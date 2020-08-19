@@ -23,46 +23,56 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
+	"io/ioutil"
+	"log"
 	"os"
+
+	"github.com/k1LoW/ndiag/version"
+	"github.com/spf13/cobra"
 )
 
-
-
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "ndiag",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Use:     "ndiag",
+	Short:   "ndiag",
+	Long:    `ndiag.`,
+	Version: version.Version,
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	rootCmd.SetOut(os.Stdout)
+	rootCmd.SetErr(os.Stderr)
+
+	log.SetOutput(ioutil.Discard)
+	if env := os.Getenv("DEBUG"); env != "" {
+		debug, err := os.Create(fmt.Sprintf("%s.debug", version.Name))
+		if err != nil {
+			printFatalln(rootCmd, err)
+		}
+		log.SetOutput(debug)
+	}
+
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		printFatalln(rootCmd, err)
 	}
 }
 
-func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
+func init() {}
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ndiag.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+// https://github.com/spf13/cobra/pull/894
+func printErrln(c *cobra.Command, i ...interface{}) {
+	c.PrintErr(fmt.Sprintln(i...))
 }
 
+func printErrf(c *cobra.Command, format string, i ...interface{}) {
+	c.PrintErr(fmt.Sprintf(format, i...))
+}
 
+func printFatalln(c *cobra.Command, i ...interface{}) {
+	printErrln(c, i...)
+	os.Exit(1)
+}
+
+func printFatalf(c *cobra.Command, format string, i ...interface{}) {
+	printErrf(c, format, i...)
+	os.Exit(1)
+}

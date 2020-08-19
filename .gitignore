@@ -1,0 +1,8 @@
+ndiag
+*.test.yml
+dist/
+coverage.txt
+*-packr.go
+.envrc
+.go-version
+.DS_Store

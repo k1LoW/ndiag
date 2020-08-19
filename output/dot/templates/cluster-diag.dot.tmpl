@@ -1,0 +1,61 @@
+digraph ndiag {
+  graph [rankdir=TB, layout=dot, fontname="Arial"];
+
+{{ define "cluster" }}
+  subgraph "cluster_{{ .Key }}:{{ .Name }}" {
+    label = "{{ .Key }}:{{ .Name }}";
+    style = rounded;
+    shape = box;
+
+    {{ range $_, $n := .Nodes }}
+    subgraph "cluster_{{ $n.Name }}" {
+      label = "{{ $n.Name }} ({{ len $n.RealNodes }})";
+      style = solid;
+      {{ range $_, $co := $n.Components }}
+      "{{ $n.Name | lower }}:{{ $co.Name | lower }}"[label="{{ $co.Name }}", style=rounded, shape=box];
+      {{ end }}
+
+      {{ $length := len $n.Components }}
+      {{ if eq $length 0 }}
+      "none"[label="", shape=none];
+      {{ end }}
+    }
+    {{ end }}
+
+    {{ range $_, $co := .Components }}
+      "{{ $.Key | lower }}:{{ $.Name | lower }}:{{ $co.Name | lower }}"[label="{{ $co.Name }}", style=rounded, shape=box];
+    {{ end }}
+
+    {{ range .Children }}
+       {{ template "cluster" . }}
+    {{ end }}
+  }
+{{ end }}
+
+{{ range .Clusters }}
+  {{ template "cluster" . }}
+{{ end }}
+
+{{ range $_, $n := .RemainNodes }}
+  subgraph "cluster_{{ $n.Name }}" {
+    label = "{{ $n.Name }} ({{ len $n.RealNodes }})";
+    style = solid;
+    {{ range $_, $co := $n.Components }}
+    "{{ $n.Name | lower }}:{{$co.Name | lower }}"[label="{{ $co.Name }}", style=rounded, shape=box];
+    {{ end }}
+    {{ $length := len $n.Components }}
+    {{ if eq $length 0 }}
+    "none"[label="", shape=none];
+    {{ end }}
+  }
+{{ end }}
+
+{{ range $_, $co := .GlobalComponents }}
+"{{ $co.Name | lower }}"[label="{{ $co.Name }}", style="rounded,bold", shape=box];
+{{ end }}
+
+{{ range $_, $nw := .Networks }}
+"{{ $nw.Head | lower }}" -> "{{ $nw.Tail | lower }}"[arrowhead=normal, arrowtail=none, headlabel="", taillabel=""];
+{{ end }}
+
+}
