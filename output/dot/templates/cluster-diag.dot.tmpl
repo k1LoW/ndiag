@@ -4,15 +4,19 @@ digraph ndiag {
 {{ define "cluster" }}
   subgraph "cluster_{{ .Key }}:{{ .Name }}" {
     label = "{{ .Key }}:{{ .Name }}";
-    style = rounded;
+    style = "rounded,filled";
+    color = "#4B75B933"
     shape = box;
+    fontname="Arial";
 
     {{ range $_, $n := .Nodes }}
     subgraph "cluster_{{ $n.Name }}" {
       label = "{{ $n.Name }} ({{ len $n.RealNodes }})";
-      style = solid;
+      style = "solid,bold,filled";
+      color = "#333333"
+      fillcolor = "#FFFFFF"
       {{ range $_, $co := $n.Components }}
-      "{{ $n.Name | lower }}:{{ $co.Name | lower }}"[label="{{ $co.Name }}", style=rounded, shape=box];
+      "{{ $n.Name | lower }}:{{ $co.Name | lower }}"[label="{{ $co.Name }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
       {{ end }}
 
       {{ $length := len $n.Components }}
@@ -23,7 +27,7 @@ digraph ndiag {
     {{ end }}
 
     {{ range $_, $co := .Components }}
-      "{{ $.Key | lower }}:{{ $.Name | lower }}:{{ $co.Name | lower }}"[label="{{ $co.Name }}", style=rounded, shape=box];
+      "{{ $.Key | lower }}:{{ $.Name | lower }}:{{ $co.Name | lower }}"[label="{{ $co.Name }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
     {{ end }}
 
     {{ range .Children }}
@@ -39,9 +43,9 @@ digraph ndiag {
 {{ range $_, $n := .RemainNodes }}
   subgraph "cluster_{{ $n.Name }}" {
     label = "{{ $n.Name }} ({{ len $n.RealNodes }})";
-    style = solid;
+    style = "solid,bold";
     {{ range $_, $co := $n.Components }}
-    "{{ $n.Name | lower }}:{{$co.Name | lower }}"[label="{{ $co.Name }}", style=rounded, shape=box];
+    "{{ $n.Name | lower }}:{{$co.Name | lower }}"[label="{{ $co.Name }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
     {{ end }}
     {{ $length := len $n.Components }}
     {{ if eq $length 0 }}
@@ -51,11 +55,11 @@ digraph ndiag {
 {{ end }}
 
 {{ range $_, $co := .GlobalComponents }}
-"{{ $co.Name | lower }}"[label="{{ $co.Name }}", style="rounded,bold", shape=box];
+"{{ $co.Name | lower }}"[label="{{ $co.Name }}", style="rounded,bold", shape=box, fontname="Arial"];
 {{ end }}
 
 {{ range $_, $nw := .Networks }}
-"{{ $nw.Head | lower }}" -> "{{ $nw.Tail | lower }}"[arrowhead=normal, arrowtail=none, headlabel="", taillabel=""];
+"{{ $nw.Head | lower }}" -> "{{ $nw.Tail | lower }}"[arrowhead=normal, arrowtail=none, headlabel="", taillabel="", color="#33333399", labelfontcolor="#333333", style=bold, fontname="Arial"];
 {{ end }}
 
 }
