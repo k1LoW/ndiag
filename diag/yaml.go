@@ -22,7 +22,7 @@ func (d *Diag) UnmarshalYAML(data []byte) error {
 		if len(nw) != 2 {
 			return fmt.Errorf("invalid network format: %s", nw)
 		}
-		d.Networks = append(d.Networks, &Network{
+		d.rawNetworks = append(d.rawNetworks, &rawNetwork{
 			Head: nw[0],
 			Tail: nw[1],
 		})

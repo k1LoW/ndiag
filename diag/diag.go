@@ -48,12 +48,14 @@ func (cs Clusters) FindByKey(key string) Clusters {
 var cCache Clusters
 
 type Diag struct {
-	Nodes            []*Node    `yaml:"nodes"`
-	Networks         []*Network `yaml:"networks"`
-	Nests            []string   `yaml:"nests"`
-	realNodes        []*RealNode
-	clusters         Clusters
-	globalComponents []*Component
+	Nodes             []*Node    `yaml:"nodes"`
+	Networks          []*Network `yaml:"networks"`
+	rawNetworks       []*rawNetwork
+	realNodes         []*RealNode
+	clusters          Clusters
+	globalComponents  []*Component
+	clusterComponents []*Component
+	nodeComponents    []*Component
 }
 
 func (d *Diag) Clusters() Clusters {
@@ -69,11 +71,10 @@ func (d *Diag) BuildNestedClusters(clusterKeys []string) (Clusters, []*Node, err
 }
 
 func (d *Diag) classifyComponents() error {
-
 	gc := map[string]struct{}{}
 	nc := map[string]struct{}{}
 	cc := map[string]struct{}{}
-	for _, nw := range d.Networks {
+	for _, nw := range d.rawNetworks {
 		switch strings.Count(nw.Head, ":") {
 		case 2: // cluster components
 			cc[nw.Head] = struct{}{}
@@ -108,6 +109,7 @@ func (d *Diag) classifyComponents() error {
 				if strings.ToLower(com.FullName()) == strings.ToLower(c) {
 					belongTo = true
 				}
+				d.nodeComponents = append(d.nodeComponents, com)
 			}
 		}
 		if !belongTo {
@@ -124,10 +126,12 @@ func (d *Diag) classifyComponents() error {
 		belongTo := false
 		for _, cl := range d.Clusters() {
 			if strings.ToLower(cl.FullName()) == strings.ToLower(clName) {
-				cl.Components = append(cl.Components, &Component{
+				com := &Component{
 					Cluster: cl,
 					Name:    comName,
-				})
+				}
+				cl.Components = append(cl.Components, com)
+				d.clusterComponents = append(d.clusterComponents, com)
 				belongTo = true
 				break
 			}
@@ -135,6 +139,21 @@ func (d *Diag) classifyComponents() error {
 		if !belongTo {
 			return fmt.Errorf("cluster '%s' not found: %s", clName, c)
 		}
+	}
+	return nil
+}
+
+func (d *Diag) buildNetworks() error {
+	for _, nw := range d.rawNetworks {
+		h, err := d.FindComponent(nw.Head)
+		if err != nil {
+			return err
+		}
+		t, err := d.FindComponent(nw.Tail)
+		d.Networks = append(d.Networks, &Network{
+			Head: h,
+			Tail: t,
+		})
 	}
 	return nil
 }
@@ -231,6 +250,11 @@ func (n *Node) FullName() string {
 }
 
 type Network struct {
+	Head *Component
+	Tail *Component
+}
+
+type rawNetwork struct {
 	Head string
 	Tail string
 }
@@ -248,8 +272,14 @@ type Component struct {
 
 func (c *Component) FullName() string {
 	if c.Node == nil {
+		if c.Cluster == nil {
+			// global components
+			return c.Name
+		}
+		// cluster components
 		return fmt.Sprintf("%s:%s", c.Cluster.FullName(), c.Name)
 	}
+	// node components
 	return fmt.Sprintf("%s:%s", c.Node.FullName(), c.Name)
 }
 
@@ -307,16 +337,8 @@ func (d *Diag) LoadRealNodes(in []byte) error {
 	if err := d.classifyComponents(); err != nil {
 		return err
 	}
-	return nil
-}
-
-func checkUniqueReadNodes(rNodes []*RealNode) error {
-	m := map[string]struct{}{}
-	for _, rn := range rNodes {
-		if _, exist := m[rn.Name]; exist {
-			return fmt.Errorf("duplicate real node name: %s", rn.Name)
-		}
-		m[rn.Name] = struct{}{}
+	if err := d.buildNetworks(); err != nil {
+		return err
 	}
 	return nil
 }
@@ -327,6 +349,24 @@ func (d *Diag) LoadRealNodesFile(path string) error {
 		return err
 	}
 	return d.LoadRealNodes(buf)
+}
+
+func (d *Diag) FindComponent(name string) (*Component, error) {
+	var components []*Component
+	switch strings.Count(name, ":") {
+	case 2: // cluster components
+		components = d.clusterComponents
+	case 1: // node components
+		components = d.nodeComponents
+	case 0: // global components
+		components = d.globalComponents
+	}
+	for _, c := range components {
+		if strings.ToLower(c.FullName()) == strings.ToLower(name) {
+			return c, nil
+		}
+	}
+	return nil, fmt.Errorf("component not found: %s", name)
 }
 
 func loadFile(path string) ([]byte, error) {
@@ -376,4 +416,15 @@ func unique(in []string) []string {
 		u = append(u, s)
 	}
 	return u
+}
+
+func checkUniqueReadNodes(rNodes []*RealNode) error {
+	m := map[string]struct{}{}
+	for _, rn := range rNodes {
+		if _, exist := m[rn.Name]; exist {
+			return fmt.Errorf("duplicate real node name: %s", rn.Name)
+		}
+		m[rn.Name] = struct{}{}
+	}
+	return nil
 }
