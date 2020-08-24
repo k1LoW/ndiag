@@ -29,6 +29,9 @@ func (d *Dot) Output(wr io.Writer) error {
 
 	funcMap := template.FuncMap{
 		"lower": strings.ToLower,
+		"fullname": func(e diag.Edge) string {
+			return e.FullName()
+		},
 	}
 
 	ts, err := d.box.FindString(t)
