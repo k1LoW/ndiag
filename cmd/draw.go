@@ -34,7 +34,7 @@ import (
 var (
 	format      string
 	clusterKeys []string
-	nodeList    []string
+	nodeLists   []string
 	configPath  string
 	out         string
 )
@@ -51,7 +51,7 @@ var drawCmd = &cobra.Command{
 		if err := d.LoadConfigFile(configPath); err != nil {
 			printFatalln(cmd, err)
 		}
-		for _, l := range nodeList {
+		for _, l := range nodeLists {
 			if err := d.LoadRealNodesFile(l); err != nil {
 				printFatalln(cmd, err)
 			}
@@ -74,7 +74,7 @@ func init() {
 	drawCmd.Flags().StringVarP(&format, "format", "t", "svg", "format")
 	drawCmd.Flags().StringSliceVarP(&clusterKeys, "cluster-key", "k", []string{}, "cluster key")
 	drawCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
-	drawCmd.Flags().StringSliceVarP(&nodeList, "node-list", "n", []string{}, "real node list file path")
+	drawCmd.Flags().StringSliceVarP(&nodeLists, "node-list", "n", []string{}, "real node list file path")
 	drawCmd.Flags().StringVarP(&out, "out", "", "", "output file path")
 	rootCmd.AddCommand(drawCmd)
 }
