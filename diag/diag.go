@@ -143,6 +143,42 @@ func (d *Diag) classifyComponents() error {
 	return nil
 }
 
+func (d *Diag) buildClusters() error {
+	for _, n := range d.Nodes {
+		for _, c := range n.rawClusters {
+			cluster, err := d.parseClusterLabel(c)
+			if err != nil {
+				return err
+			}
+			cluster.Nodes = append(cluster.Nodes, n)
+			n.Clusters = append(n.Clusters, cluster)
+		}
+	}
+	return nil
+}
+
+func (d *Diag) parseClusterLabel(label string) (*Cluster, error) {
+	if !strings.Contains(label, ":") {
+		return nil, fmt.Errorf("invalid cluster format: %s", label)
+	}
+	splitted := strings.Split(label, ":")
+	if len(splitted) != 2 {
+		return nil, fmt.Errorf("invalid cluster format: %s", label)
+	}
+	key := splitted[0]
+	name := splitted[1]
+	current := d.clusters.Find(key, name)
+	if current != nil {
+		return current, nil
+	}
+	newC := &Cluster{
+		Key:  key,
+		Name: name,
+	}
+	d.clusters = append(d.clusters, newC)
+	return newC, nil
+}
+
 func (d *Diag) buildNetworks() error {
 	for _, nw := range d.rawNetworks {
 		h, err := d.FindComponent(nw.Head)
@@ -237,12 +273,13 @@ type Edge interface {
 }
 
 type Node struct {
-	Name       string       `yaml:"name"`
-	Desc       string       `yaml:"desc"`
-	Components []*Component `yaml:"components,omitempty"`
-	Clusters   Clusters     `yaml:"clusters,omitempty"`
-	RealNodes  []*RealNode
-	nameRe     *regexp.Regexp
+	Name        string       `yaml:"name"`
+	Desc        string       `yaml:"desc"`
+	Components  []*Component `yaml:"components,omitempty"`
+	Clusters    Clusters     `yaml:"clusters,omitempty"`
+	RealNodes   []*RealNode
+	nameRe      *regexp.Regexp
+	rawClusters []string
 }
 
 func (n *Node) FullName() string {
@@ -260,8 +297,8 @@ type rawNetwork struct {
 }
 
 type RealNode struct {
-	Name string
-	Node *Node
+	Node
+	BelongTo *Node
 }
 
 type Component struct {
@@ -291,7 +328,6 @@ func (d *Diag) LoadConfig(in []byte) error {
 	if err := yaml.Unmarshal(in, d); err != nil {
 		return err
 	}
-	d.clusters = cCache
 	return nil
 }
 
@@ -307,38 +343,72 @@ func (d *Diag) LoadRealNodes(in []byte) error {
 	if len(d.Nodes) == 0 {
 		return errors.New("nodes not found")
 	}
-	rNodes := []string{}
-	if err := yaml.Unmarshal(in, &rNodes); err != nil {
+	if err := d.loadRealNodes(in); err != nil {
 		return err
 	}
-	for _, rn := range rNodes {
-		belongTo := false
-		newRn := &RealNode{
-			Name: rn,
-		}
-	N:
-		for _, n := range d.Nodes {
-			if n.nameRe.MatchString(rn) {
-				belongTo = true
-				newRn.Node = n
-				n.RealNodes = append(n.RealNodes, newRn)
-				break N
-			}
-		}
-		if !belongTo {
-			return fmt.Errorf("there is a real node '%s' that does not belong to a node", newRn.Name)
-		}
-		d.realNodes = append(d.realNodes, newRn)
-	}
-	if err := checkUniqueReadNodes(d.realNodes); err != nil {
+	if err := d.checkUniqueReadNodes(); err != nil {
 		return err
 	}
-	d.clusters = cCache
+	if err := d.buildClusters(); err != nil {
+		return err
+	}
 	if err := d.classifyComponents(); err != nil {
 		return err
 	}
 	if err := d.buildNetworks(); err != nil {
 		return err
+	}
+	return nil
+}
+
+func (d *Diag) loadRealNodes(in []byte) error {
+	rNodes := []string{}
+	if err := yaml.Unmarshal(in, &rNodes); err == nil {
+		for _, rn := range rNodes {
+			belongTo := false
+			newRn := &RealNode{
+				Node: Node{
+					Name: rn,
+				},
+			}
+		N:
+			for _, n := range d.Nodes {
+				if n.nameRe.MatchString(rn) {
+					belongTo = true
+					newRn.BelongTo = n
+					n.RealNodes = append(n.RealNodes, newRn)
+					break N
+				}
+			}
+			if !belongTo {
+				return fmt.Errorf("there is a real node '%s' that does not belong to a node", newRn.Name)
+			}
+			d.realNodes = append(d.realNodes, newRn)
+		}
+	} else {
+		rDiag := New()
+		if err := yaml.Unmarshal(in, rDiag); err != nil {
+			return err
+		}
+		for _, rn := range rDiag.Nodes {
+			belongTo := false
+			newRn := &RealNode{
+				Node: *rn,
+			}
+		NN:
+			for _, n := range d.Nodes {
+				if n.nameRe.MatchString(rn.Name) {
+					belongTo = true
+					newRn.BelongTo = n
+					n.RealNodes = append(n.RealNodes, newRn)
+					break NN
+				}
+			}
+			if !belongTo {
+				return fmt.Errorf("there is a real node '%s' that does not belong to a node", newRn.Name)
+			}
+			d.realNodes = append(d.realNodes, newRn)
+		}
 	}
 	return nil
 }
@@ -369,6 +439,17 @@ func (d *Diag) FindComponent(name string) (*Component, error) {
 	return nil, fmt.Errorf("component not found: %s", name)
 }
 
+func (d *Diag) checkUniqueReadNodes() error {
+	m := map[string]struct{}{}
+	for _, rn := range d.realNodes {
+		if _, exist := m[rn.Name]; exist {
+			return fmt.Errorf("duplicate real node name: %s", rn.Name)
+		}
+		m[rn.Name] = struct{}{}
+	}
+	return nil
+}
+
 func loadFile(path string) ([]byte, error) {
 	if path == "" {
 		return nil, nil
@@ -384,28 +465,6 @@ func loadFile(path string) ([]byte, error) {
 	return buf, nil
 }
 
-func parseClusterLabel(label string) (*Cluster, error) {
-	if !strings.Contains(label, ":") {
-		return nil, fmt.Errorf("invalid cluster format: %s", label)
-	}
-	splitted := strings.Split(label, ":")
-	if len(splitted) != 2 {
-		return nil, fmt.Errorf("invalid cluster format: %s", label)
-	}
-	key := splitted[0]
-	name := splitted[1]
-	current := cCache.Find(key, name)
-	if current != nil {
-		return current, nil
-	}
-	newC := &Cluster{
-		Key:  key,
-		Name: name,
-	}
-	cCache = append(cCache, newC)
-	return newC, nil
-}
-
 func unique(in []string) []string {
 	m := map[string]struct{}{}
 	for _, s := range in {
@@ -416,15 +475,4 @@ func unique(in []string) []string {
 		u = append(u, s)
 	}
 	return u
-}
-
-func checkUniqueReadNodes(rNodes []*RealNode) error {
-	m := map[string]struct{}{}
-	for _, rn := range rNodes {
-		if _, exist := m[rn.Name]; exist {
-			return fmt.Errorf("duplicate real node name: %s", rn.Name)
-		}
-		m[rn.Name] = struct{}{}
-	}
-	return nil
 }
