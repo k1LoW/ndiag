@@ -18,6 +18,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 		wantNodeComponentLen    int
 	}{
 		{"1_ndiag.yml", []string{"1_nodes.yml"}, 3, 7, 1, 0, 0, 3},
+		{"2_ndiag.yml", []string{"2_nodes.yml"}, 3, 7, 2, 1, 1, 3},
 	}
 	for _, tt := range tests {
 		d := New()
