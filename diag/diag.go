@@ -45,8 +45,6 @@ func (cs Clusters) FindByKey(key string) Clusters {
 	return result
 }
 
-var cCache Clusters
-
 type Diag struct {
 	Nodes             []*Node    `yaml:"nodes"`
 	Networks          []*Network `yaml:"networks"`

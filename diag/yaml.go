@@ -55,25 +55,3 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	n.rawClusters = raw.Clusters
 	return nil
 }
-
-func parseClusterLabel(label string) (*Cluster, error) {
-	if !strings.Contains(label, ":") {
-		return nil, fmt.Errorf("invalid cluster format: %s", label)
-	}
-	splitted := strings.Split(label, ":")
-	if len(splitted) != 2 {
-		return nil, fmt.Errorf("invalid cluster format: %s", label)
-	}
-	key := splitted[0]
-	name := splitted[1]
-	current := cCache.Find(key, name)
-	if current != nil {
-		return current, nil
-	}
-	newC := &Cluster{
-		Key:  key,
-		Name: name,
-	}
-	cCache = append(cCache, newC)
-	return newC, nil
-}
