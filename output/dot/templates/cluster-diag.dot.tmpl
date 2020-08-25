@@ -2,7 +2,7 @@ digraph ndiag {
   graph [rankdir=TB, layout=dot, fontname="Arial"];
 
 {{ define "cluster" }}
-  subgraph "cluster_{{ . | fullname | lower }}" {
+  subgraph "cluster_{{ . | id }}" {
     label = "{{ .Key }}:{{ .Name }}";
     style = "rounded,filled";
     color = "#4B75B933"
@@ -10,13 +10,13 @@ digraph ndiag {
     fontname="Arial";
 
     {{ range $_, $n := .Nodes }}
-    subgraph "cluster_{{ $n | fullname | lower }}" {
+    subgraph "cluster_{{ $n | id }}" {
       label = "{{ $n.Name }} ({{ len $n.RealNodes }})";
       style = "solid,bold,filled";
       color = "#333333"
       fillcolor = "#FFFFFF"
       {{ range $_, $co := $n.Components }}
-      "{{ $co | fullname | lower }}"[label="{{ $co.Name }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
+      "{{ $co | id }}"[label="{{ $co.Name }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
       {{ end }}
 
       {{ $length := len $n.Components }}
@@ -27,7 +27,7 @@ digraph ndiag {
     {{ end }}
 
     {{ range $_, $co := .Components }}
-      "{{ $co | fullname | lower }}"[label="{{ $co.Name }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
+      "{{ $co | id }}"[label="{{ $co.Name }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
     {{ end }}
 
     {{ range .Children }}
@@ -45,7 +45,7 @@ digraph ndiag {
     label = "{{ $n | fullname }} ({{ len $n.RealNodes }})";
     style = "solid,bold";
     {{ range $_, $co := $n.Components }}
-    "{{ $n | fullname | lower }}:{{$co | fullname | lower }}"[label="{{ $co.Name }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
+    "{{ $n | id }}:{{$co | id }}"[label="{{ $co.Name }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
     {{ end }}
     {{ $length := len $n.Components }}
     {{ if eq $length 0 }}
@@ -55,11 +55,11 @@ digraph ndiag {
 {{ end }}
 
 {{ range $_, $co := .GlobalComponents }}
-"{{ $co | fullname | lower }}"[label="{{ $co.Name }}", style="rounded,bold", shape=box, fontname="Arial"];
+"{{ $co | id }}"[label="{{ $co.Name }}", style="rounded,bold", shape=box, fontname="Arial"];
 {{ end }}
 
 {{ range $_, $nw := .Networks }}
-"{{ $nw.Head | fullname | lower }}" -> "{{ $nw.Tail | fullname | lower }}"[arrowhead=normal, arrowtail=none, headlabel="", taillabel="", color="#33333399", labelfontcolor="#333333", style=bold, fontname="Arial"];
+"{{ $nw.Head | id }}" -> "{{ $nw.Tail | id }}"[arrowhead=normal, arrowtail=none, headlabel="", taillabel="", color="#33333399", labelfontcolor="#333333", style=bold, fontname="Arial"];
 {{ end }}
 
 }

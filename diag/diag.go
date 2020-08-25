@@ -24,6 +24,10 @@ func (c *Cluster) FullName() string {
 	return fmt.Sprintf("%s:%s", c.Key, c.Name)
 }
 
+func (c *Cluster) Id() string {
+	return strings.ToLower(c.FullName())
+}
+
 type Clusters []*Cluster
 
 func (cs Clusters) Find(key, name string) *Cluster {
@@ -267,6 +271,7 @@ func buildNestedClusters(clusters Clusters, clusterKeys []string, nodes []*Node)
 }
 
 type Edge interface {
+	Id() string
 	FullName() string
 }
 
@@ -282,6 +287,10 @@ type Node struct {
 
 func (n *Node) FullName() string {
 	return n.Name
+}
+
+func (n *Node) Id() string {
+	return strings.ToLower(n.FullName())
 }
 
 type Network struct {
@@ -316,6 +325,10 @@ func (c *Component) FullName() string {
 	}
 	// node components
 	return fmt.Sprintf("%s:%s", c.Node.FullName(), c.Name)
+}
+
+func (c *Component) Id() string {
+	return strings.ToLower(c.FullName())
 }
 
 func New() *Diag {

@@ -2,7 +2,6 @@ package dot
 
 import (
 	"io"
-	"strings"
 	"text/template"
 
 	"github.com/gobuffalo/packr/v2"
@@ -28,7 +27,9 @@ func (d *Dot) Output(wr io.Writer) error {
 	t := "cluster-diag.dot.tmpl"
 
 	funcMap := template.FuncMap{
-		"lower": strings.ToLower,
+		"id": func(e diag.Edge) string {
+			return e.Id()
+		},
 		"fullname": func(e diag.Edge) string {
 			return e.FullName()
 		},
