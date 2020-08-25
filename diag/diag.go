@@ -68,6 +68,14 @@ func (d *Diag) GlobalComponents() []*Component {
 	return d.globalComponents
 }
 
+func (d *Diag) ClusterComponents() []*Component {
+	return d.clusterComponents
+}
+
+func (d *Diag) NodeComponents() []*Component {
+	return d.nodeComponents
+}
+
 func (d *Diag) BuildNestedClusters(clusterKeys []string) (Clusters, []*Node, error) {
 	return buildNestedClusters(d.Clusters(), clusterKeys, d.Nodes)
 }
@@ -104,14 +112,19 @@ func (d *Diag) classifyComponents() error {
 	}
 
 	// node components
+	for _, n := range d.Nodes {
+		for _, com := range n.Components {
+			d.nodeComponents = append(d.nodeComponents, com)
+		}
+	}
+
+	belongTo := false
 	for c := range nc {
-		belongTo := false
 		for _, n := range d.Nodes {
 			for _, com := range n.Components {
 				if strings.ToLower(com.FullName()) == strings.ToLower(c) {
 					belongTo = true
 				}
-				d.nodeComponents = append(d.nodeComponents, com)
 			}
 		}
 		if !belongTo {

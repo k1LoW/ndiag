@@ -1,0 +1,32 @@
+name: build
+
+on: push
+
+jobs:
+  job-test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go_version: [1.14, 1.15]
+    steps:
+      - name: Set up Go ${{ matrix.go_version }}
+        uses: actions/setup-go@v1
+        with:
+          go-version: ${{ matrix.go_version }}
+
+      - name: Install codecov
+        run: sudo pip install codecov
+
+      - name: Check out source code
+        uses: actions/checkout@v2
+
+      - name: Test
+        run: env PATH=`go env GOPATH`/bin:$PATH make ci
+        env:
+          GOPROXY: "https://proxy.golang.org"
+
+      - name: Run codecov
+        run: codecov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
