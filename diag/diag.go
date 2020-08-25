@@ -5,48 +5,24 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
-	"regexp"
 	"strings"
 
 	"github.com/goccy/go-yaml"
 )
 
-type Cluster struct {
-	Key        string
-	Name       string
-	Parent     *Cluster
-	Children   []*Cluster
-	Nodes      []*Node
-	Components []*Component
+type Edge interface {
+	Id() string
+	FullName() string
 }
 
-func (c *Cluster) FullName() string {
-	return fmt.Sprintf("%s:%s", c.Key, c.Name)
+type Network struct {
+	Head *Component
+	Tail *Component
 }
 
-func (c *Cluster) Id() string {
-	return strings.ToLower(c.FullName())
-}
-
-type Clusters []*Cluster
-
-func (cs Clusters) Find(key, name string) *Cluster {
-	for _, c := range cs {
-		if c.Key == key && c.Name == name {
-			return c
-		}
-	}
-	return nil
-}
-
-func (cs Clusters) FindByKey(key string) Clusters {
-	result := Clusters{}
-	for _, c := range cs {
-		if c.Key == key {
-			result = append(result, c)
-		}
-	}
-	return result
+type rawNetwork struct {
+	Head string
+	Tail string
 }
 
 type Diag struct {
@@ -58,6 +34,10 @@ type Diag struct {
 	globalComponents  []*Component
 	clusterComponents []*Component
 	nodeComponents    []*Component
+}
+
+func New() *Diag {
+	return &Diag{}
 }
 
 func (d *Diag) Clusters() Clusters {
@@ -281,71 +261,6 @@ func buildNestedClusters(clusters Clusters, clusterKeys []string, nodes []*Node)
 	}
 
 	return buildNestedClusters(clusters, clusterKeys, remain)
-}
-
-type Edge interface {
-	Id() string
-	FullName() string
-}
-
-type Node struct {
-	Name        string       `yaml:"name"`
-	Desc        string       `yaml:"desc"`
-	Components  []*Component `yaml:"components,omitempty"`
-	Clusters    Clusters     `yaml:"clusters,omitempty"`
-	RealNodes   []*RealNode
-	nameRe      *regexp.Regexp
-	rawClusters []string
-}
-
-func (n *Node) FullName() string {
-	return n.Name
-}
-
-func (n *Node) Id() string {
-	return strings.ToLower(n.FullName())
-}
-
-type Network struct {
-	Head *Component
-	Tail *Component
-}
-
-type rawNetwork struct {
-	Head string
-	Tail string
-}
-
-type RealNode struct {
-	Node
-	BelongTo *Node
-}
-
-type Component struct {
-	Name    string
-	Cluster *Cluster
-	Node    *Node
-}
-
-func (c *Component) FullName() string {
-	if c.Node == nil {
-		if c.Cluster == nil {
-			// global components
-			return c.Name
-		}
-		// cluster components
-		return fmt.Sprintf("%s:%s", c.Cluster.FullName(), c.Name)
-	}
-	// node components
-	return fmt.Sprintf("%s:%s", c.Node.FullName(), c.Name)
-}
-
-func (c *Component) Id() string {
-	return strings.ToLower(c.FullName())
-}
-
-func New() *Diag {
-	return &Diag{}
 }
 
 func (d *Diag) LoadConfig(in []byte) error {
