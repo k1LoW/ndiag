@@ -3,7 +3,7 @@ nodes:
   -
     name: lb-*
     components:
-      - NGINX
+      - nginx
     clusters:
       - 'consul:dc1'  
   -
