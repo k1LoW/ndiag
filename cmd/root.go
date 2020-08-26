@@ -63,7 +63,7 @@ func printErrln(c *cobra.Command, i ...interface{}) {
 	c.PrintErr(fmt.Sprintln(i...))
 }
 
-func printErrf(c *cobra.Command, format string, i ...interface{}) {
+func printErrf(c *cobra.Command, format string, i ...interface{}) { //nolint:unused
 	c.PrintErr(fmt.Sprintf(format, i...))
 }
 
@@ -72,7 +72,7 @@ func printFatalln(c *cobra.Command, i ...interface{}) {
 	os.Exit(1)
 }
 
-func printFatalf(c *cobra.Command, format string, i ...interface{}) {
+func printFatalf(c *cobra.Command, format string, i ...interface{}) { //nolint:unused,deadcode
 	printErrf(c, format, i...)
 	os.Exit(1)
 }

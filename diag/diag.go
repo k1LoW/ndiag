@@ -93,16 +93,14 @@ func (d *Diag) classifyComponents() error {
 
 	// node components
 	for _, n := range d.Nodes {
-		for _, com := range n.Components {
-			d.nodeComponents = append(d.nodeComponents, com)
-		}
+		d.nodeComponents = append(d.nodeComponents, n.Components...)
 	}
 
 	belongTo := false
 	for c := range nc {
 		for _, n := range d.Nodes {
 			for _, com := range n.Components {
-				if strings.ToLower(com.FullName()) == strings.ToLower(c) {
+				if strings.EqualFold(com.FullName(), c) {
 					belongTo = true
 				}
 			}
@@ -120,7 +118,7 @@ func (d *Diag) classifyComponents() error {
 		comName := splitted[2]
 		belongTo := false
 		for _, cl := range d.Clusters() {
-			if strings.ToLower(cl.FullName()) == strings.ToLower(clName) {
+			if strings.EqualFold(cl.FullName(), clName) {
 				com := &Component{
 					Cluster: cl,
 					Name:    comName,
@@ -181,6 +179,9 @@ func (d *Diag) buildNetworks() error {
 			return err
 		}
 		t, err := d.FindComponent(nw.Tail)
+		if err != nil {
+			return err
+		}
 		d.Networks = append(d.Networks, &Network{
 			Head: h,
 			Tail: t,
@@ -371,7 +372,7 @@ func (d *Diag) FindComponent(name string) (*Component, error) {
 		components = d.globalComponents
 	}
 	for _, c := range components {
-		if strings.ToLower(c.FullName()) == strings.ToLower(name) {
+		if strings.EqualFold(c.FullName(), name) {
 			return c, nil
 		}
 	}
@@ -402,16 +403,4 @@ func loadFile(path string) ([]byte, error) {
 		return nil, err
 	}
 	return buf, nil
-}
-
-func unique(in []string) []string {
-	m := map[string]struct{}{}
-	for _, s := range in {
-		m[s] = struct{}{}
-	}
-	u := []string{}
-	for s := range m {
-		u = append(u, s)
-	}
-	return u
 }

@@ -21,6 +21,9 @@ test:
 sec:
 	gosec ./...
 
+lint:
+	golangci-lint run ./...
+
 build:
 	packr2
 	go build -ldflags="$(BUILD_LDFLAGS)"

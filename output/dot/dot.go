@@ -9,17 +9,16 @@ import (
 )
 
 type Dot struct {
-	diag        *diag.Diag
-	real        bool
+	diag   *diag.Diag
 	layers []string
-	box         *packr.Box
+	box    *packr.Box
 }
 
 func New(d *diag.Diag, layers []string) *Dot {
 	return &Dot{
-		diag:        d,
+		diag:   d,
 		layers: layers,
-		box:         packr.New("dot", "./templates"),
+		box:    packr.New("dot", "./templates"),
 	}
 }
 

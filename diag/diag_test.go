@@ -22,9 +22,13 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 	}
 	for _, tt := range tests {
 		d := New()
-		d.LoadConfigFile(filepath.Join(testdataDir(t), tt.configFile))
+		if err := d.LoadConfigFile(filepath.Join(testdataDir(t), tt.configFile)); err != nil {
+			t.Fatal(err)
+		}
 		for _, n := range tt.nodeListFiles {
-			d.LoadRealNodesFile(filepath.Join(testdataDir(t), n))
+			if err := d.LoadRealNodesFile(filepath.Join(testdataDir(t), n)); err != nil {
+				t.Fatal(err)
+			}
 		}
 		if got := len(d.Nodes); got != tt.wantNodeLen {
 			t.Errorf("got %v\nwant %v", got, tt.wantNodeLen)
