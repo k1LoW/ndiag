@@ -12,15 +12,15 @@ import (
 type Gviz struct {
 	diag        *diag.Diag
 	dot         *dot.Dot
-	clusterKeys []string
+	layers []string
 	format      string
 }
 
-func New(d *diag.Diag, clusterKeys []string, format string) *Gviz {
+func New(d *diag.Diag, layers []string, format string) *Gviz {
 	return &Gviz{
 		diag:        d,
-		dot:         dot.New(d, clusterKeys),
-		clusterKeys: clusterKeys,
+		dot:         dot.New(d, layers),
+		layers: layers,
 		format:      format,
 	}
 }

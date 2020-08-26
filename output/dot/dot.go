@@ -11,14 +11,14 @@ import (
 type Dot struct {
 	diag        *diag.Diag
 	real        bool
-	clusterKeys []string
+	layers []string
 	box         *packr.Box
 }
 
-func New(d *diag.Diag, clusterKeys []string) *Dot {
+func New(d *diag.Diag, layers []string) *Dot {
 	return &Dot{
 		diag:        d,
-		clusterKeys: clusterKeys,
+		layers: layers,
 		box:         packr.New("dot", "./templates"),
 	}
 }
@@ -41,7 +41,7 @@ func (d *Dot) Output(wr io.Writer) error {
 	}
 	tmpl := template.Must(template.New("diag").Funcs(funcMap).Parse(ts))
 
-	clusters, remain, err := d.diag.BuildNestedClusters(d.clusterKeys)
+	clusters, remain, err := d.diag.BuildNestedClusters(d.layers)
 	if err != nil {
 		return err
 	}

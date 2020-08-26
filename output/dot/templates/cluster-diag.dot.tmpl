@@ -3,7 +3,7 @@ digraph ndiag {
 
 {{ define "cluster" }}
   subgraph "cluster_{{ . | id }}" {
-    label = "{{ .Key }}:{{ .Name }}";
+    label = "{{ .Layer }}:{{ .Name }}";
     style = "rounded,filled";
     color = "#4B75B933"
     shape = box;

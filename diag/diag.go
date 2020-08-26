@@ -56,8 +56,8 @@ func (d *Diag) NodeComponents() []*Component {
 	return d.nodeComponents
 }
 
-func (d *Diag) BuildNestedClusters(clusterKeys []string) (Clusters, []*Node, error) {
-	return buildNestedClusters(d.Clusters(), clusterKeys, d.Nodes)
+func (d *Diag) BuildNestedClusters(layers []string) (Clusters, []*Node, error) {
+	return buildNestedClusters(d.Clusters(), layers, d.Nodes)
 }
 
 func (d *Diag) classifyComponents() error {
@@ -160,15 +160,15 @@ func (d *Diag) parseClusterLabel(label string) (*Cluster, error) {
 	if len(splitted) != 2 {
 		return nil, fmt.Errorf("invalid cluster format: %s", label)
 	}
-	key := splitted[0]
+	layer := splitted[0]
 	name := splitted[1]
-	current := d.clusters.Find(key, name)
+	current := d.clusters.Find(layer, name)
 	if current != nil {
 		return current, nil
 	}
 	newC := &Cluster{
-		Key:  key,
-		Name: name,
+		Layer: layer,
+		Name:  name,
 	}
 	d.clusters = append(d.clusters, newC)
 	return newC, nil
@@ -189,37 +189,37 @@ func (d *Diag) buildNetworks() error {
 	return nil
 }
 
-func buildNestedClusters(clusters Clusters, clusterKeys []string, nodes []*Node) (Clusters, []*Node, error) {
-	if len(clusterKeys) == 0 {
+func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clusters, []*Node, error) {
+	if len(layers) == 0 {
 		return clusters, nodes, nil
 	}
-	leaf := clusterKeys[len(clusterKeys)-1]
-	clusterKeys = clusterKeys[:len(clusterKeys)-1]
+	leaf := layers[len(layers)-1]
+	layers = layers[:len(layers)-1]
 
 	remain := []*Node{}
 	belongTo := []*Node{}
 	for _, n := range nodes {
-		c := n.Clusters.FindByKey(leaf)
+		c := n.Clusters.FindByLayer(leaf)
 		if len(c) == 0 {
 			remain = append(remain, n)
 			continue
 		}
 		if len(c) > 1 {
-			return nil, nil, fmt.Errorf("duplicate cluster key %s", leaf)
+			return nil, nil, fmt.Errorf("duplicate layer %s", leaf)
 		}
 		belongTo = append(belongTo, n)
-		if len(clusterKeys) == 0 {
+		if len(layers) == 0 {
 			continue
 		}
 
 		// build cluster tree using Node.Clusters
 		parent := ""
 		var pc Clusters
-		for i := 1; i <= len(clusterKeys); i++ {
-			parent = clusterKeys[len(clusterKeys)-i]
-			pc = n.Clusters.FindByKey(parent)
+		for i := 1; i <= len(layers); i++ {
+			parent = layers[len(layers)-i]
+			pc = n.Clusters.FindByLayer(parent)
 			if len(pc) > 1 {
-				return nil, nil, fmt.Errorf("duplicate cluster key %s", parent)
+				return nil, nil, fmt.Errorf("duplicate layer %s", parent)
 			}
 			if len(pc) == 0 {
 				continue
@@ -233,7 +233,7 @@ func buildNestedClusters(clusters Clusters, clusterKeys []string, nodes []*Node)
 
 	// build a direct member node of a cluster
 	for _, c := range clusters {
-		if c.Key == leaf {
+		if c.Layer == leaf {
 			continue
 		}
 		nodes := []*Node{}
@@ -250,17 +250,17 @@ func buildNestedClusters(clusters Clusters, clusterKeys []string, nodes []*Node)
 	}
 
 	// build root clusters
-	if len(clusterKeys) == 0 {
+	if len(layers) == 0 {
 		root := Clusters{}
 		for _, c := range clusters {
-			if c.Parent == nil && (c.Key == leaf || len(c.Nodes) > 0) {
+			if c.Parent == nil && (c.Layer == leaf || len(c.Nodes) > 0) {
 				root = append(root, c)
 			}
 		}
 		clusters = root
 	}
 
-	return buildNestedClusters(clusters, clusterKeys, remain)
+	return buildNestedClusters(clusters, layers, remain)
 }
 
 func (d *Diag) LoadConfig(in []byte) error {

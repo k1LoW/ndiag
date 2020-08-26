@@ -32,11 +32,11 @@ import (
 )
 
 var (
-	format      string
-	clusterKeys []string
-	nodeLists   []string
-	configPath  string
-	out         string
+	format     string
+	layers     []string
+	nodeLists  []string
+	configPath string
+	out        string
 )
 
 // drawCmd represents the draw command
@@ -59,9 +59,9 @@ var drawCmd = &cobra.Command{
 
 		switch format {
 		case "svg", "jpg", "png":
-			o = gviz.New(d, clusterKeys, format)
+			o = gviz.New(d, layers, format)
 		case "dot":
-			o = dot.New(d, clusterKeys)
+			o = dot.New(d, layers)
 		}
 
 		if err := o.Output(os.Stdout); err != nil {
@@ -72,7 +72,7 @@ var drawCmd = &cobra.Command{
 
 func init() {
 	drawCmd.Flags().StringVarP(&format, "format", "t", "svg", "format")
-	drawCmd.Flags().StringSliceVarP(&clusterKeys, "cluster-key", "k", []string{}, "cluster key")
+	drawCmd.Flags().StringSliceVarP(&layers, "layer", "l", []string{}, "layer")
 	drawCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
 	drawCmd.Flags().StringSliceVarP(&nodeLists, "node-list", "n", []string{}, "real node list file path")
 	drawCmd.Flags().StringVarP(&out, "out", "", "", "output file path")
