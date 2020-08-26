@@ -56,6 +56,9 @@ var drawCmd = &cobra.Command{
 				printFatalln(cmd, err)
 			}
 		}
+		if err := d.Build(); err != nil {
+			printFatalln(cmd, err)
+		}
 
 		switch format {
 		case "svg", "jpg", "png":

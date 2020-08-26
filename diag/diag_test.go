@@ -30,6 +30,9 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 				t.Fatal(err)
 			}
 		}
+		if err := d.Build(); err != nil {
+			t.Fatal(err)
+		}
 		if got := len(d.Nodes); got != tt.wantNodeLen {
 			t.Errorf("got %v\nwant %v", got, tt.wantNodeLen)
 		}

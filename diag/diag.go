@@ -60,7 +60,126 @@ func (d *Diag) BuildNestedClusters(layers []string) (Clusters, []*Node, error) {
 	return buildNestedClusters(d.Clusters(), layers, d.Nodes)
 }
 
-func (d *Diag) classifyComponents() error {
+func (d *Diag) LoadConfig(in []byte) error {
+	if err := yaml.Unmarshal(in, d); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *Diag) LoadConfigFile(path string) error {
+	buf, err := loadFile(path)
+	if err != nil {
+		return err
+	}
+	return d.LoadConfig(buf)
+}
+
+func (d *Diag) LoadRealNodes(in []byte) error {
+	if len(d.Nodes) == 0 {
+		return errors.New("nodes not found")
+	}
+	if err := d.loadRealNodes(in); err != nil {
+		return err
+	}
+	if err := d.checkUniqueReadNodes(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *Diag) Build() error {
+	if err := d.buildClusters(); err != nil {
+		return err
+	}
+	if err := d.buildComponents(); err != nil {
+		return err
+	}
+	if err := d.buildNetworks(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *Diag) loadRealNodes(in []byte) error {
+	rNodes := []string{}
+	if err := yaml.Unmarshal(in, &rNodes); err == nil {
+		for _, rn := range rNodes {
+			belongTo := false
+			newRn := &RealNode{
+				Node: Node{
+					Name: rn,
+				},
+			}
+		N:
+			for _, n := range d.Nodes {
+				if n.nameRe.MatchString(rn) {
+					belongTo = true
+					newRn.BelongTo = n
+					n.RealNodes = append(n.RealNodes, newRn)
+					break N
+				}
+			}
+			if !belongTo {
+				return fmt.Errorf("there is a real node '%s' that does not belong to a node", newRn.Name)
+			}
+			d.realNodes = append(d.realNodes, newRn)
+		}
+	} else {
+		rDiag := New()
+		if err := yaml.Unmarshal(in, rDiag); err != nil {
+			return err
+		}
+		for _, rn := range rDiag.Nodes {
+			belongTo := false
+			newRn := &RealNode{
+				Node: *rn,
+			}
+		NN:
+			for _, n := range d.Nodes {
+				if n.nameRe.MatchString(rn.Name) {
+					belongTo = true
+					newRn.BelongTo = n
+					n.RealNodes = append(n.RealNodes, newRn)
+					break NN
+				}
+			}
+			if !belongTo {
+				return fmt.Errorf("there is a real node '%s' that does not belong to a node", newRn.Name)
+			}
+			d.realNodes = append(d.realNodes, newRn)
+		}
+	}
+	return nil
+}
+
+func (d *Diag) LoadRealNodesFile(path string) error {
+	buf, err := loadFile(path)
+	if err != nil {
+		return err
+	}
+	return d.LoadRealNodes(buf)
+}
+
+func (d *Diag) FindComponent(name string) (*Component, error) {
+	var components []*Component
+	switch strings.Count(name, ":") {
+	case 2: // cluster components
+		components = d.clusterComponents
+	case 1: // node components
+		components = d.nodeComponents
+	case 0: // global components
+		components = d.globalComponents
+	}
+	for _, c := range components {
+		if strings.EqualFold(c.FullName(), name) {
+			return c, nil
+		}
+	}
+	return nil, fmt.Errorf("component not found: %s", name)
+}
+
+func (d *Diag) buildComponents() error {
 	gc := map[string]struct{}{}
 	nc := map[string]struct{}{}
 	cc := map[string]struct{}{}
@@ -262,121 +381,6 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 	}
 
 	return buildNestedClusters(clusters, layers, remain)
-}
-
-func (d *Diag) LoadConfig(in []byte) error {
-	if err := yaml.Unmarshal(in, d); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (d *Diag) LoadConfigFile(path string) error {
-	buf, err := loadFile(path)
-	if err != nil {
-		return err
-	}
-	return d.LoadConfig(buf)
-}
-
-func (d *Diag) LoadRealNodes(in []byte) error {
-	if len(d.Nodes) == 0 {
-		return errors.New("nodes not found")
-	}
-	if err := d.loadRealNodes(in); err != nil {
-		return err
-	}
-	if err := d.checkUniqueReadNodes(); err != nil {
-		return err
-	}
-	if err := d.buildClusters(); err != nil {
-		return err
-	}
-	if err := d.classifyComponents(); err != nil {
-		return err
-	}
-	if err := d.buildNetworks(); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (d *Diag) loadRealNodes(in []byte) error {
-	rNodes := []string{}
-	if err := yaml.Unmarshal(in, &rNodes); err == nil {
-		for _, rn := range rNodes {
-			belongTo := false
-			newRn := &RealNode{
-				Node: Node{
-					Name: rn,
-				},
-			}
-		N:
-			for _, n := range d.Nodes {
-				if n.nameRe.MatchString(rn) {
-					belongTo = true
-					newRn.BelongTo = n
-					n.RealNodes = append(n.RealNodes, newRn)
-					break N
-				}
-			}
-			if !belongTo {
-				return fmt.Errorf("there is a real node '%s' that does not belong to a node", newRn.Name)
-			}
-			d.realNodes = append(d.realNodes, newRn)
-		}
-	} else {
-		rDiag := New()
-		if err := yaml.Unmarshal(in, rDiag); err != nil {
-			return err
-		}
-		for _, rn := range rDiag.Nodes {
-			belongTo := false
-			newRn := &RealNode{
-				Node: *rn,
-			}
-		NN:
-			for _, n := range d.Nodes {
-				if n.nameRe.MatchString(rn.Name) {
-					belongTo = true
-					newRn.BelongTo = n
-					n.RealNodes = append(n.RealNodes, newRn)
-					break NN
-				}
-			}
-			if !belongTo {
-				return fmt.Errorf("there is a real node '%s' that does not belong to a node", newRn.Name)
-			}
-			d.realNodes = append(d.realNodes, newRn)
-		}
-	}
-	return nil
-}
-
-func (d *Diag) LoadRealNodesFile(path string) error {
-	buf, err := loadFile(path)
-	if err != nil {
-		return err
-	}
-	return d.LoadRealNodes(buf)
-}
-
-func (d *Diag) FindComponent(name string) (*Component, error) {
-	var components []*Component
-	switch strings.Count(name, ":") {
-	case 2: // cluster components
-		components = d.clusterComponents
-	case 1: // node components
-		components = d.nodeComponents
-	case 0: // global components
-		components = d.globalComponents
-	}
-	for _, c := range components {
-		if strings.EqualFold(c.FullName(), name) {
-			return c, nil
-		}
-	}
-	return nil, fmt.Errorf("component not found: %s", name)
 }
 
 func (d *Diag) checkUniqueReadNodes() error {
