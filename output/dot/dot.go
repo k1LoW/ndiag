@@ -40,7 +40,7 @@ func (d *Dot) Output(wr io.Writer) error {
 	}
 	tmpl := template.Must(template.New("diag").Funcs(funcMap).Parse(ts))
 
-	clusters, remain, err := d.diag.BuildNestedClusters(d.layers)
+	clusters, remain, networks, err := d.diag.BuildNestedClusters(d.layers)
 	if err != nil {
 		return err
 	}
@@ -48,7 +48,7 @@ func (d *Dot) Output(wr io.Writer) error {
 		"Clusters":         clusters,
 		"RemainNodes":      remain,
 		"GlobalComponents": d.diag.GlobalComponents(),
-		"Networks":         d.diag.Networks,
+		"Networks":         networks,
 	}); err != nil {
 		return err
 	}

@@ -54,6 +54,50 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 	}
 }
 
+func TestBuildNestedCluster(t *testing.T) {
+	tests := []struct {
+		configFile        string
+		nodeListFiles     []string
+		layers            []string
+		wantClusterLen    int
+		wantGlobalNodeLen int
+		wantNetworkLen    int
+	}{
+		{"1_ndiag.yml", []string{"1_nodes.yml"}, []string{}, 0, 3, 0},
+		{"1_ndiag.yml", []string{"1_nodes.yml"}, []string{"consul"}, 1, 0, 0},
+		{"2_ndiag.yml", []string{"2_nodes.yml"}, []string{"consul"}, 1, 0, 2},
+		{"2_ndiag.yml", []string{"2_nodes.yml"}, []string{"consul", "group"}, 1, 0, 4},
+		{"2_ndiag.yml", []string{"2_nodes.yml"}, []string{"group"}, 1, 2, 4},
+	}
+	for i, tt := range tests {
+		d := New()
+		if err := d.LoadConfigFile(filepath.Join(testdataDir(t), tt.configFile)); err != nil {
+			t.Fatal(err)
+		}
+		for _, n := range tt.nodeListFiles {
+			if err := d.LoadRealNodesFile(filepath.Join(testdataDir(t), n)); err != nil {
+				t.Fatal(err)
+			}
+		}
+		if err := d.Build(); err != nil {
+			t.Fatal(err)
+		}
+		gotClusters, gotNodes, gotNetworks, err := d.BuildNestedClusters(tt.layers)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got := len(gotClusters); got != tt.wantClusterLen {
+			t.Errorf("%d) got %v want %v", i, got, tt.wantClusterLen)
+		}
+		if got := len(gotNodes); got != tt.wantGlobalNodeLen {
+			t.Errorf("%d) got %v want %v", i, got, tt.wantGlobalNodeLen)
+		}
+		if got := len(gotNetworks); got != tt.wantNetworkLen {
+			t.Errorf("%d) got %v want %v", i, got, tt.wantNetworkLen)
+		}
+	}
+}
+
 func testdataDir(t *testing.T) string {
 	t.Helper()
 	wd, err := os.Getwd()

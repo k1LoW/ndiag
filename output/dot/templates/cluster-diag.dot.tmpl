@@ -45,7 +45,7 @@ digraph ndiag {
     label = "{{ $n | fullname }} ({{ len $n.RealNodes }})";
     style = "solid,bold";
     {{ range $_, $co := $n.Components }}
-    "{{ $n | id }}:{{$co | id }}"[label="{{ $co.Name }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
+    "{{$co | id }}"[label="{{ $co.Name }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
     {{ end }}
     {{ $length := len $n.Components }}
     {{ if eq $length 0 }}

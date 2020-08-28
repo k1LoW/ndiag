@@ -56,8 +56,31 @@ func (d *Diag) NodeComponents() []*Component {
 	return d.nodeComponents
 }
 
-func (d *Diag) BuildNestedClusters(layers []string) (Clusters, []*Node, error) {
-	return buildNestedClusters(d.Clusters(), layers, d.Nodes)
+func (d *Diag) BuildNestedClusters(layers []string) (Clusters, []*Node, []*Network, error) {
+	if len(layers) == 0 {
+		return Clusters{}, d.Nodes, d.Networks, nil
+	}
+	clusters, globalNodes, err := buildNestedClusters(d.Clusters(), layers, d.Nodes)
+	if err != nil {
+		return clusters, globalNodes, nil, err
+	}
+	networks := []*Network{}
+	for _, nw := range d.Networks {
+		hBelongTo := false
+		tBelongTo := false
+		for _, l := range layers {
+			if nw.Head.Cluster == nil || strings.EqualFold(nw.Head.Cluster.Layer, l) {
+				hBelongTo = true
+			}
+			if nw.Tail.Cluster == nil || strings.EqualFold(nw.Tail.Cluster.Layer, l) {
+				tBelongTo = true
+			}
+		}
+		if hBelongTo && tBelongTo {
+			networks = append(networks, nw)
+		}
+	}
+	return clusters, globalNodes, networks, nil
 }
 
 func (d *Diag) LoadConfig(in []byte) error {
@@ -372,8 +395,16 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 	// build root clusters
 	if len(layers) == 0 {
 		root := Clusters{}
+	NN:
 		for _, c := range clusters {
 			if c.Parent == nil && (c.Layer == leaf || len(c.Nodes) > 0) {
+				for _, n := range c.Nodes {
+					for _, rn := range remain {
+						if n == rn {
+							continue NN
+						}
+					}
+				}
 				root = append(root, c)
 			}
 		}
