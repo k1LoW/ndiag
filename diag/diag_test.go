@@ -82,18 +82,52 @@ func TestBuildNestedCluster(t *testing.T) {
 		if err := d.Build(); err != nil {
 			t.Fatal(err)
 		}
+
+		cNodeLen := len(d.Nodes)
+		cRealNodeLen := len(d.realNodes)
+		cClusterLen := len(d.Clusters())
+		cGlobalComponentLen := len(d.GlobalComponents())
+		cClusterComponentLen := len(d.ClusterComponents())
+		cNodeComponentLen := len(d.NodeComponents())
+		cNetworkLen := len(d.Networks)
+
 		gotClusters, gotNodes, gotNetworks, err := d.BuildNestedClusters(tt.layers)
 		if err != nil {
 			t.Fatal(err)
 		}
 		if got := len(gotClusters); got != tt.wantClusterLen {
-			t.Errorf("%d) got %v want %v", i, got, tt.wantClusterLen)
+			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, tt.wantClusterLen)
 		}
 		if got := len(gotNodes); got != tt.wantGlobalNodeLen {
-			t.Errorf("%d) got %v want %v", i, got, tt.wantGlobalNodeLen)
+			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, tt.wantGlobalNodeLen)
 		}
 		if got := len(gotNetworks); got != tt.wantNetworkLen {
-			t.Errorf("%d) got %v want %v", i, got, tt.wantNetworkLen)
+			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, tt.wantNetworkLen)
+		}
+
+		if got := len(d.Nodes); got != cNodeLen {
+			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cNodeLen)
+		}
+		if got := len(d.realNodes); got != cRealNodeLen {
+			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cRealNodeLen)
+		}
+		if got := len(d.Clusters()); got != cClusterLen {
+			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cClusterLen)
+		}
+		if got := len(d.GlobalComponents()); got != cGlobalComponentLen {
+			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cGlobalComponentLen)
+		}
+		if got := len(d.ClusterComponents()); got != cClusterComponentLen {
+			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cClusterComponentLen)
+		}
+		if got := len(d.ClusterComponents()); got != cClusterComponentLen {
+			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cClusterComponentLen)
+		}
+		if got := len(d.NodeComponents()); got != cNodeComponentLen {
+			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cNodeComponentLen)
+		}
+		if got := len(d.Networks); got != cNetworkLen {
+			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cNetworkLen)
 		}
 	}
 }

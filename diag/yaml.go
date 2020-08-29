@@ -41,6 +41,9 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	if err := yaml.Unmarshal(data, &raw); err != nil {
 		return err
 	}
+	if strings.Contains(raw.Name, sep) {
+		return fmt.Errorf("a node's name cannot contain '%s': %s ", sep, raw.Name)
+	}
 
 	n.Name = raw.Name
 	n.nameRe = regexp.MustCompile(fmt.Sprintf("^%s$", strings.Replace(n.Name, "*", ".+", -1)))

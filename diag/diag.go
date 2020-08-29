@@ -10,6 +10,8 @@ import (
 	"github.com/goccy/go-yaml"
 )
 
+const sep = ":"
+
 type Edge interface {
 	Id() string
 	FullName() string
@@ -25,7 +27,13 @@ type rawNetwork struct {
 	Tail string
 }
 
+type Diagram struct {
+	Name   string   `yaml:"name"`
+	Layers []string `yaml:"layers"`
+}
+
 type Diag struct {
+	Diagrams          []*Diagram `yaml:"diagrams"`
 	Nodes             []*Node    `yaml:"nodes"`
 	Networks          []*Network `yaml:"networks"`
 	rawNetworks       []*rawNetwork
@@ -105,9 +113,6 @@ func (d *Diag) LoadRealNodes(in []byte) error {
 	if err := d.loadRealNodes(in); err != nil {
 		return err
 	}
-	if err := d.checkUniqueReadNodes(); err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -119,6 +124,9 @@ func (d *Diag) Build() error {
 		return err
 	}
 	if err := d.buildNetworks(); err != nil {
+		return err
+	}
+	if err := d.checkUnique(); err != nil {
 		return err
 	}
 	return nil
@@ -186,7 +194,7 @@ func (d *Diag) LoadRealNodesFile(path string) error {
 
 func (d *Diag) FindComponent(name string) (*Component, error) {
 	var components []*Component
-	switch strings.Count(name, ":") {
+	switch strings.Count(name, sep) {
 	case 2: // cluster components
 		components = d.clusterComponents
 	case 1: // node components
@@ -207,7 +215,7 @@ func (d *Diag) buildComponents() error {
 	nc := map[string]struct{}{}
 	cc := map[string]struct{}{}
 	for _, nw := range d.rawNetworks {
-		switch strings.Count(nw.Head, ":") {
+		switch strings.Count(nw.Head, sep) {
 		case 2: // cluster components
 			cc[nw.Head] = struct{}{}
 		case 1: // node components
@@ -216,7 +224,7 @@ func (d *Diag) buildComponents() error {
 			gc[nw.Head] = struct{}{}
 		}
 
-		switch strings.Count(nw.Tail, ":") {
+		switch strings.Count(nw.Tail, sep) {
 		case 2: // cluster components
 			cc[nw.Tail] = struct{}{}
 		case 1: // node components
@@ -248,14 +256,14 @@ func (d *Diag) buildComponents() error {
 			}
 		}
 		if !belongTo {
-			splitted := strings.Split(c, ":")
+			splitted := strings.Split(c, sep)
 			return fmt.Errorf("node '%s' not found: %s", splitted[0], c)
 		}
 	}
 
 	// cluster components
 	for c := range cc {
-		splitted := strings.Split(c, ":")
+		splitted := strings.Split(c, sep)
 		clName := fmt.Sprintf("%s:%s", splitted[0], splitted[1])
 		comName := splitted[2]
 		belongTo := false
@@ -293,12 +301,12 @@ func (d *Diag) buildClusters() error {
 }
 
 func (d *Diag) parseClusterLabel(label string) (*Cluster, error) {
-	if !strings.Contains(label, ":") {
-		return nil, fmt.Errorf("invalid cluster format: %s", label)
+	if !strings.Contains(label, sep) {
+		return nil, fmt.Errorf("invalid cluster id: %s", label)
 	}
-	splitted := strings.Split(label, ":")
+	splitted := strings.Split(label, sep)
 	if len(splitted) != 2 {
-		return nil, fmt.Errorf("invalid cluster format: %s", label)
+		return nil, fmt.Errorf("invalid cluster id: %s", label)
 	}
 	layer := splitted[0]
 	name := splitted[1]
@@ -414,7 +422,47 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 	return buildNestedClusters(clusters, layers, remain)
 }
 
-func (d *Diag) checkUniqueReadNodes() error {
+func (d *Diag) checkUnique() error {
+
+	ids := map[string]string{}
+
+	// nodes
+	for _, n := range d.Nodes {
+		if t, exist := ids[n.Id()]; exist {
+			return fmt.Errorf("duplicate id: %s[%s] <-> %s[%s]", t, n.Id(), "node", n.Id())
+		}
+		ids[n.Id()] = "node"
+	}
+
+	// components
+	for _, c := range d.GlobalComponents() {
+		if t, exist := ids[c.Id()]; exist {
+			return fmt.Errorf("duplicate id: %s[%s] <-> %s[%s]", t, c.Id(), "component", c.Id())
+		}
+		ids[c.Id()] = "component"
+	}
+	for _, c := range d.ClusterComponents() {
+		if t, exist := ids[c.Id()]; exist {
+			return fmt.Errorf("duplicate id: %s[%s] <-> %s[%s]", t, c.Id(), "component", c.Id())
+		}
+		ids[c.Id()] = "component"
+	}
+	for _, c := range d.NodeComponents() {
+		if t, exist := ids[c.Id()]; exist {
+			return fmt.Errorf("duplicate id: %s[%s] <-> %s[%s]", t, c.Id(), "component", c.Id())
+		}
+		ids[c.Id()] = "component"
+	}
+
+	// clusters
+	for _, c := range d.Clusters() {
+		if t, exist := ids[c.Id()]; exist {
+			return fmt.Errorf("duplicate id: %s[%s] <-> %s[%s]", t, c.Id(), "cluster", c.Id())
+		}
+		ids[c.Id()] = "cluster"
+	}
+
+	// read nodes
 	m := map[string]struct{}{}
 	for _, rn := range d.realNodes {
 		if _, exist := m[rn.Name]; exist {
@@ -422,6 +470,7 @@ func (d *Diag) checkUniqueReadNodes() error {
 		}
 		m[rn.Name] = struct{}{}
 	}
+
 	return nil
 }
 
