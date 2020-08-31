@@ -5,18 +5,18 @@ import (
 	"text/template"
 
 	"github.com/gobuffalo/packr/v2"
-	"github.com/k1LoW/ndiag/diag"
+	"github.com/k1LoW/ndiag/config"
 )
 
 type Dot struct {
-	diag   *diag.Diag
+	config *config.Config
 	layers []string
 	box    *packr.Box
 }
 
-func New(d *diag.Diag, layers []string) *Dot {
+func New(cfg *config.Config, layers []string) *Dot {
 	return &Dot{
-		diag:   d,
+		config: cfg,
 		layers: layers,
 		box:    packr.New("dot", "./templates"),
 	}
@@ -26,10 +26,10 @@ func (d *Dot) Output(wr io.Writer) error {
 	t := "cluster-diag.dot.tmpl"
 
 	funcMap := template.FuncMap{
-		"id": func(e diag.Edge) string {
+		"id": func(e config.Edge) string {
 			return e.Id()
 		},
-		"fullname": func(e diag.Edge) string {
+		"fullname": func(e config.Edge) string {
 			return e.FullName()
 		},
 	}
@@ -40,14 +40,14 @@ func (d *Dot) Output(wr io.Writer) error {
 	}
 	tmpl := template.Must(template.New("diag").Funcs(funcMap).Parse(ts))
 
-	clusters, remain, networks, err := d.diag.BuildNestedClusters(d.layers)
+	clusters, remain, networks, err := d.config.BuildNestedClusters(d.layers)
 	if err != nil {
 		return err
 	}
 	if err := tmpl.Execute(wr, map[string]interface{}{
 		"Clusters":         clusters,
 		"RemainNodes":      remain,
-		"GlobalComponents": d.diag.GlobalComponents(),
+		"GlobalComponents": d.config.GlobalComponents(),
 		"Networks":         networks,
 	}); err != nil {
 		return err
