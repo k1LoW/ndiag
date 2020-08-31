@@ -5,23 +5,23 @@ import (
 	"io"
 
 	"github.com/goccy/go-graphviz"
-	"github.com/k1LoW/ndiag/diag"
+	"github.com/k1LoW/ndiag/config"
 	"github.com/k1LoW/ndiag/output/dot"
 )
 
 type Gviz struct {
-	diag        *diag.Diag
-	dot         *dot.Dot
+	config *config.Config
+	dot    *dot.Dot
 	layers []string
-	format      string
+	format string
 }
 
-func New(d *diag.Diag, layers []string, format string) *Gviz {
+func New(cfg *config.Config, layers []string, format string) *Gviz {
 	return &Gviz{
-		diag:        d,
-		dot:         dot.New(d, layers),
+		config: cfg,
+		dot:    dot.New(cfg, layers),
 		layers: layers,
-		format:      format,
+		format: format,
 	}
 }
 

@@ -1,4 +1,4 @@
-package diag
+package config
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"github.com/goccy/go-yaml"
 )
 
-func (d *Diag) UnmarshalYAML(data []byte) error {
+func (d *Config) UnmarshalYAML(data []byte) error {
 	raw := struct {
 		Nodes    []*Node    `yaml:"nodes"`
 		Networks [][]string `yaml:"networks"`

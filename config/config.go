@@ -1,4 +1,4 @@
-package diag
+package config
 
 import (
 	"errors"
@@ -40,7 +40,7 @@ type Diagram struct {
 	Layers []string `yaml:"layers"`
 }
 
-type Diag struct {
+type Config struct {
 	Name              string     `yaml:"name"`
 	Desc              string     `yaml:"desc,omitempty"`
 	DocPath           string     `yaml:"docPath"`
@@ -55,36 +55,36 @@ type Diag struct {
 	nodeComponents    []*Component
 }
 
-func New() *Diag {
-	return &Diag{}
+func New() *Config {
+	return &Config{}
 }
 
-func (d *Diag) Clusters() Clusters {
-	return d.clusters
+func (cfg *Config) Clusters() Clusters {
+	return cfg.clusters
 }
 
-func (d *Diag) GlobalComponents() []*Component {
-	return d.globalComponents
+func (cfg *Config) GlobalComponents() []*Component {
+	return cfg.globalComponents
 }
 
-func (d *Diag) ClusterComponents() []*Component {
-	return d.clusterComponents
+func (cfg *Config) ClusterComponents() []*Component {
+	return cfg.clusterComponents
 }
 
-func (d *Diag) NodeComponents() []*Component {
-	return d.nodeComponents
+func (cfg *Config) NodeComponents() []*Component {
+	return cfg.nodeComponents
 }
 
-func (d *Diag) BuildNestedClusters(layers []string) (Clusters, []*Node, []*Network, error) {
+func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*Network, error) {
 	if len(layers) == 0 {
-		return Clusters{}, d.Nodes, d.Networks, nil
+		return Clusters{}, cfg.Nodes, cfg.Networks, nil
 	}
-	clusters, globalNodes, err := buildNestedClusters(d.Clusters(), layers, d.Nodes)
+	clusters, globalNodes, err := buildNestedClusters(cfg.Clusters(), layers, cfg.Nodes)
 	if err != nil {
 		return clusters, globalNodes, nil, err
 	}
 	networks := []*Network{}
-	for _, nw := range d.Networks {
+	for _, nw := range cfg.Networks {
 		hBelongTo := false
 		tBelongTo := false
 		for _, l := range layers {
@@ -102,48 +102,48 @@ func (d *Diag) BuildNestedClusters(layers []string) (Clusters, []*Node, []*Netwo
 	return clusters, globalNodes, networks, nil
 }
 
-func (d *Diag) LoadConfig(in []byte) error {
-	if err := yaml.Unmarshal(in, d); err != nil {
+func (cfg *Config) LoadConfig(in []byte) error {
+	if err := yaml.Unmarshal(in, cfg); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (d *Diag) LoadConfigFile(path string) error {
+func (cfg *Config) LoadConfigFile(path string) error {
 	buf, err := loadFile(path)
 	if err != nil {
 		return err
 	}
-	return d.LoadConfig(buf)
+	return cfg.LoadConfig(buf)
 }
 
-func (d *Diag) LoadRealNodes(in []byte) error {
-	if len(d.Nodes) == 0 {
+func (cfg *Config) LoadRealNodes(in []byte) error {
+	if len(cfg.Nodes) == 0 {
 		return errors.New("nodes not found")
 	}
-	if err := d.loadRealNodes(in); err != nil {
+	if err := cfg.loadRealNodes(in); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (d *Diag) Build() error {
-	if err := d.buildClusters(); err != nil {
+func (cfg *Config) Build() error {
+	if err := cfg.buildClusters(); err != nil {
 		return err
 	}
-	if err := d.buildComponents(); err != nil {
+	if err := cfg.buildComponents(); err != nil {
 		return err
 	}
-	if err := d.buildNetworks(); err != nil {
+	if err := cfg.buildNetworks(); err != nil {
 		return err
 	}
-	if err := d.checkUnique(); err != nil {
+	if err := cfg.checkUnique(); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (d *Diag) loadRealNodes(in []byte) error {
+func (cfg *Config) loadRealNodes(in []byte) error {
 	rNodes := []string{}
 	if err := yaml.Unmarshal(in, &rNodes); err == nil {
 		for _, rn := range rNodes {
@@ -154,7 +154,7 @@ func (d *Diag) loadRealNodes(in []byte) error {
 				},
 			}
 		N:
-			for _, n := range d.Nodes {
+			for _, n := range cfg.Nodes {
 				if n.nameRe.MatchString(rn) {
 					belongTo = true
 					newRn.BelongTo = n
@@ -165,20 +165,20 @@ func (d *Diag) loadRealNodes(in []byte) error {
 			if !belongTo {
 				return fmt.Errorf("there is a real node '%s' that does not belong to a node", newRn.Name)
 			}
-			d.realNodes = append(d.realNodes, newRn)
+			cfg.realNodes = append(cfg.realNodes, newRn)
 		}
 	} else {
-		rDiag := New()
-		if err := yaml.Unmarshal(in, rDiag); err != nil {
+		rConfig := New()
+		if err := yaml.Unmarshal(in, rConfig); err != nil {
 			return err
 		}
-		for _, rn := range rDiag.Nodes {
+		for _, rn := range rConfig.Nodes {
 			belongTo := false
 			newRn := &RealNode{
 				Node: *rn,
 			}
 		NN:
-			for _, n := range d.Nodes {
+			for _, n := range cfg.Nodes {
 				if n.nameRe.MatchString(rn.Name) {
 					belongTo = true
 					newRn.BelongTo = n
@@ -189,29 +189,29 @@ func (d *Diag) loadRealNodes(in []byte) error {
 			if !belongTo {
 				return fmt.Errorf("there is a real node '%s' that does not belong to a node", newRn.Name)
 			}
-			d.realNodes = append(d.realNodes, newRn)
+			cfg.realNodes = append(cfg.realNodes, newRn)
 		}
 	}
 	return nil
 }
 
-func (d *Diag) LoadRealNodesFile(path string) error {
+func (cfg *Config) LoadRealNodesFile(path string) error {
 	buf, err := loadFile(path)
 	if err != nil {
 		return err
 	}
-	return d.LoadRealNodes(buf)
+	return cfg.LoadRealNodes(buf)
 }
 
-func (d *Diag) FindComponent(name string) (*Component, error) {
+func (cfg *Config) FindComponent(name string) (*Component, error) {
 	var components []*Component
 	switch strings.Count(name, sep) {
 	case 2: // cluster components
-		components = d.clusterComponents
+		components = cfg.clusterComponents
 	case 1: // node components
-		components = d.nodeComponents
+		components = cfg.nodeComponents
 	case 0: // global components
-		components = d.globalComponents
+		components = cfg.globalComponents
 	}
 	for _, c := range components {
 		if strings.EqualFold(c.FullName(), name) {
@@ -221,11 +221,11 @@ func (d *Diag) FindComponent(name string) (*Component, error) {
 	return nil, fmt.Errorf("component not found: %s", name)
 }
 
-func (d *Diag) buildComponents() error {
+func (cfg *Config) buildComponents() error {
 	gc := map[string]struct{}{}
 	nc := map[string]struct{}{}
 	cc := map[string]struct{}{}
-	for _, nw := range d.rawNetworks {
+	for _, nw := range cfg.rawNetworks {
 		switch strings.Count(nw.Head, sep) {
 		case 2: // cluster components
 			cc[nw.Head] = struct{}{}
@@ -247,19 +247,19 @@ func (d *Diag) buildComponents() error {
 
 	// global components
 	for c := range gc {
-		d.globalComponents = append(d.globalComponents, &Component{
+		cfg.globalComponents = append(cfg.globalComponents, &Component{
 			Name: c,
 		})
 	}
 
 	// node components
-	for _, n := range d.Nodes {
-		d.nodeComponents = append(d.nodeComponents, n.Components...)
+	for _, n := range cfg.Nodes {
+		cfg.nodeComponents = append(cfg.nodeComponents, n.Components...)
 	}
 
 	belongTo := false
 	for c := range nc {
-		for _, n := range d.Nodes {
+		for _, n := range cfg.Nodes {
 			for _, com := range n.Components {
 				if strings.EqualFold(com.FullName(), c) {
 					belongTo = true
@@ -278,14 +278,14 @@ func (d *Diag) buildComponents() error {
 		clName := fmt.Sprintf("%s:%s", splitted[0], splitted[1])
 		comName := splitted[2]
 		belongTo := false
-		for _, cl := range d.Clusters() {
+		for _, cl := range cfg.Clusters() {
 			if strings.EqualFold(cl.FullName(), clName) {
 				com := &Component{
 					Cluster: cl,
 					Name:    comName,
 				}
 				cl.Components = append(cl.Components, com)
-				d.clusterComponents = append(d.clusterComponents, com)
+				cfg.clusterComponents = append(cfg.clusterComponents, com)
 				belongTo = true
 				break
 			}
@@ -297,10 +297,10 @@ func (d *Diag) buildComponents() error {
 	return nil
 }
 
-func (d *Diag) buildClusters() error {
-	for _, n := range d.Nodes {
+func (cfg *Config) buildClusters() error {
+	for _, n := range cfg.Nodes {
 		for _, c := range n.rawClusters {
-			cluster, err := d.parseClusterLabel(c)
+			cluster, err := cfg.parseClusterLabel(c)
 			if err != nil {
 				return err
 			}
@@ -311,7 +311,7 @@ func (d *Diag) buildClusters() error {
 	return nil
 }
 
-func (d *Diag) parseClusterLabel(label string) (*Cluster, error) {
+func (cfg *Config) parseClusterLabel(label string) (*Cluster, error) {
 	if !strings.Contains(label, sep) {
 		return nil, fmt.Errorf("invalid cluster id: %s", label)
 	}
@@ -321,7 +321,7 @@ func (d *Diag) parseClusterLabel(label string) (*Cluster, error) {
 	}
 	layer := splitted[0]
 	name := splitted[1]
-	current := d.clusters.Find(layer, name)
+	current := cfg.clusters.Find(layer, name)
 	if current != nil {
 		return current, nil
 	}
@@ -329,21 +329,21 @@ func (d *Diag) parseClusterLabel(label string) (*Cluster, error) {
 		Layer: layer,
 		Name:  name,
 	}
-	d.clusters = append(d.clusters, newC)
+	cfg.clusters = append(cfg.clusters, newC)
 	return newC, nil
 }
 
-func (d *Diag) buildNetworks() error {
-	for _, nw := range d.rawNetworks {
-		h, err := d.FindComponent(nw.Head)
+func (cfg *Config) buildNetworks() error {
+	for _, nw := range cfg.rawNetworks {
+		h, err := cfg.FindComponent(nw.Head)
 		if err != nil {
 			return err
 		}
-		t, err := d.FindComponent(nw.Tail)
+		t, err := cfg.FindComponent(nw.Tail)
 		if err != nil {
 			return err
 		}
-		d.Networks = append(d.Networks, &Network{
+		cfg.Networks = append(cfg.Networks, &Network{
 			Head: h,
 			Tail: t,
 		})
@@ -433,12 +433,12 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 	return buildNestedClusters(clusters, layers, remain)
 }
 
-func (d *Diag) checkUnique() error {
+func (cfg *Config) checkUnique() error {
 
 	ids := map[string]string{}
 
 	// nodes
-	for _, n := range d.Nodes {
+	for _, n := range cfg.Nodes {
 		if t, exist := ids[n.Id()]; exist {
 			return fmt.Errorf("duplicate id: %s[%s] <-> %s[%s]", t, n.Id(), "node", n.Id())
 		}
@@ -446,19 +446,19 @@ func (d *Diag) checkUnique() error {
 	}
 
 	// components
-	for _, c := range d.GlobalComponents() {
+	for _, c := range cfg.GlobalComponents() {
 		if t, exist := ids[c.Id()]; exist {
 			return fmt.Errorf("duplicate id: %s[%s] <-> %s[%s]", t, c.Id(), "component", c.Id())
 		}
 		ids[c.Id()] = "component"
 	}
-	for _, c := range d.ClusterComponents() {
+	for _, c := range cfg.ClusterComponents() {
 		if t, exist := ids[c.Id()]; exist {
 			return fmt.Errorf("duplicate id: %s[%s] <-> %s[%s]", t, c.Id(), "component", c.Id())
 		}
 		ids[c.Id()] = "component"
 	}
-	for _, c := range d.NodeComponents() {
+	for _, c := range cfg.NodeComponents() {
 		if t, exist := ids[c.Id()]; exist {
 			return fmt.Errorf("duplicate id: %s[%s] <-> %s[%s]", t, c.Id(), "component", c.Id())
 		}
@@ -466,7 +466,7 @@ func (d *Diag) checkUnique() error {
 	}
 
 	// clusters
-	for _, c := range d.Clusters() {
+	for _, c := range cfg.Clusters() {
 		if t, exist := ids[c.Id()]; exist {
 			return fmt.Errorf("duplicate id: %s[%s] <-> %s[%s]", t, c.Id(), "cluster", c.Id())
 		}
@@ -475,7 +475,7 @@ func (d *Diag) checkUnique() error {
 
 	// read nodes
 	m := map[string]struct{}{}
-	for _, rn := range d.realNodes {
+	for _, rn := range cfg.realNodes {
 		if _, exist := m[rn.Name]; exist {
 			return fmt.Errorf("duplicate real node name: %s", rn.Name)
 		}

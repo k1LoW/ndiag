@@ -24,7 +24,7 @@ package cmd
 import (
 	"os"
 
-	"github.com/k1LoW/ndiag/diag"
+	"github.com/k1LoW/ndiag/config"
 	"github.com/k1LoW/ndiag/output"
 	"github.com/k1LoW/ndiag/output/dot"
 	"github.com/k1LoW/ndiag/output/gviz"
@@ -39,24 +39,24 @@ var drawCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		var o output.Output
 
-		d := diag.New()
-		if err := d.LoadConfigFile(configPath); err != nil {
+		cfg := config.New()
+		if err := cfg.LoadConfigFile(configPath); err != nil {
 			printFatalln(cmd, err)
 		}
 		for _, l := range nodeLists {
-			if err := d.LoadRealNodesFile(l); err != nil {
+			if err := cfg.LoadRealNodesFile(l); err != nil {
 				printFatalln(cmd, err)
 			}
 		}
-		if err := d.Build(); err != nil {
+		if err := cfg.Build(); err != nil {
 			printFatalln(cmd, err)
 		}
 
 		switch format {
 		case "svg", "jpg", "png":
-			o = gviz.New(d, layers, format)
+			o = gviz.New(cfg, layers, format)
 		case "dot":
-			o = dot.New(d, layers)
+			o = dot.New(cfg, layers)
 		}
 
 		if err := o.Output(os.Stdout); err != nil {
@@ -66,7 +66,7 @@ var drawCmd = &cobra.Command{
 }
 
 func init() {
-	drawCmd.Flags().StringVarP(&format, "format", "t", diag.DefaultDiagFormat, "format")
+	drawCmd.Flags().StringVarP(&format, "format", "t", config.DefaultDiagFormat, "format")
 	drawCmd.Flags().StringSliceVarP(&layers, "layer", "l", []string{}, "layer")
 	drawCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
 	drawCmd.Flags().StringSliceVarP(&nodeLists, "node-list", "n", []string{}, "real node list file path")
