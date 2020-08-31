@@ -31,14 +31,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	format     string
-	layers     []string
-	nodeLists  []string
-	configPath string
-	out        string
-)
-
 // drawCmd represents the draw command
 var drawCmd = &cobra.Command{
 	Use:   "draw",
@@ -74,7 +66,7 @@ var drawCmd = &cobra.Command{
 }
 
 func init() {
-	drawCmd.Flags().StringVarP(&format, "format", "t", "svg", "format")
+	drawCmd.Flags().StringVarP(&format, "format", "t", diag.DefaultDiagFormat, "format")
 	drawCmd.Flags().StringSliceVarP(&layers, "layer", "l", []string{}, "layer")
 	drawCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
 	drawCmd.Flags().StringSliceVarP(&nodeLists, "node-list", "n", []string{}, "real node list file path")

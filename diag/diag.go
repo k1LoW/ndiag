@@ -12,6 +12,13 @@ import (
 
 const sep = ":"
 
+const DefaultDocPath = "archdoc"
+
+var DefaultConfigFilePaths = []string{".ndiag.yml", "ndiag.yml"}
+
+// DefaultDiagFormat is the default diagram format
+const DefaultDiagFormat = "svg"
+
 type Edge interface {
 	Id() string
 	FullName() string
@@ -29,10 +36,14 @@ type rawNetwork struct {
 
 type Diagram struct {
 	Name   string   `yaml:"name"`
+	Desc   string   `yaml:"desc"`
 	Layers []string `yaml:"layers"`
 }
 
 type Diag struct {
+	Name              string     `yaml:"name"`
+	Desc              string     `yaml:"desc,omitempty"`
+	DocPath           string     `yaml:"docPath"`
 	Diagrams          []*Diagram `yaml:"diagrams"`
 	Nodes             []*Node    `yaml:"nodes"`
 	Networks          []*Network `yaml:"networks"`

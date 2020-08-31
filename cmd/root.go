@@ -31,6 +31,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	format     string
+	layers     []string
+	nodeLists  []string
+	configPath string
+	out        string
+)
+
 var rootCmd = &cobra.Command{
 	Use:     "ndiag",
 	Short:   "ndiag",
