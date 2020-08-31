@@ -10,7 +10,11 @@ import (
 	"github.com/goccy/go-yaml"
 )
 
-const sep = ":"
+const Sep = ":"
+const Esc = "\\"
+
+var escRep = strings.NewReplacer(fmt.Sprintf("%s%s", Esc, Sep), "__NDIAG_REP__")
+var unescRep = strings.NewReplacer("__NDIAG_REP__", fmt.Sprintf("%s%s", Esc, Sep))
 
 const DefaultDocPath = "archdoc"
 
@@ -205,7 +209,7 @@ func (cfg *Config) LoadRealNodesFile(path string) error {
 
 func (cfg *Config) FindComponent(name string) (*Component, error) {
 	var components []*Component
-	switch strings.Count(name, sep) {
+	switch sepCount(name) {
 	case 2: // cluster components
 		components = cfg.clusterComponents
 	case 1: // node components
@@ -226,7 +230,7 @@ func (cfg *Config) buildComponents() error {
 	nc := map[string]struct{}{}
 	cc := map[string]struct{}{}
 	for _, nw := range cfg.rawNetworks {
-		switch strings.Count(nw.Head, sep) {
+		switch sepCount(nw.Head) {
 		case 2: // cluster components
 			cc[nw.Head] = struct{}{}
 		case 1: // node components
@@ -235,7 +239,7 @@ func (cfg *Config) buildComponents() error {
 			gc[nw.Head] = struct{}{}
 		}
 
-		switch strings.Count(nw.Tail, sep) {
+		switch sepCount(nw.Tail) {
 		case 2: // cluster components
 			cc[nw.Tail] = struct{}{}
 		case 1: // node components
@@ -267,14 +271,14 @@ func (cfg *Config) buildComponents() error {
 			}
 		}
 		if !belongTo {
-			splitted := strings.Split(c, sep)
+			splitted := sepSplit(c)
 			return fmt.Errorf("node '%s' not found: %s", splitted[0], c)
 		}
 	}
 
 	// cluster components
 	for c := range cc {
-		splitted := strings.Split(c, sep)
+		splitted := sepSplit(c)
 		clName := fmt.Sprintf("%s:%s", splitted[0], splitted[1])
 		comName := splitted[2]
 		belongTo := false
@@ -312,10 +316,10 @@ func (cfg *Config) buildClusters() error {
 }
 
 func (cfg *Config) parseClusterLabel(label string) (*Cluster, error) {
-	if !strings.Contains(label, sep) {
+	if !strings.Contains(label, Sep) {
 		return nil, fmt.Errorf("invalid cluster id: %s", label)
 	}
-	splitted := strings.Split(label, sep)
+	splitted := sepSplit(label)
 	if len(splitted) != 2 {
 		return nil, fmt.Errorf("invalid cluster id: %s", label)
 	}
@@ -498,4 +502,21 @@ func loadFile(path string) ([]byte, error) {
 		return nil, err
 	}
 	return buf, nil
+}
+
+func sepCount(s string) int {
+	return strings.Count(escRep.Replace(s), Sep)
+}
+
+func sepSplit(s string) []string {
+	splitted := strings.Split(escRep.Replace(s), Sep)
+	unescaped := []string{}
+	for _, ss := range splitted {
+		unescaped = append(unescaped, unescRep.Replace(ss))
+	}
+	return unescaped
+}
+
+func sepContains(s string) bool {
+	return strings.Contains(escRep.Replace(s), Sep)
 }

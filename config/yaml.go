@@ -41,8 +41,8 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	if err := yaml.Unmarshal(data, &raw); err != nil {
 		return err
 	}
-	if strings.Contains(raw.Name, sep) {
-		return fmt.Errorf("a node's name cannot contain '%s': %s ", sep, raw.Name)
+	if sepContains(raw.Name) {
+		return fmt.Errorf("a node's name cannot contain unescaped '%s': %s ", Sep, raw.Name)
 	}
 
 	n.Name = raw.Name
