@@ -1,12 +1,16 @@
 package dot
 
 import (
+	"fmt"
 	"io"
+	"strings"
 	"text/template"
 
 	"github.com/gobuffalo/packr/v2"
 	"github.com/k1LoW/ndiag/config"
 )
+
+var unescRep = strings.NewReplacer(fmt.Sprintf("%s%s", config.Esc, config.Sep), config.Sep)
 
 type Dot struct {
 	config *config.Config
@@ -27,10 +31,13 @@ func (d *Dot) Output(wr io.Writer) error {
 
 	funcMap := template.FuncMap{
 		"id": func(e config.Edge) string {
-			return e.Id()
+			return unescRep.Replace(e.Id())
 		},
 		"fullname": func(e config.Edge) string {
-			return e.FullName()
+			return unescRep.Replace(e.FullName())
+		},
+		"unesc": func(s string) string {
+			return unescRep.Replace(s)
 		},
 	}
 

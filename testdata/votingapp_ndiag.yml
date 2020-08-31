@@ -40,4 +40,4 @@ networks:
   - ["worker:votingapp_worker", "db:postgres"]
   - ["db:postgres", "db-volume"]
   - ["8080", "visualizer:visualizer"]
-  - ["visualizer:visualizer", "/var/run/docker.sock"]
+  - ["visualizer:visualizer", "/var/run/docker.sock\:/var/run/docker.sock"]
