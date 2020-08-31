@@ -1,0 +1,43 @@
+# https://github.com/dockersamples/example-voting-app/blob/master/docker-stack.yml
+nodes:
+  -
+    name: redis
+    components:
+      - redis
+  -
+    name: db
+    components:
+      - postgres
+    clusters:
+      - "role:manager"
+  -
+    name: vote*
+    components:
+      - votingapp_vote
+  -
+    name: result
+    components:
+      - votingapp_result
+  -
+    name: worker
+    components:
+      - votingapp_worker
+    clusters:
+      - "role:manager"
+  -
+    name: visualizer
+    components:
+      - visualizer
+    clusters:
+      - "role:manager"
+
+networks:
+  - ["5000", "vote*:votingapp_vote"]
+  - ["vote*:votingapp_vote", "redis:redis"]
+  - ["5001", "result:votingapp_result"]
+  - ["result:votingapp_result", "db:postgres"]
+  - ["worker:votingapp_worker", "redis:redis"]
+  - ["worker:votingapp_worker", "db:postgres"]
+  - ["db:postgres", "db-volume"]
+  - ["8080", "visualizer:visualizer"]
+  - ["visualizer:visualizer", "/var/run/docker.sock"]
