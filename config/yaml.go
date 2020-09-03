@@ -10,6 +10,10 @@ import (
 
 func (d *Config) UnmarshalYAML(data []byte) error {
 	raw := struct {
+		Name     string     `yaml:"name"`
+		Desc     string     `yaml:"desc,omitempty"`
+		DocPath  string     `yaml:"docPath"`
+		Diagrams []*Diagram `yaml:"diagrams"`
 		Nodes    []*Node    `yaml:"nodes"`
 		Networks [][]string `yaml:"networks"`
 	}{}
@@ -17,6 +21,10 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	if err := yaml.Unmarshal(data, &raw); err != nil {
 		return err
 	}
+	d.Name = raw.Name
+	d.Desc = raw.Desc
+	d.DocPath = raw.DocPath
+	d.Diagrams = raw.Diagrams
 	d.Nodes = raw.Nodes
 	for _, nw := range raw.Networks {
 		if len(nw) != 2 {

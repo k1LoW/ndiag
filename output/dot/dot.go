@@ -1,16 +1,13 @@
 package dot
 
 import (
-	"fmt"
 	"io"
-	"strings"
 	"text/template"
 
 	"github.com/gobuffalo/packr/v2"
 	"github.com/k1LoW/ndiag/config"
+	"github.com/k1LoW/ndiag/output"
 )
-
-var unescRep = strings.NewReplacer(fmt.Sprintf("%s%s", config.Esc, config.Sep), config.Sep)
 
 type Dot struct {
 	config *config.Config
@@ -29,23 +26,11 @@ func New(cfg *config.Config, layers []string) *Dot {
 func (d *Dot) Output(wr io.Writer) error {
 	t := "cluster-diag.dot.tmpl"
 
-	funcMap := template.FuncMap{
-		"id": func(e config.Edge) string {
-			return unescRep.Replace(e.Id())
-		},
-		"fullname": func(e config.Edge) string {
-			return unescRep.Replace(e.FullName())
-		},
-		"unesc": func(s string) string {
-			return unescRep.Replace(s)
-		},
-	}
-
 	ts, err := d.box.FindString(t)
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("diag").Funcs(funcMap).Parse(ts))
+	tmpl := template.Must(template.New("diag").Funcs(output.FuncMap).Parse(ts))
 
 	clusters, remain, networks, err := d.config.BuildNestedClusters(d.layers)
 	if err != nil {
