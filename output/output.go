@@ -21,6 +21,13 @@ var FuncMap = template.FuncMap{
 	"unesc": func(s string) string {
 		return unescRep.Replace(s)
 	},
+	"summary": func(s string) string {
+		splitted := strings.Split(s, "\n")
+		if len(splitted) <= 1 {
+			return splitted[0]
+		}
+		return fmt.Sprintf("%s ...", splitted[0])
+	},
 	"imgpath": func(prefix string, vals interface{}, format string) string {
 		var strs []string
 		switch v := vals.(type) {

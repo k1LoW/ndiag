@@ -9,8 +9,10 @@
 
 {{ $c.Desc }}
 
-{{ range $i, $n := $c.Nodes }}
-- [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }})
+| Name | Description |
+| --- | --- |
+{{- range $i, $n := $c.Nodes }}
+| [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}) | {{ $n.Desc | summary }} |
 {{- end }}
 
 {{- end}}
