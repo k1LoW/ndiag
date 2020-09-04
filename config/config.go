@@ -18,7 +18,7 @@ var unescRep = strings.NewReplacer("__NDIAG_REP__", fmt.Sprintf("%s%s", Esc, Sep
 
 const DefaultDocPath = "archdoc"
 
-var DefaultConfigFilePaths = []string{".ndiag.yml", "ndiag.yml"}
+var DefaultConfigFilePaths = []string{"ndiag.yml"}
 
 // DefaultDiagFormat is the default diagram format
 const DefaultDiagFormat = "svg"
@@ -53,6 +53,7 @@ type Config struct {
 	Networks          []*Network `yaml:"networks"`
 	rawNetworks       []*rawNetwork
 	realNodes         []*RealNode
+	layers            []string
 	clusters          Clusters
 	globalComponents  []*Component
 	clusterComponents []*Component
@@ -61,6 +62,19 @@ type Config struct {
 
 func New() *Config {
 	return &Config{}
+}
+
+func (cfg *Config) DiagFormat() string {
+	// TODO: jpg png
+	return DefaultDiagFormat
+}
+
+func (cfg *Config) PrimaryDiagram() *Diagram {
+	return cfg.Diagrams[0]
+}
+
+func (cfg *Config) Layers() []string {
+	return cfg.layers
 }
 
 func (cfg *Config) Clusters() Clusters {
@@ -143,6 +157,15 @@ func (cfg *Config) Build() error {
 	}
 	if err := cfg.checkUnique(); err != nil {
 		return err
+	}
+	if len(cfg.Diagrams) == 0 {
+		cfg.Diagrams = append(cfg.Diagrams, &Diagram{
+			Name:   "Nodes",
+			Layers: []string{},
+		})
+	}
+	if cfg.DocPath == "" {
+		cfg.DocPath = DefaultDocPath
 	}
 	return nil
 }
@@ -334,6 +357,9 @@ func (cfg *Config) parseClusterLabel(label string) (*Cluster, error) {
 		Name:  name,
 	}
 	cfg.clusters = append(cfg.clusters, newC)
+	if !contains(cfg.layers, layer) {
+		cfg.layers = append(cfg.layers, layer)
+	}
 	return newC, nil
 }
 
@@ -519,4 +545,13 @@ func sepSplit(s string) []string {
 
 func sepContains(s string) bool {
 	return strings.Contains(escRep.Replace(s), Sep)
+}
+
+func contains(s []string, e string) bool {
+	for _, v := range s {
+		if e == v {
+			return true
+		}
+	}
+	return false
 }

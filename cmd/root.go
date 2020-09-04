@@ -32,6 +32,7 @@ import (
 )
 
 var (
+	force      bool
 	format     string
 	layers     []string
 	nodeLists  []string

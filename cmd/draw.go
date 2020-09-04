@@ -40,11 +40,11 @@ var drawCmd = &cobra.Command{
 		var o output.Output
 
 		cfg := config.New()
-		if err := cfg.LoadConfigFile(configPath); err != nil {
+		if err := cfg.LoadConfigFile(detectConfigPath(configPath)); err != nil {
 			printFatalln(cmd, err)
 		}
-		for _, l := range nodeLists {
-			if err := cfg.LoadRealNodesFile(l); err != nil {
+		for _, n := range nodeLists {
+			if err := cfg.LoadRealNodesFile(n); err != nil {
 				printFatalln(cmd, err)
 			}
 		}
@@ -54,7 +54,8 @@ var drawCmd = &cobra.Command{
 
 		switch format {
 		case "svg", "jpg", "png":
-			o = gviz.New(cfg, layers, format)
+			// TODO: jpg png
+			o = gviz.New(cfg, layers)
 		case "dot":
 			o = dot.New(cfg, layers)
 		}
@@ -65,11 +66,23 @@ var drawCmd = &cobra.Command{
 	},
 }
 
+func detectConfigPath(configPath string) string {
+	if configPath != "" {
+		return configPath
+	}
+	for _, p := range config.DefaultConfigFilePaths {
+		if f, err := os.Stat(p); err == nil && !f.IsDir() {
+			return p
+		}
+	}
+	return config.DefaultConfigFilePaths[0]
+}
+
 func init() {
 	drawCmd.Flags().StringVarP(&format, "format", "t", config.DefaultDiagFormat, "format")
 	drawCmd.Flags().StringSliceVarP(&layers, "layer", "l", []string{}, "layer")
 	drawCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
-	drawCmd.Flags().StringSliceVarP(&nodeLists, "node-list", "n", []string{}, "real node list file path")
+	drawCmd.Flags().StringSliceVarP(&nodeLists, "nodes", "n", []string{}, "real node list file path")
 	drawCmd.Flags().StringVarP(&out, "out", "", "", "output file path")
 	rootCmd.AddCommand(drawCmd)
 }
