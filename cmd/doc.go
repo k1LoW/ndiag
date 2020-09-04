@@ -43,12 +43,16 @@ var docCmd = &cobra.Command{
 		if err != nil {
 			printFatalln(cmd, err)
 		}
-		if rmDist && cfg.DocPath != "" {
-			_ = os.RemoveAll(cfg.DocPath)
-		}
+		format := cfg.DiagFormat()
+
 		err = os.MkdirAll(cfg.DocPath, 0755) // #nosec
 		if err != nil {
 			printFatalln(cmd, err)
+		}
+		if !force {
+			if err := diagExists(cfg); err != nil {
+				printFatalln(cmd, err)
+			}
 		}
 
 		// diagrams
@@ -72,9 +76,6 @@ var docCmd = &cobra.Command{
 			// draw diagram
 			diag := gviz.New(cfg, d.Layers)
 			dPath := filepath.Join(cfg.DocPath, output.ImagePath("diag", d.Layers, format))
-			if _, err := os.Lstat(dPath); err == nil {
-				printFatalln(cmd, fmt.Errorf("%s already exist", dPath))
-			}
 			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 			if err != nil {
 				printFatalln(cmd, err)
@@ -144,6 +145,47 @@ var docCmd = &cobra.Command{
 	},
 }
 
+func diagExists(cfg *config.Config) error {
+	format := cfg.DiagFormat()
+	// diagrams
+	for _, d := range cfg.Diagrams {
+		mPath := filepath.Join(cfg.DocPath, output.MdPath("diag", d.Layers))
+		if _, err := os.Lstat(mPath); err == nil {
+			return fmt.Errorf("%s already exist", mPath)
+		}
+		dPath := filepath.Join(cfg.DocPath, output.ImagePath("diag", d.Layers, format))
+		if _, err := os.Lstat(dPath); err == nil {
+			return fmt.Errorf("%s already exist", dPath)
+		}
+	}
+
+	// layers
+	for _, l := range cfg.Layers() {
+		mPath := filepath.Join(cfg.DocPath, output.MdPath("layer", []string{l}))
+		if _, err := os.Lstat(mPath); err == nil {
+			return fmt.Errorf("%s already exist", mPath)
+		}
+		dPath := filepath.Join(cfg.DocPath, output.ImagePath("layer", []string{l}, format))
+		if _, err := os.Lstat(dPath); err == nil {
+			return fmt.Errorf("%s already exist", dPath)
+		}
+	}
+
+	// nodes
+	for _, n := range cfg.Nodes {
+		mPath := filepath.Join(cfg.DocPath, output.MdPath("node", []string{n.Id()}))
+		if _, err := os.Lstat(mPath); err == nil {
+			return fmt.Errorf("%s already exist", mPath)
+		}
+		dPath := filepath.Join(cfg.DocPath, output.MdPath("node", []string{n.Id()}, format))
+		if _, err := os.Lstat(dPath); err == nil {
+			return fmt.Errorf("%s already exist", dPath)
+		}
+	}
+
+	return nil
+}
+
 func newConfig() (*config.Config, error) {
 	cfg := config.New()
 	if err := cfg.LoadConfigFile(detectConfigPath(configPath)); err != nil {
@@ -161,7 +203,7 @@ func newConfig() (*config.Config, error) {
 }
 
 func init() {
-	docCmd.Flags().BoolVarP(&rmDist, "rm-dist", "", false, "remove dist directory before generate doc")
+	docCmd.Flags().BoolVarP(&force, "force", "", false, "force")
 	docCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
 	docCmd.Flags().StringSliceVarP(&nodeLists, "nodes", "n", []string{}, "real node list file path")
 	rootCmd.AddCommand(docCmd)
