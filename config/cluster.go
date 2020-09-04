@@ -8,6 +8,7 @@ import (
 type Cluster struct {
 	Layer      string
 	Name       string
+	Desc       string
 	Parent     *Cluster
 	Children   []*Cluster
 	Nodes      []*Node

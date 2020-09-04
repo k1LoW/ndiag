@@ -1,12 +1,12 @@
 # {{ .Config.Name }}
 
-![diagram]({{ imgpath "diag" .Diagram.Layers .DiagFormat }})
+![diagram]({{ imgpath "diagram" .Diagram.Layers .DiagFormat }})
 
 {{ .Config.Desc }}
 
 ## Diagrams
 {{ range $i, $d := .Diagrams }}
-- [{{ $d.Name }}]({{ mdpath "diag" $d.Layers }})
+- [{{ $d.Name }}]({{ mdpath "diagram" $d.Layers }})
 {{- end }}
 
 ## Layers

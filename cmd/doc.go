@@ -27,7 +27,6 @@ import (
 	"path/filepath"
 
 	"github.com/k1LoW/ndiag/config"
-	"github.com/k1LoW/ndiag/output"
 	"github.com/k1LoW/ndiag/output/gviz"
 	"github.com/k1LoW/ndiag/output/md"
 	"github.com/spf13/cobra"
@@ -64,7 +63,7 @@ var docCmd = &cobra.Command{
 			o := md.New(cfg)
 
 			// generate md
-			mPath := filepath.Join(cfg.DocPath, output.MdPath("diag", d.Layers))
+			mPath := filepath.Join(cfg.DocPath, config.MdPath("diagram", d.Layers))
 			file, err := os.Create(mPath)
 			if err != nil {
 				printFatalln(cmd, err)
@@ -75,7 +74,7 @@ var docCmd = &cobra.Command{
 
 			// draw diagram
 			diag := gviz.New(cfg, d.Layers)
-			dPath := filepath.Join(cfg.DocPath, output.ImagePath("diag", d.Layers, format))
+			dPath := filepath.Join(cfg.DocPath, config.ImagePath("diagram", d.Layers, format))
 			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 			if err != nil {
 				printFatalln(cmd, err)
@@ -94,7 +93,7 @@ var docCmd = &cobra.Command{
 			o := md.New(cfg)
 
 			// generate md
-			mPath := filepath.Join(cfg.DocPath, output.MdPath("layer", []string{l}))
+			mPath := filepath.Join(cfg.DocPath, config.MdPath("layer", []string{l.Name}))
 			file, err := os.Create(mPath)
 			if err != nil {
 				printFatalln(cmd, err)
@@ -104,11 +103,8 @@ var docCmd = &cobra.Command{
 			}
 
 			// draw diagram
-			diag := gviz.New(cfg, []string{l})
-			dPath := filepath.Join(cfg.DocPath, output.ImagePath("layer", []string{l}, format))
-			if _, err := os.Lstat(dPath); err == nil {
-				printFatalln(cmd, fmt.Errorf("%s already exist", dPath))
-			}
+			diag := gviz.New(cfg, []string{l.Name})
+			dPath := filepath.Join(cfg.DocPath, config.ImagePath("layer", []string{l.Name}, format))
 			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 			if err != nil {
 				printFatalln(cmd, err)
@@ -122,7 +118,7 @@ var docCmd = &cobra.Command{
 
 		// nodes
 		for _, n := range cfg.Nodes {
-			mPath := filepath.Join(cfg.DocPath, output.MdPath("node", []string{n.Id()}))
+			mPath := filepath.Join(cfg.DocPath, config.MdPath("node", []string{n.Id()}))
 			file, err := os.Create(mPath)
 			if err != nil {
 				printFatalln(cmd, err)
@@ -149,11 +145,11 @@ func diagExists(cfg *config.Config) error {
 	format := cfg.DiagFormat()
 	// diagrams
 	for _, d := range cfg.Diagrams {
-		mPath := filepath.Join(cfg.DocPath, output.MdPath("diag", d.Layers))
+		mPath := filepath.Join(cfg.DocPath, config.MdPath("diagram", d.Layers))
 		if _, err := os.Lstat(mPath); err == nil {
 			return fmt.Errorf("%s already exist", mPath)
 		}
-		dPath := filepath.Join(cfg.DocPath, output.ImagePath("diag", d.Layers, format))
+		dPath := filepath.Join(cfg.DocPath, config.ImagePath("diagram", d.Layers, format))
 		if _, err := os.Lstat(dPath); err == nil {
 			return fmt.Errorf("%s already exist", dPath)
 		}
@@ -161,11 +157,11 @@ func diagExists(cfg *config.Config) error {
 
 	// layers
 	for _, l := range cfg.Layers() {
-		mPath := filepath.Join(cfg.DocPath, output.MdPath("layer", []string{l}))
+		mPath := filepath.Join(cfg.DocPath, config.MdPath("layer", []string{l.Name}))
 		if _, err := os.Lstat(mPath); err == nil {
 			return fmt.Errorf("%s already exist", mPath)
 		}
-		dPath := filepath.Join(cfg.DocPath, output.ImagePath("layer", []string{l}, format))
+		dPath := filepath.Join(cfg.DocPath, config.ImagePath("layer", []string{l.Name}, format))
 		if _, err := os.Lstat(dPath); err == nil {
 			return fmt.Errorf("%s already exist", dPath)
 		}
@@ -173,11 +169,11 @@ func diagExists(cfg *config.Config) error {
 
 	// nodes
 	for _, n := range cfg.Nodes {
-		mPath := filepath.Join(cfg.DocPath, output.ImagePath("node", []string{n.Id()}, format))
+		mPath := filepath.Join(cfg.DocPath, config.ImagePath("node", []string{n.Id()}, format))
 		if _, err := os.Lstat(mPath); err == nil {
 			return fmt.Errorf("%s already exist", mPath)
 		}
-		dPath := filepath.Join(cfg.DocPath, output.MdPath("node", []string{n.Id()}))
+		dPath := filepath.Join(cfg.DocPath, config.MdPath("node", []string{n.Id()}))
 		if _, err := os.Lstat(dPath); err == nil {
 			return fmt.Errorf("%s already exist", dPath)
 		}

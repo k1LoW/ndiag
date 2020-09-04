@@ -7,7 +7,7 @@ import (
 
 type Node struct {
 	Name        string       `yaml:"name"`
-	Desc        string       `yaml:"desc"`
+	Desc        string       `yaml:"desc,omitempty"`
 	Components  []*Component `yaml:"components,omitempty"`
 	Clusters    Clusters     `yaml:"clusters,omitempty"`
 	RealNodes   []*RealNode

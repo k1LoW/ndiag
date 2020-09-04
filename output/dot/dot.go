@@ -30,7 +30,7 @@ func (d *Dot) Output(wr io.Writer) error {
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("diag").Funcs(output.FuncMap).Parse(ts))
+	tmpl := template.Must(template.New("diagram").Funcs(output.FuncMap).Parse(ts))
 
 	clusters, remain, networks, err := d.config.BuildNestedClusters(d.layers)
 	if err != nil {

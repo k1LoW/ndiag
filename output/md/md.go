@@ -37,14 +37,14 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 	return nil
 }
 
-func (m *Md) OutputLayer(wr io.Writer, l string) error {
+func (m *Md) OutputLayer(wr io.Writer, l *config.Layer) error {
 	ts, err := m.box.FindString("layer.md.tmpl")
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New(l).Funcs(output.FuncMap).Parse(ts))
+	tmpl := template.Must(template.New(l.Name).Funcs(output.FuncMap).Parse(ts))
 
-	clusters, _, _, err := m.config.BuildNestedClusters([]string{l})
+	clusters, _, _, err := m.config.BuildNestedClusters([]string{l.Name})
 	if err != nil {
 		return err
 	}

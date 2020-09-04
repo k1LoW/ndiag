@@ -1,9 +1,13 @@
-# {{ .Layer }}
+# {{ .Layer.Name }}
 
 ![diagram]({{ imgpath "layer" .Layer .DiagFormat }})
 
+{{ .Layer.Desc }}
+
 {{ range $i, $c := .Clusters }}
 ## {{ $c | fullname }}
+
+{{ $c.Desc }}
 
 {{ range $i, $n := $c.Nodes }}
 - [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }})

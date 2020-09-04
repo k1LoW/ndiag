@@ -7,6 +7,7 @@ import (
 
 type Component struct {
 	Name    string
+	Desc    string
 	Cluster *Cluster
 	Node    *Node
 }

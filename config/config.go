@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -19,6 +20,7 @@ var unescRep = strings.NewReplacer("__NDIAG_REP__", fmt.Sprintf("%s%s", Esc, Sep
 const DefaultDocPath = "archdoc"
 
 var DefaultConfigFilePaths = []string{"ndiag.yml"}
+var DefaultDescPath = "ndiag.descriptions"
 
 // DefaultDiagFormat is the default diagram format
 const DefaultDiagFormat = "svg"
@@ -31,16 +33,23 @@ type Edge interface {
 type Network struct {
 	Head *Component
 	Tail *Component
+	Desc string
+}
+
+type Layer struct {
+	Name string
+	Desc string
 }
 
 type rawNetwork struct {
 	Head string
 	Tail string
+	Desc string
 }
 
 type Diagram struct {
 	Name   string   `yaml:"name"`
-	Desc   string   `yaml:"desc"`
+	Desc   string   `yaml:"desc,omitempty"`
 	Layers []string `yaml:"layers"`
 }
 
@@ -48,12 +57,13 @@ type Config struct {
 	Name              string     `yaml:"name"`
 	Desc              string     `yaml:"desc,omitempty"`
 	DocPath           string     `yaml:"docPath"`
+	DescPath          string     `yaml:"descPath"`
 	Diagrams          []*Diagram `yaml:"diagrams"`
 	Nodes             []*Node    `yaml:"nodes"`
 	Networks          []*Network `yaml:"networks"`
 	rawNetworks       []*rawNetwork
 	realNodes         []*RealNode
-	layers            []string
+	layers            []*Layer
 	clusters          Clusters
 	globalComponents  []*Component
 	clusterComponents []*Component
@@ -73,7 +83,7 @@ func (cfg *Config) PrimaryDiagram() *Diagram {
 	return cfg.Diagrams[0]
 }
 
-func (cfg *Config) Layers() []string {
+func (cfg *Config) Layers() []*Layer {
 	return cfg.layers
 }
 
@@ -164,9 +174,17 @@ func (cfg *Config) Build() error {
 			Layers: []string{},
 		})
 	}
+	// set default
 	if cfg.DocPath == "" {
 		cfg.DocPath = DefaultDocPath
 	}
+	if cfg.DescPath == "" {
+		cfg.DescPath = DefaultDescPath
+	}
+	if err := cfg.buildDescriptions(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -357,8 +375,8 @@ func (cfg *Config) parseClusterLabel(label string) (*Cluster, error) {
 		Name:  name,
 	}
 	cfg.clusters = append(cfg.clusters, newC)
-	if !contains(cfg.layers, layer) {
-		cfg.layers = append(cfg.layers, layer)
+	if !layerContains(cfg.layers, layer) {
+		cfg.layers = append(cfg.layers, &Layer{Name: layer})
 	}
 	return newC, nil
 }
@@ -379,6 +397,114 @@ func (cfg *Config) buildNetworks() error {
 		})
 	}
 	return nil
+}
+
+func (cfg *Config) buildDescriptions() error {
+	if cfg.DescPath == "" {
+		return nil
+	}
+	err := os.MkdirAll(cfg.DescPath, 0755) // #nosec
+	if err != nil {
+		return err
+	}
+
+	// diagrams
+	for _, d := range cfg.Diagrams {
+		if d.Desc != "" {
+			continue
+		}
+		desc, err := cfg.readDescFile(MdPath("_diagram", d.Layers))
+		if err != nil {
+			return err
+		}
+		d.Desc = desc
+	}
+
+	// clusters
+	for _, c := range cfg.Clusters() {
+		if c.Desc != "" {
+			continue
+		}
+		desc, err := cfg.readDescFile(MdPath("_cluster", []string{c.Id()}))
+		if err != nil {
+			return err
+		}
+		c.Desc = desc
+	}
+
+	// layers
+	for _, l := range cfg.Layers() {
+		if l.Desc != "" {
+			continue
+		}
+		desc, err := cfg.readDescFile(MdPath("_layer", []string{l.Name}))
+		if err != nil {
+			return err
+		}
+		l.Desc = desc
+	}
+
+	// nodes
+	for _, n := range cfg.Nodes {
+		if n.Desc != "" {
+			continue
+		}
+		desc, err := cfg.readDescFile(MdPath("_node", []string{n.Id()}))
+		if err != nil {
+			return err
+		}
+		n.Desc = desc
+	}
+
+	// components
+	for _, c := range cfg.GlobalComponents() {
+		if c.Desc != "" {
+			continue
+		}
+		desc, err := cfg.readDescFile(MdPath("_component", []string{c.Id()}))
+		if err != nil {
+			return err
+		}
+		c.Desc = desc
+	}
+	for _, c := range cfg.ClusterComponents() {
+		if c.Desc != "" {
+			continue
+		}
+		desc, err := cfg.readDescFile(MdPath("_component", []string{c.Id()}))
+		if err != nil {
+			return err
+		}
+		c.Desc = desc
+	}
+	for _, c := range cfg.NodeComponents() {
+		if c.Desc != "" {
+			continue
+		}
+		desc, err := cfg.readDescFile(MdPath("_component", []string{c.Id()}))
+		if err != nil {
+			return err
+		}
+		c.Desc = desc
+	}
+
+	return nil
+}
+
+func (cfg *Config) readDescFile(f string) (string, error) {
+	descPath := filepath.Join(cfg.DescPath, f)
+	file, err := os.OpenFile(descPath, os.O_RDONLY|os.O_CREATE, 0644)
+	if err != nil {
+		return "", err
+	}
+	b, err := ioutil.ReadAll(file)
+	if err != nil {
+		return "", err
+	}
+	if err := file.Close(); err != nil {
+		return "", err
+	}
+	return string(b), err
 }
 
 func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clusters, []*Node, error) {
@@ -515,6 +641,14 @@ func (cfg *Config) checkUnique() error {
 	return nil
 }
 
+func ImagePath(prefix string, vals []string, format string) string {
+	return fmt.Sprintf("%s-%s.%s", prefix, strings.Join(vals, "-"), format)
+}
+
+func MdPath(prefix string, vals []string) string {
+	return fmt.Sprintf("%s-%s.md", prefix, strings.Join(vals, "-"))
+}
+
 func loadFile(path string) ([]byte, error) {
 	if path == "" {
 		return nil, nil
@@ -547,9 +681,9 @@ func sepContains(s string) bool {
 	return strings.Contains(escRep.Replace(s), Sep)
 }
 
-func contains(s []string, e string) bool {
+func layerContains(s []*Layer, e string) bool {
 	for _, v := range s {
-		if e == v {
+		if e == v.Name {
 			return true
 		}
 	}

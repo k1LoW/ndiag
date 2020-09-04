@@ -1,8 +1,15 @@
 # {{ .Node | fullname }}
 
+`TODO: node diagram`
+
+{{ .Node.Desc }}
+
 ## Components
-{{ range $i, $c := .Components }}
-- {{ $c.Name }}
+
+| Name | Description |
+| --- | --- |
+{{- range $i, $c := .Components }}
+| {{ $c.Name }} | {{ $c.Desc }} |
 {{- end }}
 ## Real nodes
 {{ range $i, $rn := .RealNodes }}
