@@ -32,6 +32,7 @@ import (
 )
 
 var (
+	rmDist     bool
 	format     string
 	layers     []string
 	nodeLists  []string

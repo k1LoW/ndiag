@@ -1,6 +1,7 @@
 ndiag
 *.test.yml
 dist/
+archdoc/
 coverage.txt
 *-packr.go
 .envrc
