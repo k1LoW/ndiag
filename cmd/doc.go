@@ -173,11 +173,11 @@ func diagExists(cfg *config.Config) error {
 
 	// nodes
 	for _, n := range cfg.Nodes {
-		mPath := filepath.Join(cfg.DocPath, output.MdPath("node", []string{n.Id()}))
+		mPath := filepath.Join(cfg.DocPath, output.ImagePath("node", []string{n.Id()}, format))
 		if _, err := os.Lstat(mPath); err == nil {
 			return fmt.Errorf("%s already exist", mPath)
 		}
-		dPath := filepath.Join(cfg.DocPath, output.MdPath("node", []string{n.Id()}, format))
+		dPath := filepath.Join(cfg.DocPath, output.MdPath("node", []string{n.Id()}))
 		if _, err := os.Lstat(dPath); err == nil {
 			return fmt.Errorf("%s already exist", dPath)
 		}
