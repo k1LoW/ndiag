@@ -11,14 +11,6 @@ import (
 
 var unescRep = strings.NewReplacer(fmt.Sprintf("%s%s", config.Esc, config.Sep), config.Sep)
 
-func ImagePath(prefix string, vals []string, format string) string {
-	return fmt.Sprintf("%s-%s.%s", prefix, strings.Join(vals, "-"), format)
-}
-
-func MdPath(prefix string, vals []string) string {
-	return fmt.Sprintf("%s-%s.md", prefix, strings.Join(vals, "-"))
-}
-
 var FuncMap = template.FuncMap{
 	"id": func(e config.Edge) string {
 		return unescRep.Replace(e.Id())
@@ -29,6 +21,13 @@ var FuncMap = template.FuncMap{
 	"unesc": func(s string) string {
 		return unescRep.Replace(s)
 	},
+	"summary": func(s string) string {
+		splitted := strings.Split(s, "\n")
+		if len(splitted) <= 1 {
+			return splitted[0]
+		}
+		return fmt.Sprintf("%s ...", splitted[0])
+	},
 	"imgpath": func(prefix string, vals interface{}, format string) string {
 		var strs []string
 		switch v := vals.(type) {
@@ -37,7 +36,7 @@ var FuncMap = template.FuncMap{
 		case []string:
 			strs = v
 		}
-		return ImagePath(prefix, strs, format)
+		return config.ImagePath(prefix, strs, format)
 	},
 	"mdpath": func(prefix string, vals interface{}) string {
 		var strs []string
@@ -47,7 +46,7 @@ var FuncMap = template.FuncMap{
 		case []string:
 			strs = v
 		}
-		return MdPath(prefix, strs)
+		return config.MdPath(prefix, strs)
 	},
 }
 

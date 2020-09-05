@@ -1,22 +1,31 @@
 # {{ .Config.Name }}
 
-![diagram]({{ imgpath "diag" .Diagram.Layers .DiagFormat }})
+![diagram]({{ imgpath "diagram" .Diagram.Layers .DiagFormat }})
 
 {{ .Config.Desc }}
 
 ## Diagrams
-{{ range $i, $d := .Diagrams }}
-- [{{ $d.Name }}]({{ mdpath "diag" $d.Layers }})
+
+| Name | Description |
+| --- | --- |
+{{- range $i, $d := .Diagrams }}
+| [{{ $d.Name }}]({{ mdpath "diagram" $d.Layers }}) | {{ $d.Desc | summary }} |
 {{- end }}
 
 ## Layers
-{{ range $i, $l := .Layers }}
-- [{{ $l }}]({{ mdpath "layer" $l }})
+
+| Name | Description |
+| --- | --- |
+{{- range $i, $l := .Layers }}
+| [{{ $l.Name }}]({{ mdpath "layer" $l.Name }}) | {{ $l.Desc | summary }} |
 {{- end }}
 
 ## Nodes
-{{ range $i, $n := .Nodes }}
-- [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }})
+
+| Name | Description |
+| --- | --- |
+{{- range $i, $n := .Nodes }}
+| [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}) | {{ $n.Desc | summary }} |
 {{- end }}
 
 ---

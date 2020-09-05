@@ -1,12 +1,26 @@
-# {{ .Layer }}
+# {{ .Layer.Name }}
 
-![diagram]({{ imgpath "layer" .Layer .DiagFormat }})
+![diagram]({{ imgpath "layer" .Layer.Name .DiagFormat }})
+
+{{ .Layer.Desc }}
+
+<p align="right">
+  [ <a href="{{ .DescPath }}/{{ mdpath "_layer" .Layer.Name }}">:pencil2: Edit description</a> ]
+<p>
 
 {{ range $i, $c := .Clusters }}
 ## {{ $c | fullname }}
 
-{{ range $i, $n := $c.Nodes }}
-- [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }})
+{{ $c.Desc }}
+
+<p align="right">
+  [ <a href="{{ $.DescPath }}/{{ mdpath "_cluster" ($c | id) }}">:pencil2: Edit description</a> ]
+<p>
+
+| Name | Description |
+| --- | --- |
+{{- range $i, $n := $c.Nodes }}
+| [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}) | {{ $n.Desc | summary }} |
 {{- end }}
 
 {{- end}}

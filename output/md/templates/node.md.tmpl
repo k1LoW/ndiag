@@ -1,8 +1,19 @@
 # {{ .Node | fullname }}
 
+`TODO: node diagram`
+
+{{ .Node.Desc }}
+
+<p align="right">
+  [ <a href="{{ .DescPath }}/{{ mdpath "_node" (.Node | id ) }}">:pencil2: Edit description</a> ]
+<p>
+
 ## Components
-{{ range $i, $c := .Components }}
-- {{ $c.Name }}
+
+| Name | Description |
+| --- | --- |
+{{- range $i, $c := .Components }}
+| {{ $c.Name }} | {{ $c.Desc }} |
 {{- end }}
 ## Real nodes
 {{ range $i, $rn := .RealNodes }}

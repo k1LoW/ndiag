@@ -1,8 +1,12 @@
 # {{ .Diagram.Name }}
 
-![diagram]({{ imgpath "diag"  .Diagram.Layers .DiagFormat }})
+![diagram]({{ imgpath "diagram"  .Diagram.Layers .DiagFormat }})
 
 {{ .Diagram.Desc }}
+
+<p align="right">
+  [ <a href="{{ .DescPath }}/{{ mdpath "_diagram" .Diagram.Layers }}">:pencil2: Edit description</a> ]
+<p>
 
 ---
 
