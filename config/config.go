@@ -493,7 +493,7 @@ func (cfg *Config) buildDescriptions() error {
 
 func (cfg *Config) readDescFile(f string) (string, error) {
 	descPath := filepath.Join(cfg.DescPath, f)
-	file, err := os.OpenFile(descPath, os.O_RDONLY|os.O_CREATE, 0644)
+	file, err := os.OpenFile(descPath, os.O_RDONLY|os.O_CREATE, 0644) // #nosec
 	if err != nil {
 		return "", err
 	}
