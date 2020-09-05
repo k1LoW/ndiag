@@ -641,14 +641,6 @@ func (cfg *Config) checkUnique() error {
 	return nil
 }
 
-func ImagePath(prefix string, vals []string, format string) string {
-	return fmt.Sprintf("%s-%s.%s", prefix, strings.Join(vals, "-"), format)
-}
-
-func MdPath(prefix string, vals []string) string {
-	return fmt.Sprintf("%s-%s.md", prefix, strings.Join(vals, "-"))
-}
-
 func loadFile(path string) ([]byte, error) {
 	if path == "" {
 		return nil, nil
