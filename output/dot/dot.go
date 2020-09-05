@@ -83,3 +83,72 @@ L:
 	}
 	return nil
 }
+
+func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
+	t := "cluster-diag.dot.tmpl"
+
+	ts, err := d.box.FindString(t)
+	if err != nil {
+		return err
+	}
+	tmpl := template.Must(template.New("diagram").Funcs(output.FuncMap).Parse(ts))
+
+	_, _, networks, err := d.config.BuildNestedClusters([]string{})
+	if err != nil {
+		return err
+	}
+
+	clusters := config.Clusters{}
+	cIds := map[string]*config.Cluster{}
+	nodes := []*config.Node{n}
+	nIds := map[string]*config.Node{
+		n.Id(): n,
+	}
+	globalComponents := []*config.Component{}
+	gIds := map[string]*config.Component{}
+
+	nws := []*config.Network{}
+	for _, nw := range networks {
+		if (nw.Head.Node == nil || nw.Head.Node.Id() != n.Id()) && (nw.Tail.Node == nil || nw.Tail.Node.Id() != n.Id()) {
+			continue
+		}
+		switch {
+		case nw.Head.Node != nil:
+			nIds[nw.Head.Node.Id()] = nw.Head.Node
+		case nw.Head.Cluster != nil:
+			nw.Head.Cluster.Nodes = nil
+			cIds[nw.Head.Cluster.Id()] = nw.Head.Cluster
+		default:
+			gIds[nw.Head.Id()] = nw.Head
+		}
+		switch {
+		case nw.Tail.Node != nil:
+			nIds[nw.Tail.Node.Id()] = nw.Tail.Node
+		case nw.Tail.Cluster != nil:
+			nw.Tail.Cluster.Nodes = nil
+			cIds[nw.Tail.Cluster.Id()] = nw.Tail.Cluster
+		default:
+			gIds[nw.Tail.Id()] = nw.Tail
+		}
+		nws = append(nws, nw)
+	}
+	for _, n := range nIds {
+		nodes = append(nodes, n)
+	}
+	for _, c := range cIds {
+		clusters = append(clusters, c)
+	}
+	for _, c := range gIds {
+		globalComponents = append(globalComponents, c)
+	}
+
+	if err := tmpl.Execute(wr, map[string]interface{}{
+		"Clusters":         clusters,
+		"RemainNodes":      nodes,
+		"GlobalComponents": globalComponents,
+		"Networks":         nws,
+	}); err != nil {
+		return err
+	}
+	return nil
+}

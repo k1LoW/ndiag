@@ -1,11 +1,11 @@
 # {{ .Node | fullname }}
 
-`TODO: node diagram`
+![diagram]({{ imgpath "node" (.Node | id) .DiagFormat }})
 
 {{ .Node.Desc }}
 
 <p align="right">
-  [ <a href="{{ .DescPath }}/{{ mdpath "_node" (.Node | id ) }}">:pencil2: Edit description</a> ]
+  [ <a href="{{ .DescPath }}/{{ mdpath "_node" (.Node | id) }}">:pencil2: Edit description</a> ]
 <p>
 
 ## Components

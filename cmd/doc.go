@@ -118,12 +118,30 @@ var docCmd = &cobra.Command{
 
 		// nodes
 		for _, n := range cfg.Nodes {
+			cfg, err := newConfig()
+			if err != nil {
+				printFatalln(cmd, err)
+			}
+			o := md.New(cfg)
+
+			// generate md
 			mPath := filepath.Join(cfg.DocPath, config.MdPath("node", []string{n.Id()}))
 			file, err := os.Create(mPath)
 			if err != nil {
 				printFatalln(cmd, err)
 			}
 			if err := o.OutputNode(file, n); err != nil {
+				printFatalln(cmd, err)
+			}
+
+			// draw diagram
+			diag := gviz.New(cfg)
+			dPath := filepath.Join(cfg.DocPath, config.ImagePath("node", []string{n.Id()}, format))
+			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
+			if err != nil {
+				printFatalln(cmd, err)
+			}
+			if err := diag.OutputNode(dFile, n); err != nil {
 				printFatalln(cmd, err)
 			}
 		}
