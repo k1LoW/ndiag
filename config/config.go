@@ -47,12 +47,6 @@ type rawNetwork struct {
 	Desc string
 }
 
-type Diagram struct {
-	Name   string   `yaml:"name"`
-	Desc   string   `yaml:"desc,omitempty"`
-	Layers []string `yaml:"layers"`
-}
-
 type Config struct {
 	Name              string     `yaml:"name"`
 	Desc              string     `yaml:"desc,omitempty"`

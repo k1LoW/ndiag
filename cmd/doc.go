@@ -73,13 +73,13 @@ var docCmd = &cobra.Command{
 			}
 
 			// draw diagram
-			diag := gviz.New(cfg, d.Layers)
+			diag := gviz.New(cfg)
 			dPath := filepath.Join(cfg.DocPath, config.ImagePath("diagram", d.Layers, format))
 			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 			if err != nil {
 				printFatalln(cmd, err)
 			}
-			if err := diag.Output(dFile); err != nil {
+			if err := diag.OutputDiagram(dFile, d); err != nil {
 				printFatalln(cmd, err)
 			}
 		}
@@ -103,7 +103,7 @@ var docCmd = &cobra.Command{
 			}
 
 			// draw diagram
-			diag := gviz.New(cfg, []string{l.Name})
+			diag := gviz.New(cfg)
 			dPath := filepath.Join(cfg.DocPath, config.ImagePath("layer", []string{l.Name}, format))
 			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 			if err != nil {

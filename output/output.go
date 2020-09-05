@@ -51,5 +51,5 @@ var FuncMap = template.FuncMap{
 }
 
 type Output interface {
-	Output(wr io.Writer) error
+	OutputDiagram(wr io.Writer, d *config.Diagram) error
 }

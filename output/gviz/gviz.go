@@ -12,20 +12,18 @@ import (
 type Gviz struct {
 	config *config.Config
 	dot    *dot.Dot
-	layers []string
 }
 
-func New(cfg *config.Config, layers []string) *Gviz {
+func New(cfg *config.Config) *Gviz {
 	return &Gviz{
 		config: cfg,
-		dot:    dot.New(cfg, layers),
-		layers: layers,
+		dot:    dot.New(cfg),
 	}
 }
 
-func (g *Gviz) Output(wr io.Writer) error {
+func (g *Gviz) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 	buf := &bytes.Buffer{}
-	if err := g.dot.Output(buf); err != nil {
+	if err := g.dot.OutputDiagram(buf, d); err != nil {
 		return err
 	}
 	return g.render(wr, buf.Bytes())

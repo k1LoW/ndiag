@@ -13,19 +13,17 @@ import (
 
 type Dot struct {
 	config *config.Config
-	layers []string
 	box    *packr.Box
 }
 
-func New(cfg *config.Config, layers []string) *Dot {
+func New(cfg *config.Config) *Dot {
 	return &Dot{
 		config: cfg,
-		layers: layers,
 		box:    packr.New("dot", "./templates"),
 	}
 }
 
-func (d *Dot) Output(wr io.Writer) error {
+func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 	t := "cluster-diag.dot.tmpl"
 
 	ts, err := d.box.FindString(t)
@@ -34,7 +32,7 @@ func (d *Dot) Output(wr io.Writer) error {
 	}
 	tmpl := template.Must(template.New("diagram").Funcs(output.FuncMap).Parse(ts))
 
-	clusters, remain, networks, err := d.config.BuildNestedClusters(d.layers)
+	clusters, remain, networks, err := d.config.BuildNestedClusters(diag.Layers)
 	if err != nil {
 		return err
 	}
