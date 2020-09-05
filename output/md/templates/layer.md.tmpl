@@ -4,10 +4,18 @@
 
 {{ .Layer.Desc }}
 
+<p align="right">
+  [ <a href="{{ .DescPath }}/{{ mdpath "_layer" .Layer.Name }}">:pencil2: Edit description</a> ]
+<p>
+
 {{ range $i, $c := .Clusters }}
 ## {{ $c | fullname }}
 
 {{ $c.Desc }}
+
+<p align="right">
+  [ <a href="{{ $.DescPath }}/{{ mdpath "_cluster" ($c | id) }}">:pencil2: Edit description</a> ]
+<p>
 
 | Name | Description |
 | --- | --- |
