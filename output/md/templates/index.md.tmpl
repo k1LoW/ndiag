@@ -17,7 +17,7 @@
 | Name | Description |
 | --- | --- |
 {{- range $i, $l := .Layers }}
-| [{{ $l.Name }}]({{ mdpath "layer" $l }}) | {{ $l.Desc | summary }} |
+| [{{ $l.Name }}]({{ mdpath "layer" $l.Name }}) | {{ $l.Desc | summary }} |
 {{- end }}
 
 ## Nodes
