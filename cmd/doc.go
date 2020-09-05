@@ -109,7 +109,7 @@ var docCmd = &cobra.Command{
 			if err != nil {
 				printFatalln(cmd, err)
 			}
-			if err := diag.Output(dFile); err != nil {
+			if err := diag.OutputLayer(dFile, l); err != nil {
 				printFatalln(cmd, err)
 			}
 		}
