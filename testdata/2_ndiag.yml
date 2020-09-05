@@ -24,4 +24,7 @@ networks:
   - ["internet", "group:lb:vip"]
   - ["group:lb:vip", "lb-*:nginx"]
   - ["lb-*:nginx", "app-*:rails"]
-  - ["app-*:rails", "db-*:postgresql"]
+  -
+    head: "app-*:rails"
+    tail: "db-*:postgresql"
+    desc: "app-db"
