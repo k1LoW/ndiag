@@ -55,12 +55,14 @@ var drawCmd = &cobra.Command{
 		switch format {
 		case "svg", "jpg", "png":
 			// TODO: jpg png
-			o = gviz.New(cfg, layers)
+			o = gviz.New(cfg)
 		case "dot":
-			o = dot.New(cfg, layers)
+			o = dot.New(cfg)
 		}
 
-		if err := o.Output(os.Stdout); err != nil {
+		d := config.NewDiagram("-", "-", layers)
+
+		if err := o.OutputDiagram(os.Stdout, d); err != nil {
 			printFatalln(cmd, err)
 		}
 	},
