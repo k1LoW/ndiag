@@ -10,12 +10,12 @@ import (
 
 func (d *Config) UnmarshalYAML(data []byte) error {
 	raw := struct {
-		Name     string     `yaml:"name"`
-		Desc     string     `yaml:"desc,omitempty"`
-		DocPath  string     `yaml:"docPath"`
-		Diagrams []*Diagram `yaml:"diagrams"`
-		Nodes    []*Node    `yaml:"nodes"`
-		Networks [][]string `yaml:"networks"`
+		Name     string        `yaml:"name"`
+		Desc     string        `yaml:"desc,omitempty"`
+		DocPath  string        `yaml:"docPath"`
+		Diagrams []*Diagram    `yaml:"diagrams"`
+		Nodes    []*Node       `yaml:"nodes"`
+		Networks []interface{} `yaml:"networks"`
 	}{}
 
 	if err := yaml.Unmarshal(data, &raw); err != nil {
@@ -26,14 +26,39 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	d.DocPath = raw.DocPath
 	d.Diagrams = raw.Diagrams
 	d.Nodes = raw.Nodes
+
 	for _, nw := range raw.Networks {
-		if len(nw) != 2 {
-			return fmt.Errorf("invalid network format: %s", nw)
+		switch v := nw.(type) {
+		case []interface{}:
+			if len(v) != 2 {
+				return fmt.Errorf("invalid network format: %s", v)
+			}
+			rnw := &rawNetwork{
+				Head: v[0].(string),
+				Tail: v[1].(string),
+			}
+			if len(v) == 3 {
+				rnw.Desc = v[2].(string)
+			}
+			d.rawNetworks = append(d.rawNetworks, rnw)
+		case map[string]interface{}:
+			head, ok := v["head"]
+			if !ok {
+				return fmt.Errorf("invalid network format: %s", v)
+			}
+			tail, ok := v["tail"]
+			if !ok {
+				return fmt.Errorf("invalid network format: %s", v)
+			}
+			rnw := &rawNetwork{
+				Head: head.(string),
+				Tail: tail.(string),
+			}
+			if desc, ok := v["desc"]; ok {
+				rnw.Desc = desc.(string)
+			}
+			d.rawNetworks = append(d.rawNetworks, rnw)
 		}
-		d.rawNetworks = append(d.rawNetworks, &rawNetwork{
-			Head: nw[0],
-			Tail: nw[1],
-		})
 	}
 	return nil
 }
