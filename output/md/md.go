@@ -88,6 +88,7 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 	tmpl := template.Must(template.New(n.Id()).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
 		"Node":       n,
+		"DiagFormat": m.config.DiagFormat(),
 		"DescPath":   rel,
 		"Components": n.Components,
 		"RealNodes":  n.RealNodes,

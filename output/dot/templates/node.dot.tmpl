@@ -1,0 +1,70 @@
+digraph ndiag {
+  graph [rankdir=TB, layout=dot, fontname="Arial"];
+
+{{ define "cluster" }}
+  subgraph "cluster_{{ . | id }}" {
+    label = "{{ .Layer }}:{{ .Name | unesc }}";
+    style = "rounded,filled";
+    color = "#4B75B933"
+    shape = box;
+    fontname="Arial";
+
+    {{ range $_, $n := .Nodes }}
+    subgraph "cluster_{{ $n | id }}" {
+      label = "{{ $n.Name | unesc }} ({{ len $n.RealNodes }})";
+      style = "solid,bold,filled";
+      color = "#333333"
+      fillcolor = "#FFFFFF"
+      {{ range $_, $co := $n.Components }}
+      "{{ $co | id }}"[label="{{ $co.Name | unesc }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
+      {{ end }}
+
+      {{ $length := len $n.Components }}
+      {{ if eq $length 0 }}
+      "none"[label="", shape=none];
+      {{ end }}
+    }
+    {{ end }}
+
+    {{ range $_, $co := .Components }}
+      "{{ $co | id }}"[label="{{ $co.Name | unesc }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
+    {{ end }}
+
+    {{ range .Children }}
+       {{ template "cluster" . }}
+    {{ end }}
+  }
+{{ end }}
+
+{{ range .Clusters }}
+  {{ template "cluster" . }}
+{{ end }}
+
+{{ range $_, $n := .RemainNodes }}
+  subgraph "cluster_{{ $n.Name }}" {
+    label = "{{ $n | fullname }} ({{ len $n.RealNodes }})";
+    style = "solid,bold";
+    {{ if eq $.MainNodeId ($n | id) }}
+    {{ else }}
+    fontcolor="#666666";
+    color="#999999";
+    {{ end }}
+    {{ range $_, $co := $n.Components }}
+    "{{$co | id }}"[label="{{ $co.Name | unesc }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
+    {{ end }}
+    {{ $length := len $n.Components }}
+    {{ if eq $length 0 }}
+    "none"[label="", shape=none];
+    {{ end }}
+  }
+{{ end }}
+
+{{ range $_, $co := .GlobalComponents }}
+"{{ $co | id }}"[label="{{ $co.Name | unesc }}", style="rounded,bold", shape=box, fontname="Arial"];
+{{ end }}
+
+{{ range $_, $nw := .Networks }}
+"{{ $nw.Head | id }}" -> "{{ $nw.Tail | id }}"[arrowhead=normal, arrowtail=none, headlabel="", taillabel="", color="#33333399", labelfontcolor="#333333", style=bold, fontname="Arial"];
+{{ end }}
+
+}
