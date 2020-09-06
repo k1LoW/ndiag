@@ -24,7 +24,7 @@ func New(cfg *config.Config) *Dot {
 }
 
 func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
-	t := "cluster-diag.dot.tmpl"
+	t := "diagram.dot.tmpl"
 
 	ts, err := d.box.FindString(t)
 	if err != nil {
@@ -48,7 +48,7 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 }
 
 func (d *Dot) OutputLayer(wr io.Writer, l *config.Layer) error {
-	t := "cluster-diag.dot.tmpl"
+	t := "diagram.dot.tmpl"
 
 	ts, err := d.box.FindString(t)
 	if err != nil {
@@ -85,7 +85,7 @@ L:
 }
 
 func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
-	t := "cluster-diag.dot.tmpl"
+	t := "node.dot.tmpl"
 
 	ts, err := d.box.FindString(t)
 	if err != nil {
@@ -143,6 +143,7 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 	}
 
 	if err := tmpl.Execute(wr, map[string]interface{}{
+		"MainNodeId":       n.Id(),
 		"Clusters":         clusters,
 		"RemainNodes":      nodes,
 		"GlobalComponents": globalComponents,
