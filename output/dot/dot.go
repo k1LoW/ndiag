@@ -64,6 +64,7 @@ func (d *Dot) OutputLayer(wr io.Writer, l *config.Layer) error {
 L:
 	for _, nw := range networks {
 		for _, n := range remain {
+			// remove nw with global nodes
 			if strings.HasPrefix(nw.Head.Id(), fmt.Sprintf("%s:", n.Id())) {
 				continue L
 			}
@@ -71,12 +72,17 @@ L:
 				continue L
 			}
 		}
+		// remove nw with global components
+		if (nw.Head.Node == nil && nw.Head.Cluster == nil) || (nw.Tail.Node == nil && nw.Tail.Cluster == nil) {
+			continue L
+		}
 		nws = append(nws, nw)
 	}
+
 	if err := tmpl.Execute(wr, map[string]interface{}{
 		"Clusters":         clusters,
 		"RemainNodes":      []*config.Node{},
-		"GlobalComponents": d.config.GlobalComponents(),
+		"GlobalComponents": []*config.Component{},
 		"Networks":         nws,
 	}); err != nil {
 		return err
