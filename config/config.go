@@ -391,15 +391,16 @@ func (cfg *Config) buildNetworks() error {
 		if err != nil {
 			return err
 		}
-		cfg.Networks = append(cfg.Networks, &Network{
+		nnw := &Network{
 			Head: h,
 			Tail: t,
-		})
+		}
+		cfg.Networks = append(cfg.Networks, nnw)
 		if h == t {
-			h.Networks = append(h.Networks, nw)
+			h.Networks = append(h.Networks, nnw)
 		} else {
-			h.Networks = append(h.Networks, nw)
-			t.Networks = append(t.Networks, nw)
+			h.Networks = append(h.Networks, nnw)
+			t.Networks = append(t.Networks, nnw)
 		}
 	}
 	return nil

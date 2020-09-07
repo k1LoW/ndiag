@@ -15,6 +15,13 @@
 {{- range $i, $c := .Components }}
 | {{ $c.Name }} | {{ $c.Desc }} |
 {{- end }}
+## Networks
+
+| -> | Description |
+| --- | --- |
+{{- range $i, $nw := .Networks }}
+| [{{ $nw.Head | componentlink }}]->[{{ $nw.Tail | componentlink }}] | {{ $nw.Desc }} |
+{{- end }}
 ## Real nodes
 {{ range $i, $rn := .RealNodes }}
 - {{ $rn | fullname }}
