@@ -13,6 +13,7 @@ func TestSafeFilename(t *testing.T) {
 		{"path/to/node.md", "path_to_node.md"},
 		{"path\\to\\node.md", "path_to_node.md"},
 		{"node-/\\.md", "node-__.md"},
+		{"user node.md", "user_node.md"},
 	}
 	for _, tt := range tests {
 		got := safeFilename(tt.in)

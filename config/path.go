@@ -15,7 +15,7 @@ func MdPath(prefix string, vals []string) string {
 	return safeFilename(fmt.Sprintf("%s-%s.md", prefix, strings.Join(vals, "-")))
 }
 
-var unsafeCharRe = regexp.MustCompile(`[\\\/*:?"<>|]`)
+var unsafeCharRe = regexp.MustCompile(`[\\\/*:?"<>|\s]`)
 
 func safeFilename(f string) string {
 	f = filepath.Clean(filepath.Base(strings.ToLower(unsafeCharRe.ReplaceAllString(f, "_"))))
