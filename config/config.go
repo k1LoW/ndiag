@@ -395,6 +395,12 @@ func (cfg *Config) buildNetworks() error {
 			Head: h,
 			Tail: t,
 		})
+		if h == t {
+			h.Networks = append(h.Networks, nw)
+		} else {
+			h.Networks = append(h.Networks, nw)
+			t.Networks = append(t.Networks, nw)
+		}
 	}
 	return nil
 }
