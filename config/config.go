@@ -150,6 +150,11 @@ func (cfg *Config) LoadRealNodes(in []byte) error {
 }
 
 func (cfg *Config) Build() error {
+	for _, n := range cfg.Nodes {
+		if len(n.RealNodes) == 0 {
+			return fmt.Errorf("'%s' does not have any real nodes", n.FullName())
+		}
+	}
 	if err := cfg.buildClusters(); err != nil {
 		return err
 	}
@@ -207,6 +212,7 @@ func (cfg *Config) loadRealNodes(in []byte) error {
 			cfg.realNodes = append(cfg.realNodes, newRn)
 		}
 	} else {
+		// config format
 		rConfig := New()
 		if err := yaml.Unmarshal(in, rConfig); err != nil {
 			return err
