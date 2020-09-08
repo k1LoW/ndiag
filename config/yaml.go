@@ -34,25 +34,25 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 				return fmt.Errorf("invalid network format: %s", v)
 			}
 			rnw := &rawNetwork{
-				Head: v[0].(string),
-				Tail: v[1].(string),
+				Src: v[0].(string),
+				Dst: v[1].(string),
 			}
 			if len(v) == 3 {
 				rnw.Desc = v[2].(string)
 			}
 			d.rawNetworks = append(d.rawNetworks, rnw)
 		case map[string]interface{}:
-			head, ok := v["head"]
+			src, ok := v["src"]
 			if !ok {
 				return fmt.Errorf("invalid network format: %s", v)
 			}
-			tail, ok := v["tail"]
+			dst, ok := v["dst"]
 			if !ok {
 				return fmt.Errorf("invalid network format: %s", v)
 			}
 			rnw := &rawNetwork{
-				Head: head.(string),
-				Tail: tail.(string),
+				Src: src.(string),
+				Dst: dst.(string),
 			}
 			if desc, ok := v["desc"]; ok {
 				rnw.Desc = desc.(string)

@@ -10,26 +10,30 @@ Key features of `ndiag` are:
 
 ### Node
 
-id = `[node name]`
+node id = `[node name]`
 
 ### Layer
 
-id = `[layer name]`
+layer id = `[layer name]`
 
 ### Cluster
 
-id = `[layer name]:[cluster name]`
+cluster id = `[layer name]:[cluster name]`
 
 ### Component
 
 **global component:**
 
-id = `[component name]`
+component id = `[component name]`
 
 **cluster component:**
 
-id = `[layer name]:[cluster name]:[component name]`
+component id = `[layer name]:[cluster name]:[component name]`
 
 **node component:**
 
-id = `[node name]:[component name]`
+component id = `[node name]:[component name]`
+
+### Network
+
+network id = `[component id]->[component id]`

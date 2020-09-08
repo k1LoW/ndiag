@@ -65,15 +65,15 @@ L:
 	for _, nw := range networks {
 		for _, n := range remain {
 			// remove nw with global nodes
-			if strings.HasPrefix(nw.Head.Id(), fmt.Sprintf("%s:", n.Id())) {
+			if strings.HasPrefix(nw.Src.Id(), fmt.Sprintf("%s:", n.Id())) {
 				continue L
 			}
-			if strings.HasPrefix(nw.Tail.Id(), fmt.Sprintf("%s:", n.Id())) {
+			if strings.HasPrefix(nw.Dst.Id(), fmt.Sprintf("%s:", n.Id())) {
 				continue L
 			}
 		}
 		// remove nw with global components
-		if (nw.Head.Node == nil && nw.Head.Cluster == nil) || (nw.Tail.Node == nil && nw.Tail.Cluster == nil) {
+		if (nw.Src.Node == nil && nw.Src.Cluster == nil) || (nw.Dst.Node == nil && nw.Dst.Cluster == nil) {
 			continue L
 		}
 		nws = append(nws, nw)
@@ -115,26 +115,26 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 
 	nws := []*config.Network{}
 	for _, nw := range networks {
-		if (nw.Head.Node == nil || nw.Head.Node.Id() != n.Id()) && (nw.Tail.Node == nil || nw.Tail.Node.Id() != n.Id()) {
+		if (nw.Src.Node == nil || nw.Src.Node.Id() != n.Id()) && (nw.Dst.Node == nil || nw.Dst.Node.Id() != n.Id()) {
 			continue
 		}
 		switch {
-		case nw.Head.Node != nil:
-			nIds[nw.Head.Node.Id()] = nw.Head.Node
-		case nw.Head.Cluster != nil:
-			nw.Head.Cluster.Nodes = nil
-			cIds[nw.Head.Cluster.Id()] = nw.Head.Cluster
+		case nw.Src.Node != nil:
+			nIds[nw.Src.Node.Id()] = nw.Src.Node
+		case nw.Src.Cluster != nil:
+			nw.Src.Cluster.Nodes = nil
+			cIds[nw.Src.Cluster.Id()] = nw.Src.Cluster
 		default:
-			gIds[nw.Head.Id()] = nw.Head
+			gIds[nw.Src.Id()] = nw.Src
 		}
 		switch {
-		case nw.Tail.Node != nil:
-			nIds[nw.Tail.Node.Id()] = nw.Tail.Node
-		case nw.Tail.Cluster != nil:
-			nw.Tail.Cluster.Nodes = nil
-			cIds[nw.Tail.Cluster.Id()] = nw.Tail.Cluster
+		case nw.Dst.Node != nil:
+			nIds[nw.Dst.Node.Id()] = nw.Dst.Node
+		case nw.Dst.Cluster != nil:
+			nw.Dst.Cluster.Nodes = nil
+			cIds[nw.Dst.Cluster.Id()] = nw.Dst.Cluster
 		default:
-			gIds[nw.Tail.Id()] = nw.Tail
+			gIds[nw.Dst.Id()] = nw.Dst
 		}
 		nws = append(nws, nw)
 	}

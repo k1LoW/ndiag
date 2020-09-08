@@ -85,6 +85,13 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 		return err
 	}
 
+	nws := []*config.Network{}
+	for _, c := range n.Components {
+		for _, nw := range c.Networks {
+			nws = append(nws, nw)
+		}
+	}
+
 	tmpl := template.Must(template.New(n.Id()).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
 		"Node":       n,
@@ -92,6 +99,7 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 		"DescPath":   rel,
 		"Components": n.Components,
 		"RealNodes":  n.RealNodes,
+		"Networks":   nws,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err

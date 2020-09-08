@@ -10,6 +10,7 @@ import (
 )
 
 var unescRep = strings.NewReplacer(fmt.Sprintf("%s%s", config.Esc, config.Sep), config.Sep)
+var clusterRep = strings.NewReplacer(":", "")
 
 var FuncMap = template.FuncMap{
 	"id": func(e config.Edge) string {
@@ -47,6 +48,16 @@ var FuncMap = template.FuncMap{
 			strs = v
 		}
 		return config.MdPath(prefix, strs)
+	},
+	"componentlink": func(c *config.Component) string {
+		switch {
+		case c.Node != nil:
+			return fmt.Sprintf("[%s](%s)", c.Id(), config.MdPath("node", []string{c.Node.Id()}))
+		case c.Cluster != nil:
+			return fmt.Sprintf("[%s](%s#%s)", c.Id(), config.MdPath("layer", []string{c.Cluster.Layer}), clusterRep.Replace(c.Cluster.Id()))
+		default:
+			return c.Id()
+		}
 	},
 }
 
