@@ -20,7 +20,7 @@
 | -> | Description |
 | --- | --- |
 {{- range $i, $nw := .Networks }}
-| [{{ $nw.Head | componentlink }}]->[{{ $nw.Tail | componentlink }}] | {{ $nw.Desc }} |
+| [ {{ $nw.Head | componentlink }} ]->[ {{ $nw.Tail | componentlink }} ] | {{ $nw.Desc }} |
 {{- end }}
 ## Real nodes
 {{ range $i, $rn := .RealNodes }}
