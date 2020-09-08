@@ -22,10 +22,10 @@
 
 ## Nodes
 
-| Name | Description |
+| Name (node count) | Description |
 | --- | --- |
 {{- range $i, $n := .Nodes }}
-| [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}) | {{ $n.Desc | summary }} |
+| [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}) ({{ len $n.RealNodes }}) | {{ $n.Desc | summary }} |
 {{- end }}
 
 ---

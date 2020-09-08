@@ -33,11 +33,22 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 		return err
 	}
 
+	layers := []*config.Layer{}
+	for _, n := range d.Layers {
+		for _, l := range m.config.Layers() {
+			if n == l.Name {
+				layers = append(layers, l)
+			}
+		}
+	}
+
 	tmpl := template.Must(template.New(d.Name).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
 		"Diagram":    d,
 		"DiagFormat": m.config.DiagFormat(),
 		"DescPath":   rel,
+		"Layers":     layers,
+		"Nodes":      m.config.Nodes,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
