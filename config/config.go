@@ -31,8 +31,8 @@ type Edge interface {
 }
 
 type Network struct {
-	Head *Component
-	Tail *Component
+	Src *Component
+	Dst *Component
 	Desc string
 }
 
@@ -42,8 +42,8 @@ type Layer struct {
 }
 
 type rawNetwork struct {
-	Head string
-	Tail string
+	Src string
+	Dst string
 	Desc string
 }
 
@@ -110,10 +110,10 @@ func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*N
 		hBelongTo := false
 		tBelongTo := false
 		for _, l := range layers {
-			if nw.Head.Cluster == nil || strings.EqualFold(nw.Head.Cluster.Layer, l) {
+			if nw.Src.Cluster == nil || strings.EqualFold(nw.Src.Cluster.Layer, l) {
 				hBelongTo = true
 			}
-			if nw.Tail.Cluster == nil || strings.EqualFold(nw.Tail.Cluster.Layer, l) {
+			if nw.Dst.Cluster == nil || strings.EqualFold(nw.Dst.Cluster.Layer, l) {
 				tBelongTo = true
 			}
 		}
@@ -271,22 +271,22 @@ func (cfg *Config) buildComponents() error {
 	nc := map[string]struct{}{}
 	cc := map[string]struct{}{}
 	for _, nw := range cfg.rawNetworks {
-		switch sepCount(nw.Head) {
+		switch sepCount(nw.Src) {
 		case 2: // cluster components
-			cc[nw.Head] = struct{}{}
+			cc[nw.Src] = struct{}{}
 		case 1: // node components
-			nc[nw.Head] = struct{}{}
+			nc[nw.Src] = struct{}{}
 		case 0: // global components
-			gc[nw.Head] = struct{}{}
+			gc[nw.Src] = struct{}{}
 		}
 
-		switch sepCount(nw.Tail) {
+		switch sepCount(nw.Dst) {
 		case 2: // cluster components
-			cc[nw.Tail] = struct{}{}
+			cc[nw.Dst] = struct{}{}
 		case 1: // node components
-			nc[nw.Tail] = struct{}{}
+			nc[nw.Dst] = struct{}{}
 		case 0: // global components
-			gc[nw.Tail] = struct{}{}
+			gc[nw.Dst] = struct{}{}
 		}
 	}
 
@@ -383,17 +383,17 @@ func (cfg *Config) parseClusterLabel(label string) (*Cluster, error) {
 
 func (cfg *Config) buildNetworks() error {
 	for _, nw := range cfg.rawNetworks {
-		h, err := cfg.FindComponent(nw.Head)
+		h, err := cfg.FindComponent(nw.Src)
 		if err != nil {
 			return err
 		}
-		t, err := cfg.FindComponent(nw.Tail)
+		t, err := cfg.FindComponent(nw.Dst)
 		if err != nil {
 			return err
 		}
 		nnw := &Network{
-			Head: h,
-			Tail: t,
+			Src: h,
+			Dst: t,
 		}
 		cfg.Networks = append(cfg.Networks, nnw)
 		if h == t {

@@ -10,17 +10,17 @@
 
 ## Components
 
-| Name | Description |
-| --- | --- |
+| Name | Description | From (Network) | To (Network) |
+| --- | --- | --- | --- |
 {{- range $i, $c := .Components }}
-| {{ $c.Name }} | {{ $c.Desc }} |
+| {{ $c.Name }} | {{ $c.Desc }} | {{- range $i, $nw := $c.Networks }}{{ if ne ($c | id) ($nw.Src | id) }}{{ $nw.Src | componentlink }}{{ end }} {{ end }} | {{- range $i, $nw := $c.Networks }}{{ if ne ($c | id) ($nw.Dst | id) }}{{ $nw.Dst | componentlink }}{{ end }} {{ end }} |
 {{- end }}
 ## Networks
 
 | -> | Description |
 | --- | --- |
 {{- range $i, $nw := .Networks }}
-| [ {{ $nw.Head | componentlink }} ]->[ {{ $nw.Tail | componentlink }} ] | {{ $nw.Desc }} |
+| [ {{ $nw.Src | componentlink }} ]->[ {{ $nw.Dst | componentlink }} ] | {{ $nw.Desc }} |
 {{- end }}
 ## Real nodes
 {{ range $i, $rn := .RealNodes }}
