@@ -31,9 +31,17 @@ type Edge interface {
 }
 
 type Network struct {
-	Src *Component
-	Dst *Component
+	Src  *Component
+	Dst  *Component
 	Desc string
+}
+
+func (n *Network) FullName() string {
+	return fmt.Sprintf("%s->%s", n.Src.Id(), n.Dst.Id())
+}
+
+func (n *Network) Id() string {
+	return strings.ToLower(n.FullName())
 }
 
 type Layer struct {
@@ -42,8 +50,8 @@ type Layer struct {
 }
 
 type rawNetwork struct {
-	Src string
-	Dst string
+	Src  string
+	Dst  string
 	Desc string
 }
 
@@ -493,6 +501,18 @@ func (cfg *Config) buildDescriptions() error {
 			return err
 		}
 		c.Desc = desc
+	}
+
+	// networks
+	for _, nw := range cfg.Networks {
+		if nw.Desc != "" {
+			continue
+		}
+		desc, err := cfg.readDescFile(MdPath("_network", []string{nw.Id()}))
+		if err != nil {
+			return err
+		}
+		nw.Desc = desc
 	}
 
 	return nil
