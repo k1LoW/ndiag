@@ -49,16 +49,37 @@ var FuncMap = template.FuncMap{
 		}
 		return config.MdPath(prefix, strs)
 	},
-	"componentlink": func(c *config.Component) string {
-		switch {
-		case c.Node != nil:
-			return fmt.Sprintf("[%s](%s)", c.Id(), config.MdPath("node", []string{c.Node.Id()}))
-		case c.Cluster != nil:
-			return fmt.Sprintf("[%s](%s#%s)", c.Id(), config.MdPath("layer", []string{c.Cluster.Layer}), clusterRep.Replace(c.Cluster.Id()))
-		default:
-			return c.Id()
+	"componentlink": componentLink,
+	"fromlinks": func(nws []*config.Network, base *config.Component) string {
+		links := []string{}
+		for _, nw := range nws {
+			if nw.Src.Id() != base.Id() {
+				links = append(links, componentLink(nw.Src))
+			}
 		}
+		return strings.Join(links, " / ")
 	},
+	"tolinks": func(nws []*config.Network, base *config.Component) string {
+		links := []string{}
+		for _, nw := range nws {
+			if nw.Dst.Id() != base.Id() {
+				links = append(links, componentLink(nw.Src))
+			}
+		}
+		return strings.Join(links, " / ")
+	},
+}
+
+// componentLink
+func componentLink(c *config.Component) string {
+	switch {
+	case c.Node != nil:
+		return fmt.Sprintf("[%s](%s)", c.Id(), config.MdPath("node", []string{c.Node.Id()}))
+	case c.Cluster != nil:
+		return fmt.Sprintf("[%s](%s#%s)", c.Id(), config.MdPath("layer", []string{c.Cluster.Layer}), clusterRep.Replace(c.Cluster.Id()))
+	default:
+		return c.Id()
+	}
 }
 
 type Output interface {
