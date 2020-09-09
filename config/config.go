@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/elliotchance/orderedmap"
 	"github.com/goccy/go-yaml"
 )
 
@@ -275,33 +276,33 @@ func (cfg *Config) FindComponent(name string) (*Component, error) {
 }
 
 func (cfg *Config) buildComponents() error {
-	gc := map[string]struct{}{}
-	nc := map[string]struct{}{}
-	cc := map[string]struct{}{}
+	gc := orderedmap.NewOrderedMap()
+	nc := orderedmap.NewOrderedMap()
+	cc := orderedmap.NewOrderedMap()
 	for _, nw := range cfg.rawNetworks {
 		switch sepCount(nw.Src) {
 		case 2: // cluster components
-			cc[nw.Src] = struct{}{}
+			cc.Set(nw.Src, struct{}{})
 		case 1: // node components
-			nc[nw.Src] = struct{}{}
+			nc.Set(nw.Src, struct{}{})
 		case 0: // global components
-			gc[nw.Src] = struct{}{}
+			gc.Set(nw.Src, struct{}{})
 		}
 
 		switch sepCount(nw.Dst) {
 		case 2: // cluster components
-			cc[nw.Dst] = struct{}{}
+			cc.Set(nw.Dst, struct{}{})
 		case 1: // node components
-			nc[nw.Dst] = struct{}{}
+			nc.Set(nw.Dst, struct{}{})
 		case 0: // global components
-			gc[nw.Dst] = struct{}{}
+			gc.Set(nw.Dst, struct{}{})
 		}
 	}
 
 	// global components
-	for c := range gc {
+	for _, c := range gc.Keys() {
 		cfg.globalComponents = append(cfg.globalComponents, &Component{
-			Name: c,
+			Name: c.(string),
 		})
 	}
 
@@ -311,23 +312,23 @@ func (cfg *Config) buildComponents() error {
 	}
 
 	belongTo := false
-	for c := range nc {
+	for _, c := range nc.Keys() {
 		for _, n := range cfg.Nodes {
 			for _, com := range n.Components {
-				if strings.EqualFold(com.FullName(), c) {
+				if strings.EqualFold(com.FullName(), c.(string)) {
 					belongTo = true
 				}
 			}
 		}
 		if !belongTo {
-			splitted := sepSplit(c)
+			splitted := sepSplit(c.(string))
 			return fmt.Errorf("node '%s' not found: %s", splitted[0], c)
 		}
 	}
 
 	// cluster components
-	for c := range cc {
-		splitted := sepSplit(c)
+	for _, c := range cc.Keys() {
+		splitted := sepSplit(c.(string))
 		clName := fmt.Sprintf("%s:%s", splitted[0], splitted[1])
 		comName := splitted[2]
 		belongTo := false
