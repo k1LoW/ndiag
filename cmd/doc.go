@@ -23,6 +23,7 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -51,6 +52,23 @@ var docCmd = &cobra.Command{
 		if !force {
 			if err := diagExists(cfg); err != nil {
 				printFatalln(cmd, err)
+			}
+		}
+		err = os.MkdirAll(cfg.DescPath, 0755) // #nosec
+		if err != nil {
+			printFatalln(cmd, err)
+		}
+
+		// cleanup empty descriptions/*.md
+		descs, err := ioutil.ReadDir(cfg.DescPath)
+		if err != nil {
+			printFatalln(cmd, err)
+		}
+		for _, f := range descs {
+			if !f.IsDir() && f.Size() == 0 {
+				if err := os.Remove(filepath.Join(cfg.DescPath, f.Name())); err != nil {
+					printFatalln(cmd, err)
+				}
 			}
 		}
 
