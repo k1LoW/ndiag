@@ -23,6 +23,7 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -35,8 +36,8 @@ import (
 // docCmd represents the doc command
 var docCmd = &cobra.Command{
 	Use:   "doc",
-	Short: "doc",
-	Long:  `doc.`,
+	Short: "generate architecture document",
+	Long:  `generate architecture document.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cfg, err := newConfig()
 		if err != nil {
@@ -48,9 +49,37 @@ var docCmd = &cobra.Command{
 		if err != nil {
 			printFatalln(cmd, err)
 		}
+		if rmDist && cfg.DocPath != "" {
+			docs, err := ioutil.ReadDir(cfg.DocPath)
+			if err != nil {
+				printFatalln(cmd, err)
+			}
+			for _, f := range docs {
+				if err := os.RemoveAll(filepath.Join(cfg.DocPath, f.Name())); err != nil {
+					printFatalln(cmd, err)
+				}
+			}
+		}
 		if !force {
 			if err := diagExists(cfg); err != nil {
 				printFatalln(cmd, err)
+			}
+		}
+		err = os.MkdirAll(cfg.DescPath, 0755) // #nosec
+		if err != nil {
+			printFatalln(cmd, err)
+		}
+
+		// cleanup empty descriptions/*.md
+		descs, err := ioutil.ReadDir(cfg.DescPath)
+		if err != nil {
+			printFatalln(cmd, err)
+		}
+		for _, f := range descs {
+			if !f.IsDir() && f.Size() == 0 {
+				if err := os.Remove(filepath.Join(cfg.DescPath, f.Name())); err != nil {
+					printFatalln(cmd, err)
+				}
 			}
 		}
 
@@ -217,8 +246,9 @@ func newConfig() (*config.Config, error) {
 }
 
 func init() {
-	docCmd.Flags().BoolVarP(&force, "force", "", false, "force")
+	docCmd.Flags().BoolVarP(&force, "force", "", false, "generate a document without checking for the existence of an existing document")
 	docCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
 	docCmd.Flags().StringSliceVarP(&nodeLists, "nodes", "n", []string{}, "real node list file path")
+	docCmd.Flags().BoolVarP(&rmDist, "rm-dist", "", false, "remove all files in the document directory before generating the documents")
 	rootCmd.AddCommand(docCmd)
 }
