@@ -36,8 +36,8 @@ import (
 // docCmd represents the doc command
 var docCmd = &cobra.Command{
 	Use:   "doc",
-	Short: "doc",
-	Long:  `doc.`,
+	Short: "generate architecture document",
+	Long:  `generate architecture document.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cfg, err := newConfig()
 		if err != nil {
