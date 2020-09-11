@@ -13,14 +13,16 @@
 
 {{ $c.Desc }}
 
+### Nodes
+
 <p align="right">
   [ <a href="{{ $.DescPath }}/{{ mdpath "_cluster" ($c | id) }}">:pencil2: Edit description</a> ]
 <p>
 
-| Name | Description |
+| Name (node count) | Description |
 | --- | --- |
 {{- range $i, $n := $c.Nodes }}
-| [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}) | {{ $n.Desc | summary }} |
+| [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}) ({{ len $n.RealNodes }}) | {{ $n.Desc | summary }} |
 {{- end }}
 
 {{- end}}
