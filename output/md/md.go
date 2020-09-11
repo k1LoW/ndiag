@@ -123,11 +123,18 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 	if err != nil {
 		return err
 	}
+
+	rel, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
+	if err != nil {
+		return err
+	}
+
 	tmpl := template.Must(template.New("index").Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
 		"Config":     m.config,
 		"Diagram":    m.config.PrimaryDiagram(),
 		"DiagFormat": m.config.DiagFormat(),
+		"DescPath":   rel,
 		"Diagrams":   m.config.Diagrams,
 		"Layers":     m.config.Layers(),
 		"Nodes":      m.config.Nodes,
