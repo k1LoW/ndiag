@@ -24,10 +24,16 @@ var FuncMap = template.FuncMap{
 	},
 	"summary": func(s string) string {
 		splitted := strings.Split(s, "\n")
-		if len(splitted) <= 1 {
+		switch {
+		case len(splitted) == 0:
+			return ""
+		case len(splitted) == 1:
 			return splitted[0]
+		case len(splitted) == 2 && splitted[1] == "":
+			return splitted[0]
+		default:
+			return fmt.Sprintf("%s ...", splitted[0])
 		}
-		return fmt.Sprintf("%s ...", splitted[0])
 	},
 	"imgpath": func(prefix string, vals interface{}, format string) string {
 		var strs []string
