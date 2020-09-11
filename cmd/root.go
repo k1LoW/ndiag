@@ -38,6 +38,7 @@ var (
 	nodeLists  []string
 	configPath string
 	out        string
+	rmDist     bool
 )
 
 var rootCmd = &cobra.Command{
