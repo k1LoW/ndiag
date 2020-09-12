@@ -6,6 +6,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/elliotchance/orderedmap"
 	"github.com/gobuffalo/packr/v2"
 	"github.com/k1LoW/ndiag/config"
 	"github.com/k1LoW/ndiag/output"
@@ -105,13 +106,12 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 	}
 
 	clusters := config.Clusters{}
-	cIds := map[string]*config.Cluster{}
+	cIds := orderedmap.NewOrderedMap() // map[string]*config.Cluster{}
 	nodes := []*config.Node{n}
-	nIds := map[string]*config.Node{
-		n.Id(): n,
-	}
+	nIds := orderedmap.NewOrderedMap() // map[string]*config.Node{ n.Id(): n }
+	nIds.Set(n.Id(), n)
 	globalComponents := []*config.Component{}
-	gIds := map[string]*config.Component{}
+	gIds := orderedmap.NewOrderedMap() // map[string]*config.Component{}
 
 	nws := []*config.Network{}
 	for _, nw := range networks {
@@ -120,32 +120,35 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 		}
 		switch {
 		case nw.Src.Node != nil:
-			nIds[nw.Src.Node.Id()] = nw.Src.Node
+			nIds.Set(nw.Src.Node.Id(), nw.Src.Node)
 		case nw.Src.Cluster != nil:
 			nw.Src.Cluster.Nodes = nil
-			cIds[nw.Src.Cluster.Id()] = nw.Src.Cluster
+			cIds.Set(nw.Src.Cluster.Id(), nw.Src.Cluster)
 		default:
-			gIds[nw.Src.Id()] = nw.Src
+			gIds.Set(nw.Src.Id(), nw.Src)
 		}
 		switch {
 		case nw.Dst.Node != nil:
-			nIds[nw.Dst.Node.Id()] = nw.Dst.Node
+			nIds.Set(nw.Dst.Node.Id(), nw.Dst.Node)
 		case nw.Dst.Cluster != nil:
 			nw.Dst.Cluster.Nodes = nil
-			cIds[nw.Dst.Cluster.Id()] = nw.Dst.Cluster
+			cIds.Set(nw.Dst.Cluster.Id(), nw.Dst.Cluster)
 		default:
-			gIds[nw.Dst.Id()] = nw.Dst
+			gIds.Set(nw.Dst.Id(), nw.Dst)
 		}
 		nws = append(nws, nw)
 	}
-	for _, n := range nIds {
-		nodes = append(nodes, n)
+	for _, k := range nIds.Keys() {
+		n, _ := nIds.Get(k)
+		nodes = append(nodes, n.(*config.Node))
 	}
-	for _, c := range cIds {
-		clusters = append(clusters, c)
+	for _, k := range cIds.Keys() {
+		c, _ := cIds.Get(k)
+		clusters = append(clusters, c.(*config.Cluster))
 	}
-	for _, c := range gIds {
-		globalComponents = append(globalComponents, c)
+	for _, k := range gIds.Keys() {
+		c, _ := gIds.Get(k)
+		globalComponents = append(globalComponents, c.(*config.Component))
 	}
 
 	if err := tmpl.Execute(wr, map[string]interface{}{
