@@ -1,6 +1,6 @@
 module github.com/k1LoW/ndiag
 
-go 1.13
+go 1.14
 
 require (
 	github.com/elliotchance/orderedmap v1.3.0
