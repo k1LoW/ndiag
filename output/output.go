@@ -9,14 +9,18 @@ import (
 	"github.com/k1LoW/ndiag/config"
 )
 
+type Output interface {
+	OutputDiagram(wr io.Writer, d *config.Diagram) error
+}
+
 var unescRep = strings.NewReplacer(fmt.Sprintf("%s%s", config.Esc, config.Sep), config.Sep)
 var clusterRep = strings.NewReplacer(":", "")
 
 var FuncMap = template.FuncMap{
-	"id": func(e config.Edge) string {
+	"id": func(e config.NNode) string {
 		return unescRep.Replace(e.Id())
 	},
-	"fullname": func(e config.Edge) string {
+	"fullname": func(e config.NNode) string {
 		return unescRep.Replace(e.FullName())
 	},
 	"unesc": func(s string) string {
@@ -56,23 +60,24 @@ var FuncMap = template.FuncMap{
 		return config.MdPath(prefix, strs)
 	},
 	"componentlink": componentLink,
-	"fromlinks": func(nws []*config.Network, base *config.Component) string {
+	"nwlink":        nwLink,
+	"fromlinks": func(edges []*config.NEdge, base *config.Component) string {
 		links := []string{}
-		for _, nw := range nws {
-			if nw.Src.Id() != base.Id() {
-				links = append(links, componentLink(nw.Src))
+		for _, e := range edges {
+			if e.Src.Id() != base.Id() {
+				links = append(links, componentLink(e.Src))
 			}
 		}
-		return strings.Join(links, " / ")
+		return strings.Join(unique(links), " / ")
 	},
-	"tolinks": func(nws []*config.Network, base *config.Component) string {
+	"tolinks": func(edges []*config.NEdge, base *config.Component) string {
 		links := []string{}
-		for _, nw := range nws {
-			if nw.Dst.Id() != base.Id() {
-				links = append(links, componentLink(nw.Src))
+		for _, e := range edges {
+			if e.Dst.Id() != base.Id() {
+				links = append(links, componentLink(e.Dst))
 			}
 		}
-		return strings.Join(links, " / ")
+		return strings.Join(unique(links), " / ")
 	},
 }
 
@@ -88,6 +93,22 @@ func componentLink(c *config.Component) string {
 	}
 }
 
-type Output interface {
-	OutputDiagram(wr io.Writer, d *config.Diagram) error
+func nwLink(nw *config.Network) string {
+	cIds := []string{}
+	for _, r := range nw.Route {
+		cIds = append(cIds, r.FullName())
+	}
+	return fmt.Sprintf("[%s](%s)", strings.Join(cIds, " -> "), config.MdPath("network", []string{nw.Id()}))
+}
+
+func unique(in []string) []string {
+	m := map[string]struct{}{}
+	for _, s := range in {
+		m[s] = struct{}{}
+	}
+	u := []string{}
+	for s := range m {
+		u = append(u, s)
+	}
+	return u
 }

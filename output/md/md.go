@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"text/template"
 
+	"github.com/elliotchance/orderedmap"
 	"github.com/gobuffalo/packr/v2"
 	"github.com/k1LoW/ndiag/config"
 	"github.com/k1LoW/ndiag/output"
@@ -96,11 +97,16 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 		return err
 	}
 
-	nws := []*config.Network{}
+	networks := []*config.Network{}
+	nwIds := orderedmap.NewOrderedMap()
 	for _, c := range n.Components {
-		for _, nw := range c.Networks {
-			nws = append(nws, nw)
+		for _, e := range c.NEdges {
+			nwIds.Set(e.Network.Id(), e.Network)
 		}
+	}
+	for _, k := range nwIds.Keys() {
+		nw, _ := nwIds.Get(k)
+		networks = append(networks, nw.(*config.Network))
 	}
 
 	tmpl := template.Must(template.New(n.Id()).Funcs(output.FuncMap).Parse(ts))
@@ -110,7 +116,7 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 		"DescPath":   rel,
 		"Components": n.Components,
 		"RealNodes":  n.RealNodes,
-		"Networks":   nws,
+		"Networks":   networks,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err

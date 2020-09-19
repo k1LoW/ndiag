@@ -58,8 +58,8 @@ digraph ndiag {
 "{{ $co | id }}"[label="{{ $co.Name | unesc }}", style="rounded,bold", shape=box, fontname="Arial"];
 {{ end }}
 
-{{ range $_, $nw := .Networks }}
-"{{ $nw.Src | id }}" -> "{{ $nw.Dst | id }}"[arrowhead=normal, arrowtail=none, headlabel="", taillabel="", color="#33333399", labelfontcolor="#333333", style=bold, fontname="Arial"];
+{{ range $_, $e := .Edges }}
+"{{ $e.Src | id }}" -> "{{ $e.Dst | id }}"[arrowhead=normal, arrowtail=none, headlabel="", taillabel="", color="#33333399", labelfontcolor="#333333", style=bold, fontname="Arial"];
 {{ end }}
 
 }
