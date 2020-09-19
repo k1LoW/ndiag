@@ -25,9 +25,7 @@ func New(cfg *config.Config) *Dot {
 }
 
 func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
-	t := "diagram.dot.tmpl"
-
-	ts, err := d.box.FindString(t)
+	ts, err := d.box.FindString("diagram.dot.tmpl")
 	if err != nil {
 		return err
 	}
@@ -49,9 +47,7 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 }
 
 func (d *Dot) OutputLayer(wr io.Writer, l *config.Layer) error {
-	t := "diagram.dot.tmpl"
-
-	ts, err := d.box.FindString(t)
+	ts, err := d.box.FindString("diagram.dot.tmpl")
 	if err != nil {
 		return err
 	}
@@ -92,18 +88,11 @@ L:
 }
 
 func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
-	t := "node.dot.tmpl"
-
-	ts, err := d.box.FindString(t)
+	ts, err := d.box.FindString("node.dot.tmpl")
 	if err != nil {
 		return err
 	}
 	tmpl := template.Must(template.New("diagram").Funcs(output.FuncMap).Parse(ts))
-
-	_, _, nEdges, err := d.config.BuildNestedClusters([]string{})
-	if err != nil {
-		return err
-	}
 
 	clusters := config.Clusters{}
 	cIds := orderedmap.NewOrderedMap() // map[string]*config.Cluster{}
@@ -114,7 +103,7 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 	gIds := orderedmap.NewOrderedMap() // map[string]*config.Component{}
 
 	edges := []*config.NEdge{}
-	for _, e := range nEdges {
+	for _, e := range d.config.NEdges() {
 		if (e.Src.Node == nil || e.Src.Node.Id() != n.Id()) && (e.Dst.Node == nil || e.Dst.Node.Id() != n.Id()) {
 			continue
 		}
