@@ -41,7 +41,7 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 		"Clusters":         clusters,
 		"RemainNodes":      remain,
 		"GlobalComponents": d.config.GlobalComponents(),
-		"Edges":            nEdges,
+		"Edges":            mergeEdges(nEdges),
 	}); err != nil {
 		return err
 	}
@@ -84,7 +84,7 @@ L:
 		"Clusters":         clusters,
 		"RemainNodes":      []*config.Node{},
 		"GlobalComponents": []*config.Component{},
-		"Edges":            edges,
+		"Edges":            mergeEdges(edges),
 	}); err != nil {
 		return err
 	}
@@ -161,4 +161,17 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 		return err
 	}
 	return nil
+}
+
+func mergeEdges(edges []*config.NEdge) []*config.NEdge {
+	eKeys := orderedmap.NewOrderedMap()
+	merged := []*config.NEdge{}
+	for _, e := range edges {
+		eKeys.Set(fmt.Sprintf("%s->%s", e.Src.Id(), e.Dst.Id()), e)
+	}
+	for _, k := range eKeys.Keys() {
+		e, _ := eKeys.Get(k)
+		merged = append(merged, e.(*config.NEdge))
+	}
+	return merged
 }
