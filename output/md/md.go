@@ -124,6 +124,31 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 	return nil
 }
 
+func (m *Md) OutputNetwork(wr io.Writer, nw *config.Network) error {
+	ts, err := m.box.FindString("network.md.tmpl")
+	if err != nil {
+		return err
+	}
+
+	rel, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
+	if err != nil {
+		return err
+	}
+
+	tmpl := template.Must(template.New(nw.Id()).Funcs(output.FuncMap).Parse(ts))
+	tmplData := map[string]interface{}{
+		"Network":    nw,
+		"DiagFormat": m.config.DiagFormat(),
+		"DescPath":   rel,
+	}
+
+	if err := tmpl.Execute(wr, tmplData); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Md) OutputIndex(wr io.Writer) error {
 	ts, err := m.box.FindString("index.md.tmpl")
 	if err != nil {

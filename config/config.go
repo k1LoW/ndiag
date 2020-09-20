@@ -38,29 +38,9 @@ type NEdge struct {
 	Network *Network
 }
 
-type Network struct {
-	NetworkId string
-	Route     []*Component
-	Desc      string
-}
-
-func (n *Network) FullName() string {
-	return fmt.Sprintf(n.NetworkId)
-}
-
-func (n *Network) Id() string {
-	return strings.ToLower(n.FullName())
-}
-
 type Layer struct {
 	Name string
 	Desc string
-}
-
-type rawNetwork struct {
-	Id    string
-	Route []string
-	Desc  string
 }
 
 type Config struct {

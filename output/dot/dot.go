@@ -101,8 +101,8 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 	nIds.Set(n.Id(), n)
 	globalComponents := []*config.Component{}
 	gIds := orderedmap.NewOrderedMap() // map[string]*config.Component{}
-
 	edges := []*config.NEdge{}
+
 	for _, e := range d.config.NEdges() {
 		if (e.Src.Node == nil || e.Src.Node.Id() != n.Id()) && (e.Dst.Node == nil || e.Dst.Node.Id() != n.Id()) {
 			continue
@@ -149,6 +149,70 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 	}); err != nil {
 		return err
 	}
+	return nil
+}
+
+func (d *Dot) OutputNetwork(wr io.Writer, nw *config.Network) error {
+	ts, err := d.box.FindString("diagram.dot.tmpl")
+	if err != nil {
+		return err
+	}
+	tmpl := template.Must(template.New("diagram").Funcs(output.FuncMap).Parse(ts))
+
+	clusters := config.Clusters{}
+	cIds := orderedmap.NewOrderedMap()
+	nodes := []*config.Node{}
+	nIds := orderedmap.NewOrderedMap()
+	globalComponents := []*config.Component{}
+	gIds := orderedmap.NewOrderedMap()
+	edges := []*config.NEdge{}
+
+	for _, e := range d.config.NEdges() {
+		if e.Network.Id() != nw.Id() {
+			continue
+		}
+		switch {
+		case e.Src.Node != nil:
+			nIds.Set(e.Src.Node.Id(), e.Src.Node)
+		case e.Src.Cluster != nil:
+			e.Src.Cluster.Nodes = nil
+			cIds.Set(e.Src.Cluster.Id(), e.Src.Cluster)
+		default:
+			gIds.Set(e.Src.Id(), e.Src)
+		}
+		switch {
+		case e.Dst.Node != nil:
+			nIds.Set(e.Dst.Node.Id(), e.Dst.Node)
+		case e.Dst.Cluster != nil:
+			e.Dst.Cluster.Nodes = nil
+			cIds.Set(e.Dst.Cluster.Id(), e.Dst.Cluster)
+		default:
+			gIds.Set(e.Dst.Id(), e.Dst)
+		}
+		edges = append(edges, e)
+	}
+	for _, k := range nIds.Keys() {
+		n, _ := nIds.Get(k)
+		nodes = append(nodes, n.(*config.Node))
+	}
+	for _, k := range cIds.Keys() {
+		c, _ := cIds.Get(k)
+		clusters = append(clusters, c.(*config.Cluster))
+	}
+	for _, k := range gIds.Keys() {
+		c, _ := gIds.Get(k)
+		globalComponents = append(globalComponents, c.(*config.Component))
+	}
+
+	if err := tmpl.Execute(wr, map[string]interface{}{
+		"Clusters":         clusters,
+		"RemainNodes":      nodes,
+		"GlobalComponents": globalComponents,
+		"Edges":            edges,
+	}); err != nil {
+		return err
+	}
+	return nil
 	return nil
 }
 

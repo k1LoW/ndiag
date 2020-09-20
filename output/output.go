@@ -6,6 +6,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/elliotchance/orderedmap"
 	"github.com/k1LoW/ndiag/config"
 )
 
@@ -102,13 +103,14 @@ func nwLink(nw *config.Network) string {
 }
 
 func unique(in []string) []string {
-	m := map[string]struct{}{}
+	m := orderedmap.NewOrderedMap()
 	for _, s := range in {
-		m[s] = struct{}{}
+		m.Set(s, s)
 	}
 	u := []string{}
-	for s := range m {
-		u = append(u, s)
+	for _, k := range m.Keys() {
+		s, _ := m.Get(k)
+		u = append(u, s.(string))
 	}
 	return u
 }
