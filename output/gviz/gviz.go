@@ -45,6 +45,14 @@ func (g *Gviz) OutputNode(wr io.Writer, n *config.Node) error {
 	return g.render(wr, buf.Bytes())
 }
 
+func (g *Gviz) OutputNetwork(wr io.Writer, nw *config.Network) error {
+	buf := &bytes.Buffer{}
+	if err := g.dot.OutputNetwork(buf, nw); err != nil {
+		return err
+	}
+	return g.render(wr, buf.Bytes())
+}
+
 func (g *Gviz) render(wr io.Writer, b []byte) (e error) {
 	format := g.config.DiagFormat()
 	gviz := graphviz.New()

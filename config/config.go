@@ -26,33 +26,26 @@ var DefaultDescPath = "ndiag.descriptions"
 // DefaultDiagFormat is the default diagram format
 const DefaultDiagFormat = "svg"
 
-type Edge interface {
+type NNode interface {
 	Id() string
 	FullName() string
 }
 
-type Network struct {
-	Src  *Component
-	Dst  *Component
-	Desc string
+type Attr struct {
+	Key   string
+	Value string
 }
 
-func (n *Network) FullName() string {
-	return fmt.Sprintf("%s->%s", n.Src.Id(), n.Dst.Id())
-}
-
-func (n *Network) Id() string {
-	return strings.ToLower(n.FullName())
+type NEdge struct {
+	Src     *Component
+	Dst     *Component
+	Desc    string
+	Network *Network
+	Attrs   []*Attr
 }
 
 type Layer struct {
 	Name string
-	Desc string
-}
-
-type rawNetwork struct {
-	Src  string
-	Dst  string
 	Desc string
 }
 
@@ -71,6 +64,7 @@ type Config struct {
 	globalComponents  []*Component
 	clusterComponents []*Component
 	nodeComponents    []*Component
+	nEdges            []*NEdge
 }
 
 func New() *Config {
@@ -106,31 +100,37 @@ func (cfg *Config) NodeComponents() []*Component {
 	return cfg.nodeComponents
 }
 
-func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*Network, error) {
+func (cfg *Config) NEdges() []*NEdge {
+	return cfg.nEdges
+}
+
+func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*NEdge, error) {
+	nEdges := []*NEdge{}
 	if len(layers) == 0 {
-		return Clusters{}, cfg.Nodes, cfg.Networks, nil
+		return Clusters{}, cfg.Nodes, cfg.nEdges, nil
 	}
 	clusters, globalNodes, err := buildNestedClusters(cfg.Clusters(), layers, cfg.Nodes)
 	if err != nil {
 		return clusters, globalNodes, nil, err
 	}
-	networks := []*Network{}
-	for _, nw := range cfg.Networks {
+
+	for _, e := range cfg.nEdges {
 		hBelongTo := false
 		tBelongTo := false
 		for _, l := range layers {
-			if nw.Src.Cluster == nil || strings.EqualFold(nw.Src.Cluster.Layer, l) {
+			if e.Src.Cluster == nil || strings.EqualFold(e.Src.Cluster.Layer, l) {
 				hBelongTo = true
 			}
-			if nw.Dst.Cluster == nil || strings.EqualFold(nw.Dst.Cluster.Layer, l) {
+			if e.Dst.Cluster == nil || strings.EqualFold(e.Dst.Cluster.Layer, l) {
 				tBelongTo = true
 			}
 		}
 		if hBelongTo && tBelongTo {
-			networks = append(networks, nw)
+			nEdges = append(nEdges, e)
 		}
 	}
-	return clusters, globalNodes, networks, nil
+
+	return clusters, globalNodes, nEdges, nil
 }
 
 func (cfg *Config) LoadConfig(in []byte) error {
@@ -280,22 +280,15 @@ func (cfg *Config) buildComponents() error {
 	nc := orderedmap.NewOrderedMap()
 	cc := orderedmap.NewOrderedMap()
 	for _, nw := range cfg.rawNetworks {
-		switch sepCount(nw.Src) {
-		case 2: // cluster components
-			cc.Set(nw.Src, struct{}{})
-		case 1: // node components
-			nc.Set(nw.Src, struct{}{})
-		case 0: // global components
-			gc.Set(nw.Src, struct{}{})
-		}
-
-		switch sepCount(nw.Dst) {
-		case 2: // cluster components
-			cc.Set(nw.Dst, struct{}{})
-		case 1: // node components
-			nc.Set(nw.Dst, struct{}{})
-		case 0: // global components
-			gc.Set(nw.Dst, struct{}{})
+		for _, r := range nw.Route {
+			switch sepCount(r) {
+			case 2: // cluster components
+				cc.Set(r, struct{}{})
+			case 1: // node components
+				nc.Set(r, struct{}{})
+			case 0: // global components
+				gc.Set(r, struct{}{})
+			}
 		}
 	}
 
@@ -392,26 +385,20 @@ func (cfg *Config) parseClusterLabel(label string) (*Cluster, error) {
 
 func (cfg *Config) buildNetworks() error {
 	for _, nw := range cfg.rawNetworks {
-		h, err := cfg.FindComponent(nw.Src)
-		if err != nil {
-			return err
-		}
-		t, err := cfg.FindComponent(nw.Dst)
-		if err != nil {
-			return err
-		}
 		nnw := &Network{
-			Src: h,
-			Dst: t,
+			NetworkId: nw.Id,
+			Desc:      nw.Desc,
+		}
+		for _, r := range nw.Route {
+			c, err := cfg.FindComponent(r)
+			if err != nil {
+				return err
+			}
+			nnw.Route = append(nnw.Route, c)
 		}
 		cfg.Networks = append(cfg.Networks, nnw)
-		if h == t {
-			h.Networks = append(h.Networks, nnw)
-		} else {
-			h.Networks = append(h.Networks, nnw)
-			t.Networks = append(t.Networks, nnw)
-		}
 	}
+	cfg.nEdges = splitNetworks(cfg.Networks)
 	return nil
 }
 
@@ -708,4 +695,27 @@ func layerContains(s []*Layer, e string) bool {
 		}
 	}
 	return false
+}
+
+func splitNetworks(networks []*Network) []*NEdge {
+	var prev *Component
+	edges := []*NEdge{}
+	for _, nw := range networks {
+		prev = nil
+		for _, r := range nw.Route {
+			if prev != nil {
+				edge := &NEdge{
+					Src:     prev,
+					Dst:     r,
+					Desc:    nw.Desc,
+					Network: nw,
+				}
+				prev.NEdges = append(prev.NEdges, edge)
+				r.NEdges = append(r.NEdges, edge)
+				edges = append(edges, edge)
+			}
+			prev = r
+		}
+	}
+	return edges
 }

@@ -25,6 +25,7 @@ networks:
   - ["group:lb:vip", "lb-*:nginx"]
   - ["lb-*:nginx", "app-*:rails"]
   -
-    src: "app-*:rails"
-    dst: "db-*:postgresql"
-    desc: "app-db"
+    id: app
+    route:
+      - "app-*:rails"
+      - "db-*:postgresql"

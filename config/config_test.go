@@ -20,7 +20,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 		{"1_ndiag.yml", []string{"1_nodes.yml"}, 3, 7, 1, 0, 0, 3},
 		{"2_ndiag.yml", []string{"2_nodes.yml"}, 3, 7, 2, 1, 1, 3},
 	}
-	for _, tt := range tests {
+	for i, tt := range tests {
 		d := New()
 		if err := d.LoadConfigFile(filepath.Join(testdataDir(t), tt.configFile)); err != nil {
 			t.Fatal(err)
@@ -34,22 +34,22 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			t.Fatal(err)
 		}
 		if got := len(d.Nodes); got != tt.wantNodeLen {
-			t.Errorf("got %v\nwant %v", got, tt.wantNodeLen)
+			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantNodeLen)
 		}
 		if got := len(d.realNodes); got != tt.wantRealNodeLen {
-			t.Errorf("got %v\nwant %v", got, tt.wantRealNodeLen)
+			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantRealNodeLen)
 		}
 		if got := len(d.Clusters()); got != tt.wantClusterLen {
-			t.Errorf("got %v\nwant %v", got, tt.wantClusterLen)
+			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantClusterLen)
 		}
 		if got := len(d.GlobalComponents()); got != tt.wantGlobalComponentLen {
-			t.Errorf("got %v\nwant %v", got, tt.wantGlobalComponentLen)
+			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantGlobalComponentLen)
 		}
 		if got := len(d.ClusterComponents()); got != tt.wantClusterComponentLen {
-			t.Errorf("got %v\nwant %v", got, tt.wantClusterComponentLen)
+			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantClusterComponentLen)
 		}
 		if got := len(d.NodeComponents()); got != tt.wantNodeComponentLen {
-			t.Errorf("got %v\nwant %v", got, tt.wantNodeComponentLen)
+			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantNodeComponentLen)
 		}
 	}
 }
@@ -61,7 +61,7 @@ func TestBuildNestedCluster(t *testing.T) {
 		layers            []string
 		wantClusterLen    int
 		wantGlobalNodeLen int
-		wantNetworkLen    int
+		wantNEdgeLen      int
 	}{
 		{"1_ndiag.yml", []string{"1_nodes.yml"}, []string{}, 0, 3, 0},
 		{"1_ndiag.yml", []string{"1_nodes.yml"}, []string{"consul"}, 1, 0, 0},
@@ -91,7 +91,7 @@ func TestBuildNestedCluster(t *testing.T) {
 		cNodeComponentLen := len(d.NodeComponents())
 		cNetworkLen := len(d.Networks)
 
-		gotClusters, gotNodes, gotNetworks, err := d.BuildNestedClusters(tt.layers)
+		gotClusters, gotNodes, gotNEdges, err := d.BuildNestedClusters(tt.layers)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -101,8 +101,8 @@ func TestBuildNestedCluster(t *testing.T) {
 		if got := len(gotNodes); got != tt.wantGlobalNodeLen {
 			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, tt.wantGlobalNodeLen)
 		}
-		if got := len(gotNetworks); got != tt.wantNetworkLen {
-			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, tt.wantNetworkLen)
+		if got := len(gotNEdges); got != tt.wantNEdgeLen {
+			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, tt.wantNEdgeLen)
 		}
 
 		if got := len(d.Nodes); got != cNodeLen {

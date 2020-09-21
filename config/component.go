@@ -6,11 +6,11 @@ import (
 )
 
 type Component struct {
-	Name     string
-	Desc     string
-	Cluster  *Cluster
-	Node     *Node
-	Networks []*Network
+	Name    string
+	Desc    string
+	Cluster *Cluster
+	Node    *Node
+	NEdges  []*NEdge
 }
 
 func (c *Component) FullName() string {

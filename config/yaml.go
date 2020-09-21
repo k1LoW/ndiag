@@ -1,7 +1,9 @@
 package config
 
 import (
+	"crypto/sha256"
 	"fmt"
+	"io"
 	"regexp"
 	"strings"
 
@@ -28,31 +30,42 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	d.Nodes = raw.Nodes
 
 	for _, nw := range raw.Networks {
+		route := []string{}
 		switch v := nw.(type) {
 		case []interface{}:
-			if len(v) != 2 {
+			for _, r := range v {
+				route = append(route, r.(string))
+			}
+			if len(route) < 2 {
 				return fmt.Errorf("invalid network format: %s", v)
 			}
-			rnw := &rawNetwork{
-				Src: v[0].(string),
-				Dst: v[1].(string),
+			id, err := genNetworkId(route)
+			if err != nil {
+				return err
 			}
-			if len(v) == 3 {
-				rnw.Desc = v[2].(string)
+			rnw := &rawNetwork{
+				Id:    id,
+				Route: route,
 			}
 			d.rawNetworks = append(d.rawNetworks, rnw)
 		case map[string]interface{}:
-			src, ok := v["src"]
+			id, ok := v["id"]
 			if !ok {
 				return fmt.Errorf("invalid network format: %s", v)
 			}
-			dst, ok := v["dst"]
+			ri, ok := v["route"]
 			if !ok {
+				return fmt.Errorf("invalid network format: %s", v)
+			}
+			for _, r := range ri.([]interface{}) {
+				route = append(route, r.(string))
+			}
+			if len(route) < 2 {
 				return fmt.Errorf("invalid network format: %s", v)
 			}
 			rnw := &rawNetwork{
-				Src: src.(string),
-				Dst: dst.(string),
+				Id:    id.(string),
+				Route: route,
 			}
 			if desc, ok := v["desc"]; ok {
 				rnw.Desc = desc.(string)
@@ -90,4 +103,13 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	}
 	n.rawClusters = raw.Clusters
 	return nil
+}
+
+func genNetworkId(route []string) (string, error) {
+	h := sha256.New()
+	if _, err := io.WriteString(h, fmt.Sprintf("%s", route)); err != nil {
+		return "", err
+	}
+	s := fmt.Sprintf("%x", h.Sum(nil))
+	return fmt.Sprintf("nw-%s", s[:12]), nil
 }

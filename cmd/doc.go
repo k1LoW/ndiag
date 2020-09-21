@@ -175,6 +175,36 @@ var docCmd = &cobra.Command{
 			}
 		}
 
+		// networks
+		for _, nw := range cfg.Networks {
+			cfg, err := newConfig()
+			if err != nil {
+				printFatalln(cmd, err)
+			}
+			o := md.New(cfg)
+
+			// generate md
+			mPath := filepath.Join(cfg.DocPath, config.MdPath("network", []string{nw.Id()}))
+			file, err := os.Create(mPath)
+			if err != nil {
+				printFatalln(cmd, err)
+			}
+			if err := o.OutputNetwork(file, nw); err != nil {
+				printFatalln(cmd, err)
+			}
+
+			// draw diagram
+			diag := gviz.New(cfg)
+			dPath := filepath.Join(cfg.DocPath, config.ImagePath("network", []string{nw.Id()}, format))
+			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
+			if err != nil {
+				printFatalln(cmd, err)
+			}
+			if err := diag.OutputNetwork(dFile, nw); err != nil {
+				printFatalln(cmd, err)
+			}
+		}
+
 		// top page
 		mPath := filepath.Join(cfg.DocPath, "README.md")
 		file, err := os.Create(mPath)
@@ -221,6 +251,18 @@ func diagExists(cfg *config.Config) error {
 			return fmt.Errorf("%s already exist", mPath)
 		}
 		dPath := filepath.Join(cfg.DocPath, config.MdPath("node", []string{n.Id()}))
+		if _, err := os.Lstat(dPath); err == nil {
+			return fmt.Errorf("%s already exist", dPath)
+		}
+	}
+
+	// networks
+	for _, nw := range cfg.Networks {
+		mPath := filepath.Join(cfg.DocPath, config.ImagePath("network", []string{nw.Id()}, format))
+		if _, err := os.Lstat(mPath); err == nil {
+			return fmt.Errorf("%s already exist", mPath)
+		}
+		dPath := filepath.Join(cfg.DocPath, config.MdPath("network", []string{nw.Id()}))
 		if _, err := os.Lstat(dPath); err == nil {
 			return fmt.Errorf("%s already exist", dPath)
 		}
