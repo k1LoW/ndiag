@@ -80,6 +80,16 @@ var FuncMap = template.FuncMap{
 		}
 		return strings.Join(unique(links), " / ")
 	},
+	"attrs": func(attrs []*config.Attr) string {
+		if len(attrs) == 0 {
+			return ""
+		}
+		var out string
+		for _, a := range attrs {
+			out = fmt.Sprintf("%s, %s=%s", out, a.Key, a.Value)
+		}
+		return out
+	},
 }
 
 // componentLink

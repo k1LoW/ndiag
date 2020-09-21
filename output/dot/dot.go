@@ -217,14 +217,37 @@ func (d *Dot) OutputNetwork(wr io.Writer, nw *config.Network) error {
 }
 
 func mergeEdges(edges []*config.NEdge) []*config.NEdge {
-	eKeys := orderedmap.NewOrderedMap()
-	merged := []*config.NEdge{}
+	eKeys0 := orderedmap.NewOrderedMap()
+	merged0 := []*config.NEdge{}
 	for _, e := range edges {
-		eKeys.Set(fmt.Sprintf("%s->%s", e.Src.Id(), e.Dst.Id()), e)
+		eKeys0.Set(fmt.Sprintf("%s->%s", e.Src.Id(), e.Dst.Id()), e)
 	}
-	for _, k := range eKeys.Keys() {
-		e, _ := eKeys.Get(k)
-		merged = append(merged, e.(*config.NEdge))
+	for _, k := range eKeys0.Keys() {
+		e, _ := eKeys0.Get(k)
+		merged0 = append(merged0, e.(*config.NEdge))
 	}
-	return merged
+
+	eKeys1 := orderedmap.NewOrderedMap()
+	merged1 := []*config.NEdge{}
+	for _, e := range merged0 {
+		var k string
+		if e.Src.Id() < e.Dst.Id() {
+			k = fmt.Sprintf("%s->%s", e.Src.Id(), e.Dst.Id())
+		} else {
+			k = fmt.Sprintf("%s->%s", e.Dst.Id(), e.Src.Id())
+		}
+		ce, _ := eKeys1.Get(k)
+		if ce != nil {
+			e.Attrs = append(e.Attrs, &config.Attr{
+				Key:   "dir",
+				Value: "both",
+			})
+		}
+		eKeys1.Set(k, e)
+	}
+	for _, k := range eKeys1.Keys() {
+		e, _ := eKeys1.Get(k)
+		merged1 = append(merged1, e.(*config.NEdge))
+	}
+	return merged1
 }
