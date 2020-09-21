@@ -31,11 +31,17 @@ type NNode interface {
 	FullName() string
 }
 
+type Attr struct {
+	Key   string
+	Value string
+}
+
 type NEdge struct {
 	Src     *Component
 	Dst     *Component
 	Desc    string
 	Network *Network
+	Attrs   []*Attr
 }
 
 type Layer struct {
