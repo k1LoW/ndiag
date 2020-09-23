@@ -17,6 +17,15 @@
   [ <a href="{{ $.DescPath }}/{{ mdpath "_cluster" ($c | id) }}">:pencil2: Edit description</a> ]
 <p>
 
+{{ if ne (len $c.Components) 0 }}
+### Cluster components
+
+| Name | Description |
+| --- | --- |
+{{- range $i, $cc := $c.Components }}
+| {{ $cc | fullname }} | {{ if ne $cc.Desc "" }}{{ $cc.Desc }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_component" ($cc | id)}}">:pencil2:</a>{{ end }} |
+{{- end -}}
+{{- end }}
 ### Nodes
 
 | Name (node count) | Description |
