@@ -15,9 +15,17 @@ type Output interface {
 }
 
 var unescRep = strings.NewReplacer(fmt.Sprintf("%s%s", config.Esc, config.Sep), config.Sep)
+var nl2brRep = strings.NewReplacer("\r\n", "<br>", "\n", "<br>", "\r", "<br>")
+var crRep = strings.NewReplacer("\r", "")
 var clusterRep = strings.NewReplacer(":", "")
 
 var FuncMap = template.FuncMap{
+	"trim": func(s string) string {
+		return strings.TrimRight(s, "\r\n")
+	},
+	"nl2br": func(s string) string {
+		return nl2brRep.Replace(s)
+	},
 	"id": func(e config.NNode) string {
 		return unescRep.Replace(e.Id())
 	},
@@ -28,7 +36,7 @@ var FuncMap = template.FuncMap{
 		return unescRep.Replace(s)
 	},
 	"summary": func(s string) string {
-		splitted := strings.Split(s, "\n")
+		splitted := strings.Split(crRep.Replace(strings.TrimRight(s, "\r\n")), "\n")
 		switch {
 		case len(splitted) == 0:
 			return ""

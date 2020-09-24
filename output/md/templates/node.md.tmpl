@@ -13,7 +13,7 @@
 | Name | Description | From (Network) | To (Network) |
 | --- | --- | --- | --- |
 {{- range $i, $c := .Components }}
-| {{ $c.Name }} | {{ $c.Desc }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> | {{ fromlinks $c.NEdges $c }} | {{ tolinks $c.NEdges $c }} |
+| {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> | {{ fromlinks $c.NEdges $c }} | {{ tolinks $c.NEdges $c }} |
 {{- end }}
 ## Network tag groups
 

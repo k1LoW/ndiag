@@ -13,7 +13,7 @@
 | # | Component | Component Description |
 | --- | --- | --- |
 {{- range $i, $c := .Network.Route }}
-| {{ $i }} | {{ $c.Name }} | {{ $c.Desc }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |
+| {{ $i }} | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |
 {{- end }}
 
 ---
