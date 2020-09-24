@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# Usage:
+#
+#   source <(curl https://raw.githubusercontent.com/k1LoW/ndiag/master/use)
+#
+# Reference:
+#   https://github.com/goreleaser/get
+
+NDIAG_GOOS=linux
+NDIAG_EXT=tar.gz
+NDIAG_ARCH=amd64
+if test $(uname -s) = "Darwin"
+then
+  NDIAG_GOOS=darwin
+  NDIAG_EXT=zip
+fi
+NDIAG_ARCHIVE="/tmp/ndiag.${NDIAG_EXT}"
+
+NDIAG_RELEASES_URL="https://github.com/k1LoW/ndiag/releases"
+test -z "$NDIAG_TMPDIR" && NDIAG_TMPDIR="$(mktemp -d)"
+
+last_version() {
+  curl -sL -o /dev/null -w %{url_effective} "$NDIAG_RELEASES_URL/latest" |
+    rev |
+    cut -f1 -d'/'|
+    rev
+}
+
+download() {
+  test -z "$NDIAG_VERSION" && NDIAG_VERSION="$(last_version)"
+  test -z "$NDIAG_VERSION" && {
+    echo "Unable to get ndiag version." >&2
+    exit 1
+  }
+  rm -f "$NDIAG_ARCHIVE"
+  curl -s -L -o "$NDIAG_ARCHIVE" \
+    "${NDIAG_RELEASES_URL}/download/${NDIAG_VERSION}/ndiag_${NDIAG_VERSION}_${NDIAG_GOOS}_${NDIAG_ARCH}.${NDIAG_EXT}"
+}
+
+download
+if test ${NDIAG_EXT} = "tar.gz"
+then
+  tar -xf "$NDIAG_ARCHIVE" -C "$NDIAG_TMPDIR"
+elif test ${NDIAG_EXT} = "zip"
+then
+  unzip -qo "$NDIAG_ARCHIVE" -d "$NDIAG_TMPDIR"
+fi
+export PATH=${NDIAG_TMPDIR}:$PATH
+echo -e '\e[36mYou can use `ndiag` command in this session.\e[m'
