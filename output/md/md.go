@@ -97,16 +97,22 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 		return err
 	}
 
-	networks := []*config.Network{}
-	nwIds := orderedmap.NewOrderedMap()
+	tags := []*config.Tag{}
+	nwTags := orderedmap.NewOrderedMap()
 	for _, c := range n.Components {
 		for _, e := range c.NEdges {
-			nwIds.Set(e.Network.Id(), e.Network)
+			for _, ts := range e.Network.Tags {
+				for _, t := range m.config.Tags() {
+					if ts == t.Name {
+						nwTags.Set(ts, t)
+					}
+				}
+			}
 		}
 	}
-	for _, k := range nwIds.Keys() {
-		nw, _ := nwIds.Get(k)
-		networks = append(networks, nw.(*config.Network))
+	for _, k := range nwTags.Keys() {
+		t, _ := nwTags.Get(k)
+		tags = append(tags, t.(*config.Tag))
 	}
 
 	tmpl := template.Must(template.New(n.Id()).Funcs(output.FuncMap).Parse(ts))
@@ -116,11 +122,36 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 		"DescPath":   rel,
 		"Components": n.Components,
 		"RealNodes":  n.RealNodes,
-		"Networks":   networks,
+		"Tags":       tags,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
 	}
+	return nil
+}
+
+func (m *Md) OutputTag(wr io.Writer, t *config.Tag) error {
+	ts, err := m.box.FindString("network-tag.md.tmpl")
+	if err != nil {
+		return err
+	}
+
+	rel, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
+	if err != nil {
+		return err
+	}
+
+	tmpl := template.Must(template.New(t.Id()).Funcs(output.FuncMap).Parse(ts))
+	tmplData := map[string]interface{}{
+		"Tag":        t,
+		"DiagFormat": m.config.DiagFormat(),
+		"DescPath":   rel,
+	}
+
+	if err := tmpl.Execute(wr, tmplData); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -169,6 +200,7 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 		"Diagrams":   m.config.Diagrams,
 		"Layers":     m.config.Layers(),
 		"Nodes":      m.config.Nodes,
+		"Tags":       m.config.Tags(),
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err

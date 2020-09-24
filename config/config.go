@@ -65,6 +65,7 @@ type Config struct {
 	clusterComponents []*Component
 	nodeComponents    []*Component
 	nEdges            []*NEdge
+	tags              []*Tag
 }
 
 func New() *Config {
@@ -102,6 +103,10 @@ func (cfg *Config) NodeComponents() []*Component {
 
 func (cfg *Config) NEdges() []*NEdge {
 	return cfg.nEdges
+}
+
+func (cfg *Config) Tags() []*Tag {
+	return cfg.tags
 }
 
 func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*NEdge, error) {
@@ -384,10 +389,11 @@ func (cfg *Config) parseClusterLabel(label string) (*Cluster, error) {
 }
 
 func (cfg *Config) buildNetworks() error {
+	nwTags := orderedmap.NewOrderedMap()
 	for _, nw := range cfg.rawNetworks {
 		nnw := &Network{
 			NetworkId: nw.Id,
-			Desc:      nw.Desc,
+			Tags:      nw.Tags,
 		}
 		for _, r := range nw.Route {
 			c, err := cfg.FindComponent(r)
@@ -397,8 +403,29 @@ func (cfg *Config) buildNetworks() error {
 			nnw.Route = append(nnw.Route, c)
 		}
 		cfg.Networks = append(cfg.Networks, nnw)
+
+		// tags
+		for _, t := range nw.Tags {
+			var nt *Tag
+			nti, ok := nwTags.Get(t)
+			if ok {
+				nt = nti.(*Tag)
+			} else {
+				nt = &Tag{
+					Name: t,
+				}
+				nwTags.Set(t, nt)
+			}
+			nt.Networks = append(nt.Networks, nnw)
+		}
 	}
-	cfg.nEdges = splitNetworks(cfg.Networks)
+	cfg.nEdges = SplitNetworks(cfg.Networks)
+
+	for _, k := range nwTags.Keys() {
+		nt, _ := nwTags.Get(k)
+		cfg.tags = append(cfg.tags, nt.(*Tag))
+	}
+
 	return nil
 }
 
@@ -491,16 +518,16 @@ func (cfg *Config) buildDescriptions() error {
 		c.Desc = desc
 	}
 
-	// networks
-	for _, nw := range cfg.Networks {
-		if nw.Desc != "" {
+	// tags
+	for _, t := range cfg.tags {
+		if t.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_network", []string{nw.Id()}))
+		desc, err := cfg.readDescFile(MdPath("_network-tag", []string{t.Id()}))
 		if err != nil {
 			return err
 		}
-		nw.Desc = desc
+		t.Desc = desc
 	}
 
 	return nil
@@ -695,27 +722,4 @@ func layerContains(s []*Layer, e string) bool {
 		}
 	}
 	return false
-}
-
-func splitNetworks(networks []*Network) []*NEdge {
-	var prev *Component
-	edges := []*NEdge{}
-	for _, nw := range networks {
-		prev = nil
-		for _, r := range nw.Route {
-			if prev != nil {
-				edge := &NEdge{
-					Src:     prev,
-					Dst:     r,
-					Desc:    nw.Desc,
-					Network: nw,
-				}
-				prev.NEdges = append(prev.NEdges, edge)
-				r.NEdges = append(r.NEdges, edge)
-				edges = append(edges, edge)
-			}
-			prev = r
-		}
-	}
-	return edges
 }

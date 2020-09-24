@@ -31,6 +31,7 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 
 	for _, nw := range raw.Networks {
 		route := []string{}
+		tags := []string{}
 		switch v := nw.(type) {
 		case []interface{}:
 			for _, r := range v {
@@ -43,15 +44,26 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 			if err != nil {
 				return err
 			}
+			tags = []string{id}
 			rnw := &rawNetwork{
 				Id:    id,
 				Route: route,
+				Tags:  tags,
 			}
 			d.rawNetworks = append(d.rawNetworks, rnw)
 		case map[string]interface{}:
-			id, ok := v["id"]
-			if !ok {
-				return fmt.Errorf("invalid network format: %s", v)
+			var (
+				id  string
+				err error
+			)
+			idi, ok := v["id"]
+			if ok {
+				id = idi.(string)
+			} else {
+				id, err = genNetworkId(route)
+				if err != nil {
+					return err
+				}
 			}
 			ri, ok := v["route"]
 			if !ok {
@@ -63,12 +75,19 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 			if len(route) < 2 {
 				return fmt.Errorf("invalid network format: %s", v)
 			}
-			rnw := &rawNetwork{
-				Id:    id.(string),
-				Route: route,
+			ti, ok := v["tags"]
+			if ok {
+				for _, t := range ti.([]interface{}) {
+					tags = append(tags, t.(string))
+				}
 			}
-			if desc, ok := v["desc"]; ok {
-				rnw.Desc = desc.(string)
+			if len(tags) == 0 {
+				tags = []string{id}
+			}
+			rnw := &rawNetwork{
+				Id:    id,
+				Route: route,
+				Tags:  tags,
 			}
 			d.rawNetworks = append(d.rawNetworks, rnw)
 		}

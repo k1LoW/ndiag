@@ -39,7 +39,7 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 		"Clusters":         clusters,
 		"RemainNodes":      remain,
 		"GlobalComponents": d.config.GlobalComponents(),
-		"Edges":            mergeEdges(nEdges),
+		"Edges":            config.MergeEdges(nEdges),
 	}); err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ L:
 		"Clusters":         clusters,
 		"RemainNodes":      []*config.Node{},
 		"GlobalComponents": []*config.Component{},
-		"Edges":            mergeEdges(edges),
+		"Edges":            config.MergeEdges(edges),
 	}); err != nil {
 		return err
 	}
@@ -152,6 +152,65 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 	return nil
 }
 
+func (d *Dot) OutputTag(wr io.Writer, t *config.Tag) error {
+	ts, err := d.box.FindString("diagram.dot.tmpl")
+	if err != nil {
+		return err
+	}
+	tmpl := template.Must(template.New("diagram").Funcs(output.FuncMap).Parse(ts))
+
+	clusters := config.Clusters{}
+	cIds := orderedmap.NewOrderedMap()
+	nodes := []*config.Node{}
+	nIds := orderedmap.NewOrderedMap()
+	globalComponents := []*config.Component{}
+	gIds := orderedmap.NewOrderedMap()
+	edges := config.SplitNetworks(t.Networks)
+
+	for _, e := range edges {
+		switch {
+		case e.Src.Node != nil:
+			nIds.Set(e.Src.Node.Id(), e.Src.Node)
+		case e.Src.Cluster != nil:
+			e.Src.Cluster.Nodes = nil
+			cIds.Set(e.Src.Cluster.Id(), e.Src.Cluster)
+		default:
+			gIds.Set(e.Src.Id(), e.Src)
+		}
+		switch {
+		case e.Dst.Node != nil:
+			nIds.Set(e.Dst.Node.Id(), e.Dst.Node)
+		case e.Dst.Cluster != nil:
+			e.Dst.Cluster.Nodes = nil
+			cIds.Set(e.Dst.Cluster.Id(), e.Dst.Cluster)
+		default:
+			gIds.Set(e.Dst.Id(), e.Dst)
+		}
+	}
+	for _, k := range nIds.Keys() {
+		n, _ := nIds.Get(k)
+		nodes = append(nodes, n.(*config.Node))
+	}
+	for _, k := range cIds.Keys() {
+		c, _ := cIds.Get(k)
+		clusters = append(clusters, c.(*config.Cluster))
+	}
+	for _, k := range gIds.Keys() {
+		c, _ := gIds.Get(k)
+		globalComponents = append(globalComponents, c.(*config.Component))
+	}
+
+	if err := tmpl.Execute(wr, map[string]interface{}{
+		"Clusters":         clusters,
+		"RemainNodes":      nodes,
+		"GlobalComponents": globalComponents,
+		"Edges":            edges,
+	}); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (d *Dot) OutputNetwork(wr io.Writer, nw *config.Network) error {
 	ts, err := d.box.FindString("diagram.dot.tmpl")
 	if err != nil {
@@ -213,41 +272,4 @@ func (d *Dot) OutputNetwork(wr io.Writer, nw *config.Network) error {
 		return err
 	}
 	return nil
-	return nil
-}
-
-func mergeEdges(edges []*config.NEdge) []*config.NEdge {
-	eKeys0 := orderedmap.NewOrderedMap()
-	merged0 := []*config.NEdge{}
-	for _, e := range edges {
-		eKeys0.Set(fmt.Sprintf("%s->%s", e.Src.Id(), e.Dst.Id()), e)
-	}
-	for _, k := range eKeys0.Keys() {
-		e, _ := eKeys0.Get(k)
-		merged0 = append(merged0, e.(*config.NEdge))
-	}
-
-	eKeys1 := orderedmap.NewOrderedMap()
-	merged1 := []*config.NEdge{}
-	for _, e := range merged0 {
-		var k string
-		if e.Src.Id() < e.Dst.Id() {
-			k = fmt.Sprintf("%s->%s", e.Src.Id(), e.Dst.Id())
-		} else {
-			k = fmt.Sprintf("%s->%s", e.Dst.Id(), e.Src.Id())
-		}
-		ce, _ := eKeys1.Get(k)
-		if ce != nil {
-			e.Attrs = append(e.Attrs, &config.Attr{
-				Key:   "dir",
-				Value: "both",
-			})
-		}
-		eKeys1.Set(k, e)
-	}
-	for _, k := range eKeys1.Keys() {
-		e, _ := eKeys1.Get(k)
-		merged1 = append(merged1, e.(*config.NEdge))
-	}
-	return merged1
 }
