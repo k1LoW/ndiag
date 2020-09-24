@@ -14,7 +14,7 @@
 | # | Component | Component Description |
 | --- | --- | --- |
 {{- range $i, $c := $nw.Route }}
-| {{ $i }} | {{ $c | id }} | {{ $c.Desc }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |
+| {{ $i }} | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |
 {{- end }}
 {{ end }}
 

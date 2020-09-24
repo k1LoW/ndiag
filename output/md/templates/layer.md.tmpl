@@ -23,7 +23,7 @@
 | Name | Description |
 | --- | --- |
 {{- range $i, $cc := $c.Components }}
-| {{ $cc | fullname }} | {{ if ne $cc.Desc "" }}{{ $cc.Desc }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_component" ($cc | id)}}">:pencil2:</a>{{ end }} |
+| {{ $cc | fullname }} | {{ if ne $cc.Desc "" }}{{ $cc.Desc | trim | nl2br }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_component" ($cc | id)}}">:pencil2:</a>{{ end }} |
 {{- end -}}
 {{- end }}
 ### Nodes
