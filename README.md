@@ -33,7 +33,3 @@ component id = `[layer name]:[cluster name]:[component name]`
 **node component:**
 
 component id = `[node name]:[component name]`
-
-### Network
-
-network id = `[component id]->[component id]`

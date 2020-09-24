@@ -15,16 +15,12 @@
 {{- range $i, $c := .Components }}
 | {{ $c.Name }} | {{ $c.Desc }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> | {{ fromlinks $c.NEdges $c }} | {{ tolinks $c.NEdges $c }} |
 {{- end }}
-## Networks
+## Network tag groups
 
-| -> | Description |
+| Name | Description |
 | --- | --- |
-{{- range $i, $nw := .Networks }}
-| {{ $nw | nwlink }} | {{ if ne $nw.Desc "" }}{{ $nw.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_network" ($nw | id) }}">:pencil2:</a>{{ end }} |
-{{- end }}
-## Real nodes
-{{ range $i, $rn := .RealNodes }}
-- {{ $rn | fullname }}
+{{- range $i, $t := .Tags }}
+| [{{ $t | fullname }}]({{ mdpath "network-tag" ($t | id) }}) | {{ if ne $t.Desc "" }}{{ $t.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_network-tag" ($t | id)}}">:pencil2:</a>{{ end }} |
 {{- end }}
 
 ---
