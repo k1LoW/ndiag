@@ -1,3 +1,9 @@
+## [v0.1.0](https://github.com/k1LoW/ndiag/compare/v0.0.1...v0.1.0) (2020-09-24)
+
+* [BREAKING] Add Network.Tags [#14](https://github.com/k1LoW/ndiag/pull/14) ([k1LoW](https://github.com/k1LoW))
+* Show cluster component [#13](https://github.com/k1LoW/ndiag/pull/13) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING]Change `networks:` design [#12](https://github.com/k1LoW/ndiag/pull/12) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.0.1](https://github.com/k1LoW/ndiag/compare/6eabff9d8ff3...v0.0.1) (2020-09-12)
 
 * Get a deterministic output [#11](https://github.com/k1LoW/ndiag/pull/11) ([k1LoW](https://github.com/k1LoW))
