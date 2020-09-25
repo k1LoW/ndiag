@@ -1,3 +1,7 @@
+## [v0.1.2](https://github.com/k1LoW/ndiag/compare/v0.1.1...v0.1.2) (2020-09-25)
+
+* Add Tags param to diagram.md.tmpl [#16](https://github.com/k1LoW/ndiag/pull/16) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.1.1](https://github.com/k1LoW/ndiag/compare/v0.1.0...v0.1.1) (2020-09-24)
 
 * Fix table output (trim \r and add nl2br) [#15](https://github.com/k1LoW/ndiag/pull/15) ([k1LoW](https://github.com/k1LoW))
