@@ -1,3 +1,7 @@
+## [v0.2.0](https://github.com/k1LoW/ndiag/compare/v0.1.2...v0.2.0) (2020-09-25)
+
+* Create a node component from the network routes when the node component does not exist [#17](https://github.com/k1LoW/ndiag/pull/17) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.1.2](https://github.com/k1LoW/ndiag/compare/v0.1.1...v0.1.2) (2020-09-25)
 
 * Add Tags param to diagram.md.tmpl [#16](https://github.com/k1LoW/ndiag/pull/16) ([k1LoW](https://github.com/k1LoW))
