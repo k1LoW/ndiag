@@ -262,6 +262,15 @@ func (cfg *Config) LoadRealNodesFile(path string) error {
 	return cfg.LoadRealNodes(buf)
 }
 
+func (cfg *Config) FindNode(name string) (*Node, error) {
+	for _, n := range cfg.Nodes {
+		if strings.EqualFold(n.FullName(), name) {
+			return n, nil
+		}
+	}
+	return nil, fmt.Errorf("node not found: %s", name)
+}
+
 func (cfg *Config) FindComponent(name string) (*Component, error) {
 	var components []*Component
 	switch sepCount(name) {
@@ -299,6 +308,7 @@ func (cfg *Config) buildComponents() error {
 
 	// global components
 	for _, c := range gc.Keys() {
+		// create global component from network route
 		cfg.globalComponents = append(cfg.globalComponents, &Component{
 			Name: c.(string),
 		})
@@ -309,18 +319,29 @@ func (cfg *Config) buildComponents() error {
 		cfg.nodeComponents = append(cfg.nodeComponents, n.Components...)
 	}
 
-	belongTo := false
 	for _, c := range nc.Keys() {
-		for _, n := range cfg.Nodes {
-			for _, com := range n.Components {
-				if strings.EqualFold(com.FullName(), c.(string)) {
-					belongTo = true
-				}
+		belongTo := false
+		splitted := sepSplit(c.(string))
+		nodeName := splitted[0]
+		comName := splitted[1]
+		n, err := cfg.FindNode(nodeName)
+		if err != nil {
+			return fmt.Errorf("node '%s' not found: %s", nodeName, c)
+		}
+		for _, com := range n.Components {
+			if strings.EqualFold(com.FullName(), c.(string)) {
+				belongTo = true
+				break
 			}
 		}
 		if !belongTo {
-			splitted := sepSplit(c.(string))
-			return fmt.Errorf("node '%s' not found: %s", splitted[0], c)
+			// create node component from network route
+			component := &Component{
+				Name: comName,
+				Node: n,
+			}
+			n.Components = append(n.Components, component)
+			cfg.nodeComponents = append(cfg.nodeComponents, component)
 		}
 	}
 
@@ -332,6 +353,7 @@ func (cfg *Config) buildComponents() error {
 		belongTo := false
 		for _, cl := range cfg.Clusters() {
 			if strings.EqualFold(cl.FullName(), clName) {
+				// create cluster component from network route
 				com := &Component{
 					Cluster: cl,
 					Name:    comName,
