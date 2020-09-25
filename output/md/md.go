@@ -50,6 +50,7 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 		"DescPath":   rel,
 		"Layers":     layers,
 		"Nodes":      m.config.Nodes,
+		"Tags":       m.config.Tags(),
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
