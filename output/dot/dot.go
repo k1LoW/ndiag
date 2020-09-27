@@ -40,6 +40,7 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 		"RemainNodes":      remain,
 		"GlobalComponents": d.config.GlobalComponents(),
 		"Edges":            config.MergeEdges(nEdges),
+		"HideUnlinked":     false,
 	}); err != nil {
 		return err
 	}
@@ -81,6 +82,7 @@ L:
 		"RemainNodes":      []*config.Node{},
 		"GlobalComponents": []*config.Component{},
 		"Edges":            config.MergeEdges(edges),
+		"HideUnlinked":     false,
 	}); err != nil {
 		return err
 	}
@@ -205,6 +207,7 @@ func (d *Dot) OutputTag(wr io.Writer, t *config.Tag) error {
 		"RemainNodes":      nodes,
 		"GlobalComponents": globalComponents,
 		"Edges":            edges,
+		"HideUnlinked":     true,
 	}); err != nil {
 		return err
 	}
@@ -268,6 +271,7 @@ func (d *Dot) OutputNetwork(wr io.Writer, nw *config.Network) error {
 		"RemainNodes":      nodes,
 		"GlobalComponents": globalComponents,
 		"Edges":            edges,
+		"HideUnlinked":     true,
 	}); err != nil {
 		return err
 	}

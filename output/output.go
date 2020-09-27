@@ -98,6 +98,23 @@ var FuncMap = template.FuncMap{
 		}
 		return out
 	},
+	"dict": func(v ...interface{}) map[string]interface{} {
+		dict := map[string]interface{}{}
+		length := len(v)
+		for i := 0; i < length; i += 2 {
+			key := v[i].(string)
+			dict[key] = v[i+1]
+		}
+		return dict
+	},
+	"is_linked": func(c *config.Component, edges []*config.NEdge) bool {
+		for _, e := range edges {
+			if c.Id() == e.Src.Id() || c.Id() == e.Dst.Id() {
+				return true
+			}
+		}
+		return false
+	},
 }
 
 // componentLink

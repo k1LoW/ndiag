@@ -2,21 +2,23 @@ digraph ndiag {
   graph [rankdir=TB, layout=dot, fontname="Arial"];
 
 {{ define "cluster" }}
-  subgraph "cluster_{{ . | id }}" {
-    label = "{{ .Layer }}:{{ .Name | unesc }}";
+  subgraph "cluster_{{ .cluster | id }}" {
+    label = "{{ .cluster.Layer }}:{{ .cluster.Name | unesc }}";
     style = "rounded,filled";
     color = "#4B75B933"
     shape = box;
     fontname="Arial";
 
-    {{ range $_, $n := .Nodes }}
+    {{ range $n := .cluster.Nodes }}
     subgraph "cluster_{{ $n | id }}" {
       label = "{{ $n.Name | unesc }} ({{ len $n.RealNodes }})";
       style = "solid,bold,filled";
       color = "#333333"
       fillcolor = "#FFFFFF"
-      {{ range $_, $co := $n.Components }}
+      {{ range $co := $n.Components }}
+      {{ if is_linked $co $.edges }}
       "{{ $co | id }}"[label="{{ $co.Name | unesc }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
+      {{ end }}
       {{ end }}
 
       {{ $length := len $n.Components }}
@@ -26,21 +28,23 @@ digraph ndiag {
     }
     {{ end }}
 
-    {{ range $_, $co := .Components }}
+    {{ range $co := .cluster.Components }}
+      {{ if is_linked $co $.edges }}
       "{{ $co | id }}"[label="{{ $co.Name | unesc }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
+      {{ end }}
     {{ end }}
 
-    {{ range .Children }}
-       {{ template "cluster" . }}
+    {{ range $c := .cluster.Children }}
+       {{ template "cluster" (dict "cluster" $c "edges" $.edges) }}
     {{ end }}
   }
 {{ end }}
 
-{{ range .Clusters }}
-  {{ template "cluster" . }}
+{{ range $c := .Clusters }}
+  {{ template "cluster" (dict "cluster" $c "edges" $.Edges) }}
 {{ end }}
 
-{{ range $_, $n := .RemainNodes }}
+{{ range $n := .RemainNodes }}
   subgraph "cluster_{{ $n.Name }}" {
     label = "{{ $n | fullname }} ({{ len $n.RealNodes }})";
     style = "solid,bold";
@@ -49,8 +53,10 @@ digraph ndiag {
     fontcolor="#666666";
     color="#999999";
     {{ end }}
-    {{ range $_, $co := $n.Components }}
+    {{ range $co := $n.Components }}
+    {{ if or (eq $.MainNodeId ($n | id)) (is_linked $co $.Edges) }}
     "{{$co | id }}"[label="{{ $co.Name | unesc }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
+    {{ end }}
     {{ end }}
     {{ $length := len $n.Components }}
     {{ if eq $length 0 }}
@@ -59,11 +65,13 @@ digraph ndiag {
   }
 {{ end }}
 
-{{ range $_, $co := .GlobalComponents }}
+{{ range $co := .GlobalComponents }}
+{{ if is_linked $co $.Edges }}
 "{{ $co | id }}"[label="{{ $co.Name | unesc }}", style="rounded,bold", shape=box, fontname="Arial"];
 {{ end }}
+{{ end }}
 
-{{ range $_, $e := .Edges }}
+{{ range $e := .Edges }}
 "{{ $e.Src | id }}" -> "{{ $e.Dst | id }}"[arrowhead=normal, arrowtail=normal, headlabel="", taillabel="", color="#33333399", labelfontcolor="#333333", style=bold, fontname="Arial"{{ $e.Attrs | attrs }}];
 {{ end }}
 
