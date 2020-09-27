@@ -145,7 +145,7 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 		"Clusters":         clusters,
 		"RemainNodes":      nodes,
 		"GlobalComponents": globalComponents,
-		"Edges":            edges,
+		"Edges":            config.MergeEdges(edges),
 	}); err != nil {
 		return err
 	}
