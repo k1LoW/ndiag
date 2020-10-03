@@ -294,7 +294,7 @@ func (cfg *Config) buildComponents() error {
 	nc := orderedmap.NewOrderedMap()
 	cc := orderedmap.NewOrderedMap()
 	for _, rel := range cfg.rawRelations {
-		for _, r := range rel.Route {
+		for _, r := range rel.Components {
 			switch sepCount(r) {
 			case 2: // cluster components
 				cc.Set(r, struct{}{})
@@ -417,12 +417,12 @@ func (cfg *Config) buildRelations() error {
 			RelationId: rel.Id,
 			Tags:       rel.Tags,
 		}
-		for _, r := range rel.Route {
+		for _, r := range rel.Components {
 			c, err := cfg.FindComponent(r)
 			if err != nil {
 				return err
 			}
-			nrel.Route = append(nrel.Route, c)
+			nrel.Components = append(nrel.Components, c)
 		}
 		cfg.Relations = append(cfg.Relations, nrel)
 

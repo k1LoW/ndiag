@@ -30,24 +30,24 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	d.Nodes = raw.Nodes
 
 	for _, rel := range raw.Relations {
-		route := []string{}
+		components := []string{}
 		tags := []string{}
 		switch v := rel.(type) {
 		case []interface{}:
 			for _, r := range v {
-				route = append(route, r.(string))
+				components = append(components, r.(string))
 			}
-			if len(route) < 2 {
+			if len(components) < 2 {
 				return fmt.Errorf("invalid relation format: %s", v)
 			}
-			id, err := genRelationId(route)
+			id, err := genRelationId(components)
 			if err != nil {
 				return err
 			}
 			tags = []string{id}
 			rrel := &rawRelation{
 				Id:    id,
-				Route: route,
+				Components: components,
 				Tags:  tags,
 			}
 			d.rawRelations = append(d.rawRelations, rrel)
@@ -60,19 +60,19 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 			if ok {
 				id = idi.(string)
 			} else {
-				id, err = genRelationId(route)
+				id, err = genRelationId(components)
 				if err != nil {
 					return err
 				}
 			}
-			ri, ok := v["route"]
+			ri, ok := v["components"]
 			if !ok {
 				return fmt.Errorf("invalid relation format: %s", v)
 			}
 			for _, r := range ri.([]interface{}) {
-				route = append(route, r.(string))
+				components = append(components, r.(string))
 			}
-			if len(route) < 2 {
+			if len(components) < 2 {
 				return fmt.Errorf("invalid relation format: %s", v)
 			}
 			ti, ok := v["tags"]
@@ -86,7 +86,7 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 			}
 			rrel := &rawRelation{
 				Id:    id,
-				Route: route,
+				Components: components,
 				Tags:  tags,
 			}
 			d.rawRelations = append(d.rawRelations, rrel)
@@ -124,9 +124,9 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	return nil
 }
 
-func genRelationId(route []string) (string, error) {
+func genRelationId(components []string) (string, error) {
 	h := sha256.New()
-	if _, err := io.WriteString(h, fmt.Sprintf("%s", route)); err != nil {
+	if _, err := io.WriteString(h, fmt.Sprintf("%s", components)); err != nil {
 		return "", err
 	}
 	s := fmt.Sprintf("%x", h.Sum(nil))

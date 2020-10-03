@@ -8,11 +8,11 @@
   [ <a href="{{ .DescPath }}/{{ mdpath "_relation" (.Relation | id) }}">:pencil2: Edit description</a> ]
 <p>
 
-## Route
+## Components
 
 | # | Component | Component Description |
 | --- | --- | --- |
-{{- range $i, $c := .Relation.Route }}
+{{- range $i, $c := .Relation.Components }}
 | {{ $i }} | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |
 {{- end }}
 

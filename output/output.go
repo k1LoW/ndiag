@@ -131,7 +131,7 @@ func componentLink(c *config.Component) string {
 
 func relLink(rel *config.Relation) string {
 	cIds := []string{}
-	for _, r := range rel.Route {
+	for _, r := range rel.Components {
 		cIds = append(cIds, r.FullName())
 	}
 	return fmt.Sprintf("[%s](%s)", strings.Join(cIds, " -> "), config.MdPath("relation", []string{rel.Id()}))

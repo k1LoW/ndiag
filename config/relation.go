@@ -9,7 +9,7 @@ import (
 
 type Relation struct {
 	RelationId string
-	Route      []*Component
+	Components      []*Component
 	Tags       []string
 }
 
@@ -23,7 +23,7 @@ func (n *Relation) Id() string {
 
 type rawRelation struct {
 	Id    string
-	Route []string
+	Components []string
 	Tags  []string
 }
 
@@ -46,7 +46,7 @@ func SplitRelations(relations []*Relation) []*NEdge {
 	edges := []*NEdge{}
 	for _, rel := range relations {
 		prev = nil
-		for _, r := range rel.Route {
+		for _, r := range rel.Components {
 			if prev != nil {
 				edge := &NEdge{
 					Src:      prev,
