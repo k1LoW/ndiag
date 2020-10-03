@@ -7,38 +7,53 @@ import (
 	"github.com/elliotchance/orderedmap"
 )
 
-var defaultNetworkAttrs = []*Attr{
-	&Attr{
-		Key:   "arrowhead",
-		Value: "normal",
-	},
-	&Attr{
-		Key:   "arrowhead",
-		Value: "normal",
-	},
-	&Attr{
-		Key:   "style",
-		Value: "bold",
+type RelationType struct {
+	Name          string
+	ComponentsKey string
+	Attrs         []*Attr
+}
+
+var RelationTypeDefault = &RelationType{
+	Name:          "relation",
+	ComponentsKey: "components",
+	Attrs: []*Attr{
+		&Attr{
+			Key:   "arrowhead",
+			Value: "dot",
+		},
+		&Attr{
+			Key:   "arrowhead",
+			Value: "dot",
+		},
+		&Attr{
+			Key:   "style",
+			Value: "dashed",
+		},
 	},
 }
 
-var defaultRelationAttrs = []*Attr{
-	&Attr{
-		Key:   "arrowhead",
-		Value: "dot",
-	},
-	&Attr{
-		Key:   "arrowhead",
-		Value: "dot",
-	},
-	&Attr{
-		Key:   "style",
-		Value: "dashed",
+var RelationTypeNetwork = &RelationType{
+	Name:          "network",
+	ComponentsKey: "route",
+	Attrs: []*Attr{
+		&Attr{
+			Key:   "arrowhead",
+			Value: "normal",
+		},
+		&Attr{
+			Key:   "arrowhead",
+			Value: "normal",
+		},
+		&Attr{
+			Key:   "style",
+			Value: "bold",
+		},
 	},
 }
 
 type Relation struct {
 	RelationId string
+	Type       *RelationType
 	Components []*Component
 	Tags       []string
 	Attrs      []*Attr
@@ -54,6 +69,7 @@ func (n *Relation) Id() string {
 
 type rawRelation struct {
 	Id         string
+	Type       *RelationType
 	Components []string
 	Tags       []string
 	Attrs      []*Attr

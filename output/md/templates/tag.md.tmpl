@@ -11,7 +11,7 @@
 ## Components
 
 {{- range $j, $rel := .Tag.Relations }}
-| # | Component | Component Description |
+| # | Name | Description |
 | --- | --- | --- |
 {{- range $i, $c := $rel.Components }}
 | {{ $i }} | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |

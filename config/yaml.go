@@ -32,20 +32,18 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	d.Nodes = raw.Nodes
 
 	for _, rel := range raw.Networks {
-		rel, err := parseRelation("network", "route", rel)
+		rel, err := parseRelation(RelationTypeNetwork, rel)
 		if err != nil {
 			return err
 		}
-		rel.Attrs = append(defaultNetworkAttrs, rel.Attrs...)
 		d.rawRelations = append(d.rawRelations, rel)
 	}
 
 	for _, rel := range raw.Relations {
-		rel, err := parseRelation("relation", "components", rel)
+		rel, err := parseRelation(RelationTypeDefault, rel)
 		if err != nil {
 			return err
 		}
-		rel.Attrs = append(defaultRelationAttrs, rel.Attrs...)
 		d.rawRelations = append(d.rawRelations, rel)
 	}
 	return nil
@@ -80,7 +78,7 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	return nil
 }
 
-func parseRelation(relType, componentKey string, rel interface{}) (*rawRelation, error) {
+func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error) {
 	components := []string{}
 	tags := []string{}
 	switch v := rel.(type) {
@@ -89,7 +87,7 @@ func parseRelation(relType, componentKey string, rel interface{}) (*rawRelation,
 			components = append(components, r.(string))
 		}
 		if len(components) < 2 {
-			return nil, fmt.Errorf("invalid %s format: %s", relType, v)
+			return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
 		}
 		id, err := genRelationId(components)
 		if err != nil {
@@ -98,8 +96,10 @@ func parseRelation(relType, componentKey string, rel interface{}) (*rawRelation,
 		tags = []string{id}
 		return &rawRelation{
 			Id:         id,
+			Type:       relType,
 			Components: components,
 			Tags:       tags,
+			Attrs:      relType.Attrs,
 		}, nil
 	case map[string]interface{}:
 		var (
@@ -115,15 +115,15 @@ func parseRelation(relType, componentKey string, rel interface{}) (*rawRelation,
 				return nil, err
 			}
 		}
-		ri, ok := v[componentKey]
+		ri, ok := v[relType.ComponentsKey]
 		if !ok {
-			return nil, fmt.Errorf("invalid %s format: %s", relType, v)
+			return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
 		}
 		for _, r := range ri.([]interface{}) {
 			components = append(components, r.(string))
 		}
 		if len(components) < 2 {
-			return nil, fmt.Errorf("invalid %s format: %s", relType, v)
+			return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
 		}
 		ti, ok := v["tags"]
 		if ok {
@@ -150,9 +150,11 @@ func parseRelation(relType, componentKey string, rel interface{}) (*rawRelation,
 			}
 			return attrs[i].Key < attrs[j].Key
 		})
+		attrs = append(relType.Attrs, attrs...)
 
 		return &rawRelation{
 			Id:         id,
+			Type:       relType,
 			Components: components,
 			Tags:       tags,
 			Attrs:      attrs,

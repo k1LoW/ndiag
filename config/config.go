@@ -415,6 +415,7 @@ func (cfg *Config) buildRelations() error {
 	for _, rel := range cfg.rawRelations {
 		nrel := &Relation{
 			RelationId: rel.Id,
+			Type:       rel.Type,
 			Tags:       rel.Tags,
 			Attrs:      rel.Attrs,
 		}
