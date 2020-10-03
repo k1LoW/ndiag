@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"regexp"
+	"sort"
 	"strings"
 
 	"github.com/goccy/go-yaml"
@@ -12,12 +13,13 @@ import (
 
 func (d *Config) UnmarshalYAML(data []byte) error {
 	raw := struct {
-		Name     string        `yaml:"name"`
-		Desc     string        `yaml:"desc,omitempty"`
-		DocPath  string        `yaml:"docPath"`
-		Diagrams []*Diagram    `yaml:"diagrams"`
-		Nodes    []*Node       `yaml:"nodes"`
-		Networks []interface{} `yaml:"networks"`
+		Name      string        `yaml:"name"`
+		Desc      string        `yaml:"desc,omitempty"`
+		DocPath   string        `yaml:"docPath"`
+		Diagrams  []*Diagram    `yaml:"diagrams"`
+		Nodes     []*Node       `yaml:"nodes"`
+		Networks  []interface{} `yaml:"networks"`
+		Relations []interface{} `yaml:"relations"`
 	}{}
 
 	if err := yaml.Unmarshal(data, &raw); err != nil {
@@ -29,68 +31,20 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	d.Diagrams = raw.Diagrams
 	d.Nodes = raw.Nodes
 
-	for _, nw := range raw.Networks {
-		route := []string{}
-		tags := []string{}
-		switch v := nw.(type) {
-		case []interface{}:
-			for _, r := range v {
-				route = append(route, r.(string))
-			}
-			if len(route) < 2 {
-				return fmt.Errorf("invalid network format: %s", v)
-			}
-			id, err := genNetworkId(route)
-			if err != nil {
-				return err
-			}
-			tags = []string{id}
-			rnw := &rawNetwork{
-				Id:    id,
-				Route: route,
-				Tags:  tags,
-			}
-			d.rawNetworks = append(d.rawNetworks, rnw)
-		case map[string]interface{}:
-			var (
-				id  string
-				err error
-			)
-			idi, ok := v["id"]
-			if ok {
-				id = idi.(string)
-			} else {
-				id, err = genNetworkId(route)
-				if err != nil {
-					return err
-				}
-			}
-			ri, ok := v["route"]
-			if !ok {
-				return fmt.Errorf("invalid network format: %s", v)
-			}
-			for _, r := range ri.([]interface{}) {
-				route = append(route, r.(string))
-			}
-			if len(route) < 2 {
-				return fmt.Errorf("invalid network format: %s", v)
-			}
-			ti, ok := v["tags"]
-			if ok {
-				for _, t := range ti.([]interface{}) {
-					tags = append(tags, t.(string))
-				}
-			}
-			if len(tags) == 0 {
-				tags = []string{id}
-			}
-			rnw := &rawNetwork{
-				Id:    id,
-				Route: route,
-				Tags:  tags,
-			}
-			d.rawNetworks = append(d.rawNetworks, rnw)
+	for _, rel := range raw.Networks {
+		rel, err := parseRelation(RelationTypeNetwork, rel)
+		if err != nil {
+			return err
 		}
+		d.rawRelations = append(d.rawRelations, rel)
+	}
+
+	for _, rel := range raw.Relations {
+		rel, err := parseRelation(RelationTypeDefault, rel)
+		if err != nil {
+			return err
+		}
+		d.rawRelations = append(d.rawRelations, rel)
 	}
 	return nil
 }
@@ -124,11 +78,106 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	return nil
 }
 
-func genNetworkId(route []string) (string, error) {
+func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error) {
+	components := []string{}
+	tags := []string{}
+	switch v := rel.(type) {
+	case []interface{}:
+		for _, r := range v {
+			components = append(components, r.(string))
+		}
+		if len(components) < 2 {
+			return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
+		}
+		id, err := genRelationId(components)
+		if err != nil {
+			return nil, err
+		}
+		tags = []string{id}
+		return &rawRelation{
+			Id:         id,
+			Type:       relType,
+			Components: components,
+			Tags:       tags,
+			Attrs:      relType.Attrs,
+		}, nil
+	case map[string]interface{}:
+		var (
+			id  string
+			err error
+		)
+		idi, ok := v["id"]
+		if ok {
+			id = idi.(string)
+		} else {
+			id, err = genRelationId(components)
+			if err != nil {
+				return nil, err
+			}
+		}
+		ri, ok := v[relType.ComponentsKey]
+		if !ok {
+			return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
+		}
+		for _, r := range ri.([]interface{}) {
+			components = append(components, r.(string))
+		}
+		if len(components) < 2 {
+			return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
+		}
+		typei, ok := v["type"]
+		if ok {
+			switch typei.(string) {
+			case "network":
+				relType = RelationTypeNetwork
+			default:
+				return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
+			}
+		}
+		ti, ok := v["tags"]
+		if ok {
+			for _, t := range ti.([]interface{}) {
+				tags = append(tags, t.(string))
+			}
+		}
+		if len(tags) == 0 {
+			tags = []string{id}
+		}
+		attrs := []*Attr{}
+		attrsi, ok := v["attrs"]
+		if ok {
+			for k, v := range attrsi.(map[string]interface{}) {
+				attrs = append(attrs, &Attr{
+					Key:   k,
+					Value: v.(string),
+				})
+			}
+		}
+		sort.Slice(attrs, func(i, j int) bool {
+			if attrs[i].Key == attrs[j].Key {
+				return attrs[i].Value < attrs[j].Value
+			}
+			return attrs[i].Key < attrs[j].Key
+		})
+		attrs = append(relType.Attrs, attrs...)
+
+		return &rawRelation{
+			Id:         id,
+			Type:       relType,
+			Components: components,
+			Tags:       tags,
+			Attrs:      attrs,
+		}, nil
+	default:
+		return nil, fmt.Errorf("invalid relation format: %s", v)
+	}
+}
+
+func genRelationId(components []string) (string, error) {
 	h := sha256.New()
-	if _, err := io.WriteString(h, fmt.Sprintf("%s", route)); err != nil {
+	if _, err := io.WriteString(h, fmt.Sprintf("%s", components)); err != nil {
 		return "", err
 	}
 	s := fmt.Sprintf("%x", h.Sum(nil))
-	return fmt.Sprintf("nw-%s", s[:12]), nil
+	return fmt.Sprintf("rel-%s", s[:12]), nil
 }

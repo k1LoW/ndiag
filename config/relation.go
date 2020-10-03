@@ -7,30 +7,78 @@ import (
 	"github.com/elliotchance/orderedmap"
 )
 
-type Network struct {
-	NetworkId string
-	Route     []*Component
-	Tags      []string
+type RelationType struct {
+	Name          string
+	ComponentsKey string
+	Attrs         []*Attr
 }
 
-func (n *Network) FullName() string {
-	return fmt.Sprintf(n.NetworkId)
+var RelationTypeDefault = &RelationType{
+	Name:          "relation",
+	ComponentsKey: "components",
+	Attrs: []*Attr{
+		&Attr{
+			Key:   "arrowhead",
+			Value: "dot",
+		},
+		&Attr{
+			Key:   "arrowhead",
+			Value: "dot",
+		},
+		&Attr{
+			Key:   "style",
+			Value: "dashed",
+		},
+	},
 }
 
-func (n *Network) Id() string {
+var RelationTypeNetwork = &RelationType{
+	Name:          "network",
+	ComponentsKey: "route",
+	Attrs: []*Attr{
+		&Attr{
+			Key:   "arrowhead",
+			Value: "normal",
+		},
+		&Attr{
+			Key:   "arrowhead",
+			Value: "normal",
+		},
+		&Attr{
+			Key:   "style",
+			Value: "bold",
+		},
+	},
+}
+
+type Relation struct {
+	RelationId string
+	Type       *RelationType
+	Components []*Component
+	Tags       []string
+	Attrs      []*Attr
+}
+
+func (n *Relation) FullName() string {
+	return fmt.Sprintf(n.RelationId)
+}
+
+func (n *Relation) Id() string {
 	return strings.ToLower(n.FullName())
 }
 
-type rawNetwork struct {
-	Id    string
-	Route []string
-	Tags  []string
+type rawRelation struct {
+	Id         string
+	Type       *RelationType
+	Components []string
+	Tags       []string
+	Attrs      []*Attr
 }
 
 type Tag struct {
-	Name     string
-	Desc     string
-	Networks []*Network
+	Name      string
+	Desc      string
+	Relations []*Relation
 }
 
 func (t *Tag) FullName() string {
@@ -41,17 +89,18 @@ func (t *Tag) Id() string {
 	return strings.ToLower(t.FullName())
 }
 
-func SplitNetworks(networks []*Network) []*NEdge {
+func SplitRelations(relations []*Relation) []*NEdge {
 	var prev *Component
 	edges := []*NEdge{}
-	for _, nw := range networks {
+	for _, rel := range relations {
 		prev = nil
-		for _, r := range nw.Route {
+		for _, r := range rel.Components {
 			if prev != nil {
 				edge := &NEdge{
-					Src:     prev,
-					Dst:     r,
-					Network: nw,
+					Src:      prev,
+					Dst:      r,
+					Relation: rel,
+					Attrs:    rel.Attrs,
 				}
 				prev.NEdges = append(prev.NEdges, edge)
 				r.NEdges = append(r.NEdges, edge)

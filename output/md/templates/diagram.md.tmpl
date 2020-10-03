@@ -23,12 +23,12 @@
 {{- range $i, $n := .Nodes }}
 | [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}) ({{ len $n.RealNodes }}) | {{ if ne $n.Desc "" }}{{ $n.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_node" ($n | id)}}">:pencil2:</a>{{ end }} |
 {{- end }}
-## Network tag groups
+## Tag groups
 
 | Name | Description |
 | --- | --- |
 {{- range $i, $t := .Tags }}
-| [{{ $t | fullname }}]({{ mdpath "network-tag" ($t | id) }}) | {{ if ne $t.Desc "" }}{{ $t.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_network-tag" ($t | id)}}">:pencil2:</a>{{ end }} |
+| [{{ $t | fullname }}]({{ mdpath "tag" ($t | id) }}) | {{ if ne $t.Desc "" }}{{ $t.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_tag" ($t | id)}}">:pencil2:</a>{{ end }} |
 {{- end }}
 
 ---

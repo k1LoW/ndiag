@@ -89,7 +89,7 @@ func TestBuildNestedCluster(t *testing.T) {
 		cGlobalComponentLen := len(d.GlobalComponents())
 		cClusterComponentLen := len(d.ClusterComponents())
 		cNodeComponentLen := len(d.NodeComponents())
-		cNetworkLen := len(d.Networks)
+		cRelationLen := len(d.Relations)
 
 		gotClusters, gotNodes, gotNEdges, err := d.BuildNestedClusters(tt.layers)
 		if err != nil {
@@ -126,8 +126,8 @@ func TestBuildNestedCluster(t *testing.T) {
 		if got := len(d.NodeComponents()); got != cNodeComponentLen {
 			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cNodeComponentLen)
 		}
-		if got := len(d.Networks); got != cNetworkLen {
-			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cNetworkLen)
+		if got := len(d.Relations); got != cRelationLen {
+			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cRelationLen)
 		}
 	}
 }

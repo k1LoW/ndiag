@@ -62,7 +62,7 @@ func (d *Dot) OutputLayer(wr io.Writer, l *config.Layer) error {
 L:
 	for _, e := range nEdges {
 		for _, n := range remain {
-			// remove nw with global nodes
+			// remove rel with global nodes
 			if strings.HasPrefix(e.Src.Id(), fmt.Sprintf("%s:", n.Id())) {
 				continue L
 			}
@@ -70,7 +70,7 @@ L:
 				continue L
 			}
 		}
-		// remove nw with global components
+		// remove rel with global components
 		if (e.Src.Node == nil && e.Src.Cluster == nil) || (e.Dst.Node == nil && e.Dst.Cluster == nil) {
 			continue L
 		}
@@ -167,7 +167,7 @@ func (d *Dot) OutputTag(wr io.Writer, t *config.Tag) error {
 	nIds := orderedmap.NewOrderedMap()
 	globalComponents := []*config.Component{}
 	gIds := orderedmap.NewOrderedMap()
-	edges := config.SplitNetworks(t.Networks)
+	edges := config.SplitRelations(t.Relations)
 
 	for _, e := range edges {
 		switch {
@@ -214,7 +214,7 @@ func (d *Dot) OutputTag(wr io.Writer, t *config.Tag) error {
 	return nil
 }
 
-func (d *Dot) OutputNetwork(wr io.Writer, nw *config.Network) error {
+func (d *Dot) OutputRelation(wr io.Writer, rel *config.Relation) error {
 	ts, err := d.box.FindString("diagram.dot.tmpl")
 	if err != nil {
 		return err
@@ -230,7 +230,7 @@ func (d *Dot) OutputNetwork(wr io.Writer, nw *config.Network) error {
 	edges := []*config.NEdge{}
 
 	for _, e := range d.config.NEdges() {
-		if e.Network.Id() != nw.Id() {
+		if e.Relation.Id() != rel.Id() {
 			continue
 		}
 		switch {

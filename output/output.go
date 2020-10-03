@@ -69,7 +69,7 @@ var FuncMap = template.FuncMap{
 		return config.MdPath(prefix, strs)
 	},
 	"componentlink": componentLink,
-	"nwlink":        nwLink,
+	"rellink":       relLink,
 	"fromlinks": func(edges []*config.NEdge, base *config.Component) string {
 		links := []string{}
 		for _, e := range edges {
@@ -94,7 +94,7 @@ var FuncMap = template.FuncMap{
 		}
 		var out string
 		for _, a := range attrs {
-			out = fmt.Sprintf("%s, %s=%s", out, a.Key, a.Value)
+			out = fmt.Sprintf("%s, %s=\"%s\"", out, a.Key, a.Value)
 		}
 		return out
 	},
@@ -129,12 +129,12 @@ func componentLink(c *config.Component) string {
 	}
 }
 
-func nwLink(nw *config.Network) string {
+func relLink(rel *config.Relation) string {
 	cIds := []string{}
-	for _, r := range nw.Route {
+	for _, r := range rel.Components {
 		cIds = append(cIds, r.FullName())
 	}
-	return fmt.Sprintf("[%s](%s)", strings.Join(cIds, " -> "), config.MdPath("network", []string{nw.Id()}))
+	return fmt.Sprintf("[%s](%s)", strings.Join(cIds, " -> "), config.MdPath("relation", []string{rel.Id()}))
 }
 
 func unique(in []string) []string {

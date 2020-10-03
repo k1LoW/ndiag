@@ -1,22 +1,20 @@
-# {{ .Tag | fullname }}
+# {{ .Relation | fullname }}
 
-![diagram]({{ imgpath "network-tag" (.Tag | id) .DiagFormat }})
+![diagram]({{ imgpath "relation" (.Relation | id) .DiagFormat }})
 
-{{ .Tag.Desc }}
+{{ .Relation.Desc }}
 
 <p align="right">
-  [ <a href="{{ .DescPath }}/{{ mdpath "_network-tag" (.Tag | id) }}">:pencil2: Edit description</a> ]
+  [ <a href="{{ .DescPath }}/{{ mdpath "_relation" (.Relation | id) }}">:pencil2: Edit description</a> ]
 <p>
 
-## Route
+## Components
 
-{{- range $j, $nw := .Tag.Networks }}
 | # | Component | Component Description |
 | --- | --- | --- |
-{{- range $i, $c := $nw.Route }}
+{{- range $i, $c := .Relation.Components }}
 | {{ $i }} | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |
 {{- end }}
-{{ end }}
 
 ---
 
