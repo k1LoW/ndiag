@@ -1,3 +1,7 @@
+## [v0.4.0](https://github.com/k1LoW/ndiag/compare/v0.3.0...v0.4.0) (2020-10-04)
+
+* Add `relations:` to describe the relationship between components [#21](https://github.com/k1LoW/ndiag/pull/21) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.3.0](https://github.com/k1LoW/ndiag/compare/v0.2.0...v0.3.0) (2020-09-27)
 
 * Hide unlinked components on network tag group diagram and node diagram [#20](https://github.com/k1LoW/ndiag/pull/20) ([k1LoW](https://github.com/k1LoW))
