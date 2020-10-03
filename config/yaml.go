@@ -125,6 +125,15 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 		if len(components) < 2 {
 			return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
 		}
+		typei, ok := v["type"]
+		if ok {
+			switch typei.(string) {
+			case "network":
+				relType = RelationTypeNetwork
+			default:
+				return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
+			}
+		}
 		ti, ok := v["tags"]
 		if ok {
 			for _, t := range ti.([]interface{}) {
