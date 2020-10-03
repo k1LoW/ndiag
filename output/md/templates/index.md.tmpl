@@ -28,7 +28,7 @@
 | [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}) ({{ len $n.RealNodes }}) | {{ if ne $n.Desc "" }}{{ $n.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_node" ($n | id)}}">:pencil2:</a>{{ end }} |
 {{- end }}
 
-## Network tag groups
+## Tag groups
 
 | Name | Description |
 | --- | --- |

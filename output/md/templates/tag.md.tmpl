@@ -10,10 +10,10 @@
 
 ## Route
 
-{{- range $j, $nw := .Tag.Networks }}
+{{- range $j, $rel := .Tag.Relations }}
 | # | Component | Component Description |
 | --- | --- | --- |
-{{- range $i, $c := $nw.Route }}
+{{- range $i, $c := $rel.Route }}
 | {{ $i }} | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |
 {{- end }}
 {{ end }}

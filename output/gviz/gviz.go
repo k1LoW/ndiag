@@ -53,9 +53,9 @@ func (g *Gviz) OutputTag(wr io.Writer, t *config.Tag) error {
 	return g.render(wr, buf.Bytes())
 }
 
-func (g *Gviz) OutputNetwork(wr io.Writer, nw *config.Network) error {
+func (g *Gviz) OutputRelation(wr io.Writer, rel *config.Relation) error {
 	buf := &bytes.Buffer{}
-	if err := g.dot.OutputNetwork(buf, nw); err != nil {
+	if err := g.dot.OutputRelation(buf, rel); err != nil {
 		return err
 	}
 	return g.render(wr, buf.Bytes())

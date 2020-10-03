@@ -12,12 +12,12 @@ import (
 
 func (d *Config) UnmarshalYAML(data []byte) error {
 	raw := struct {
-		Name     string        `yaml:"name"`
-		Desc     string        `yaml:"desc,omitempty"`
-		DocPath  string        `yaml:"docPath"`
-		Diagrams []*Diagram    `yaml:"diagrams"`
-		Nodes    []*Node       `yaml:"nodes"`
-		Networks []interface{} `yaml:"networks"`
+		Name      string        `yaml:"name"`
+		Desc      string        `yaml:"desc,omitempty"`
+		DocPath   string        `yaml:"docPath"`
+		Diagrams  []*Diagram    `yaml:"diagrams"`
+		Nodes     []*Node       `yaml:"nodes"`
+		Relations []interface{} `yaml:"relations"`
 	}{}
 
 	if err := yaml.Unmarshal(data, &raw); err != nil {
@@ -29,28 +29,28 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	d.Diagrams = raw.Diagrams
 	d.Nodes = raw.Nodes
 
-	for _, nw := range raw.Networks {
+	for _, rel := range raw.Relations {
 		route := []string{}
 		tags := []string{}
-		switch v := nw.(type) {
+		switch v := rel.(type) {
 		case []interface{}:
 			for _, r := range v {
 				route = append(route, r.(string))
 			}
 			if len(route) < 2 {
-				return fmt.Errorf("invalid network format: %s", v)
+				return fmt.Errorf("invalid relation format: %s", v)
 			}
-			id, err := genNetworkId(route)
+			id, err := genRelationId(route)
 			if err != nil {
 				return err
 			}
 			tags = []string{id}
-			rnw := &rawNetwork{
+			rrel := &rawRelation{
 				Id:    id,
 				Route: route,
 				Tags:  tags,
 			}
-			d.rawNetworks = append(d.rawNetworks, rnw)
+			d.rawRelations = append(d.rawRelations, rrel)
 		case map[string]interface{}:
 			var (
 				id  string
@@ -60,20 +60,20 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 			if ok {
 				id = idi.(string)
 			} else {
-				id, err = genNetworkId(route)
+				id, err = genRelationId(route)
 				if err != nil {
 					return err
 				}
 			}
 			ri, ok := v["route"]
 			if !ok {
-				return fmt.Errorf("invalid network format: %s", v)
+				return fmt.Errorf("invalid relation format: %s", v)
 			}
 			for _, r := range ri.([]interface{}) {
 				route = append(route, r.(string))
 			}
 			if len(route) < 2 {
-				return fmt.Errorf("invalid network format: %s", v)
+				return fmt.Errorf("invalid relation format: %s", v)
 			}
 			ti, ok := v["tags"]
 			if ok {
@@ -84,12 +84,12 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 			if len(tags) == 0 {
 				tags = []string{id}
 			}
-			rnw := &rawNetwork{
+			rrel := &rawRelation{
 				Id:    id,
 				Route: route,
 				Tags:  tags,
 			}
-			d.rawNetworks = append(d.rawNetworks, rnw)
+			d.rawRelations = append(d.rawRelations, rrel)
 		}
 	}
 	return nil
@@ -124,11 +124,11 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	return nil
 }
 
-func genNetworkId(route []string) (string, error) {
+func genRelationId(route []string) (string, error) {
 	h := sha256.New()
 	if _, err := io.WriteString(h, fmt.Sprintf("%s", route)); err != nil {
 		return "", err
 	}
 	s := fmt.Sprintf("%x", h.Sum(nil))
-	return fmt.Sprintf("nw-%s", s[:12]), nil
+	return fmt.Sprintf("rel-%s", s[:12]), nil
 }

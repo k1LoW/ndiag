@@ -10,12 +10,12 @@
 
 ## Components
 
-| Name | Description | From (Network) | To (Network) |
+| Name | Description | From (Relation) | To (Relation) |
 | --- | --- | --- | --- |
 {{- range $i, $c := .Components }}
 | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> | {{ fromlinks $c.NEdges $c }} | {{ tolinks $c.NEdges $c }} |
 {{- end }}
-## Network tag groups
+## Tag groups
 
 | Name | Description |
 | --- | --- |

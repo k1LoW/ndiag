@@ -7,30 +7,30 @@ import (
 	"github.com/elliotchance/orderedmap"
 )
 
-type Network struct {
-	NetworkId string
-	Route     []*Component
-	Tags      []string
+type Relation struct {
+	RelationId string
+	Route      []*Component
+	Tags       []string
 }
 
-func (n *Network) FullName() string {
-	return fmt.Sprintf(n.NetworkId)
+func (n *Relation) FullName() string {
+	return fmt.Sprintf(n.RelationId)
 }
 
-func (n *Network) Id() string {
+func (n *Relation) Id() string {
 	return strings.ToLower(n.FullName())
 }
 
-type rawNetwork struct {
+type rawRelation struct {
 	Id    string
 	Route []string
 	Tags  []string
 }
 
 type Tag struct {
-	Name     string
-	Desc     string
-	Networks []*Network
+	Name      string
+	Desc      string
+	Relations []*Relation
 }
 
 func (t *Tag) FullName() string {
@@ -41,17 +41,17 @@ func (t *Tag) Id() string {
 	return strings.ToLower(t.FullName())
 }
 
-func SplitNetworks(networks []*Network) []*NEdge {
+func SplitRelations(relations []*Relation) []*NEdge {
 	var prev *Component
 	edges := []*NEdge{}
-	for _, nw := range networks {
+	for _, rel := range relations {
 		prev = nil
-		for _, r := range nw.Route {
+		for _, r := range rel.Route {
 			if prev != nil {
 				edge := &NEdge{
-					Src:     prev,
-					Dst:     r,
-					Network: nw,
+					Src:      prev,
+					Dst:      r,
+					Relation: rel,
 				}
 				prev.NEdges = append(prev.NEdges, edge)
 				r.NEdges = append(r.NEdges, edge)

@@ -37,11 +37,11 @@ type Attr struct {
 }
 
 type NEdge struct {
-	Src     *Component
-	Dst     *Component
-	Desc    string
-	Network *Network
-	Attrs   []*Attr
+	Src      *Component
+	Dst      *Component
+	Desc     string
+	Relation *Relation
+	Attrs    []*Attr
 }
 
 type Layer struct {
@@ -50,14 +50,14 @@ type Layer struct {
 }
 
 type Config struct {
-	Name              string     `yaml:"name"`
-	Desc              string     `yaml:"desc,omitempty"`
-	DocPath           string     `yaml:"docPath"`
-	DescPath          string     `yaml:"descPath"`
-	Diagrams          []*Diagram `yaml:"diagrams"`
-	Nodes             []*Node    `yaml:"nodes"`
-	Networks          []*Network `yaml:"networks"`
-	rawNetworks       []*rawNetwork
+	Name              string      `yaml:"name"`
+	Desc              string      `yaml:"desc,omitempty"`
+	DocPath           string      `yaml:"docPath"`
+	DescPath          string      `yaml:"descPath"`
+	Diagrams          []*Diagram  `yaml:"diagrams"`
+	Nodes             []*Node     `yaml:"nodes"`
+	Relations         []*Relation `yaml:"relations"`
+	rawRelations      []*rawRelation
 	realNodes         []*RealNode
 	layers            []*Layer
 	clusters          Clusters
@@ -175,7 +175,7 @@ func (cfg *Config) Build() error {
 	if err := cfg.buildComponents(); err != nil {
 		return err
 	}
-	if err := cfg.buildNetworks(); err != nil {
+	if err := cfg.buildRelations(); err != nil {
 		return err
 	}
 	if err := cfg.checkUnique(); err != nil {
@@ -293,8 +293,8 @@ func (cfg *Config) buildComponents() error {
 	gc := orderedmap.NewOrderedMap()
 	nc := orderedmap.NewOrderedMap()
 	cc := orderedmap.NewOrderedMap()
-	for _, nw := range cfg.rawNetworks {
-		for _, r := range nw.Route {
+	for _, rel := range cfg.rawRelations {
+		for _, r := range rel.Route {
 			switch sepCount(r) {
 			case 2: // cluster components
 				cc.Set(r, struct{}{})
@@ -308,7 +308,7 @@ func (cfg *Config) buildComponents() error {
 
 	// global components
 	for _, c := range gc.Keys() {
-		// create global component from network route
+		// create global component from relations
 		cfg.globalComponents = append(cfg.globalComponents, &Component{
 			Name: c.(string),
 		})
@@ -335,7 +335,7 @@ func (cfg *Config) buildComponents() error {
 			}
 		}
 		if !belongTo {
-			// create node component from network route
+			// create node component from relations
 			component := &Component{
 				Name: comName,
 				Node: n,
@@ -353,7 +353,7 @@ func (cfg *Config) buildComponents() error {
 		belongTo := false
 		for _, cl := range cfg.Clusters() {
 			if strings.EqualFold(cl.FullName(), clName) {
-				// create cluster component from network route
+				// create cluster component from relations
 				com := &Component{
 					Cluster: cl,
 					Name:    comName,
@@ -410,41 +410,41 @@ func (cfg *Config) parseClusterLabel(label string) (*Cluster, error) {
 	return newC, nil
 }
 
-func (cfg *Config) buildNetworks() error {
-	nwTags := orderedmap.NewOrderedMap()
-	for _, nw := range cfg.rawNetworks {
-		nnw := &Network{
-			NetworkId: nw.Id,
-			Tags:      nw.Tags,
+func (cfg *Config) buildRelations() error {
+	relTags := orderedmap.NewOrderedMap()
+	for _, rel := range cfg.rawRelations {
+		nrel := &Relation{
+			RelationId: rel.Id,
+			Tags:       rel.Tags,
 		}
-		for _, r := range nw.Route {
+		for _, r := range rel.Route {
 			c, err := cfg.FindComponent(r)
 			if err != nil {
 				return err
 			}
-			nnw.Route = append(nnw.Route, c)
+			nrel.Route = append(nrel.Route, c)
 		}
-		cfg.Networks = append(cfg.Networks, nnw)
+		cfg.Relations = append(cfg.Relations, nrel)
 
 		// tags
-		for _, t := range nw.Tags {
+		for _, t := range rel.Tags {
 			var nt *Tag
-			nti, ok := nwTags.Get(t)
+			nti, ok := relTags.Get(t)
 			if ok {
 				nt = nti.(*Tag)
 			} else {
 				nt = &Tag{
 					Name: t,
 				}
-				nwTags.Set(t, nt)
+				relTags.Set(t, nt)
 			}
-			nt.Networks = append(nt.Networks, nnw)
+			nt.Relations = append(nt.Relations, nrel)
 		}
 	}
-	cfg.nEdges = SplitNetworks(cfg.Networks)
+	cfg.nEdges = SplitRelations(cfg.Relations)
 
-	for _, k := range nwTags.Keys() {
-		nt, _ := nwTags.Get(k)
+	for _, k := range relTags.Keys() {
+		nt, _ := relTags.Get(k)
 		cfg.tags = append(cfg.tags, nt.(*Tag))
 	}
 

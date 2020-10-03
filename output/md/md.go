@@ -29,7 +29,7 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 		return err
 	}
 
-	rel, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
+	relPath, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 	tmplData := map[string]interface{}{
 		"Diagram":    d,
 		"DiagFormat": m.config.DiagFormat(),
-		"DescPath":   rel,
+		"DescPath":   relPath,
 		"Layers":     layers,
 		"Nodes":      m.config.Nodes,
 		"Tags":       m.config.Tags(),
@@ -64,7 +64,7 @@ func (m *Md) OutputLayer(wr io.Writer, l *config.Layer) error {
 		return err
 	}
 
-	rel, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
+	relPath, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
 	if err != nil {
 		return err
 	}
@@ -78,7 +78,7 @@ func (m *Md) OutputLayer(wr io.Writer, l *config.Layer) error {
 	tmplData := map[string]interface{}{
 		"Layer":      l,
 		"DiagFormat": m.config.DiagFormat(),
-		"DescPath":   rel,
+		"DescPath":   relPath,
 		"Clusters":   clusters,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
@@ -93,26 +93,26 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 		return err
 	}
 
-	rel, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
+	relPath, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
 	if err != nil {
 		return err
 	}
 
 	tags := []*config.Tag{}
-	nwTags := orderedmap.NewOrderedMap()
+	relTags := orderedmap.NewOrderedMap()
 	for _, c := range n.Components {
 		for _, e := range c.NEdges {
-			for _, ts := range e.Network.Tags {
+			for _, ts := range e.Relation.Tags {
 				for _, t := range m.config.Tags() {
 					if ts == t.Name {
-						nwTags.Set(ts, t)
+						relTags.Set(ts, t)
 					}
 				}
 			}
 		}
 	}
-	for _, k := range nwTags.Keys() {
-		t, _ := nwTags.Get(k)
+	for _, k := range relTags.Keys() {
+		t, _ := relTags.Get(k)
 		tags = append(tags, t.(*config.Tag))
 	}
 
@@ -120,7 +120,7 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 	tmplData := map[string]interface{}{
 		"Node":       n,
 		"DiagFormat": m.config.DiagFormat(),
-		"DescPath":   rel,
+		"DescPath":   relPath,
 		"Components": n.Components,
 		"RealNodes":  n.RealNodes,
 		"Tags":       tags,
@@ -137,7 +137,7 @@ func (m *Md) OutputTag(wr io.Writer, t *config.Tag) error {
 		return err
 	}
 
-	rel, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
+	relPath, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
 	if err != nil {
 		return err
 	}
@@ -146,7 +146,7 @@ func (m *Md) OutputTag(wr io.Writer, t *config.Tag) error {
 	tmplData := map[string]interface{}{
 		"Tag":        t,
 		"DiagFormat": m.config.DiagFormat(),
-		"DescPath":   rel,
+		"DescPath":   relPath,
 	}
 
 	if err := tmpl.Execute(wr, tmplData); err != nil {
@@ -156,22 +156,22 @@ func (m *Md) OutputTag(wr io.Writer, t *config.Tag) error {
 	return nil
 }
 
-func (m *Md) OutputNetwork(wr io.Writer, nw *config.Network) error {
-	ts, err := m.box.FindString("network.md.tmpl")
+func (m *Md) OutputRelation(wr io.Writer, rel *config.Relation) error {
+	ts, err := m.box.FindString("relation.md.tmpl")
 	if err != nil {
 		return err
 	}
 
-	rel, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
+	relPath, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
 	if err != nil {
 		return err
 	}
 
-	tmpl := template.Must(template.New(nw.Id()).Funcs(output.FuncMap).Parse(ts))
+	tmpl := template.Must(template.New(rel.Id()).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Network":    nw,
+		"Relation":   rel,
 		"DiagFormat": m.config.DiagFormat(),
-		"DescPath":   rel,
+		"DescPath":   relPath,
 	}
 
 	if err := tmpl.Execute(wr, tmplData); err != nil {
@@ -187,7 +187,7 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 		return err
 	}
 
-	rel, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
+	relPath, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
 	if err != nil {
 		return err
 	}
@@ -197,7 +197,7 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 		"Config":     m.config,
 		"Diagram":    m.config.PrimaryDiagram(),
 		"DiagFormat": m.config.DiagFormat(),
-		"DescPath":   rel,
+		"DescPath":   relPath,
 		"Diagrams":   m.config.Diagrams,
 		"Layers":     m.config.Layers(),
 		"Nodes":      m.config.Nodes,
