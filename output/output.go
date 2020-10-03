@@ -69,7 +69,7 @@ var FuncMap = template.FuncMap{
 		return config.MdPath(prefix, strs)
 	},
 	"componentlink": componentLink,
-	"rellink":        relLink,
+	"rellink":       relLink,
 	"fromlinks": func(edges []*config.NEdge, base *config.Component) string {
 		links := []string{}
 		for _, e := range edges {
@@ -94,7 +94,7 @@ var FuncMap = template.FuncMap{
 		}
 		var out string
 		for _, a := range attrs {
-			out = fmt.Sprintf("%s, %s=%s", out, a.Key, a.Value)
+			out = fmt.Sprintf("%s, %s=\"%s\"", out, a.Key, a.Value)
 		}
 		return out
 	},
