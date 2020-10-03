@@ -545,7 +545,7 @@ func (cfg *Config) buildDescriptions() error {
 		if t.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_network-tag", []string{t.Id()}))
+		desc, err := cfg.readDescFile(MdPath("_tag", []string{t.Id()}))
 		if err != nil {
 			return err
 		}

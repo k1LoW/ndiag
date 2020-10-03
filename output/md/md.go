@@ -132,7 +132,7 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 }
 
 func (m *Md) OutputTag(wr io.Writer, t *config.Tag) error {
-	ts, err := m.box.FindString("network-tag.md.tmpl")
+	ts, err := m.box.FindString("tag.md.tmpl")
 	if err != nil {
 		return err
 	}

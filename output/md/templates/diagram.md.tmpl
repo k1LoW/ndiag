@@ -28,7 +28,7 @@
 | Name | Description |
 | --- | --- |
 {{- range $i, $t := .Tags }}
-| [{{ $t | fullname }}]({{ mdpath "network-tag" ($t | id) }}) | {{ if ne $t.Desc "" }}{{ $t.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_network-tag" ($t | id)}}">:pencil2:</a>{{ end }} |
+| [{{ $t | fullname }}]({{ mdpath "tag" ($t | id) }}) | {{ if ne $t.Desc "" }}{{ $t.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_tag" ($t | id)}}">:pencil2:</a>{{ end }} |
 {{- end }}
 
 ---

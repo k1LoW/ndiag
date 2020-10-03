@@ -184,7 +184,7 @@ var docCmd = &cobra.Command{
 			o := md.New(cfg)
 
 			// generate md
-			mPath := filepath.Join(cfg.DocPath, config.MdPath("network-tag", []string{nw.Id()}))
+			mPath := filepath.Join(cfg.DocPath, config.MdPath("tag", []string{nw.Id()}))
 			file, err := os.Create(mPath)
 			if err != nil {
 				printFatalln(cmd, err)
@@ -195,7 +195,7 @@ var docCmd = &cobra.Command{
 
 			// draw diagram
 			diag := gviz.New(cfg)
-			dPath := filepath.Join(cfg.DocPath, config.ImagePath("network-tag", []string{nw.Id()}, format))
+			dPath := filepath.Join(cfg.DocPath, config.ImagePath("tag", []string{nw.Id()}, format))
 			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 			if err != nil {
 				printFatalln(cmd, err)
@@ -258,11 +258,11 @@ func diagExists(cfg *config.Config) error {
 
 	// tags
 	for _, nw := range cfg.Tags() {
-		mPath := filepath.Join(cfg.DocPath, config.ImagePath("network-tag", []string{nw.Id()}, format))
+		mPath := filepath.Join(cfg.DocPath, config.ImagePath("tag", []string{nw.Id()}, format))
 		if _, err := os.Lstat(mPath); err == nil {
 			return fmt.Errorf("%s already exist", mPath)
 		}
-		dPath := filepath.Join(cfg.DocPath, config.MdPath("network-tag", []string{nw.Id()}))
+		dPath := filepath.Join(cfg.DocPath, config.MdPath("tag", []string{nw.Id()}))
 		if _, err := os.Lstat(dPath); err == nil {
 			return fmt.Errorf("%s already exist", dPath)
 		}
