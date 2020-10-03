@@ -7,10 +7,41 @@ import (
 	"github.com/elliotchance/orderedmap"
 )
 
+var defaultNetworkAttrs = []*Attr{
+	&Attr{
+		Key:   "arrowhead",
+		Value: "normal",
+	},
+	&Attr{
+		Key:   "arrowhead",
+		Value: "normal",
+	},
+	&Attr{
+		Key:   "style",
+		Value: "bold",
+	},
+}
+
+var defaultRelationAttrs = []*Attr{
+	&Attr{
+		Key:   "arrowhead",
+		Value: "dot",
+	},
+	&Attr{
+		Key:   "arrowhead",
+		Value: "dot",
+	},
+	&Attr{
+		Key:   "style",
+		Value: "dashed",
+	},
+}
+
 type Relation struct {
 	RelationId string
-	Components      []*Component
+	Components []*Component
 	Tags       []string
+	Attrs      []*Attr
 }
 
 func (n *Relation) FullName() string {
@@ -22,9 +53,10 @@ func (n *Relation) Id() string {
 }
 
 type rawRelation struct {
-	Id    string
+	Id         string
 	Components []string
-	Tags  []string
+	Tags       []string
+	Attrs      []*Attr
 }
 
 type Tag struct {
@@ -52,6 +84,7 @@ func SplitRelations(relations []*Relation) []*NEdge {
 					Src:      prev,
 					Dst:      r,
 					Relation: rel,
+					Attrs:    rel.Attrs,
 				}
 				prev.NEdges = append(prev.NEdges, edge)
 				r.NEdges = append(r.NEdges, edge)

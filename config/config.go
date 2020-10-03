@@ -416,6 +416,7 @@ func (cfg *Config) buildRelations() error {
 		nrel := &Relation{
 			RelationId: rel.Id,
 			Tags:       rel.Tags,
+			Attrs:      rel.Attrs,
 		}
 		for _, r := range rel.Components {
 			c, err := cfg.FindComponent(r)
