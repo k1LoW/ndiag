@@ -16,9 +16,33 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 		wantGlobalComponentLen  int
 		wantClusterComponentLen int
 		wantNodeComponentLen    int
+		wantNEdgeLen            int
+		wantTagLen              int
 	}{
-		{"1_ndiag.yml", []string{"1_nodes.yml"}, 3, 7, 1, 0, 0, 3},
-		{"2_ndiag.yml", []string{"2_nodes.yml"}, 3, 7, 2, 1, 1, 3},
+		{
+			configFile:              "1_ndiag.yml",
+			nodeListFiles:           []string{"1_nodes.yml"},
+			wantNodeLen:             3,
+			wantRealNodeLen:         7,
+			wantClusterLen:          1,
+			wantGlobalComponentLen:  0,
+			wantClusterComponentLen: 0,
+			wantNodeComponentLen:    3,
+			wantNEdgeLen:            0,
+			wantTagLen:              0,
+		},
+		{
+			configFile:              "2_ndiag.yml",
+			nodeListFiles:           []string{"2_nodes.yml"},
+			wantNodeLen:             3,
+			wantRealNodeLen:         7,
+			wantClusterLen:          2,
+			wantGlobalComponentLen:  1,
+			wantClusterComponentLen: 1,
+			wantNodeComponentLen:    4,
+			wantNEdgeLen:            5,
+			wantTagLen:              2,
+		},
 	}
 	for i, tt := range tests {
 		d := New()
@@ -51,6 +75,12 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 		if got := len(d.NodeComponents()); got != tt.wantNodeComponentLen {
 			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantNodeComponentLen)
 		}
+		if got := len(d.NEdges()); got != tt.wantNEdgeLen {
+			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantNEdgeLen)
+		}
+		if got := len(d.Tags()); got != tt.wantTagLen {
+			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantTagLen)
+		}
 	}
 }
 
@@ -66,8 +96,8 @@ func TestBuildNestedCluster(t *testing.T) {
 		{"1_ndiag.yml", []string{"1_nodes.yml"}, []string{}, 0, 3, 0},
 		{"1_ndiag.yml", []string{"1_nodes.yml"}, []string{"consul"}, 1, 0, 0},
 		{"2_ndiag.yml", []string{"2_nodes.yml"}, []string{"consul"}, 1, 0, 2},
-		{"2_ndiag.yml", []string{"2_nodes.yml"}, []string{"consul", "group"}, 1, 0, 4},
-		{"2_ndiag.yml", []string{"2_nodes.yml"}, []string{"group"}, 1, 2, 4},
+		{"2_ndiag.yml", []string{"2_nodes.yml"}, []string{"consul", "group"}, 1, 0, 5},
+		{"2_ndiag.yml", []string{"2_nodes.yml"}, []string{"group"}, 1, 2, 5},
 	}
 	for i, tt := range tests {
 		d := New()

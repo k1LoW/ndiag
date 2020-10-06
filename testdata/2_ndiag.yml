@@ -21,11 +21,30 @@ nodes:
       - 'consul:dc1'
 
 networks:
-  - ["internet", "group:lb:vip"]
-  - ["group:lb:vip", "lb-*:nginx"]
-  - ["lb-*:nginx", "app-*:rails"]
   -
-    id: app
+    tags:
+      - http
     route:
+      - "internet"
+      - "group:lb:vip"
+  -
+    tags:
+      - http
+    route:
+      - "group:lb:vip"
+      - "lb-*:nginx"
+  -
+    tags:
+      - http
+    route:
+      - "lb-*:nginx"
       - "app-*:rails"
-      - "db-*:postgresql"
+  - ["app-*:rails", "db-*:postgresql"]
+
+relations:
+  -
+    tags:
+      - http
+    components:
+      - 'lb-*:keepalived'
+      - "group:lb:vip"
