@@ -1,5 +1,5 @@
 digraph ndiag {
-  graph [rankdir=TB, layout=dot, fontname="Arial"];
+  graph [rankdir=TB, layout=dot, splines=ortho, fontname="Arial"];
 
 {{ define "cluster" }}
   subgraph "cluster_{{ .cluster | id }}" {
@@ -67,7 +67,7 @@ digraph ndiag {
 {{ end }}
 
 {{ range $e := .Edges }}
-"{{ $e.Src | id }}" -> "{{ $e.Dst | id }}"[color="#33333399", labelfontcolor="#333333", fontname="Arial"{{ $e.Attrs | attrs }}];
+"{{ $e.Src | id }}" -> "{{ $e.Dst | id }}"[labelfontcolor="#333333", fontname="Arial"{{ $e.Attrs | attrs }}];
 {{ end }}
 
 }
