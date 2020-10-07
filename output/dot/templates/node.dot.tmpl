@@ -1,5 +1,5 @@
 digraph ndiag {
-  graph [rankdir=TB, layout=dot, fontname="Arial"];
+  graph [rankdir=TB, layout=dot, splines=ortho, fontname="Arial"];
 
 {{ define "cluster" }}
   subgraph "cluster_{{ .cluster | id }}" {
