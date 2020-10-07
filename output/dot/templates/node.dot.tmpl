@@ -72,7 +72,7 @@ digraph ndiag {
 {{ end }}
 
 {{ range $e := .Edges }}
-"{{ $e.Src | id }}" -> "{{ $e.Dst | id }}"[color="#33333399", labelfontcolor="#333333", style=bold, fontname="Arial"{{ $e.Attrs | attrs }}];
+"{{ $e.Src | id }}" -> "{{ $e.Dst | id }}"[labelfontcolor="#333333", fontname="Arial"{{ $e.Attrs | attrs }}];
 {{ end }}
 
 }

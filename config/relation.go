@@ -18,6 +18,10 @@ var RelationTypeDefault = &RelationType{
 	ComponentsKey: "components",
 	Attrs: []*Attr{
 		&Attr{
+			Key:   "color",
+			Value: "#4B75B9",
+		},
+		&Attr{
 			Key:   "arrowhead",
 			Value: "dot",
 		},
@@ -27,7 +31,7 @@ var RelationTypeDefault = &RelationType{
 		},
 		&Attr{
 			Key:   "style",
-			Value: "dashed",
+			Value: "bold,dashed",
 		},
 	},
 }
@@ -36,6 +40,10 @@ var RelationTypeNetwork = &RelationType{
 	Name:          "network",
 	ComponentsKey: "route",
 	Attrs: []*Attr{
+		&Attr{
+			Key:   "color",
+			Value: "#33333399",
+		},
 		&Attr{
 			Key:   "arrowhead",
 			Value: "normal",
