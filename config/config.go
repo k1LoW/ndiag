@@ -316,6 +316,12 @@ func (cfg *Config) buildComponents() error {
 
 	// node components
 	for _, n := range cfg.Nodes {
+		for _, c := range n.rawComponents {
+			n.Components = append(n.Components, &Component{
+				Name: c,
+				Node: n,
+			})
+		}
 		cfg.nodeComponents = append(cfg.nodeComponents, n.Components...)
 	}
 

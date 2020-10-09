@@ -67,13 +67,7 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	n.Name = raw.Name
 	n.nameRe = regexp.MustCompile(fmt.Sprintf("^%s$", strings.Replace(n.Name, "*", ".+", -1)))
 	n.Desc = raw.Desc
-	n.Components = []*Component{}
-	for _, c := range raw.Components {
-		n.Components = append(n.Components, &Component{
-			Name: c,
-			Node: n,
-		})
-	}
+	n.rawComponents = raw.Components
 	n.rawClusters = raw.Clusters
 	return nil
 }
