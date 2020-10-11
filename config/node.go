@@ -6,13 +6,14 @@ import (
 )
 
 type Node struct {
-	Name        string       `yaml:"name"`
-	Desc        string       `yaml:"desc,omitempty"`
-	Components  []*Component `yaml:"components,omitempty"`
-	Clusters    Clusters     `yaml:"clusters,omitempty"`
-	RealNodes   []*RealNode
-	nameRe      *regexp.Regexp
-	rawClusters []string
+	Name          string       `yaml:"name"`
+	Desc          string       `yaml:"desc,omitempty"`
+	Components    []*Component `yaml:"components,omitempty"`
+	Clusters      Clusters     `yaml:"clusters,omitempty"`
+	RealNodes     []*RealNode
+	nameRe        *regexp.Regexp
+	rawComponents []string
+	rawClusters   []string
 }
 
 func (n *Node) FullName() string {

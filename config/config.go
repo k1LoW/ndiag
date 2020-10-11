@@ -242,6 +242,8 @@ func (cfg *Config) loadRealNodes(in []byte) error {
 					belongTo = true
 					newRn.BelongTo = n
 					n.RealNodes = append(n.RealNodes, newRn)
+					n.rawClusters = merge(n.rawClusters, rn.rawClusters)
+					n.rawComponents = merge(n.rawComponents, rn.rawComponents)
 					break NN
 				}
 			}
@@ -250,6 +252,25 @@ func (cfg *Config) loadRealNodes(in []byte) error {
 			}
 			cfg.realNodes = append(cfg.realNodes, newRn)
 		}
+		// replace component id ( real node name -> node name )
+		for _, rel := range rConfig.rawRelations {
+			replaced := []string{}
+			for _, c := range rel.Components {
+				splitted := sepSplit(c)
+				if len(splitted) == 2 {
+				RL:
+					for _, n := range cfg.Nodes {
+						if n.nameRe.MatchString(splitted[0]) {
+							splitted[0] = n.Name
+							break RL
+						}
+					}
+				}
+				replaced = append(replaced, sepJoin(splitted))
+			}
+			rel.Components = replaced
+		}
+		cfg.rawRelations = append(cfg.rawRelations, uniqueRawRelations(rConfig.rawRelations)...)
 	}
 	return nil
 }
@@ -316,6 +337,12 @@ func (cfg *Config) buildComponents() error {
 
 	// node components
 	for _, n := range cfg.Nodes {
+		for _, c := range n.rawComponents {
+			n.Components = append(n.Components, &Component{
+				Name: c,
+				Node: n,
+			})
+		}
 		cfg.nodeComponents = append(cfg.nodeComponents, n.Components...)
 	}
 
@@ -414,7 +441,7 @@ func (cfg *Config) buildRelations() error {
 	relTags := orderedmap.NewOrderedMap()
 	for _, rel := range cfg.rawRelations {
 		nrel := &Relation{
-			RelationId: rel.Id,
+			relationId: rel.Id(),
 			Type:       rel.Type,
 			Tags:       rel.Tags,
 			Attrs:      rel.Attrs,
@@ -735,6 +762,10 @@ func sepSplit(s string) []string {
 	return unescaped
 }
 
+func sepJoin(ss []string) string {
+	return strings.Join(ss, Sep)
+}
+
 func sepContains(s string) bool {
 	return strings.Contains(escRep.Replace(s), Sep)
 }
@@ -746,4 +777,20 @@ func layerContains(s []*Layer, e string) bool {
 		}
 	}
 	return false
+}
+
+func merge(a, b []string) []string {
+	m := orderedmap.NewOrderedMap()
+	for _, s := range a {
+		m.Set(s, s)
+	}
+	for _, s := range b {
+		m.Set(s, s)
+	}
+	o := []string{}
+	for _, k := range m.Keys() {
+		s, _ := m.Get(k)
+		o = append(o, s.(string))
+	}
+	return o
 }

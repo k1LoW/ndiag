@@ -1,9 +1,7 @@
 package config
 
 import (
-	"crypto/sha256"
 	"fmt"
-	"io"
 	"regexp"
 	"sort"
 	"strings"
@@ -67,13 +65,7 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	n.Name = raw.Name
 	n.nameRe = regexp.MustCompile(fmt.Sprintf("^%s$", strings.Replace(n.Name, "*", ".+", -1)))
 	n.Desc = raw.Desc
-	n.Components = []*Component{}
-	for _, c := range raw.Components {
-		n.Components = append(n.Components, &Component{
-			Name: c,
-			Node: n,
-		})
-	}
+	n.rawComponents = raw.Components
 	n.rawClusters = raw.Clusters
 	return nil
 }
@@ -89,31 +81,22 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 		if len(components) < 2 {
 			return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
 		}
-		id, err := genRelationId(components)
-		if err != nil {
-			return nil, err
-		}
-		tags = []string{id}
-		return &rawRelation{
-			Id:         id,
+		rel := &rawRelation{
 			Type:       relType,
 			Components: components,
-			Tags:       tags,
 			Attrs:      relType.Attrs,
-		}, nil
+		}
+		rel.Tags = []string{rel.Id()}
+		return rel, nil
 	case map[string]interface{}:
 		var (
-			id  string
-			err error
+			id string
 		)
 		idi, ok := v["id"]
 		if ok {
 			id = idi.(string)
 		} else {
-			id, err = genRelationId(components)
-			if err != nil {
-				return nil, err
-			}
+			id = ""
 		}
 		ri, ok := v[relType.ComponentsKey]
 		if !ok {
@@ -162,7 +145,7 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 		attrs = append(relType.Attrs, attrs...)
 
 		return &rawRelation{
-			Id:         id,
+			relationId: id,
 			Type:       relType,
 			Components: components,
 			Tags:       tags,
@@ -171,13 +154,4 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 	default:
 		return nil, fmt.Errorf("invalid relation format: %s", v)
 	}
-}
-
-func genRelationId(components []string) (string, error) {
-	h := sha256.New()
-	if _, err := io.WriteString(h, fmt.Sprintf("%s", components)); err != nil {
-		return "", err
-	}
-	s := fmt.Sprintf("%x", h.Sum(nil))
-	return fmt.Sprintf("rel-%s", s[:12]), nil
 }
