@@ -1,3 +1,8 @@
+## [v0.5.0](https://github.com/k1LoW/ndiag/compare/v0.4.0...v0.5.0) (2020-10-11)
+
+* Add support for merging components, clusters and relations in the node list into config [#23](https://github.com/k1LoW/ndiag/pull/23) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING]Use splines=ortho [#22](https://github.com/k1LoW/ndiag/pull/22) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.4.0](https://github.com/k1LoW/ndiag/compare/v0.3.0...v0.4.0) (2020-10-04)
 
 * Add `relations:` to describe the relationship between components [#21](https://github.com/k1LoW/ndiag/pull/21) ([k1LoW](https://github.com/k1LoW))
