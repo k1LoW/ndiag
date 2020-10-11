@@ -1,0 +1,87 @@
+---
+nodes:
+  -
+    name: lb-1
+    components:
+      - nginx
+    clusters:
+      - 'consul:dc1'
+      - 'group:lb'
+  -
+    name: lb-2
+    clusters:
+      - 'consul:dc1'
+      - 'group:lb'
+  -
+    name: app-1
+    components:
+      - rails
+    clusters:
+      - 'consul:dc1'
+  -
+    name: app-2
+    components:
+      - rails
+    clusters:
+      - 'consul:dc1'
+  -
+    name: app-3
+    components:
+      - rails
+    clusters:
+      - 'consul:dc1'
+  -
+    name: db-1
+    components:
+      - PostgreSQL
+    clusters:
+      - 'consul:dc1'
+  -
+    name: db-2
+    components:
+      - PostgreSQL
+    clusters:
+      - 'consul:dc1'
+
+networks:
+  -
+    tags:
+      - http
+    route:
+      - "group:lb:vip"
+      - "lb-1:nginx"
+  -
+    tags:
+      - http
+    route:
+      - "lb-1:nginx"
+      - "app-1:rails"
+  -
+    tags:
+      - http
+    route:
+      - "lb-1:nginx"
+      - "app-2:rails"
+  -
+    tags:
+      - http
+    route:
+      - "lb-1:nginx"
+      - "app-3:rails"
+  - ["app-1:rails", "db-1:postgresql"]
+  - ["app-2:rails", "db-1:postgresql"]
+  - ["app-3:rails", "db-1:postgresql"]
+
+relations:
+  -
+    tags:
+      - http
+    components:
+      - 'lb-1:keepalived'
+      - "group:lb:vip"
+  -
+    tags:
+      - http
+    components:
+      - 'lb-2:keepalived'
+      - "group:lb:vip"

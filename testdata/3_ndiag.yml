@@ -1,0 +1,16 @@
+---
+nodes:
+  -
+    name: lb-*
+  -
+    name: app-*
+  -
+    name: db-*
+
+networks:
+  -
+    tags:
+      - http
+    route:
+      - "internet"
+      - "group:lb:vip"

@@ -43,6 +43,18 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantNEdgeLen:            5,
 			wantTagLen:              2,
 		},
+		{
+			configFile:              "3_ndiag.yml",
+			nodeListFiles:           []string{"3_nodes.yml"},
+			wantNodeLen:             3,
+			wantRealNodeLen:         7,
+			wantClusterLen:          2,
+			wantGlobalComponentLen:  1,
+			wantClusterComponentLen: 1,
+			wantNodeComponentLen:    4,
+			wantNEdgeLen:            5,
+			wantTagLen:              2,
+		},
 	}
 	for i, tt := range tests {
 		d := New()

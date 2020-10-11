@@ -1,7 +1,10 @@
 package config
 
 import (
+	"crypto/sha256"
+	"encoding/json"
 	"fmt"
+	"io"
 	"strings"
 
 	"github.com/elliotchance/orderedmap"
@@ -52,7 +55,7 @@ var RelationTypeNetwork = &RelationType{
 }
 
 type Relation struct {
-	RelationId string
+	relationId string
 	Type       *RelationType
 	Components []*Component
 	Tags       []string
@@ -60,19 +63,32 @@ type Relation struct {
 }
 
 func (n *Relation) FullName() string {
-	return fmt.Sprintf(n.RelationId)
+	return n.relationId
 }
 
 func (n *Relation) Id() string {
-	return strings.ToLower(n.FullName())
+	return strings.ToLower(n.relationId)
 }
 
 type rawRelation struct {
-	Id         string
+	relationId string
 	Type       *RelationType
 	Components []string
-	Tags       []string
+	Tags       []string `json:"-"`
 	Attrs      []*Attr
+}
+
+func (rel *rawRelation) Id() string {
+	if rel.relationId != "" {
+		return strings.ToLower(rel.relationId)
+	}
+	h := sha256.New()
+	key, _ := json.Marshal(rel)
+	if _, err := io.WriteString(h, string(key)); err != nil {
+		return ""
+	}
+	s := fmt.Sprintf("%x", h.Sum(nil))
+	return fmt.Sprintf("rel-%s", s[:12])
 }
 
 type Tag struct {
@@ -146,4 +162,18 @@ func MergeEdges(edges []*NEdge) []*NEdge {
 		merged1 = append(merged1, e.(*NEdge))
 	}
 	return merged1
+}
+
+func uniqueRawRelations(rels []*rawRelation) []*rawRelation {
+	rKeys := orderedmap.NewOrderedMap()
+	result := []*rawRelation{}
+	for _, rel := range rels {
+		key, _ := json.Marshal(rel)
+		rKeys.Set(string(key), rel)
+	}
+	for _, k := range rKeys.Keys() {
+		rel, _ := rKeys.Get(k)
+		result = append(result, rel.(*rawRelation))
+	}
+	return result
 }
