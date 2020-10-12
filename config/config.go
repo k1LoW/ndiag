@@ -70,14 +70,23 @@ type Config struct {
 }
 
 type Graph struct {
-	Format string        `yaml:"format,omitempty"`
-	Attrs  yaml.MapSlice `yaml:"attrs,omitempty"`
+	Format        string        `yaml:"format,omitempty"`
+	MapSliceAttrs yaml.MapSlice `yaml:"attrs,omitempty"`
+}
+
+func (g *Graph) Attrs() []*Attr {
+	attrs := []*Attr{}
+	for _, kv := range g.MapSliceAttrs {
+		attrs = append(attrs, &Attr{
+			Key:   kv.Key.(string),
+			Value: kv.Value.(string),
+		})
+	}
+	return attrs
 }
 
 func New() *Config {
-	return &Config{
-		Graph: &Graph{},
-	}
+	return &Config{}
 }
 
 func (cfg *Config) Format() string {
