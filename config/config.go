@@ -23,8 +23,8 @@ const DefaultDocPath = "archdoc"
 var DefaultConfigFilePaths = []string{"ndiag.yml"}
 var DefaultDescPath = "ndiag.descriptions"
 
-// DefaultDiagFormat is the default diagram format
-const DefaultDiagFormat = "svg"
+// DefaultFormat is the default diagram format
+const DefaultFormat = "svg"
 
 type NNode interface {
 	Id() string
@@ -54,6 +54,7 @@ type Config struct {
 	Desc              string      `yaml:"desc,omitempty"`
 	DocPath           string      `yaml:"docPath"`
 	DescPath          string      `yaml:"descPath"`
+	Graph             *Graph      `yaml:"graph,omitempty"`
 	Diagrams          []*Diagram  `yaml:"diagrams"`
 	Nodes             []*Node     `yaml:"nodes"`
 	Relations         []*Relation `yaml:"relations"`
@@ -68,13 +69,22 @@ type Config struct {
 	tags              []*Tag
 }
 
-func New() *Config {
-	return &Config{}
+type Graph struct {
+	Format string        `yaml:"format,omitempty"`
+	Attrs  yaml.MapSlice `yaml:"attrs,omitempty"`
 }
 
-func (cfg *Config) DiagFormat() string {
-	// TODO: jpg png
-	return DefaultDiagFormat
+func New() *Config {
+	return &Config{
+		Graph: &Graph{},
+	}
+}
+
+func (cfg *Config) Format() string {
+	if cfg.Graph.Format != "" {
+		return cfg.Graph.Format
+	}
+	return DefaultFormat
 }
 
 func (cfg *Config) PrimaryDiagram() *Diagram {
@@ -635,7 +645,6 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 			if len(pc) == 0 {
 				continue
 			}
-			// _, _ = fmt.Fprintf(os.Stderr, "build cluster tree %v->%v\n", pc[0].FullName(), c[0].FullName())
 			c[0].Parent = pc[0]
 			pc[0].Children = append(pc[0].Children, c[0])
 			c = pc

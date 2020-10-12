@@ -62,7 +62,7 @@ func (g *Gviz) OutputRelation(wr io.Writer, rel *config.Relation) error {
 }
 
 func (g *Gviz) render(wr io.Writer, b []byte) (e error) {
-	format := g.config.DiagFormat()
+	format := g.config.Format()
 	gviz := graphviz.New()
 	graph, err := graphviz.ParseBytes(b)
 	if err != nil {

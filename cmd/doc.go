@@ -43,7 +43,7 @@ var docCmd = &cobra.Command{
 		if err != nil {
 			printFatalln(cmd, err)
 		}
-		format := cfg.DiagFormat()
+		format := cfg.Format()
 
 		err = os.MkdirAll(cfg.DocPath, 0755) // #nosec
 		if err != nil {
@@ -219,7 +219,7 @@ var docCmd = &cobra.Command{
 }
 
 func diagExists(cfg *config.Config) error {
-	format := cfg.DiagFormat()
+	format := cfg.Format()
 	// diagrams
 	for _, d := range cfg.Diagrams {
 		mPath := filepath.Join(cfg.DocPath, config.MdPath("diagram", d.Layers))

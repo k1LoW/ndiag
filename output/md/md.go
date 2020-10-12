@@ -46,7 +46,7 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 	tmpl := template.Must(template.New(d.Name).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
 		"Diagram":    d,
-		"DiagFormat": m.config.DiagFormat(),
+		"Format": m.config.Format(),
 		"DescPath":   relPath,
 		"Layers":     layers,
 		"Nodes":      m.config.Nodes,
@@ -77,7 +77,7 @@ func (m *Md) OutputLayer(wr io.Writer, l *config.Layer) error {
 	tmpl := template.Must(template.New(l.Name).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
 		"Layer":      l,
-		"DiagFormat": m.config.DiagFormat(),
+		"Format": m.config.Format(),
 		"DescPath":   relPath,
 		"Clusters":   clusters,
 	}
@@ -119,7 +119,7 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 	tmpl := template.Must(template.New(n.Id()).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
 		"Node":       n,
-		"DiagFormat": m.config.DiagFormat(),
+		"Format": m.config.Format(),
 		"DescPath":   relPath,
 		"Components": n.Components,
 		"RealNodes":  n.RealNodes,
@@ -145,7 +145,7 @@ func (m *Md) OutputTag(wr io.Writer, t *config.Tag) error {
 	tmpl := template.Must(template.New(t.Id()).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
 		"Tag":        t,
-		"DiagFormat": m.config.DiagFormat(),
+		"Format": m.config.Format(),
 		"DescPath":   relPath,
 	}
 
@@ -170,7 +170,7 @@ func (m *Md) OutputRelation(wr io.Writer, rel *config.Relation) error {
 	tmpl := template.Must(template.New(rel.Id()).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
 		"Relation":   rel,
-		"DiagFormat": m.config.DiagFormat(),
+		"Format": m.config.Format(),
 		"DescPath":   relPath,
 	}
 
@@ -196,7 +196,7 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 	tmplData := map[string]interface{}{
 		"Config":     m.config,
 		"Diagram":    m.config.PrimaryDiagram(),
-		"DiagFormat": m.config.DiagFormat(),
+		"Format": m.config.Format(),
 		"DescPath":   relPath,
 		"Diagrams":   m.config.Diagrams,
 		"Layers":     m.config.Layers(),
