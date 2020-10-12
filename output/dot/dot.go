@@ -36,6 +36,7 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 		return err
 	}
 	if err := tmpl.Execute(wr, map[string]interface{}{
+		"GraphAttrs":       d.config.Graph.Attrs(),
 		"Clusters":         clusters,
 		"RemainNodes":      remain,
 		"GlobalComponents": d.config.GlobalComponents(),
@@ -78,6 +79,7 @@ L:
 	}
 
 	if err := tmpl.Execute(wr, map[string]interface{}{
+		"GraphAttrs":       d.config.Graph.Attrs(),
 		"Clusters":         clusters,
 		"RemainNodes":      []*config.Node{},
 		"GlobalComponents": []*config.Component{},
@@ -143,6 +145,7 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 	}
 
 	if err := tmpl.Execute(wr, map[string]interface{}{
+		"GraphAttrs":       d.config.Graph.Attrs(),
 		"MainNodeId":       n.Id(),
 		"Clusters":         clusters,
 		"RemainNodes":      nodes,
@@ -203,6 +206,7 @@ func (d *Dot) OutputTag(wr io.Writer, t *config.Tag) error {
 	}
 
 	if err := tmpl.Execute(wr, map[string]interface{}{
+		"GraphAttrs":       d.config.Graph.Attrs(),
 		"Clusters":         clusters,
 		"RemainNodes":      nodes,
 		"GlobalComponents": globalComponents,
@@ -267,6 +271,7 @@ func (d *Dot) OutputRelation(wr io.Writer, rel *config.Relation) error {
 	}
 
 	if err := tmpl.Execute(wr, map[string]interface{}{
+		"GraphAttrs":       d.config.Graph.Attrs(),
 		"Clusters":         clusters,
 		"RemainNodes":      nodes,
 		"GlobalComponents": globalComponents,

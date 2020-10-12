@@ -14,6 +14,8 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 		Name      string        `yaml:"name"`
 		Desc      string        `yaml:"desc,omitempty"`
 		DocPath   string        `yaml:"docPath"`
+		DescPath  string        `yaml:"descPath"`
+		Graph     *Graph        `yaml:"graph,omitempty"`
 		Diagrams  []*Diagram    `yaml:"diagrams"`
 		Nodes     []*Node       `yaml:"nodes"`
 		Networks  []interface{} `yaml:"networks"`
@@ -26,6 +28,8 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	d.Name = raw.Name
 	d.Desc = raw.Desc
 	d.DocPath = raw.DocPath
+	d.DescPath = raw.DescPath
+	d.Graph = raw.Graph
 	d.Diagrams = raw.Diagrams
 	d.Nodes = raw.Nodes
 
