@@ -55,6 +55,7 @@ type Config struct {
 	DocPath           string      `yaml:"docPath"`
 	DescPath          string      `yaml:"descPath"`
 	Graph             *Graph      `yaml:"graph,omitempty"`
+	HideRealNodes     bool        `yaml:"hideRealNodes"`
 	Diagrams          []*Diagram  `yaml:"diagrams"`
 	Nodes             []*Node     `yaml:"nodes"`
 	Relations         []*Relation `yaml:"relations"`

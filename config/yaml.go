@@ -11,15 +11,16 @@ import (
 
 func (d *Config) UnmarshalYAML(data []byte) error {
 	raw := struct {
-		Name      string        `yaml:"name"`
-		Desc      string        `yaml:"desc,omitempty"`
-		DocPath   string        `yaml:"docPath"`
-		DescPath  string        `yaml:"descPath"`
-		Graph     *Graph        `yaml:"graph,omitempty"`
-		Diagrams  []*Diagram    `yaml:"diagrams"`
-		Nodes     []*Node       `yaml:"nodes"`
-		Networks  []interface{} `yaml:"networks"`
-		Relations []interface{} `yaml:"relations"`
+		Name          string        `yaml:"name"`
+		Desc          string        `yaml:"desc,omitempty"`
+		DocPath       string        `yaml:"docPath"`
+		DescPath      string        `yaml:"descPath"`
+		Graph         *Graph        `yaml:"graph,omitempty"`
+		HideRealNodes bool          `yaml:"hideRealNodes"`
+		Diagrams      []*Diagram    `yaml:"diagrams"`
+		Nodes         []*Node       `yaml:"nodes"`
+		Networks      []interface{} `yaml:"networks"`
+		Relations     []interface{} `yaml:"relations"`
 	}{}
 
 	if err := yaml.Unmarshal(data, &raw); err != nil {
@@ -30,6 +31,7 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	d.DocPath = raw.DocPath
 	d.DescPath = raw.DescPath
 	d.Graph = raw.Graph
+	d.HideRealNodes = raw.HideRealNodes
 	d.Diagrams = raw.Diagrams
 	d.Nodes = raw.Nodes
 

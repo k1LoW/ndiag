@@ -42,6 +42,7 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 		"GlobalComponents": d.config.GlobalComponents(),
 		"Edges":            config.MergeEdges(nEdges),
 		"HideUnlinked":     false,
+		"HideRealNodes":    d.config.HideRealNodes,
 	}); err != nil {
 		return err
 	}
@@ -277,6 +278,7 @@ func (d *Dot) OutputRelation(wr io.Writer, rel *config.Relation) error {
 		"GlobalComponents": globalComponents,
 		"Edges":            edges,
 		"HideUnlinked":     true,
+		"HideRealNodes":    d.config.HideRealNodes,
 	}); err != nil {
 		return err
 	}
