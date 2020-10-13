@@ -45,12 +45,13 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 
 	tmpl := template.Must(template.New(d.Name).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Diagram":  d,
-		"Format":   m.config.Format(),
-		"DescPath": relPath,
-		"Layers":   layers,
-		"Nodes":    m.config.Nodes,
-		"Tags":     m.config.Tags(),
+		"Diagram":       d,
+		"Format":        m.config.Format(),
+		"DescPath":      relPath,
+		"Layers":        layers,
+		"Nodes":         m.config.Nodes,
+		"Tags":          m.config.Tags(),
+		"HideRealNodes": m.config.HideRealNodes,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
@@ -76,10 +77,11 @@ func (m *Md) OutputLayer(wr io.Writer, l *config.Layer) error {
 
 	tmpl := template.Must(template.New(l.Name).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Layer":    l,
-		"Format":   m.config.Format(),
-		"DescPath": relPath,
-		"Clusters": clusters,
+		"Layer":         l,
+		"Format":        m.config.Format(),
+		"DescPath":      relPath,
+		"Clusters":      clusters,
+		"HideRealNodes": m.config.HideRealNodes,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
@@ -195,14 +197,15 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 
 	tmpl := template.Must(template.New("index").Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Config":   m.config,
-		"Diagram":  m.config.PrimaryDiagram(),
-		"Format":   m.config.Format(),
-		"DescPath": relPath,
-		"Diagrams": m.config.Diagrams,
-		"Layers":   m.config.Layers(),
-		"Nodes":    m.config.Nodes,
-		"Tags":     m.config.Tags(),
+		"Config":        m.config,
+		"Diagram":       m.config.PrimaryDiagram(),
+		"Format":        m.config.Format(),
+		"DescPath":      relPath,
+		"Diagrams":      m.config.Diagrams,
+		"Layers":        m.config.Layers(),
+		"Nodes":         m.config.Nodes,
+		"Tags":          m.config.Tags(),
+		"HideRealNodes": m.config.HideRealNodes,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
