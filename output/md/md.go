@@ -45,12 +45,12 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 
 	tmpl := template.Must(template.New(d.Name).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Diagram":    d,
-		"Format": m.config.Format(),
-		"DescPath":   relPath,
-		"Layers":     layers,
-		"Nodes":      m.config.Nodes,
-		"Tags":       m.config.Tags(),
+		"Diagram":  d,
+		"Format":   m.config.Format(),
+		"DescPath": relPath,
+		"Layers":   layers,
+		"Nodes":    m.config.Nodes,
+		"Tags":     m.config.Tags(),
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
@@ -76,10 +76,10 @@ func (m *Md) OutputLayer(wr io.Writer, l *config.Layer) error {
 
 	tmpl := template.Must(template.New(l.Name).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Layer":      l,
-		"Format": m.config.Format(),
-		"DescPath":   relPath,
-		"Clusters":   clusters,
+		"Layer":    l,
+		"Format":   m.config.Format(),
+		"DescPath": relPath,
+		"Clusters": clusters,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
@@ -118,12 +118,13 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 
 	tmpl := template.Must(template.New(n.Id()).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Node":       n,
-		"Format": m.config.Format(),
-		"DescPath":   relPath,
-		"Components": n.Components,
-		"RealNodes":  n.RealNodes,
-		"Tags":       tags,
+		"Node":          n,
+		"Format":        m.config.Format(),
+		"DescPath":      relPath,
+		"Components":    n.Components,
+		"RealNodes":     n.RealNodes,
+		"Tags":          tags,
+		"HideRealNodes": m.config.HideRealNodes,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
@@ -144,9 +145,9 @@ func (m *Md) OutputTag(wr io.Writer, t *config.Tag) error {
 
 	tmpl := template.Must(template.New(t.Id()).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Tag":        t,
-		"Format": m.config.Format(),
-		"DescPath":   relPath,
+		"Tag":      t,
+		"Format":   m.config.Format(),
+		"DescPath": relPath,
 	}
 
 	if err := tmpl.Execute(wr, tmplData); err != nil {
@@ -169,9 +170,9 @@ func (m *Md) OutputRelation(wr io.Writer, rel *config.Relation) error {
 
 	tmpl := template.Must(template.New(rel.Id()).Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Relation":   rel,
-		"Format": m.config.Format(),
-		"DescPath":   relPath,
+		"Relation": rel,
+		"Format":   m.config.Format(),
+		"DescPath": relPath,
 	}
 
 	if err := tmpl.Execute(wr, tmplData); err != nil {
@@ -194,14 +195,14 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 
 	tmpl := template.Must(template.New("index").Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Config":     m.config,
-		"Diagram":    m.config.PrimaryDiagram(),
-		"Format": m.config.Format(),
-		"DescPath":   relPath,
-		"Diagrams":   m.config.Diagrams,
-		"Layers":     m.config.Layers(),
-		"Nodes":      m.config.Nodes,
-		"Tags":       m.config.Tags(),
+		"Config":   m.config,
+		"Diagram":  m.config.PrimaryDiagram(),
+		"Format":   m.config.Format(),
+		"DescPath": relPath,
+		"Diagrams": m.config.Diagrams,
+		"Layers":   m.config.Layers(),
+		"Nodes":    m.config.Nodes,
+		"Tags":     m.config.Tags(),
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err

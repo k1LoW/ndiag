@@ -11,7 +11,7 @@ digraph ndiag {
 
     {{ range $n := .cluster.Nodes }}
     subgraph "cluster_{{ $n | id }}" {
-      label = "{{ $n.Name | unesc }} ({{ len $n.RealNodes }})";
+      label = "{{ $n.Name | unesc }}{{ if not $.hideRealNodes }} ({{ len $n.RealNodes }}){{ end }}";
       style = "solid,bold,filled";
       color = "#333333"
       fillcolor = "#FFFFFF"
@@ -35,18 +35,18 @@ digraph ndiag {
     {{ end }}
 
     {{ range $c := .cluster.Children }}
-       {{ template "cluster" (dict "cluster" $c "edges" $.edges) }}
+       {{ template "cluster" (dict "cluster" $c "edges" $.edges "hideRealNodes" $.hideRealNodes) }}
     {{ end }}
   }
 {{ end }}
 
 {{ range $c := .Clusters }}
-  {{ template "cluster" (dict "cluster" $c "edges" $.Edges) }}
+  {{ template "cluster" (dict "cluster" $c "edges" $.Edges "hideRealNodes" $.HideRealNodes) }}
 {{ end }}
 
 {{ range $n := .RemainNodes }}
   subgraph "cluster_{{ $n.Name }}" {
-    label = "{{ $n | fullname }} ({{ len $n.RealNodes }})";
+    label = "{{ $n | fullname }}{{ if not $.HideRealNodes }} ({{ len $n.RealNodes }}){{ end }}";
     style = "solid,bold";
     {{ if eq $.MainNodeId ($n | id) }}
     {{ else }}

@@ -22,9 +22,11 @@
 {{- range $i, $t := .Tags }}
 | [{{ $t | fullname }}]({{ mdpath "tag" ($t | id) }}) | {{ if ne $t.Desc "" }}{{ $t.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_tag" ($t | id)}}">:pencil2:</a>{{ end }} |
 {{- end }}
+{{- if not .HideRealNodes }}
 ## Real nodes
 {{ range $i, $rn := .RealNodes }}
 - {{ $rn | fullname }}
+{{- end }}
 {{- end }}
 
 ---
