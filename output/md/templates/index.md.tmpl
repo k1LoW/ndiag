@@ -12,6 +12,7 @@
 | [{{ $d.Name }}]({{ mdpath "diagram" $d.Layers }}) | {{ if ne $d.Desc "" }}{{ $d.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_diagram" $d.Name }}">:pencil2:</a>{{ end }} |
 {{- end }}
 
+{{ if not .Config.HideLayers }}
 ## Layers
 
 | Name | Description |
@@ -19,13 +20,14 @@
 {{- range $i, $l := .Layers }}
 | [{{ $l.Name }}]({{ mdpath "layer" $l.Name }}) | {{ if ne $l.Desc "" }}{{ $l.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_layer" $l.Name }}">:pencil2:</a>{{ end }} |
 {{- end }}
+{{- end }}
 
 ## Nodes
 
 | Name (node count) | Description |
 | --- | --- |
 {{- range $i, $n := .Nodes }}
-| [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}){{ if not $.HideRealNodes }} ({{ len $n.RealNodes }}){{ end }} | {{ if ne $n.Desc "" }}{{ $n.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_node" ($n | id)}}">:pencil2:</a>{{ end }} |
+| [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}){{ if not $.Config.HideRealNodes }} ({{ len $n.RealNodes }}){{ end }} | {{ if ne $n.Desc "" }}{{ $n.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_node" ($n | id)}}">:pencil2:</a>{{ end }} |
 {{- end }}
 
 ## Tag groups

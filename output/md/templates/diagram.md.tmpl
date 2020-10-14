@@ -8,12 +8,14 @@
   [ <a href="{{ .DescPath }}/{{ mdpath "_diagram" .Diagram.Layers }}">:pencil2: Edit description</a> ]
 <p>
 
+{{ if not .HideLayers }}
 ## Layers
 
 | Name | Description |
 | --- | --- |
 {{- range $i, $l := .Layers }}
 | [{{ $l.Name }}]({{ mdpath "layer" $l.Name }}) | {{ if ne $l.Desc "" }}{{ $l.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_layer" $l.Name }}">:pencil2:</a>{{ end }} |
+{{- end }}
 {{- end }}
 
 ## Nodes

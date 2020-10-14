@@ -51,6 +51,7 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 		"Layers":        layers,
 		"Nodes":         m.config.Nodes,
 		"Tags":          m.config.Tags(),
+		"HideLayers":    m.config.HideLayers,
 		"HideRealNodes": m.config.HideRealNodes,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
@@ -197,15 +198,14 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 
 	tmpl := template.Must(template.New("index").Funcs(output.FuncMap).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Config":        m.config,
-		"Diagram":       m.config.PrimaryDiagram(),
-		"Format":        m.config.Format(),
-		"DescPath":      relPath,
-		"Diagrams":      m.config.Diagrams,
-		"Layers":        m.config.Layers(),
-		"Nodes":         m.config.Nodes,
-		"Tags":          m.config.Tags(),
-		"HideRealNodes": m.config.HideRealNodes,
+		"Config":   m.config,
+		"Diagram":  m.config.PrimaryDiagram(),
+		"Format":   m.config.Format(),
+		"DescPath": relPath,
+		"Diagrams": m.config.Diagrams,
+		"Layers":   m.config.Layers(),
+		"Nodes":    m.config.Nodes,
+		"Tags":     m.config.Tags(),
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
