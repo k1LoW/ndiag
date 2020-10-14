@@ -53,12 +53,13 @@ type Config struct {
 	Name              string      `yaml:"name"`
 	Desc              string      `yaml:"desc,omitempty"`
 	DocPath           string      `yaml:"docPath"`
-	DescPath          string      `yaml:"descPath"`
+	DescPath          string      `yaml:"descPath,omitempty"`
 	Graph             *Graph      `yaml:"graph,omitempty"`
-	HideRealNodes     bool        `yaml:"hideRealNodes"`
+	HideLayers        bool        `yaml:"hideLayers,omitempty"`
+	HideRealNodes     bool        `yaml:"hideRealNodes,omitempty"`
 	Diagrams          []*Diagram  `yaml:"diagrams"`
 	Nodes             []*Node     `yaml:"nodes"`
-	Relations         []*Relation `yaml:"relations"`
+	Relations         []*Relation `yaml:"relations,omitempty"`
 	rawRelations      []*rawRelation
 	realNodes         []*RealNode
 	layers            []*Layer
