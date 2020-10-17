@@ -89,7 +89,9 @@ func (g *Graph) Attrs() []*Attr {
 }
 
 func New() *Config {
-	return &Config{}
+	return &Config{
+		Graph: &Graph{},
+	}
 }
 
 func (cfg *Config) Format() string {

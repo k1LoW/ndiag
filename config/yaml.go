@@ -32,7 +32,9 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	d.Desc = raw.Desc
 	d.DocPath = raw.DocPath
 	d.DescPath = raw.DescPath
-	d.Graph = raw.Graph
+	if raw.Graph != nil {
+		d.Graph = raw.Graph
+	}
 	d.HideDiagrams = raw.HideDiagrams
 	d.HideLayers = raw.HideLayers
 	d.HideRealNodes = raw.HideRealNodes
