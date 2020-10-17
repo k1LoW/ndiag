@@ -84,32 +84,34 @@ var docCmd = &cobra.Command{
 		}
 
 		// diagrams
-		for _, d := range cfg.Diagrams {
-			cfg, err := newConfig()
-			if err != nil {
-				printFatalln(cmd, err)
-			}
-			o := md.New(cfg)
+		if !cfg.HideDiagrams {
+			for _, d := range cfg.Diagrams {
+				cfg, err := newConfig()
+				if err != nil {
+					printFatalln(cmd, err)
+				}
+				o := md.New(cfg)
 
-			// generate md
-			mPath := filepath.Join(cfg.DocPath, config.MdPath("diagram", d.Layers))
-			file, err := os.Create(mPath)
-			if err != nil {
-				printFatalln(cmd, err)
-			}
-			if err := o.OutputDiagram(file, d); err != nil {
-				printFatalln(cmd, err)
-			}
+				// generate md
+				mPath := filepath.Join(cfg.DocPath, config.MdPath("diagram", d.Layers))
+				file, err := os.Create(mPath)
+				if err != nil {
+					printFatalln(cmd, err)
+				}
+				if err := o.OutputDiagram(file, d); err != nil {
+					printFatalln(cmd, err)
+				}
 
-			// draw diagram
-			diag := gviz.New(cfg)
-			dPath := filepath.Join(cfg.DocPath, config.ImagePath("diagram", d.Layers, format))
-			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
-			if err != nil {
-				printFatalln(cmd, err)
-			}
-			if err := diag.OutputDiagram(dFile, d); err != nil {
-				printFatalln(cmd, err)
+				// draw diagram
+				diag := gviz.New(cfg)
+				dPath := filepath.Join(cfg.DocPath, config.ImagePath("diagram", d.Layers, format))
+				dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
+				if err != nil {
+					printFatalln(cmd, err)
+				}
+				if err := diag.OutputDiagram(dFile, d); err != nil {
+					printFatalln(cmd, err)
+				}
 			}
 		}
 

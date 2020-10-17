@@ -55,6 +55,7 @@ type Config struct {
 	DocPath           string      `yaml:"docPath"`
 	DescPath          string      `yaml:"descPath,omitempty"`
 	Graph             *Graph      `yaml:"graph,omitempty"`
+	HideDiagrams      bool        `yaml:"hideDiagrams,omitempty"`
 	HideLayers        bool        `yaml:"hideLayers,omitempty"`
 	HideRealNodes     bool        `yaml:"hideRealNodes,omitempty"`
 	Diagrams          []*Diagram  `yaml:"diagrams"`
@@ -185,6 +186,9 @@ func (cfg *Config) LoadRealNodes(in []byte) error {
 }
 
 func (cfg *Config) Build() error {
+	if cfg.HideDiagrams && len(cfg.Diagrams) > 1 {
+		return errors.New("can't make hideDiagrams true if you have more than one diagrams defined")
+	}
 	for _, n := range cfg.Nodes {
 		if len(n.RealNodes) == 0 {
 			return fmt.Errorf("'%s' does not have any real nodes", n.FullName())
