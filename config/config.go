@@ -510,6 +510,15 @@ func (cfg *Config) buildDescriptions() error {
 		return err
 	}
 
+	// top
+	if cfg.Desc == "" {
+		desc, err := cfg.readDescFile(MdPath("_index", []string{}))
+		if err != nil {
+			return err
+		}
+		cfg.Desc = desc
+	}
+
 	// diagrams
 	for _, d := range cfg.Diagrams {
 		if d.Desc != "" {
