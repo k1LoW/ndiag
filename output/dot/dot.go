@@ -213,6 +213,7 @@ func (d *Dot) OutputTag(wr io.Writer, t *config.Tag) error {
 		"GlobalComponents": globalComponents,
 		"Edges":            edges,
 		"HideUnlinked":     true,
+		"HideRealNodes":    d.config.HideRealNodes,
 	}); err != nil {
 		return err
 	}
