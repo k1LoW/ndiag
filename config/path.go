@@ -12,6 +12,9 @@ func ImagePath(prefix string, vals []string, format string) string {
 }
 
 func MdPath(prefix string, vals []string) string {
+	if len(vals) == 0 {
+		return safeFilename(fmt.Sprintf("%s.md", prefix))
+	}
 	return safeFilename(fmt.Sprintf("%s-%s.md", prefix, strings.Join(vals, "-")))
 }
 

@@ -62,7 +62,11 @@ var FuncMap = template.FuncMap{
 		var strs []string
 		switch v := vals.(type) {
 		case string:
-			strs = []string{v}
+			if v == "" {
+				strs = []string{}
+			} else {
+				strs = []string{v}
+			}
 		case []string:
 			strs = v
 		}
