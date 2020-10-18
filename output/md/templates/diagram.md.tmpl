@@ -5,29 +5,29 @@
 {{ .Diagram.Desc }}
 
 <p align="right">
-  [ <a href="{{ .DescPath }}/{{ mdpath "_diagram" .Diagram.Layers }}">:pencil2: Edit description</a> ]
+  [ <a href="{{ .DescPath }}/{{ mdpath "_diagram" .Diagram.Layers }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
 <p>
 
 {{ if not .HideLayers }}
-## Layers
+## {{ "Layers" | lookup }}
 
-| Name | Description |
+| {{ "Name" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- |
 {{- range $i, $l := .Layers }}
 | [{{ $l.Name }}]({{ mdpath "layer" $l.Name }}) | {{ if ne $l.Desc "" }}{{ $l.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_layer" $l.Name }}">:pencil2:</a>{{ end }} |
 {{- end }}
 {{- end }}
 
-## Nodes
+## {{ "Nodes" | lookup }}
 
-| Name{{ if not .HideRealNodes }} (node count){{ end }} | Description |
+| {{ "Name" | lookup }}{{ if not .HideRealNodes }} ({{ "node count" | lookup }}){{ end }} | {{ "Description" | lookup }} |
 | --- | --- |
 {{- range $i, $n := .Nodes }}
 | [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}){{ if not $.HideRealNodes }} ({{ len $n.RealNodes }}){{ end }} | {{ if ne $n.Desc "" }}{{ $n.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_node" ($n | id)}}">:pencil2:</a>{{ end }} |
 {{- end }}
-## Tag groups
+## {{ "Tag groups" | lookup }}
 
-| Name | Description |
+| {{ "Name" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- |
 {{- range $i, $t := .Tags }}
 | [{{ $t | fullname }}]({{ mdpath "tag" ($t | id) }}) | {{ if ne $t.Desc "" }}{{ $t.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_tag" ($t | id)}}">:pencil2:</a>{{ end }} |

@@ -5,25 +5,25 @@
 {{ .Node.Desc }}
 
 <p align="right">
-  [ <a href="{{ .DescPath }}/{{ mdpath "_node" (.Node | id) }}">:pencil2: Edit description</a> ]
+  [ <a href="{{ .DescPath }}/{{ mdpath "_node" (.Node | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
 <p>
 
-## Components
+## {{ "Components" | lookup }}
 
-| Name | Description | From (Relation) | To (Relation) |
+| {{ "Name" | lookup }} | {{ "Description" | lookup }} | {{ "From" | lookup }} ({{ "Relation" | lookup }}) | {{ "To" | lookup }} ({{ "Relation" | lookup }}) |
 | --- | --- | --- | --- |
 {{- range $i, $c := .Components }}
 | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> | {{ fromlinks $c.NEdges $c }} | {{ tolinks $c.NEdges $c }} |
 {{- end }}
-## Tag groups
+## {{ "Tag groups" | lookup }}
 
-| Name | Description |
+| {{ "Name" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- |
 {{- range $i, $t := .Tags }}
 | [{{ $t | fullname }}]({{ mdpath "tag" ($t | id) }}) | {{ if ne $t.Desc "" }}{{ $t.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_tag" ($t | id)}}">:pencil2:</a>{{ end }} |
 {{- end }}
 {{- if not .HideRealNodes }}
-## Real nodes
+## {{ "Real nodes" | lookup }}
 {{ range $i, $rn := .RealNodes }}
 - {{ $rn | fullname }}
 {{- end }}

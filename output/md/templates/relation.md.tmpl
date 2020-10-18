@@ -5,12 +5,12 @@
 {{ .Relation.Desc }}
 
 <p align="right">
-  [ <a href="{{ .DescPath }}/{{ mdpath "_relation" (.Relation | id) }}">:pencil2: Edit description</a> ]
+  [ <a href="{{ .DescPath }}/{{ mdpath "_relation" (.Relation | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
 <p>
 
-## Components
+## {{ "Components" | lookup }}
 
-| # | Component | Component Description |
+| # | {{ "Name" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- | --- |
 {{- range $i, $c := .Relation.Components }}
 | {{ $i }} | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |

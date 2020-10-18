@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/goccy/go-yaml"
+	"github.com/k1LoW/tbls/dict"
 )
 
 func (d *Config) UnmarshalYAML(data []byte) error {
@@ -23,6 +24,7 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 		Nodes         []*Node       `yaml:"nodes"`
 		Networks      []interface{} `yaml:"networks"`
 		Relations     []interface{} `yaml:"relations"`
+		Dict          *dict.Dict    `yaml:"dict,omitempty"`
 	}{}
 
 	if err := yaml.Unmarshal(data, &raw); err != nil {
@@ -40,6 +42,9 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	d.HideRealNodes = raw.HideRealNodes
 	d.Diagrams = raw.Diagrams
 	d.Nodes = raw.Nodes
+	if raw.Dict != nil {
+		d.Dict = raw.Dict
+	}
 
 	for _, rel := range raw.Networks {
 		rel, err := parseRelation(RelationTypeNetwork, rel)
