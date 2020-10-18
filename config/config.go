@@ -10,6 +10,7 @@ import (
 
 	"github.com/elliotchance/orderedmap"
 	"github.com/goccy/go-yaml"
+	"github.com/k1LoW/tbls/dict"
 )
 
 const Sep = ":"
@@ -61,6 +62,7 @@ type Config struct {
 	Diagrams          []*Diagram  `yaml:"diagrams"`
 	Nodes             []*Node     `yaml:"nodes"`
 	Relations         []*Relation `yaml:"relations,omitempty"`
+	Dict              *dict.Dict  `yaml:"dict,omitempty"`
 	rawRelations      []*rawRelation
 	realNodes         []*RealNode
 	layers            []*Layer
@@ -91,6 +93,7 @@ func (g *Graph) Attrs() []*Attr {
 func New() *Config {
 	return &Config{
 		Graph: &Graph{},
+		Dict:  &dict.Dict{},
 	}
 }
 

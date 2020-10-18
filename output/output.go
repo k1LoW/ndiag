@@ -8,6 +8,7 @@ import (
 
 	"github.com/elliotchance/orderedmap"
 	"github.com/k1LoW/ndiag/config"
+	"github.com/k1LoW/tbls/dict"
 )
 
 type Output interface {
@@ -19,106 +20,111 @@ var nl2brRep = strings.NewReplacer("\r\n", "<br>", "\n", "<br>", "\r", "<br>")
 var crRep = strings.NewReplacer("\r", "")
 var clusterRep = strings.NewReplacer(":", "")
 
-var FuncMap = template.FuncMap{
-	"trim": func(s string) string {
-		return strings.TrimRight(s, "\r\n")
-	},
-	"nl2br": func(s string) string {
-		return nl2brRep.Replace(s)
-	},
-	"id": func(e config.NNode) string {
-		return unescRep.Replace(e.Id())
-	},
-	"fullname": func(e config.NNode) string {
-		return unescRep.Replace(e.FullName())
-	},
-	"unesc": func(s string) string {
-		return unescRep.Replace(s)
-	},
-	"summary": func(s string) string {
-		splitted := strings.Split(crRep.Replace(strings.TrimRight(s, "\r\n")), "\n")
-		switch {
-		case len(splitted) == 0:
-			return ""
-		case len(splitted) == 1:
-			return splitted[0]
-		case len(splitted) == 2 && splitted[1] == "":
-			return splitted[0]
-		default:
-			return fmt.Sprintf("%s ...", splitted[0])
-		}
-	},
-	"imgpath": func(prefix string, vals interface{}, format string) string {
-		var strs []string
-		switch v := vals.(type) {
-		case string:
-			strs = []string{v}
-		case []string:
-			strs = v
-		}
-		return config.ImagePath(prefix, strs, format)
-	},
-	"mdpath": func(prefix string, vals interface{}) string {
-		var strs []string
-		switch v := vals.(type) {
-		case string:
-			if v == "" {
-				strs = []string{}
-			} else {
+func Funcs(d *dict.Dict) map[string]interface{} {
+	return template.FuncMap{
+		"trim": func(s string) string {
+			return strings.TrimRight(s, "\r\n")
+		},
+		"nl2br": func(s string) string {
+			return nl2brRep.Replace(s)
+		},
+		"id": func(e config.NNode) string {
+			return unescRep.Replace(e.Id())
+		},
+		"fullname": func(e config.NNode) string {
+			return unescRep.Replace(e.FullName())
+		},
+		"unesc": func(s string) string {
+			return unescRep.Replace(s)
+		},
+		"summary": func(s string) string {
+			splitted := strings.Split(crRep.Replace(strings.TrimRight(s, "\r\n")), "\n")
+			switch {
+			case len(splitted) == 0:
+				return ""
+			case len(splitted) == 1:
+				return splitted[0]
+			case len(splitted) == 2 && splitted[1] == "":
+				return splitted[0]
+			default:
+				return fmt.Sprintf("%s ...", splitted[0])
+			}
+		},
+		"imgpath": func(prefix string, vals interface{}, format string) string {
+			var strs []string
+			switch v := vals.(type) {
+			case string:
 				strs = []string{v}
+			case []string:
+				strs = v
 			}
-		case []string:
-			strs = v
-		}
-		return config.MdPath(prefix, strs)
-	},
-	"componentlink": componentLink,
-	"rellink":       relLink,
-	"fromlinks": func(edges []*config.NEdge, base *config.Component) string {
-		links := []string{}
-		for _, e := range edges {
-			if e.Src.Id() != base.Id() {
-				links = append(links, componentLink(e.Src))
+			return config.ImagePath(prefix, strs, format)
+		},
+		"mdpath": func(prefix string, vals interface{}) string {
+			var strs []string
+			switch v := vals.(type) {
+			case string:
+				if v == "" {
+					strs = []string{}
+				} else {
+					strs = []string{v}
+				}
+			case []string:
+				strs = v
 			}
-		}
-		return strings.Join(unique(links), " / ")
-	},
-	"tolinks": func(edges []*config.NEdge, base *config.Component) string {
-		links := []string{}
-		for _, e := range edges {
-			if e.Dst.Id() != base.Id() {
-				links = append(links, componentLink(e.Dst))
+			return config.MdPath(prefix, strs)
+		},
+		"componentlink": componentLink,
+		"rellink":       relLink,
+		"fromlinks": func(edges []*config.NEdge, base *config.Component) string {
+			links := []string{}
+			for _, e := range edges {
+				if e.Src.Id() != base.Id() {
+					links = append(links, componentLink(e.Src))
+				}
 			}
-		}
-		return strings.Join(unique(links), " / ")
-	},
-	"attrs": func(attrs []*config.Attr) string {
-		if len(attrs) == 0 {
-			return ""
-		}
-		var out string
-		for _, a := range attrs {
-			out = fmt.Sprintf("%s, %s=\"%s\"", out, a.Key, a.Value)
-		}
-		return out
-	},
-	"dict": func(v ...interface{}) map[string]interface{} {
-		dict := map[string]interface{}{}
-		length := len(v)
-		for i := 0; i < length; i += 2 {
-			key := v[i].(string)
-			dict[key] = v[i+1]
-		}
-		return dict
-	},
-	"is_linked": func(c *config.Component, edges []*config.NEdge) bool {
-		for _, e := range edges {
-			if c.Id() == e.Src.Id() || c.Id() == e.Dst.Id() {
-				return true
+			return strings.Join(unique(links), " / ")
+		},
+		"tolinks": func(edges []*config.NEdge, base *config.Component) string {
+			links := []string{}
+			for _, e := range edges {
+				if e.Dst.Id() != base.Id() {
+					links = append(links, componentLink(e.Dst))
+				}
 			}
-		}
-		return false
-	},
+			return strings.Join(unique(links), " / ")
+		},
+		"attrs": func(attrs []*config.Attr) string {
+			if len(attrs) == 0 {
+				return ""
+			}
+			var out string
+			for _, a := range attrs {
+				out = fmt.Sprintf("%s, %s=\"%s\"", out, a.Key, a.Value)
+			}
+			return out
+		},
+		"dict": func(v ...interface{}) map[string]interface{} {
+			dict := map[string]interface{}{}
+			length := len(v)
+			for i := 0; i < length; i += 2 {
+				key := v[i].(string)
+				dict[key] = v[i+1]
+			}
+			return dict
+		},
+		"is_linked": func(c *config.Component, edges []*config.NEdge) bool {
+			for _, e := range edges {
+				if c.Id() == e.Src.Id() || c.Id() == e.Dst.Id() {
+					return true
+				}
+			}
+			return false
+		},
+		"lookup": func(text string) string {
+			return d.Lookup(text)
+		},
+	}
 }
 
 // componentLink

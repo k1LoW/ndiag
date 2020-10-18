@@ -5,13 +5,13 @@
 {{ .Tag.Desc }}
 
 <p align="right">
-  [ <a href="{{ .DescPath }}/{{ mdpath "_tag" (.Tag | id) }}">:pencil2: Edit description</a> ]
+  [ <a href="{{ .DescPath }}/{{ mdpath "_tag" (.Tag | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
 <p>
 
-## Components
+## {{ "Components" | lookup }}
 
 {{- range $j, $rel := .Tag.Relations }}
-| # | Name | Description |
+| # | {{ "Name" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- | --- |
 {{- range $i, $c := $rel.Components }}
 | {{ $i }} | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |
