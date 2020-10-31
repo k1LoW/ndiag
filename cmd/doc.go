@@ -178,32 +178,34 @@ var docCmd = &cobra.Command{
 		}
 
 		// tags
-		for _, rel := range cfg.Tags() {
-			cfg, err := newConfig()
-			if err != nil {
-				printFatalln(cmd, err)
-			}
+		if !cfg.HideTagGroups {
+			for _, rel := range cfg.Tags() {
+				cfg, err := newConfig()
+				if err != nil {
+					printFatalln(cmd, err)
+				}
 
-			// generate md
-			o := md.New(cfg)
-			mPath := filepath.Join(cfg.DocPath, config.MdPath("tag", []string{rel.Id()}))
-			file, err := os.Create(mPath)
-			if err != nil {
-				printFatalln(cmd, err)
-			}
-			if err := o.OutputTag(file, rel); err != nil {
-				printFatalln(cmd, err)
-			}
+				// generate md
+				o := md.New(cfg)
+				mPath := filepath.Join(cfg.DocPath, config.MdPath("tag", []string{rel.Id()}))
+				file, err := os.Create(mPath)
+				if err != nil {
+					printFatalln(cmd, err)
+				}
+				if err := o.OutputTag(file, rel); err != nil {
+					printFatalln(cmd, err)
+				}
 
-			// draw diagram
-			diag := gviz.New(cfg)
-			dPath := filepath.Join(cfg.DocPath, config.ImagePath("tag", []string{rel.Id()}, format))
-			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
-			if err != nil {
-				printFatalln(cmd, err)
-			}
-			if err := diag.OutputTag(dFile, rel); err != nil {
-				printFatalln(cmd, err)
+				// draw diagram
+				diag := gviz.New(cfg)
+				dPath := filepath.Join(cfg.DocPath, config.ImagePath("tag", []string{rel.Id()}, format))
+				dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
+				if err != nil {
+					printFatalln(cmd, err)
+				}
+				if err := diag.OutputTag(dFile, rel); err != nil {
+					printFatalln(cmd, err)
+				}
 			}
 		}
 

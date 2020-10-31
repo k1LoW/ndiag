@@ -20,6 +20,7 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 		HideDiagrams  bool          `yaml:"hideDiagrams"`
 		HideLayers    bool          `yaml:"hideLayers"`
 		HideRealNodes bool          `yaml:"hideRealNodes"`
+		HideTagGroups bool          `yaml:"hideTagGroups"`
 		Diagrams      []*Diagram    `yaml:"diagrams"`
 		Nodes         []*Node       `yaml:"nodes"`
 		Networks      []interface{} `yaml:"networks"`
@@ -40,6 +41,7 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	d.HideDiagrams = raw.HideDiagrams
 	d.HideLayers = raw.HideLayers
 	d.HideRealNodes = raw.HideRealNodes
+	d.HideTagGroups = raw.HideTagGroups
 	d.Diagrams = raw.Diagrams
 	d.Nodes = raw.Nodes
 	if raw.Dict != nil {

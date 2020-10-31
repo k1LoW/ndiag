@@ -59,6 +59,7 @@ type Config struct {
 	HideDiagrams      bool        `yaml:"hideDiagrams,omitempty"`
 	HideLayers        bool        `yaml:"hideLayers,omitempty"`
 	HideRealNodes     bool        `yaml:"hideRealNodes,omitempty"`
+	HideTagGroups     bool        `yaml:"hideTagGroups,omitempty"`
 	Diagrams          []*Diagram  `yaml:"diagrams"`
 	Nodes             []*Node     `yaml:"nodes"`
 	Relations         []*Relation `yaml:"relations,omitempty"`
