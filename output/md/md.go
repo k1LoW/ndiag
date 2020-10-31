@@ -53,6 +53,7 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 		"Tags":          m.config.Tags(),
 		"HideLayers":    m.config.HideLayers,
 		"HideRealNodes": m.config.HideRealNodes,
+		"HideTagGroups": m.config.HideTagGroups,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
@@ -128,6 +129,7 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 		"RealNodes":     n.RealNodes,
 		"Tags":          tags,
 		"HideRealNodes": m.config.HideRealNodes,
+		"HideTagGroups": m.config.HideTagGroups,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
