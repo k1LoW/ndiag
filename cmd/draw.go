@@ -60,7 +60,12 @@ var drawCmd = &cobra.Command{
 			o = dot.New(cfg)
 		}
 
-		d := config.NewDiagram("-", "-", layers)
+		d := &config.Diagram{
+			Name:   "-",
+			Desc:   "-",
+			Layers: layers,
+			Tags:   []string{},
+		}
 
 		if err := o.OutputDiagram(os.Stdout, d); err != nil {
 			printFatalln(cmd, err)
