@@ -11,7 +11,7 @@ jobs:
         go_version: [1.14, 1.15]
     steps:
       - name: Set up Go ${{ matrix.go_version }}
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go_version }}
 
@@ -22,9 +22,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Test
-        run: env PATH=`go env GOPATH`/bin:$PATH make ci
-        env:
-          GOPROXY: "https://proxy.golang.org"
+        run: make ci
 
       - name: Run codecov
         run: codecov
