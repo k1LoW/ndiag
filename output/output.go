@@ -43,11 +43,11 @@ func Funcs(d *dict.Dict) map[string]interface{} {
 			case len(splitted) == 0:
 				return ""
 			case len(splitted) == 1:
-				return splitted[0]
+				return strings.TrimLeft(splitted[0], "# ")
 			case len(splitted) == 2 && splitted[1] == "":
-				return splitted[0]
+				return strings.TrimLeft(splitted[0], "# ")
 			default:
-				return fmt.Sprintf("%s ...", splitted[0])
+				return fmt.Sprintf("%s ...", strings.TrimLeft(splitted[0], "# "))
 			}
 		},
 		"imgpath": func(prefix string, vals interface{}, format string) string {
