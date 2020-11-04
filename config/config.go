@@ -166,6 +166,133 @@ func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*N
 	return clusters, globalNodes, nEdges, nil
 }
 
+func (cfg *Config) PruneClustersByTags(clusters Clusters, nodes []*Node, components []*Component, nEdges []*NEdge, tags []string) (Clusters, []*Node, []*Component, []*NEdge, error) {
+	if len(tags) == 0 {
+		return clusters, nodes, components, nEdges, nil
+	}
+
+	remainNEdges := []*NEdge{}
+	nIds := orderedmap.NewOrderedMap()
+	cIds := orderedmap.NewOrderedMap()
+	comIds := orderedmap.NewOrderedMap()
+
+	for _, name := range tags {
+		t, err := cfg.FindTag(name)
+		if err != nil {
+			return clusters, nodes, components, nEdges, err
+		}
+		edges := SplitRelations(t.Relations)
+
+		for _, e := range edges {
+			switch {
+			case e.Src.Node != nil:
+				nIds.Set(e.Src.Node.Id(), e.Src.Node)
+				for _, c := range e.Src.Node.Clusters {
+					cIds.Set(c.Id(), c)
+				}
+			case e.Src.Cluster != nil:
+				cIds.Set(e.Src.Cluster.Id(), e.Src.Cluster)
+			}
+			comIds.Set(e.Src.Id(), e.Src)
+
+			switch {
+			case e.Dst.Node != nil:
+				nIds.Set(e.Dst.Node.Id(), e.Dst.Node)
+				for _, c := range e.Dst.Node.Clusters {
+					cIds.Set(c.Id(), c)
+				}
+			case e.Dst.Cluster != nil:
+				cIds.Set(e.Dst.Cluster.Id(), e.Dst.Cluster)
+			}
+			comIds.Set(e.Dst.Id(), e.Dst)
+		}
+
+		remainNEdges = append(remainNEdges, edges...)
+	}
+
+	// prune cluster nodes
+	pruneClusters(clusters, nIds, comIds)
+
+	// global nodes
+	filteredNodes := []*Node{}
+	for _, n := range nodes {
+		_, ok := nIds.Get(n.Id())
+		if ok {
+			filteredComponents := []*Component{}
+			for _, c := range n.Components {
+				_, ok := comIds.Get(c.Id())
+				if ok {
+					filteredComponents = append(filteredComponents, c)
+				}
+			}
+			n.Components = filteredComponents
+			filteredNodes = append(filteredNodes, n)
+		}
+	}
+	nodes = filteredNodes
+
+	// global components
+	filteredComponents := []*Component{}
+	for _, c := range components {
+		_, ok := comIds.Get(c.Id())
+		if ok {
+			filteredComponents = append(filteredComponents, c)
+		}
+	}
+	components = filteredComponents
+
+	return clusters, nodes, components, remainNEdges, nil
+}
+
+func (cfg *Config) PruneNodesByTags(nodes []*Node, tags []string) ([]*Node, error) {
+	if len(tags) == 0 {
+		return nodes, nil
+	}
+	nIds := orderedmap.NewOrderedMap()
+	comIds := orderedmap.NewOrderedMap()
+
+	for _, name := range tags {
+		t, err := cfg.FindTag(name)
+		if err != nil {
+			return nodes, nil
+		}
+		edges := SplitRelations(t.Relations)
+
+		for _, e := range edges {
+			switch {
+			case e.Src.Node != nil:
+				nIds.Set(e.Src.Node.Id(), e.Src.Node)
+			}
+			comIds.Set(e.Src.Id(), e.Src)
+
+			switch {
+			case e.Dst.Node != nil:
+				nIds.Set(e.Dst.Node.Id(), e.Dst.Node)
+			}
+			comIds.Set(e.Dst.Id(), e.Dst)
+		}
+	}
+
+	filteredNodes := []*Node{}
+	for _, n := range nodes {
+		_, ok := nIds.Get(n.Id())
+		if ok {
+			filteredComponents := []*Component{}
+			for _, c := range n.Components {
+				_, ok := comIds.Get(c.Id())
+				if ok {
+					filteredComponents = append(filteredComponents, c)
+				}
+			}
+			n.Components = filteredComponents
+			filteredNodes = append(filteredNodes, n)
+		}
+	}
+	nodes = filteredNodes
+
+	return nodes, nil
+}
+
 func (cfg *Config) LoadConfig(in []byte) error {
 	if err := yaml.Unmarshal(in, cfg); err != nil {
 		return err
@@ -339,6 +466,15 @@ func (cfg *Config) FindComponent(name string) (*Component, error) {
 		}
 	}
 	return nil, fmt.Errorf("component not found: %s", name)
+}
+
+func (cfg *Config) FindTag(name string) (*Tag, error) {
+	for _, t := range cfg.Tags() {
+		if t.Name == name {
+			return t, nil
+		}
+	}
+	return nil, fmt.Errorf("tag not found: %s", name)
 }
 
 func (cfg *Config) buildComponents() error {
@@ -786,6 +922,39 @@ func loadFile(path string) ([]byte, error) {
 		return nil, err
 	}
 	return buf, nil
+}
+
+func pruneClusters(clusters []*Cluster, nIds, comIds *orderedmap.OrderedMap) {
+	for _, c := range clusters {
+		filteredNodes := []*Node{}
+		for _, n := range c.Nodes {
+			_, ok := nIds.Get(n.Id())
+			if ok {
+				// node component
+				filteredComponents := []*Component{}
+				for _, com := range n.Components {
+					_, ok := comIds.Get(com.Id())
+					if ok {
+						filteredComponents = append(filteredComponents, com)
+					}
+				}
+				n.Components = filteredComponents
+
+				filteredNodes = append(filteredNodes, n)
+			}
+		}
+		c.Nodes = filteredNodes
+		filteredComponents := []*Component{}
+		for _, com := range c.Components {
+			_, ok := comIds.Get(com.Id())
+			if ok {
+				filteredComponents = append(filteredComponents, com)
+			}
+		}
+		c.Components = filteredComponents
+
+		pruneClusters(c.Children, nIds, comIds)
+	}
 }
 
 func sepCount(s string) int {

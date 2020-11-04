@@ -1,6 +1,7 @@
 package md
 
 import (
+	"fmt"
 	"io"
 	"path/filepath"
 	"text/template"
@@ -43,6 +44,24 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 		}
 	}
 
+	nodes := m.config.Nodes
+	tags := m.config.Tags()
+	if len(d.Tags) > 0 {
+		tags = []*config.Tag{}
+		for _, t := range d.Tags {
+			tag, ok := m.config.FindTag(t)
+			if ok != nil {
+				return fmt.Errorf("tag not found: %s", t)
+			}
+			tags = append(tags, tag)
+		}
+
+		nodes, err = m.config.PruneNodesByTags(nodes, d.Tags)
+		if err != nil {
+			return err
+		}
+	}
+
 	tmpl := template.Must(template.New(d.Name).Funcs(output.Funcs(m.config.Dict)).Parse(ts))
 	tmplData := map[string]interface{}{
 		"Diagram":       d,
@@ -50,7 +69,7 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 		"DescPath":      relPath,
 		"Layers":        layers,
 		"Nodes":         m.config.Nodes,
-		"Tags":          m.config.Tags(),
+		"Tags":          tags,
 		"HideLayers":    m.config.HideLayers,
 		"HideRealNodes": m.config.HideRealNodes,
 		"HideTagGroups": m.config.HideTagGroups,
