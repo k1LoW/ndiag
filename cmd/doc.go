@@ -92,7 +92,7 @@ var docCmd = &cobra.Command{
 			if !cfg.HideDiagrams {
 				// generate md
 				o := md.New(cfg)
-				mPath := filepath.Join(cfg.DocPath, config.MdPath("diagram", d.Layers))
+				mPath := filepath.Join(cfg.DocPath, config.MdPath("diagram", []string{d.Id()}))
 				file, err := os.Create(mPath)
 				if err != nil {
 					printFatalln(cmd, err)
@@ -103,7 +103,7 @@ var docCmd = &cobra.Command{
 			}
 			// draw diagram
 			diag := gviz.New(cfg)
-			dPath := filepath.Join(cfg.DocPath, config.ImagePath("diagram", d.Layers, format))
+			dPath := filepath.Join(cfg.DocPath, config.ImagePath("diagram", []string{d.Id()}, format))
 			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 			if err != nil {
 				printFatalln(cmd, err)
@@ -226,11 +226,11 @@ func diagExists(cfg *config.Config) error {
 	format := cfg.Format()
 	// diagrams
 	for _, d := range cfg.Diagrams {
-		mPath := filepath.Join(cfg.DocPath, config.MdPath("diagram", d.Layers))
+		mPath := filepath.Join(cfg.DocPath, config.MdPath("diagram", []string{d.Id()}))
 		if _, err := os.Lstat(mPath); err == nil {
 			return fmt.Errorf("%s already exist", mPath)
 		}
-		dPath := filepath.Join(cfg.DocPath, config.ImagePath("diagram", d.Layers, format))
+		dPath := filepath.Join(cfg.DocPath, config.ImagePath("diagram", []string{d.Id()}, format))
 		if _, err := os.Lstat(dPath); err == nil {
 			return fmt.Errorf("%s already exist", dPath)
 		}

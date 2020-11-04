@@ -1,6 +1,6 @@
 # {{ .Config.Name }}
 
-![diagram]({{ imgpath "diagram" .Diagram.Layers .Format }})
+![diagram]({{ imgpath "diagram" (.Diagram | id) .Format }})
 
 {{ .Config.Desc }}
 
@@ -14,7 +14,7 @@
 | {{ "Name" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- |
 {{- range $i, $d := .Diagrams }}
-| [{{ $d.Name }}]({{ mdpath "diagram" $d.Layers }}) | {{ if ne $d.Desc "" }}{{ $d.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_diagram" $d.Layers }}">:pencil2:</a>{{ end }} |
+| [{{ $d.Name }}]({{ mdpath "diagram" ($d | id) }}) | {{ if ne $d.Desc "" }}{{ $d.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_diagram" ($d | id) }}">:pencil2:</a>{{ end }} |
 {{- end }}
 {{- end }}
 
