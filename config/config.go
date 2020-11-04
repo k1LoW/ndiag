@@ -670,7 +670,7 @@ func (cfg *Config) buildDescriptions() error {
 		if d.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_diagram", d.Layers))
+		desc, err := cfg.readDescFile(MdPath("_diagram", []string{d.Id()}))
 		if err != nil {
 			return err
 		}
