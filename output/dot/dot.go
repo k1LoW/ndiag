@@ -35,11 +35,17 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 	if err != nil {
 		return err
 	}
+	components := d.config.GlobalComponents()
+	clusters, remain, components, nEdges, err = d.config.PruneClustersByTags(clusters, remain, components, nEdges, diag.Tags)
+	if err != nil {
+		return err
+	}
+
 	if err := tmpl.Execute(wr, map[string]interface{}{
 		"GraphAttrs":       d.config.Graph.Attrs(),
 		"Clusters":         clusters,
 		"RemainNodes":      remain,
-		"GlobalComponents": d.config.GlobalComponents(),
+		"GlobalComponents": components,
 		"Edges":            config.MergeEdges(nEdges),
 		"HideUnlinked":     false,
 		"HideRealNodes":    d.config.HideRealNodes,
