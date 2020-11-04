@@ -68,7 +68,7 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 		"Format":        m.config.Format(),
 		"DescPath":      relPath,
 		"Layers":        layers,
-		"Nodes":         m.config.Nodes,
+		"Nodes":         nodes,
 		"Tags":          tags,
 		"HideLayers":    m.config.HideLayers,
 		"HideRealNodes": m.config.HideRealNodes,
