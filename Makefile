@@ -29,6 +29,15 @@ build:
 	go build -ldflags="$(BUILD_LDFLAGS)"
 	packr2 clean
 
+ndiag_doc: build
+	./ndiag doc -c ndiag_ndiag.yml -n ndiag_ndiag.yml --rm-dist
+	./ndiag doc -c ndiag_ndiag.ja.yml -n ndiag_ndiag.ja.yml --rm-dist
+	./ndiag doc -c sample/input/ndiag.yml -n sample/input/nodes.yml --rm-dist
+
+ci_doc: depsdev ndiag_doc
+	$(eval DIFF_EXIST := $(shell git checkout go.* && git diff --exit-code --quiet || echo "exist"))
+	test -z "$(DIFF_EXIST)" || (git add -A ./docs && git add -A ./sample && git commit -m "Update ndiag archtecture document by GitHub Action (${GITHUB_SHA})" && git push -v origin ${GITHUB_BRANCH} && exit 1)
+
 depsdev:
 	go get github.com/Songmu/ghch/cmd/ghch
 	go get github.com/gobuffalo/packr/v2/packr2

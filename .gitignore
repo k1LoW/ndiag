@@ -3,7 +3,7 @@ ndiag
 dist/
 doc/
 archdoc/
-ndiag.descriptions/
+./ndiag.descriptions/
 coverage.txt
 *-packr.go
 .envrc
