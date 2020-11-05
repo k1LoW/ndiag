@@ -36,20 +36,20 @@ var drawCmd = &cobra.Command{
 	Use:   "draw",
 	Short: "draw diagram",
 	Long:  `draw diagram.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		var o output.Output
 
 		cfg := config.New()
 		if err := cfg.LoadConfigFile(detectConfigPath(configPath)); err != nil {
-			printFatalln(cmd, err)
+			return err
 		}
 		for _, n := range nodeLists {
 			if err := cfg.LoadRealNodesFile(n); err != nil {
-				printFatalln(cmd, err)
+				return err
 			}
 		}
 		if err := cfg.Build(); err != nil {
-			printFatalln(cmd, err)
+			return err
 		}
 
 		switch format {
@@ -67,9 +67,7 @@ var drawCmd = &cobra.Command{
 			Tags:   []string{},
 		}
 
-		if err := o.OutputDiagram(os.Stdout, d); err != nil {
-			printFatalln(cmd, err)
-		}
+		return o.OutputDiagram(os.Stdout, d)
 	},
 }
 

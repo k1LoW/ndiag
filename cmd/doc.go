@@ -38,47 +38,47 @@ var docCmd = &cobra.Command{
 	Use:   "doc",
 	Short: "generate architecture document",
 	Long:  `generate architecture document.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		cfg, err := newConfig()
 		if err != nil {
-			printFatalln(cmd, err)
+			return err
 		}
 		format := cfg.Format()
 
 		err = os.MkdirAll(cfg.DocPath, 0755) // #nosec
 		if err != nil {
-			printFatalln(cmd, err)
+			return err
 		}
 		if rmDist && cfg.DocPath != "" {
 			docs, err := ioutil.ReadDir(cfg.DocPath)
 			if err != nil {
-				printFatalln(cmd, err)
+				return err
 			}
 			for _, f := range docs {
 				if err := os.RemoveAll(filepath.Join(cfg.DocPath, f.Name())); err != nil {
-					printFatalln(cmd, err)
+					return err
 				}
 			}
 		}
 		if !force {
 			if err := diagExists(cfg); err != nil {
-				printFatalln(cmd, err)
+				return err
 			}
 		}
 		err = os.MkdirAll(cfg.DescPath, 0755) // #nosec
 		if err != nil {
-			printFatalln(cmd, err)
+			return err
 		}
 
 		// cleanup empty descriptions/*.md
 		descs, err := ioutil.ReadDir(cfg.DescPath)
 		if err != nil {
-			printFatalln(cmd, err)
+			return err
 		}
 		for _, f := range descs {
 			if !f.IsDir() && f.Size() == 0 {
 				if err := os.Remove(filepath.Join(cfg.DescPath, f.Name())); err != nil {
-					printFatalln(cmd, err)
+					return err
 				}
 			}
 		}
@@ -87,7 +87,7 @@ var docCmd = &cobra.Command{
 		for _, d := range cfg.Diagrams {
 			cfg, err := newConfig()
 			if err != nil {
-				printFatalln(cmd, err)
+				return err
 			}
 			if !cfg.HideDiagrams {
 				// generate md
@@ -95,10 +95,10 @@ var docCmd = &cobra.Command{
 				mPath := filepath.Join(cfg.DocPath, config.MdPath("diagram", []string{d.Id()}))
 				file, err := os.Create(mPath)
 				if err != nil {
-					printFatalln(cmd, err)
+					return err
 				}
 				if err := o.OutputDiagram(file, d); err != nil {
-					printFatalln(cmd, err)
+					return err
 				}
 			}
 			// draw diagram
@@ -106,10 +106,10 @@ var docCmd = &cobra.Command{
 			dPath := filepath.Join(cfg.DocPath, config.ImagePath("diagram", []string{d.Id()}, format))
 			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 			if err != nil {
-				printFatalln(cmd, err)
+				return err
 			}
 			if err := diag.OutputDiagram(dFile, d); err != nil {
-				printFatalln(cmd, err)
+				return err
 			}
 		}
 
@@ -118,7 +118,7 @@ var docCmd = &cobra.Command{
 			for _, l := range cfg.Layers() {
 				cfg, err := newConfig()
 				if err != nil {
-					printFatalln(cmd, err)
+					return err
 				}
 
 				// generate md
@@ -126,10 +126,10 @@ var docCmd = &cobra.Command{
 				mPath := filepath.Join(cfg.DocPath, config.MdPath("layer", []string{l.Name}))
 				file, err := os.Create(mPath)
 				if err != nil {
-					printFatalln(cmd, err)
+					return err
 				}
 				if err := o.OutputLayer(file, l); err != nil {
-					printFatalln(cmd, err)
+					return err
 				}
 
 				// draw diagram
@@ -137,10 +137,10 @@ var docCmd = &cobra.Command{
 				dPath := filepath.Join(cfg.DocPath, config.ImagePath("layer", []string{l.Name}, format))
 				dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 				if err != nil {
-					printFatalln(cmd, err)
+					return err
 				}
 				if err := diag.OutputLayer(dFile, l); err != nil {
-					printFatalln(cmd, err)
+					return err
 				}
 			}
 		}
@@ -151,7 +151,7 @@ var docCmd = &cobra.Command{
 		for _, n := range cfg.Nodes {
 			cfg, err := newConfig()
 			if err != nil {
-				printFatalln(cmd, err)
+				return err
 			}
 			o := md.New(cfg)
 
@@ -159,10 +159,10 @@ var docCmd = &cobra.Command{
 			mPath := filepath.Join(cfg.DocPath, config.MdPath("node", []string{n.Id()}))
 			file, err := os.Create(mPath)
 			if err != nil {
-				printFatalln(cmd, err)
+				return err
 			}
 			if err := o.OutputNode(file, n); err != nil {
-				printFatalln(cmd, err)
+				return err
 			}
 
 			// draw diagram
@@ -170,10 +170,10 @@ var docCmd = &cobra.Command{
 			dPath := filepath.Join(cfg.DocPath, config.ImagePath("node", []string{n.Id()}, format))
 			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 			if err != nil {
-				printFatalln(cmd, err)
+				return err
 			}
 			if err := diag.OutputNode(dFile, n); err != nil {
-				printFatalln(cmd, err)
+				return err
 			}
 		}
 
@@ -182,7 +182,7 @@ var docCmd = &cobra.Command{
 			for _, rel := range cfg.Tags() {
 				cfg, err := newConfig()
 				if err != nil {
-					printFatalln(cmd, err)
+					return err
 				}
 
 				// generate md
@@ -190,10 +190,10 @@ var docCmd = &cobra.Command{
 				mPath := filepath.Join(cfg.DocPath, config.MdPath("tag", []string{rel.Id()}))
 				file, err := os.Create(mPath)
 				if err != nil {
-					printFatalln(cmd, err)
+					return err
 				}
 				if err := o.OutputTag(file, rel); err != nil {
-					printFatalln(cmd, err)
+					return err
 				}
 
 				// draw diagram
@@ -201,10 +201,10 @@ var docCmd = &cobra.Command{
 				dPath := filepath.Join(cfg.DocPath, config.ImagePath("tag", []string{rel.Id()}, format))
 				dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 				if err != nil {
-					printFatalln(cmd, err)
+					return err
 				}
 				if err := diag.OutputTag(dFile, rel); err != nil {
-					printFatalln(cmd, err)
+					return err
 				}
 			}
 		}
@@ -213,12 +213,13 @@ var docCmd = &cobra.Command{
 		mPath := filepath.Join(cfg.DocPath, "README.md")
 		file, err := os.Create(mPath)
 		if err != nil {
-			printFatalln(cmd, err)
+			return err
 		}
 		if err := o.OutputIndex(file); err != nil {
-			printFatalln(cmd, err)
+			return err
 		}
 
+		return nil
 	},
 }
 

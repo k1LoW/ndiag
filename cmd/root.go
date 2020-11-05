@@ -56,33 +56,16 @@ func Execute() {
 	if env := os.Getenv("DEBUG"); env != "" {
 		debug, err := os.Create(fmt.Sprintf("%s.debug", version.Name))
 		if err != nil {
-			printFatalln(rootCmd, err)
+			rootCmd.PrintErrln(err)
+			os.Exit(1)
 		}
 		log.SetOutput(debug)
 	}
 
 	if err := rootCmd.Execute(); err != nil {
-		printFatalln(rootCmd, err)
+		rootCmd.PrintErrln(err)
+		os.Exit(1)
 	}
 }
 
 func init() {}
-
-// https://github.com/spf13/cobra/pull/894
-func printErrln(c *cobra.Command, i ...interface{}) {
-	c.PrintErr(fmt.Sprintln(i...))
-}
-
-func printErrf(c *cobra.Command, format string, i ...interface{}) { //nolint:unused
-	c.PrintErr(fmt.Sprintf(format, i...))
-}
-
-func printFatalln(c *cobra.Command, i ...interface{}) {
-	printErrln(c, i...)
-	os.Exit(1)
-}
-
-func printFatalf(c *cobra.Command, format string, i ...interface{}) { //nolint:unused,deadcode
-	printErrf(c, format, i...)
-	os.Exit(1)
-}

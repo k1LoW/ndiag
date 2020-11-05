@@ -54,7 +54,7 @@ ndiag completion fish ~/.config/fish/completions/ndiag.fish
 		}
 		return nil
 	},
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		var (
 			o   *os.File
 			err error
@@ -65,7 +65,7 @@ ndiag completion fish ~/.config/fish/completions/ndiag.fish
 		} else {
 			o, err = os.Create(out)
 			if err != nil {
-				printFatalln(cmd, err)
+				return err
 			}
 		}
 
@@ -73,27 +73,28 @@ ndiag completion fish ~/.config/fish/completions/ndiag.fish
 		case "bash":
 			if err := cmd.Root().GenBashCompletion(o); err != nil {
 				_ = o.Close()
-				printFatalln(cmd, err)
+				return err
 			}
 		case "zsh":
 			if err := cmd.Root().GenZshCompletion(o); err != nil {
 				_ = o.Close()
-				printFatalln(cmd, err)
+				return err
 			}
 		case "fish":
 			if err := cmd.Root().GenFishCompletion(o, true); err != nil {
 				_ = o.Close()
-				printFatalln(cmd, err)
+				return err
 			}
 		case "powershell":
 			if err := cmd.Root().GenPowerShellCompletion(o); err != nil {
 				_ = o.Close()
-				printFatalln(cmd, err)
+				return err
 			}
 		}
 		if err := o.Close(); err != nil {
-			printFatalln(cmd, err)
+			return err
 		}
+		return nil
 	},
 }
 
