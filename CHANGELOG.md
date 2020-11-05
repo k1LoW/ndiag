@@ -1,3 +1,17 @@
+## [v0.6.0](https://github.com/k1LoW/ndiag/compare/v0.5.0...v0.6.0) (2020-11-05)
+
+* Add task for updating ndiag documents [#26](https://github.com/k1LoW/ndiag/pull/26) ([k1LoW](https://github.com/k1LoW))
+* Fix diagram image filename [#34](https://github.com/k1LoW/ndiag/pull/34) ([k1LoW](https://github.com/k1LoW))
+* Add tags setting to diagram [#33](https://github.com/k1LoW/ndiag/pull/33) ([k1LoW](https://github.com/k1LoW))
+* Bump up go version [#32](https://github.com/k1LoW/ndiag/pull/32) ([k1LoW](https://github.com/k1LoW))
+* Add `hideTagGroups` [#31](https://github.com/k1LoW/ndiag/pull/31) ([k1LoW](https://github.com/k1LoW))
+* Add `dict` [#30](https://github.com/k1LoW/ndiag/pull/30) ([k1LoW](https://github.com/k1LoW))
+* Add `hideDiagrams` [#29](https://github.com/k1LoW/ndiag/pull/29) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING]Add ndiag.descriptions/_index.md [#28](https://github.com/k1LoW/ndiag/pull/28) ([k1LoW](https://github.com/k1LoW))
+* Add `hideLayers` [#27](https://github.com/k1LoW/ndiag/pull/27) ([k1LoW](https://github.com/k1LoW))
+* Add `hideRealNodes` [#25](https://github.com/k1LoW/ndiag/pull/25) ([k1LoW](https://github.com/k1LoW))
+* Add Config.Graph for setting the description of the diagram [#24](https://github.com/k1LoW/ndiag/pull/24) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.5.0](https://github.com/k1LoW/ndiag/compare/v0.4.0...v0.5.0) (2020-10-11)
 
 * Add support for merging components, clusters and relations in the node list into config [#23](https://github.com/k1LoW/ndiag/pull/23) ([k1LoW](https://github.com/k1LoW))
