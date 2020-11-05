@@ -1,6 +1,6 @@
 # ndiag
 
-`ndiag` is a high-level architecture diagramming/documentation tool.
+`ndiag` is a "high-level architecture" diagramming/documentation tool.
 
 Key features of `ndiag` are:
 
@@ -8,28 +8,47 @@ Key features of `ndiag` are:
 - **N**ested-clusters: nodes can be clustered in layers.
 - **N**-diagrams: generate multiple diagrams from a single configuration pair.
 
-### Node
+## Usage
 
-node id = `[node name]`
+``` console
+$ ndiag doc -c ndiag.yml -n nodes.yml --rm-dist
+```
 
-### Layer
+## Architecture
 
-layer id = `[layer name]`
+- WIP [English](/docs/arch/README.md)
+- [日本語](/docs/arch.ja/README.md)
 
-### Cluster
+## Install
 
-cluster id = `[layer name]:[cluster name]`
+**deb:**
 
-### Component
+Use [dpkg-i-from-url](https://github.com/k1LoW/dpkg-i-from-url)
 
-**global component:**
+``` console
+$ export NDIAG_VERSION=X.X.X
+$ curl -L https://git.io/dpkg-i-from-url | bash -s -- https://github.com/k1LoW/ndiag/releases/download/v$NDIAG_VERSION/ndiag_$NDIAG_VERSION-1_amd64.deb
+```
 
-component id = `[component name]`
+**RPM:**
 
-**cluster component:**
+``` console
+$ export NDIAG_VERSION=X.X.X
+$ yum install https://github.com/k1LoW/ndiag/releases/download/v$NDIAG_VERSION/ndiag_$NDIAG_VERSION-1_amd64.rpm
+```
 
-component id = `[layer name]:[cluster name]:[component name]`
+**homebrew tap:**
 
-**node component:**
+```console
+$ brew install k1LoW/tap/ndiag
+```
 
-component id = `[node name]:[component name]`
+**manually:**
+
+Download binary from [releases page](https://github.com/k1LoW/ndiag/releases)
+
+**go get:**
+
+```console
+$ go get github.com/k1LoW/ndiag
+```
