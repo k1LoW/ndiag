@@ -28,6 +28,7 @@ import (
 	"github.com/k1LoW/ndiag/output"
 	"github.com/k1LoW/ndiag/output/dot"
 	"github.com/k1LoW/ndiag/output/gviz"
+
 	"github.com/spf13/cobra"
 )
 
@@ -54,7 +55,7 @@ var drawCmd = &cobra.Command{
 
 		switch format {
 		case "svg", "jpg", "png":
-			// TODO: jpg png
+			cfg.Graph.Format = format
 			o = gviz.New(cfg)
 		case "dot":
 			o = dot.New(cfg)

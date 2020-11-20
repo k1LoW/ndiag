@@ -29,6 +29,11 @@ build:
 	go build -ldflags="$(BUILD_LDFLAGS)"
 	packr2 clean
 
+ndiag_draw: build
+	./ndiag draw -c sample/input/ndiag.yml -n sample/input/nodes.yml -t png -l consul -l vip_group > sample.png
+	./ndiag draw -c sample/input/ndiag.yml -n sample/input/nodes.yml -t svg -l consul -l vip_group > sample.svg
+	./ndiag draw -c sample/input/ndiag.yml -n sample/input/nodes.yml -t dot -l consul -l vip_group > sample.dot
+
 ndiag_doc: build
 	./ndiag doc -c ndiag_ndiag.yml -n ndiag_ndiag.yml --rm-dist
 	./ndiag doc -c ndiag_ndiag.ja.yml -n ndiag_ndiag.ja.yml --rm-dist

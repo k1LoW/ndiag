@@ -2,7 +2,9 @@ package gviz
 
 import (
 	"bytes"
+	"fmt"
 	"io"
+	"os/exec"
 
 	"github.com/goccy/go-graphviz"
 	"github.com/k1LoW/ndiag/config"
@@ -63,6 +65,32 @@ func (g *Gviz) OutputRelation(wr io.Writer, rel *config.Relation) error {
 
 func (g *Gviz) render(wr io.Writer, b []byte) (e error) {
 	format := g.config.Format()
+	_, err := exec.LookPath("dot")
+	if err == nil {
+		// use dot commad
+		dotFormatOption := fmt.Sprintf("-T%s", format)
+		cmd := exec.Command("dot", dotFormatOption)
+		stdin, err := cmd.StdinPipe()
+		if err != nil {
+			return err
+		}
+		if _, err := stdin.Write(b); err != nil {
+			_ = stdin.Close()
+			return err
+		}
+		if err := stdin.Close(); err != nil {
+			return err
+		}
+		out, err := cmd.Output()
+		if err != nil {
+			return err
+		}
+		if _, err := wr.Write(out); err != nil {
+			return err
+		}
+		return nil
+	}
+	// use go-graphviz
 	gviz := graphviz.New()
 	graph, err := graphviz.ParseBytes(b)
 	if err != nil {
