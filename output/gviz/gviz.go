@@ -69,7 +69,7 @@ func (g *Gviz) render(wr io.Writer, b []byte) (e error) {
 	if err == nil {
 		// use dot commad
 		dotFormatOption := fmt.Sprintf("-T%s", format)
-		cmd := exec.Command("dot", dotFormatOption)
+		cmd := exec.Command("dot", dotFormatOption) // #nosec
 		stdin, err := cmd.StdinPipe()
 		if err != nil {
 			return err
