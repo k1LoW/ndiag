@@ -66,6 +66,9 @@ func (g *Gviz) OutputRelation(wr io.Writer, rel *config.Relation) error {
 func (g *Gviz) render(wr io.Writer, b []byte) (e error) {
 	format := g.config.Format()
 	_, err := exec.LookPath("dot")
+	if format == "png" && err != nil {
+		fmt.Errorf("%v: if the format is png, you need dot command", err)
+	}
 	if err == nil {
 		// use dot commad
 		dotFormatOption := fmt.Sprintf("-T%s", format)
