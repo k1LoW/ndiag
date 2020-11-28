@@ -17,7 +17,7 @@ digraph ndiag {
       fillcolor = "#FFFFFF"
       {{ range $co := $n.Components }}
       {{ if or (not $.hideUnlinked) (is_linked $co $.edges) }}
-      "{{ $co | id }}"[label="{{ $co.Name | unesc }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
+      {{ $co | component }}
       {{ end }}
       {{ end }}
 
@@ -30,7 +30,7 @@ digraph ndiag {
 
     {{ range $co := .cluster.Components }}
       {{ if or (not $.hideUnlinked) (is_linked $co $.edges) }}
-      "{{ $co | id }}"[label="{{ $co.Name | unesc }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
+      {{ $co | component }}
       {{ end }}
     {{ end }}
 
@@ -50,7 +50,7 @@ digraph ndiag {
     style = "solid,bold";
     {{ range $co := $n.Components }}
     {{ if or (not $.HideUnlinked) (is_linked $co $.Edges) }}
-    "{{$co | id }}"[label="{{ $co.Name | unesc }}", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];
+    {{ $co | component }}
     {{ end }}
     {{ end }}
     {{ $length := len $n.Components }}
@@ -62,7 +62,7 @@ digraph ndiag {
 
 {{ range $co := .GlobalComponents }}
 {{ if or (not $.HideUnlinked) (is_linked $co $.Edges) }}
-"{{ $co | id }}"[label="{{ $co.Name | unesc }}", style="rounded,bold", shape=box, fontname="Arial"];
+{{ $co | global_component }}
 {{ end }}
 {{ end }}
 

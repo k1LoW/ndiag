@@ -37,6 +37,12 @@ func Funcs(d *dict.Dict) map[string]interface{} {
 		"unesc": func(s string) string {
 			return unescRep.Replace(s)
 		},
+		"component": func(c config.Component) string {
+			return fmt.Sprintf(`"%s"[label="%s", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), unescRep.Replace(c.Name))
+		},
+		"global_component": func(c config.Component) string {
+			return fmt.Sprintf(`"%s"[label="%s", style="rounded,bold", shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), unescRep.Replace(c.Name))
+		},
 		"summary": func(s string) string {
 			splitted := strings.Split(crRep.Replace(strings.TrimRight(s, "\r\n")), "\n")
 			switch {
