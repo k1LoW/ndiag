@@ -1,6 +1,6 @@
 # vip_group
 
-![diagram](layer-vip_group.svg)
+![diagram](layer-vip_group.png)
 
 A group of virtual IP and nodes/components to handle it.
 

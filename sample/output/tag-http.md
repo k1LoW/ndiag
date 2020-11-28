@@ -1,6 +1,6 @@
 # http
 
-![diagram](tag-http.svg)
+![diagram](tag-http.png)
 
 HTTP request flow
 

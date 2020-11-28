@@ -1,6 +1,6 @@
 # relations
 
-![diagram](node-relations.svg)
+![diagram](node-relations.png)
 
 
 

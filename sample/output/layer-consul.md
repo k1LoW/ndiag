@@ -1,6 +1,6 @@
 # consul
 
-![diagram](layer-consul.svg)
+![diagram](layer-consul.png)
 
 Consul DC
 

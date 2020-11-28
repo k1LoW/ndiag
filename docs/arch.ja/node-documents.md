@@ -1,6 +1,6 @@
 # documents
 
-![diagram](node-documents.svg)
+![diagram](node-documents.png)
 
 出力されるアーキテクチャドキュメント ( [sample](/sample/output/README.md) )
 

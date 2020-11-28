@@ -1,6 +1,6 @@
 # overview
 
-![diagram](diagram-overview.svg)
+![diagram](diagram-overview.png)
 
 全体イメージ
 

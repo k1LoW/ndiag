@@ -1,6 +1,6 @@
 # diagrams
 
-![diagram](node-diagrams.svg)
+![diagram](node-diagrams.png)
 
 
 

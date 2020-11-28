@@ -1,6 +1,6 @@
 # real nodes
 
-![diagram](node-real_nodes.svg)
+![diagram](node-real_nodes.png)
 
 
 

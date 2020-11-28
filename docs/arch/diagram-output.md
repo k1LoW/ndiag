@@ -1,6 +1,6 @@
 # output
 
-![diagram](diagram-output.svg)
+![diagram](diagram-output.png)
 
 
 
