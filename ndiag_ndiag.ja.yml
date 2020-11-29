@@ -223,7 +223,7 @@ networks:
       - output
     route:
       - 'ndiag:internal'
-      - 'documents:custom document'
+      - 'documents:custom document?icon=doc'
   -
     tags:
       - output
