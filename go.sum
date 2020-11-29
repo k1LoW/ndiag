@@ -286,6 +286,8 @@ github.com/k1LoW/glyph v0.3.1-0.20201129085757-e274bf04a5cc h1:MgbRWUezTRgn/jq62
 github.com/k1LoW/glyph v0.3.1-0.20201129085757-e274bf04a5cc/go.mod h1:fgJR8kuZEx6Mg3XSwwOHnZpGpdXL/JT9yeNEbDUJEpM=
 github.com/k1LoW/glyph v0.3.1-0.20201129102616-93d37319c03a h1:MEMfOFPr7+AG2UjYekygYYruaJoWO++YFof089BWBsI=
 github.com/k1LoW/glyph v0.3.1-0.20201129102616-93d37319c03a/go.mod h1:fgJR8kuZEx6Mg3XSwwOHnZpGpdXL/JT9yeNEbDUJEpM=
+github.com/k1LoW/glyph v0.3.1-0.20201129160819-9363bf99a5ba h1:DWEaxx0fQTgHOu0KmtPAOfSYl+if1hrDXn+IIdde3SM=
+github.com/k1LoW/glyph v0.3.1-0.20201129160819-9363bf99a5ba/go.mod h1:fgJR8kuZEx6Mg3XSwwOHnZpGpdXL/JT9yeNEbDUJEpM=
 github.com/k1LoW/tbls v1.43.1 h1:kE8SCOdbWBJ0Ro5qpo+/pvK41sC746T5Gqeca/HkgpQ=
 github.com/k1LoW/tbls v1.43.1/go.mod h1:sfWCT8+8YymKB9ZqzUrkoAbVZhgBdAss+wOq8/9UahA=
 github.com/karrick/godirwalk v1.15.3/go.mod h1:j4mkqPuvaLI8mp1DroR3P6ad7cyYd4c1qeJ3RV7ULlk=

@@ -49,10 +49,10 @@ nodes:
   -
     name: descriptions
     components:
-      - 'component descriptions'
-      - 'diagram descriptions'
-      - 'layer group descriptions'
-      - 'tag group descriptions'
+      - 'component descriptions?icon=doc'
+      - 'diagram descriptions?icon=doc'
+      - 'layer group descriptions?icon=doc'
+      - 'tag group descriptions?icon=doc'
     clusters:
       - 'type:input'
       - 'file:ndiag.descriptions/*.md'
@@ -88,10 +88,10 @@ nodes:
   -
     name: documents
     components:
-      - 'index document'
-      - 'layer group based document'
-      - 'layer based document'
-      - 'tag(relation) based document'
+      - 'index document?icon=text'
+      - 'layer group based document?icon=doc'
+      - 'layer based document?icon=doc'
+      - 'tag(relation) based document?icon=doc'
     clusters:
       - 'type:output'
       - 'file:generated documents'
