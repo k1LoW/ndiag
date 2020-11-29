@@ -11,6 +11,11 @@ type Component struct {
 	Cluster *Cluster
 	Node    *Node
 	NEdges  []*NEdge
+	Config  ComponentConfig
+}
+
+type ComponentConfig struct {
+	Icon string `qs:"icon"`
 }
 
 func (c *Component) FullName() string {

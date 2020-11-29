@@ -109,8 +109,10 @@ var docCmd = &cobra.Command{
 				return err
 			}
 			if err := diag.OutputDiagram(dFile, d); err != nil {
+				_ = dFile.Close()
 				return err
 			}
+			_ = dFile.Close()
 		}
 
 		// layers
@@ -140,8 +142,10 @@ var docCmd = &cobra.Command{
 					return err
 				}
 				if err := diag.OutputLayer(dFile, l); err != nil {
+					_ = dFile.Close()
 					return err
 				}
+				_ = dFile.Close()
 			}
 		}
 
@@ -173,17 +177,20 @@ var docCmd = &cobra.Command{
 				return err
 			}
 			if err := diag.OutputNode(dFile, n); err != nil {
+				_ = dFile.Close()
 				return err
 			}
+			_ = dFile.Close()
 		}
 
 		// tags
 		if !cfg.HideTagGroups {
-			for _, rel := range cfg.Tags() {
+			for k := range cfg.Tags() {
 				cfg, err := newConfig()
 				if err != nil {
 					return err
 				}
+				rel := cfg.Tags()[k]
 
 				// generate md
 				o := md.New(cfg)
@@ -204,8 +211,10 @@ var docCmd = &cobra.Command{
 					return err
 				}
 				if err := diag.OutputTag(dFile, rel); err != nil {
+					_ = dFile.Close()
 					return err
 				}
+				_ = dFile.Close()
 			}
 		}
 

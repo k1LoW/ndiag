@@ -14,20 +14,20 @@ nodes:
   -
     name: lb-*
     components:
-      - nginx
+      - nginx?icon=lb
     clusters:
       - 'consul:dc1'
       - 'vip_group:lb'
   -
     name: app-*
     components:
-      - rails
+      - Rails?icon=cube4
     clusters:
       - 'consul:dc1'
   -
     name: db-*
     components:
-      - PostgreSQL
+      - PostgreSQL?icon=db
     clusters:
       - 'consul:dc1'
 
@@ -36,7 +36,7 @@ networks:
     tags:
       - http
     route:
-      - "internet"
+      - "internet?icon=cloud"
       - "vip_group:lb:vip"
   -
     tags:

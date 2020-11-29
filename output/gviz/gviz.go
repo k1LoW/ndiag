@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
+	"path/filepath"
 
 	"github.com/goccy/go-graphviz"
 	"github.com/k1LoW/ndiag/config"
@@ -65,6 +67,29 @@ func (g *Gviz) OutputRelation(wr io.Writer, rel *config.Relation) error {
 
 func (g *Gviz) render(wr io.Writer, b []byte) (e error) {
 	format := g.config.Format()
+	tmpIconDir := g.config.TempIconDir()
+	if err := os.Mkdir(tmpIconDir, 0777); err != nil { // #nosec
+		return err
+	}
+	defer os.RemoveAll(tmpIconDir)
+	for _, k := range g.config.IconMap().Keys() {
+		i, err := g.config.IconMap().Get(k)
+		if err != nil {
+			return err
+		}
+		p := filepath.Join(tmpIconDir, fmt.Sprintf("%s.png", k))
+		f, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666) // #nosec
+		if err != nil {
+			return err
+		}
+		if err := i.WriteImage(f); err != nil {
+			e = f.Close()
+			return err
+		}
+		if err := f.Close(); err != nil {
+			return err
+		}
+	}
 	_, err := exec.LookPath("dot")
 	if format == "png" && err != nil {
 		fmt.Errorf("%v: if the format is png, you need dot command", err)
@@ -73,6 +98,7 @@ func (g *Gviz) render(wr io.Writer, b []byte) (e error) {
 		// use dot commad
 		dotFormatOption := fmt.Sprintf("-T%s", format)
 		cmd := exec.Command("dot", dotFormatOption) // #nosec
+		cmd.Stderr = os.Stderr
 		stdin, err := cmd.StdinPipe()
 		if err != nil {
 			return err

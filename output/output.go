@@ -38,10 +38,20 @@ func Funcs(d *dict.Dict) map[string]interface{} {
 			return unescRep.Replace(s)
 		},
 		"component": func(c config.Component) string {
-			return fmt.Sprintf(`"%s"[label="%s", style="rounded,filled,bold", color="#FFFFFF", fillcolor="#4B75B9", fontcolor="#FFFFFF" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), unescRep.Replace(c.Name))
+			if c.Config.Icon == "" {
+				label := fmt.Sprintf(`"%s"`, unescRep.Replace(c.Name))
+				return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
+			}
+			label := fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, c.Config.Icon, unescRep.Replace(c.Name))
+			return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
 		},
 		"global_component": func(c config.Component) string {
-			return fmt.Sprintf(`"%s"[label="%s", style="rounded,bold", shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), unescRep.Replace(c.Name))
+			if c.Config.Icon == "" {
+				label := fmt.Sprintf(`"%s"`, unescRep.Replace(c.Name))
+				return fmt.Sprintf(`"%s"[label=%s, style="rounded,bold", shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
+			}
+			label := fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, c.Config.Icon, unescRep.Replace(c.Name))
+			return fmt.Sprintf(`"%s"[label=%s, style="rounded,bold", fillcolor="#FFFFFF", fontcolor="#333333", shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
 		},
 		"summary": func(s string) string {
 			splitted := strings.Split(crRep.Replace(strings.TrimRight(s, "\r\n")), "\n")
