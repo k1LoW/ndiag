@@ -62,6 +62,7 @@ github.com/bcicen/jstream v0.0.0-20190220045926-16c1f8af81c2/go.mod h1:RDu/qcrnp
 github.com/beevik/ntp v0.2.0/go.mod h1:hIHWr+l3+/clUnF44zdK+CWW7fO8dR5cIylAQ76NRpg=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+CedLV8=
+github.com/beta/freetype v0.0.1 h1:/t8b5+N9FlAMOF0d1aZPa83oufB2dU/YDqA0cq/QwyU=
 github.com/beta/freetype v0.0.1/go.mod h1:IwMJ63oxprtqBiFXQiJTMyGLdsap+CKsO8ZzQut194I=
 github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kBD4zp0CCIs=
 github.com/bketelsen/crypt v0.0.3-0.20200106085610-5cbc8cc4026c/go.mod h1:MKsuJmJgSg28kpZDP6UIiPt0e0Oz0kqKNGyRaWEPv84=
@@ -288,6 +289,8 @@ github.com/k1LoW/glyph v0.3.1-0.20201129102616-93d37319c03a h1:MEMfOFPr7+AG2UjYe
 github.com/k1LoW/glyph v0.3.1-0.20201129102616-93d37319c03a/go.mod h1:fgJR8kuZEx6Mg3XSwwOHnZpGpdXL/JT9yeNEbDUJEpM=
 github.com/k1LoW/glyph v0.3.1-0.20201129160819-9363bf99a5ba h1:DWEaxx0fQTgHOu0KmtPAOfSYl+if1hrDXn+IIdde3SM=
 github.com/k1LoW/glyph v0.3.1-0.20201129160819-9363bf99a5ba/go.mod h1:fgJR8kuZEx6Mg3XSwwOHnZpGpdXL/JT9yeNEbDUJEpM=
+github.com/k1LoW/glyph v0.4.1-0.20201201045213-4b32a4dcaa62 h1:h0QxrP3KOawItT23A5Be5GpFLdF4til+DmaqFrurOjE=
+github.com/k1LoW/glyph v0.4.1-0.20201201045213-4b32a4dcaa62/go.mod h1:1dQ8DKfNOtI2v6jIPAHQtF/WG0SlXMRBz7Cf+oAlP50=
 github.com/k1LoW/tbls v1.43.1 h1:kE8SCOdbWBJ0Ro5qpo+/pvK41sC746T5Gqeca/HkgpQ=
 github.com/k1LoW/tbls v1.43.1/go.mod h1:sfWCT8+8YymKB9ZqzUrkoAbVZhgBdAss+wOq8/9UahA=
 github.com/karrick/godirwalk v1.15.3/go.mod h1:j4mkqPuvaLI8mp1DroR3P6ad7cyYd4c1qeJ3RV7ULlk=
