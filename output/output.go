@@ -43,7 +43,7 @@ func Funcs(d *dict.Dict) map[string]interface{} {
 				return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
 			}
 			label := fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, c.Config.Icon, unescRep.Replace(c.Name))
-			return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
+			return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="#4B75B966", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
 		},
 		"global_component": func(c config.Component) string {
 			if c.Config.Icon == "" {
