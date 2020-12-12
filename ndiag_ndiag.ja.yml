@@ -94,7 +94,7 @@ nodes:
   -
     name: ndiag
     components:
-      - internal?icon=gear
+      - internal?icon=hex2
   -
     name: documents
     components:
@@ -235,7 +235,7 @@ networks:
       - output
     route:
       - 'ndiag:internal'
-      - 'documents:custom document?icon=doc'
+      - 'documents:custom document'
   -
     tags:
       - output
