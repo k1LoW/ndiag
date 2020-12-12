@@ -38,26 +38,29 @@ func Funcs(d *dict.Dict) map[string]interface{} {
 			return unescRep.Replace(s)
 		},
 		"node_label": func(n config.Node, hideRealNodes bool) string {
-			label := fmt.Sprintf(`"%s (%d)"`, unescRep.Replace(n.Name), len(n.RealNodes))
+			label := fmt.Sprintf(`"%s (%d)"`, unescRep.Replace(n.FullName()), len(n.RealNodes))
 			if hideRealNodes || len(n.RealNodes) == 0 {
 				label = fmt.Sprintf(`"%s"`, unescRep.Replace(n.Name))
+			}
+			if n.Metadata.IconPath != "" {
+				label = fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, n.Metadata.IconPath, label)
 			}
 			return label
 		},
 		"component": func(c config.Component) string {
-			if c.Metadata.Icon == "" {
+			if c.Metadata.IconPath == "" {
 				label := fmt.Sprintf(`"%s"`, unescRep.Replace(c.Name))
 				return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
 			}
-			label := fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, c.Metadata.Icon, unescRep.Replace(c.Name))
+			label := fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, c.Metadata.IconPath, unescRep.Replace(c.Name))
 			return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="#4B75B966", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
 		},
 		"global_component": func(c config.Component) string {
-			if c.Metadata.Icon == "" {
+			if c.Metadata.IconPath == "" {
 				label := fmt.Sprintf(`"%s"`, unescRep.Replace(c.Name))
 				return fmt.Sprintf(`"%s"[label=%s, style="rounded,bold", shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
 			}
-			label := fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, c.Metadata.Icon, unescRep.Replace(c.Name))
+			label := fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, c.Metadata.IconPath, unescRep.Replace(c.Name))
 			return fmt.Sprintf(`"%s"[label=%s, style="rounded,bold", fillcolor="#FFFFFF", fontcolor="#333333", shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
 		},
 		"summary": func(s string) string {

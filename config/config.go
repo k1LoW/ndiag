@@ -351,6 +351,9 @@ func (cfg *Config) Build() error {
 	if err := cfg.buildClusters(); err != nil {
 		return err
 	}
+	if err := cfg.buildNodes(); err != nil {
+		return err
+	}
 	if err := cfg.buildComponents(); err != nil {
 		return err
 	}
@@ -498,6 +501,15 @@ func (cfg *Config) FindTag(name string) (*Tag, error) {
 		}
 	}
 	return nil, fmt.Errorf("tag not found: %s", name)
+}
+
+func (cfg *Config) buildNodes() error {
+	for _, n := range cfg.Nodes {
+		if n.Metadata.Icon != "" {
+			n.Metadata.IconPath = filepath.Join(cfg.TempIconDir(), fmt.Sprintf("%s.png", n.Metadata.Icon))
+		}
+	}
+	return nil
 }
 
 func (cfg *Config) buildComponents() error {

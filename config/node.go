@@ -10,10 +10,16 @@ type Node struct {
 	Desc          string       `yaml:"desc,omitempty"`
 	Components    []*Component `yaml:"components,omitempty"`
 	Clusters      Clusters     `yaml:"clusters,omitempty"`
-	RealNodes     []*RealNode
+	Metadata      NodeMetadata `yaml:"metadata,omitempty"`
+	RealNodes     []*RealNode  `yaml:"-"`
 	nameRe        *regexp.Regexp
 	rawComponents []string
 	rawClusters   []string
+}
+
+type NodeMetadata struct {
+	Icon     string `yaml:"icon,omitempty"`
+	IconPath string `yaml:"-"`
 }
 
 func (n *Node) FullName() string {
