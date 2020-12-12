@@ -94,7 +94,7 @@ func (g *Gviz) renderPNG(wr io.Writer, b []byte) (e error) {
 		if err != nil {
 			return err
 		}
-		p := filepath.Join(tmpIconDir, fmt.Sprintf("%s.%s", k, format))
+		p := filepath.Join(tmpIconDir, fmt.Sprintf("%s.png", k))
 		f, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666) // #nosec
 		if err != nil {
 			return err
