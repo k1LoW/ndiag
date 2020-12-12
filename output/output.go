@@ -37,6 +37,13 @@ func Funcs(d *dict.Dict) map[string]interface{} {
 		"unesc": func(s string) string {
 			return unescRep.Replace(s)
 		},
+		"node_label": func(n config.Node, hideRealNodes bool) string {
+			label := fmt.Sprintf(`"%s (%d)"`, unescRep.Replace(n.Name), len(n.RealNodes))
+			if hideRealNodes || len(n.RealNodes) == 0 {
+				label = fmt.Sprintf(`"%s"`, unescRep.Replace(n.Name))
+			}
+			return label
+		},
 		"component": func(c config.Component) string {
 			if c.Metadata.Icon == "" {
 				label := fmt.Sprintf(`"%s"`, unescRep.Replace(c.Name))

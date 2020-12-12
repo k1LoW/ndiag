@@ -92,6 +92,7 @@ L:
 		"GlobalComponents": []*config.Component{},
 		"Edges":            config.MergeEdges(edges),
 		"HideUnlinked":     false,
+		"HideRealNodes":    d.config.HideRealNodes,
 	}); err != nil {
 		return err
 	}
@@ -158,6 +159,7 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 		"RemainNodes":      nodes,
 		"GlobalComponents": globalComponents,
 		"Edges":            config.MergeEdges(edges),
+		"HideRealNodes":    d.config.HideRealNodes,
 	}); err != nil {
 		return err
 	}
