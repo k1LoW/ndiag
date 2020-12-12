@@ -67,6 +67,22 @@ func (g *Gviz) OutputRelation(wr io.Writer, rel *config.Relation) error {
 
 func (g *Gviz) render(wr io.Writer, b []byte) (e error) {
 	format := g.config.Format()
+	switch format {
+	case "png":
+		return renderPNG(wr, b)
+	case "svg":
+		return renderSVG(wr, b)
+	default:
+		return fmt.Errorf("invalid format: %s", format)
+	}
+}
+
+func (g *Gviz) renderPNG(wr io.Writer, b []byte) (e error) {
+	_, err := exec.LookPath("dot")
+	if format == "png" && err != nil {
+		return fmt.Errorf("%v: if the format is png, you need dot command", err)
+	}
+
 	tmpIconDir := g.config.TempIconDir()
 	if err := os.Mkdir(tmpIconDir, 0750); err != nil {
 		return err
@@ -90,35 +106,32 @@ func (g *Gviz) render(wr io.Writer, b []byte) (e error) {
 			return err
 		}
 	}
-	_, err := exec.LookPath("dot")
-	if format == "png" && err != nil {
-		return fmt.Errorf("%v: if the format is png, you need dot command", err)
+	// use dot commad
+	dotFormatOption := fmt.Sprintf("-T%s", format)
+	cmd := exec.Command("dot", dotFormatOption) // #nosec
+	cmd.Stderr = os.Stderr
+	stdin, err := cmd.StdinPipe()
+	if err != nil {
+		return err
 	}
-	if err == nil {
-		// use dot commad
-		dotFormatOption := fmt.Sprintf("-T%s", format)
-		cmd := exec.Command("dot", dotFormatOption) // #nosec
-		cmd.Stderr = os.Stderr
-		stdin, err := cmd.StdinPipe()
-		if err != nil {
-			return err
-		}
-		if _, err := stdin.Write(b); err != nil {
-			_ = stdin.Close()
-			return err
-		}
-		if err := stdin.Close(); err != nil {
-			return err
-		}
-		out, err := cmd.Output()
-		if err != nil {
-			return err
-		}
-		if _, err := wr.Write(out); err != nil {
-			return err
-		}
-		return nil
+	if _, err := stdin.Write(b); err != nil {
+		_ = stdin.Close()
+		return err
 	}
+	if err := stdin.Close(); err != nil {
+		return err
+	}
+	out, err := cmd.Output()
+	if err != nil {
+		return err
+	}
+	if _, err := wr.Write(out); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (g *Gviz) renderSVG(wr io.Writer, b []byte) (e error) {
 	// use go-graphviz
 	gviz := graphviz.New()
 	graph, err := graphviz.ParseBytes(b)
