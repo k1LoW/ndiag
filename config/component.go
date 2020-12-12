@@ -6,15 +6,15 @@ import (
 )
 
 type Component struct {
-	Name    string
-	Desc    string
-	Cluster *Cluster
-	Node    *Node
-	NEdges  []*NEdge
-	Config  ComponentConfig
+	Name     string
+	Desc     string
+	Cluster  *Cluster
+	Node     *Node
+	NEdges   []*NEdge
+	Metadata ComponentMetadata
 }
 
-type ComponentConfig struct {
+type ComponentMetadata struct {
 	Icon string `qs:"icon"`
 }
 

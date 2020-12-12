@@ -1005,19 +1005,19 @@ func pruneClusters(clusters []*Cluster, nIds, comIds *orderedmap.OrderedMap) {
 func (cfg *Config) parseComponent(comName string) (*Component, error) {
 	c := &Component{}
 	if queryContains(comName) {
-		var cc ComponentConfig
+		var m ComponentMetadata
 		splited := querySplit(comName)
 		c.Name = splited[0]
-		if err := qs.Unmarshal(&cc, splited[1]); err != nil {
+		if err := qs.Unmarshal(&m, splited[1]); err != nil {
 			return nil, err
 		}
-		if cc.Icon != "" {
-			if _, err := cfg.iconMap.Get(cc.Icon); err != nil {
-				return nil, fmt.Errorf("not found icon: %s", cc.Icon)
+		if m.Icon != "" {
+			if _, err := cfg.iconMap.Get(m.Icon); err != nil {
+				return nil, fmt.Errorf("not found icon: %s", m.Icon)
 			}
-			cc.Icon = filepath.Join(cfg.TempIconDir(), fmt.Sprintf("%s.png", cc.Icon))
+			m.Icon = filepath.Join(cfg.TempIconDir(), fmt.Sprintf("%s.png", m.Icon))
 		}
-		c.Config = cc
+		c.Metadata = m
 	} else {
 		c.Name = comName
 	}
