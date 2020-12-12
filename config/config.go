@@ -58,19 +58,20 @@ type Layer struct {
 }
 
 type Config struct {
-	Name              string      `yaml:"name"`
-	Desc              string      `yaml:"desc,omitempty"`
-	DocPath           string      `yaml:"docPath"`
-	DescPath          string      `yaml:"descPath,omitempty"`
-	Graph             *Graph      `yaml:"graph,omitempty"`
-	HideDiagrams      bool        `yaml:"hideDiagrams,omitempty"`
-	HideLayers        bool        `yaml:"hideLayers,omitempty"`
-	HideRealNodes     bool        `yaml:"hideRealNodes,omitempty"`
-	HideTagGroups     bool        `yaml:"hideTagGroups,omitempty"`
-	Diagrams          []*Diagram  `yaml:"diagrams"`
-	Nodes             []*Node     `yaml:"nodes"`
-	Relations         []*Relation `yaml:"relations,omitempty"`
-	Dict              *dict.Dict  `yaml:"dict,omitempty"`
+	Name              string             `yaml:"name"`
+	Desc              string             `yaml:"desc,omitempty"`
+	DocPath           string             `yaml:"docPath"`
+	DescPath          string             `yaml:"descPath,omitempty"`
+	Graph             *Graph             `yaml:"graph,omitempty"`
+	HideDiagrams      bool               `yaml:"hideDiagrams,omitempty"`
+	HideLayers        bool               `yaml:"hideLayers,omitempty"`
+	HideRealNodes     bool               `yaml:"hideRealNodes,omitempty"`
+	HideTagGroups     bool               `yaml:"hideTagGroups,omitempty"`
+	Diagrams          []*Diagram         `yaml:"diagrams"`
+	Nodes             []*Node            `yaml:"nodes"`
+	Relations         []*Relation        `yaml:"relations,omitempty"`
+	Dict              *dict.Dict         `yaml:"dict,omitempty"`
+	CustomIcons       []*glyph.Blueprint `yaml:"customIcons,omitempty"`
 	rawRelations      []*rawRelation
 	realNodes         []*RealNode
 	layers            []*Layer
@@ -101,14 +102,9 @@ func (g *Graph) Attrs() []*Attr {
 }
 
 func New() *Config {
-	rand.Seed(time.Now().UnixNano())
-	r := rand.Intn(100000)
 	return &Config{
 		Graph: &Graph{},
 		Dict:  &dict.Dict{},
-		// iconMap:     glyph.NewMapWithIncluded(glyph.Width(100.0), glyph.Height(100.0), glyph.Color("#FFFFFF"), glyph.FillColor("#4B75B9")),
-		iconMap:     glyph.NewMapWithIncluded(glyph.Width(100.0), glyph.Height(100.0)),
-		tempIconDir: filepath.Join(os.TempDir(), fmt.Sprintf("ndiag.%06d", r)),
 	}
 }
 
@@ -349,6 +345,9 @@ func (cfg *Config) Build() error {
 			return fmt.Errorf("'%s' does not have any real nodes", n.FullName())
 		}
 	}
+	if err := cfg.buildIconMap(); err != nil {
+		return err
+	}
 	if err := cfg.buildClusters(); err != nil {
 		return err
 	}
@@ -551,10 +550,10 @@ func (cfg *Config) buildComponents() error {
 			return fmt.Errorf("node '%s' not found: %s", nodeName, c)
 		}
 		newCom, err := cfg.parseComponent(comName)
-		newCom.Node = n
 		if err != nil {
 			return err
 		}
+		newCom.Node = n
 		for _, com := range n.Components {
 			if strings.EqualFold(com.FullName(), newCom.FullName()) {
 				belongTo = true
@@ -885,6 +884,22 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 	}
 
 	return buildNestedClusters(clusters, layers, remain)
+}
+
+func (cfg *Config) buildIconMap() error {
+	icm := glyph.NewMapWithIncluded(glyph.Width(100.0), glyph.Height(100.0))
+	for _, i := range cfg.CustomIcons {
+		g, k, err := i.ToGlyphAndKey()
+		if err != nil {
+			return err
+		}
+		icm.Set(k, g)
+	}
+	cfg.iconMap = icm
+	rand.Seed(time.Now().UnixNano())
+	r := rand.Intn(100000)
+	cfg.tempIconDir = filepath.Join(os.TempDir(), fmt.Sprintf("ndiag.%06d", r))
+	return nil
 }
 
 func (cfg *Config) checkUnique() error {
