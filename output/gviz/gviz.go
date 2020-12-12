@@ -65,21 +65,22 @@ func (g *Gviz) OutputRelation(wr io.Writer, rel *config.Relation) error {
 	return g.render(wr, buf.Bytes())
 }
 
-func (g *Gviz) render(wr io.Writer, b []byte) (e error) {
+func (g *Gviz) render(wr io.Writer, b []byte) error {
 	format := g.config.Format()
 	switch format {
 	case "png":
-		return renderPNG(wr, b)
+		return g.renderPNG(wr, b)
 	case "svg":
-		return renderSVG(wr, b)
+		return g.renderSVG(wr, b)
 	default:
 		return fmt.Errorf("invalid format: %s", format)
 	}
 }
 
 func (g *Gviz) renderPNG(wr io.Writer, b []byte) (e error) {
+	format := g.config.Format()
 	_, err := exec.LookPath("dot")
-	if format == "png" && err != nil {
+	if err != nil {
 		return fmt.Errorf("%v: if the format is png, you need dot command", err)
 	}
 
@@ -93,7 +94,7 @@ func (g *Gviz) renderPNG(wr io.Writer, b []byte) (e error) {
 		if err != nil {
 			return err
 		}
-		p := filepath.Join(tmpIconDir, fmt.Sprintf("%s.png", k))
+		p := filepath.Join(tmpIconDir, fmt.Sprintf("%s.%s", k, format))
 		f, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666) // #nosec
 		if err != nil {
 			return err
@@ -146,7 +147,7 @@ func (g *Gviz) renderSVG(wr io.Writer, b []byte) (e error) {
 			e = err
 		}
 	}()
-	if err := gviz.Render(graph, graphviz.Format(format), wr); err != nil {
+	if err := gviz.Render(graph, graphviz.Format("svg"), wr); err != nil {
 		return err
 	}
 	return nil
