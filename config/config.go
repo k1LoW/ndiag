@@ -340,9 +340,11 @@ func (cfg *Config) Build() error {
 	if cfg.HideDiagrams && len(cfg.Diagrams) > 1 {
 		return errors.New("can't make hideDiagrams true if you have more than one diagrams defined")
 	}
-	for _, n := range cfg.Nodes {
-		if len(n.RealNodes) == 0 {
-			return fmt.Errorf("'%s' does not have any real nodes", n.FullName())
+	if len(cfg.realNodes) > 0 {
+		for _, n := range cfg.Nodes {
+			if len(n.RealNodes) == 0 {
+				return fmt.Errorf("'%s' does not have any real nodes", n.FullName())
+			}
 		}
 	}
 	if err := cfg.buildIconMap(); err != nil {
