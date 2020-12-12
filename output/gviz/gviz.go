@@ -199,15 +199,11 @@ func (g *Gviz) renderSVG(wr io.Writer, b []byte) (e error) {
 					return err
 				}
 				s := xmlquery.FindOne(imgdoc, "//svg")
-				// xmlquery.AddChild(img.Parent, s)
-				// _, _ = fmt.Fprintf(os.Stderr, "%v\n", img.Parent.OutputXML(true))
-				_, _ = fmt.Fprintf(os.Stderr, "%v\n", s.OutputXML(true))
 				xmlquery.AddAttr(img, "xlink:href", fmt.Sprintf("data:image/svg+xml;base64,%s", base64.StdEncoding.EncodeToString([]byte(s.OutputXML(true)))))
 				img.Attr = append(img.Attr[:i], img.Attr[i+1:]...)
 				break
 			}
 		}
-		// xmlquery.RemoveFromTree(img)
 	}
 
 	wr.Write([]byte(doc.OutputXML(false)))
