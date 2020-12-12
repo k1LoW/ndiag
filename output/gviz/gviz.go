@@ -68,7 +68,7 @@ func (g *Gviz) OutputRelation(wr io.Writer, rel *config.Relation) error {
 func (g *Gviz) render(wr io.Writer, b []byte) (e error) {
 	format := g.config.Format()
 	tmpIconDir := g.config.TempIconDir()
-	if err := os.Mkdir(tmpIconDir, 0777); err != nil { // #nosec
+	if err := os.Mkdir(tmpIconDir, 0750); err != nil {
 		return err
 	}
 	defer os.RemoveAll(tmpIconDir)
@@ -92,7 +92,7 @@ func (g *Gviz) render(wr io.Writer, b []byte) (e error) {
 	}
 	_, err := exec.LookPath("dot")
 	if format == "png" && err != nil {
-		fmt.Errorf("%v: if the format is png, you need dot command", err)
+		return fmt.Errorf("%v: if the format is png, you need dot command", err)
 	}
 	if err == nil {
 		// use dot commad
