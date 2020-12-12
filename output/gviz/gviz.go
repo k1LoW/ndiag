@@ -79,7 +79,7 @@ func (g *Gviz) render(wr io.Writer, b []byte) (e error) {
 
 func (g *Gviz) renderPNG(wr io.Writer, b []byte) (e error) {
 	_, err := exec.LookPath("dot")
-	if format == "png" && err != nil {
+	if err != nil {
 		return fmt.Errorf("%v: if the format is png, you need dot command", err)
 	}
 
