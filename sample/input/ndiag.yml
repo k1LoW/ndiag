@@ -14,13 +14,14 @@ nodes:
   -
     name: lb-*
     components:
-      - nginx?icon=lb
+      - nginx?icon=lb-l7
     clusters:
       - 'consul:dc1'
       - 'vip_group:lb'
   -
     name: app-*
     components:
+      - nginx?icon=proxy
       - Rails?icon=cube4
     clusters:
       - 'consul:dc1'
@@ -50,6 +51,7 @@ networks:
       - app
     route:
       - "lb-*:nginx"
+      - "app-*:nginx"
       - "app-*:rails"
   -
     tags:
@@ -63,5 +65,14 @@ relations:
     tags:
       - http
     components:
-      - 'lb-*:keepalived'
+      - 'lb-*:keepalived?icon=keepalived'
       - "vip_group:lb:vip"
+
+customIcons:
+  -
+    key: keepalived
+    lines:
+      - b1 b5 f9 j5 j1 f1 b1
+      - d2 d6
+      - h2 d4
+      - e4 h6
