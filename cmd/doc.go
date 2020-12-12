@@ -220,7 +220,7 @@ var docCmd = &cobra.Command{
 
 		// top page
 		mPath := filepath.Join(cfg.DocPath, "README.md")
-		file, err := os.Create(mPath)
+		file, err := os.OpenFile(mPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 		if err != nil {
 			return err
 		}
