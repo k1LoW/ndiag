@@ -887,7 +887,7 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 }
 
 func (cfg *Config) buildIconMap() error {
-	icm := glyph.NewMapWithIncluded(glyph.Width(100.0), glyph.Height(100.0))
+	icm := glyph.NewMapWithIncluded(glyph.Width(80.0), glyph.Height(80.0))
 	for _, i := range cfg.CustomIcons {
 		g, k, err := i.ToGlyphAndKey()
 		if err != nil {
