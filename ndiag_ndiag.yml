@@ -48,10 +48,10 @@ nodes:
   -
     name: descriptions
     components:
-      - 'component descriptions?icon=doc'
-      - 'diagram descriptions?icon=doc'
-      - 'layer group descriptions?icon=doc'
-      - 'tag group descriptions?icon=doc'
+      - 'component descriptions?icon=write'
+      - 'diagram descriptions?icon=write'
+      - 'layer group descriptions?icon=write'
+      - 'tag group descriptions?icon=write'
     clusters:
       - 'type:input'
       - 'file:ndiag.descriptions/*.md'
@@ -83,7 +83,7 @@ nodes:
   -
     name: ndiag
     components:
-      - internal
+      - internal?icon=gear
   -
     name: documents
     components:
