@@ -7,25 +7,27 @@ import (
 	"strings"
 
 	"github.com/goccy/go-yaml"
+	"github.com/k1LoW/glyph"
 	"github.com/k1LoW/tbls/dict"
 )
 
 func (d *Config) UnmarshalYAML(data []byte) error {
 	raw := struct {
-		Name          string        `yaml:"name"`
-		Desc          string        `yaml:"desc,omitempty"`
-		DocPath       string        `yaml:"docPath"`
-		DescPath      string        `yaml:"descPath"`
-		Graph         *Graph        `yaml:"graph,omitempty"`
-		HideDiagrams  bool          `yaml:"hideDiagrams"`
-		HideLayers    bool          `yaml:"hideLayers"`
-		HideRealNodes bool          `yaml:"hideRealNodes"`
-		HideTagGroups bool          `yaml:"hideTagGroups"`
-		Diagrams      []*Diagram    `yaml:"diagrams"`
-		Nodes         []*Node       `yaml:"nodes"`
-		Networks      []interface{} `yaml:"networks"`
-		Relations     []interface{} `yaml:"relations"`
-		Dict          *dict.Dict    `yaml:"dict,omitempty"`
+		Name          string             `yaml:"name"`
+		Desc          string             `yaml:"desc,omitempty"`
+		DocPath       string             `yaml:"docPath"`
+		DescPath      string             `yaml:"descPath"`
+		Graph         *Graph             `yaml:"graph,omitempty"`
+		HideDiagrams  bool               `yaml:"hideDiagrams"`
+		HideLayers    bool               `yaml:"hideLayers"`
+		HideRealNodes bool               `yaml:"hideRealNodes"`
+		HideTagGroups bool               `yaml:"hideTagGroups"`
+		Diagrams      []*Diagram         `yaml:"diagrams"`
+		Nodes         []*Node            `yaml:"nodes"`
+		Networks      []interface{}      `yaml:"networks"`
+		Relations     []interface{}      `yaml:"relations"`
+		Dict          *dict.Dict         `yaml:"dict,omitempty"`
+		CustomIcons   []*glyph.Blueprint `yaml:"customIcons,omitempty"`
 	}{}
 
 	if err := yaml.Unmarshal(data, &raw); err != nil {
@@ -47,6 +49,7 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	if raw.Dict != nil {
 		d.Dict = raw.Dict
 	}
+	d.CustomIcons = raw.CustomIcons
 
 	for _, rel := range raw.Networks {
 		rel, err := parseRelation(RelationTypeNetwork, rel)
@@ -68,10 +71,11 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 
 func (n *Node) UnmarshalYAML(data []byte) error {
 	raw := struct {
-		Name       string   `yaml:"name"`
-		Desc       string   `yaml:"desc"`
-		Components []string `yaml:"components,omitempty"`
-		Clusters   []string `yaml:"clusters,omitempty"`
+		Name       string       `yaml:"name"`
+		Desc       string       `yaml:"desc"`
+		Components []string     `yaml:"components,omitempty"`
+		Clusters   []string     `yaml:"clusters,omitempty"`
+		Metadata   NodeMetadata `yaml:"metadata,omitempty"`
 	}{}
 
 	if err := yaml.Unmarshal(data, &raw); err != nil {
@@ -86,6 +90,7 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	n.Desc = raw.Desc
 	n.rawComponents = raw.Components
 	n.rawClusters = raw.Clusters
+	n.Metadata = raw.Metadata
 	return nil
 }
 

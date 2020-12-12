@@ -1,6 +1,6 @@
 # app
 
-![diagram](tag-app.svg)
+![diagram](tag-app.png)
 
 App-DB
 
@@ -13,7 +13,8 @@ App-DB
 | # | Name | Description |
 | --- | --- | --- |
 | 0 | lb-*:nginx |  <a href="../input/ndiag.descriptions/_component-lb-__nginx.md">:pencil2:</a> |
-| 1 | app-*:rails |  <a href="../input/ndiag.descriptions/_component-app-__rails.md">:pencil2:</a> |
+| 1 | app-*:nginx |  <a href="../input/ndiag.descriptions/_component-app-__nginx.md">:pencil2:</a> |
+| 2 | app-*:rails |  <a href="../input/ndiag.descriptions/_component-app-__rails.md">:pencil2:</a> |
 
 | # | Name | Description |
 | --- | --- | --- |

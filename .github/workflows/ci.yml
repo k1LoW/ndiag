@@ -15,8 +15,11 @@ jobs:
         with:
           go-version: ${{ matrix.go_version }}
 
-      - name: Install codecov
-        run: sudo pip install codecov
+      - name: Setup
+        run: |
+          sudo apt-get update
+          sudo apt-get install graphviz
+          sudo pip install codecov
 
       - name: Check out source code
         uses: actions/checkout@v2

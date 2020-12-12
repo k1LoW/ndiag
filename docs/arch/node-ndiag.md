@@ -1,6 +1,6 @@
 # ndiag
 
-![diagram](node-ndiag.svg)
+![diagram](node-ndiag.png)
 
 `ndiag doc` command
 

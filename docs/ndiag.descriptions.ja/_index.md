@@ -4,7 +4,7 @@
 
 サンプルとしてnginx, Rails, PostgreSQLで構成された[3層アーキテクチャのドキュメント](/sample/output/README.md)を例に説明します。
 
-![3tier](/sample/output/diagram-overview.svg)
+![3tier](/sample/output/diagram-overview.png)
 
 具体的に実行するコマンドは以下です。
 

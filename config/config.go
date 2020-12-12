@@ -4,20 +4,27 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/elliotchance/orderedmap"
 	"github.com/goccy/go-yaml"
+	"github.com/k1LoW/glyph"
 	"github.com/k1LoW/tbls/dict"
+	"github.com/pasztorpisti/qs"
 )
 
 const Sep = ":"
 const Esc = "\\"
+const Q = "?"
 
 var escRep = strings.NewReplacer(fmt.Sprintf("%s%s", Esc, Sep), "__NDIAG_REP__")
 var unescRep = strings.NewReplacer("__NDIAG_REP__", fmt.Sprintf("%s%s", Esc, Sep))
+var qRep = strings.NewReplacer(fmt.Sprintf("%s%s", Esc, Q), "__NDIAG_REP__")
+var unqRep = strings.NewReplacer("__NDIAG_REP__", fmt.Sprintf("%s%s", Esc, Q))
 
 const DefaultDocPath = "archdoc"
 
@@ -25,7 +32,7 @@ var DefaultConfigFilePaths = []string{"ndiag.yml"}
 var DefaultDescPath = "ndiag.descriptions"
 
 // DefaultFormat is the default diagram format
-const DefaultFormat = "svg"
+const DefaultFormat = "png"
 
 type NNode interface {
 	Id() string
@@ -51,19 +58,20 @@ type Layer struct {
 }
 
 type Config struct {
-	Name              string      `yaml:"name"`
-	Desc              string      `yaml:"desc,omitempty"`
-	DocPath           string      `yaml:"docPath"`
-	DescPath          string      `yaml:"descPath,omitempty"`
-	Graph             *Graph      `yaml:"graph,omitempty"`
-	HideDiagrams      bool        `yaml:"hideDiagrams,omitempty"`
-	HideLayers        bool        `yaml:"hideLayers,omitempty"`
-	HideRealNodes     bool        `yaml:"hideRealNodes,omitempty"`
-	HideTagGroups     bool        `yaml:"hideTagGroups,omitempty"`
-	Diagrams          []*Diagram  `yaml:"diagrams"`
-	Nodes             []*Node     `yaml:"nodes"`
-	Relations         []*Relation `yaml:"relations,omitempty"`
-	Dict              *dict.Dict  `yaml:"dict,omitempty"`
+	Name              string             `yaml:"name"`
+	Desc              string             `yaml:"desc,omitempty"`
+	DocPath           string             `yaml:"docPath"`
+	DescPath          string             `yaml:"descPath,omitempty"`
+	Graph             *Graph             `yaml:"graph,omitempty"`
+	HideDiagrams      bool               `yaml:"hideDiagrams,omitempty"`
+	HideLayers        bool               `yaml:"hideLayers,omitempty"`
+	HideRealNodes     bool               `yaml:"hideRealNodes,omitempty"`
+	HideTagGroups     bool               `yaml:"hideTagGroups,omitempty"`
+	Diagrams          []*Diagram         `yaml:"diagrams"`
+	Nodes             []*Node            `yaml:"nodes"`
+	Relations         []*Relation        `yaml:"relations,omitempty"`
+	Dict              *dict.Dict         `yaml:"dict,omitempty"`
+	CustomIcons       []*glyph.Blueprint `yaml:"customIcons,omitempty"`
 	rawRelations      []*rawRelation
 	realNodes         []*RealNode
 	layers            []*Layer
@@ -73,6 +81,8 @@ type Config struct {
 	nodeComponents    []*Component
 	nEdges            []*NEdge
 	tags              []*Tag
+	iconMap           *glyph.Map
+	tempIconDir       string
 }
 
 type Graph struct {
@@ -103,6 +113,14 @@ func (cfg *Config) Format() string {
 		return cfg.Graph.Format
 	}
 	return DefaultFormat
+}
+
+func (cfg *Config) IconMap() *glyph.Map {
+	return cfg.iconMap
+}
+
+func (cfg *Config) TempIconDir() string {
+	return cfg.tempIconDir
 }
 
 func (cfg *Config) PrimaryDiagram() *Diagram {
@@ -327,7 +345,13 @@ func (cfg *Config) Build() error {
 			return fmt.Errorf("'%s' does not have any real nodes", n.FullName())
 		}
 	}
+	if err := cfg.buildIconMap(); err != nil {
+		return err
+	}
 	if err := cfg.buildClusters(); err != nil {
+		return err
+	}
+	if err := cfg.buildNodes(); err != nil {
 		return err
 	}
 	if err := cfg.buildComponents(); err != nil {
@@ -450,7 +474,9 @@ func (cfg *Config) FindNode(name string) (*Node, error) {
 	return nil, fmt.Errorf("node not found: %s", name)
 }
 
-func (cfg *Config) FindComponent(name string) (*Component, error) {
+func (cfg *Config) FindComponent(s string) (*Component, error) {
+	splited := querySplit(s)
+	name := splited[0]
 	var components []*Component
 	switch sepCount(name) {
 	case 2: // cluster components
@@ -477,6 +503,15 @@ func (cfg *Config) FindTag(name string) (*Tag, error) {
 	return nil, fmt.Errorf("tag not found: %s", name)
 }
 
+func (cfg *Config) buildNodes() error {
+	for _, n := range cfg.Nodes {
+		if n.Metadata.Icon != "" {
+			n.Metadata.IconPath = filepath.Join(cfg.TempIconDir(), fmt.Sprintf("%s.png", n.Metadata.Icon))
+		}
+	}
+	return nil
+}
+
 func (cfg *Config) buildComponents() error {
 	gc := orderedmap.NewOrderedMap()
 	nc := orderedmap.NewOrderedMap()
@@ -496,19 +531,23 @@ func (cfg *Config) buildComponents() error {
 
 	// global components
 	for _, c := range gc.Keys() {
+		com, err := cfg.parseComponent(c.(string))
+		if err != nil {
+			return err
+		}
 		// create global component from relations
-		cfg.globalComponents = append(cfg.globalComponents, &Component{
-			Name: c.(string),
-		})
+		cfg.globalComponents = append(cfg.globalComponents, com)
 	}
 
 	// node components
 	for _, n := range cfg.Nodes {
 		for _, c := range n.rawComponents {
-			n.Components = append(n.Components, &Component{
-				Name: c,
-				Node: n,
-			})
+			com, err := cfg.parseComponent(c)
+			if err != nil {
+				return err
+			}
+			com.Node = n
+			n.Components = append(n.Components, com)
 		}
 		cfg.nodeComponents = append(cfg.nodeComponents, n.Components...)
 	}
@@ -522,20 +561,21 @@ func (cfg *Config) buildComponents() error {
 		if err != nil {
 			return fmt.Errorf("node '%s' not found: %s", nodeName, c)
 		}
+		newCom, err := cfg.parseComponent(comName)
+		if err != nil {
+			return err
+		}
+		newCom.Node = n
 		for _, com := range n.Components {
-			if strings.EqualFold(com.FullName(), c.(string)) {
+			if strings.EqualFold(com.FullName(), newCom.FullName()) {
 				belongTo = true
 				break
 			}
 		}
 		if !belongTo {
 			// create node component from relations
-			component := &Component{
-				Name: comName,
-				Node: n,
-			}
-			n.Components = append(n.Components, component)
-			cfg.nodeComponents = append(cfg.nodeComponents, component)
+			n.Components = append(n.Components, newCom)
+			cfg.nodeComponents = append(cfg.nodeComponents, newCom)
 		}
 	}
 
@@ -548,10 +588,11 @@ func (cfg *Config) buildComponents() error {
 		for _, cl := range cfg.Clusters() {
 			if strings.EqualFold(cl.FullName(), clName) {
 				// create cluster component from relations
-				com := &Component{
-					Cluster: cl,
-					Name:    comName,
+				com, err := cfg.parseComponent(comName)
+				if err != nil {
+					return err
 				}
+				com.Cluster = cl
 				cl.Components = append(cl.Components, com)
 				cfg.clusterComponents = append(cfg.clusterComponents, com)
 				belongTo = true
@@ -857,6 +898,22 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 	return buildNestedClusters(clusters, layers, remain)
 }
 
+func (cfg *Config) buildIconMap() error {
+	icm := glyph.NewMapWithIncluded(glyph.Width(80.0), glyph.Height(80.0))
+	for _, i := range cfg.CustomIcons {
+		g, k, err := i.ToGlyphAndKey()
+		if err != nil {
+			return err
+		}
+		icm.Set(k, g)
+	}
+	cfg.iconMap = icm
+	rand.Seed(time.Now().UnixNano())
+	r := rand.Intn(100000)
+	cfg.tempIconDir = filepath.Join(os.TempDir(), fmt.Sprintf("ndiag.%06d", r))
+	return nil
+}
+
 func (cfg *Config) checkUnique() error {
 
 	ids := map[string]string{}
@@ -955,6 +1012,41 @@ func pruneClusters(clusters []*Cluster, nIds, comIds *orderedmap.OrderedMap) {
 
 		pruneClusters(c.Children, nIds, comIds)
 	}
+}
+
+func (cfg *Config) parseComponent(comName string) (*Component, error) {
+	c := &Component{}
+	if queryContains(comName) {
+		var m ComponentMetadata
+		splited := querySplit(comName)
+		c.Name = splited[0]
+		if err := qs.Unmarshal(&m, splited[1]); err != nil {
+			return nil, err
+		}
+		if m.Icon != "" {
+			if _, err := cfg.iconMap.Get(m.Icon); err != nil {
+				return nil, fmt.Errorf("not found icon: %s", m.Icon)
+			}
+			m.IconPath = filepath.Join(cfg.TempIconDir(), fmt.Sprintf("%s.png", m.Icon))
+		}
+		c.Metadata = m
+	} else {
+		c.Name = comName
+	}
+	return c, nil
+}
+
+func querySplit(s string) []string {
+	splitted := strings.Split(qRep.Replace(s), Q)
+	unescaped := []string{}
+	for _, ss := range splitted {
+		unescaped = append(unescaped, unqRep.Replace(ss))
+	}
+	return unescaped
+}
+
+func queryContains(s string) bool {
+	return strings.Contains(qRep.Replace(s), Q)
 }
 
 func sepCount(s string) int {

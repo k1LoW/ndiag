@@ -1,6 +1,6 @@
 # db-*
 
-![diagram](node-db-_.svg)
+![diagram](node-db-_.png)
 
 Database
 

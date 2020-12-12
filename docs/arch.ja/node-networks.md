@@ -1,6 +1,6 @@
 # networks
 
-![diagram](node-networks.svg)
+![diagram](node-networks.png)
 
 Component間のネットワーク ( [sample](/sample/input/ndiag.yml#L34-L59) )
 

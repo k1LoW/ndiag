@@ -6,11 +6,17 @@ import (
 )
 
 type Component struct {
-	Name    string
-	Desc    string
-	Cluster *Cluster
-	Node    *Node
-	NEdges  []*NEdge
+	Name     string
+	Desc     string
+	Cluster  *Cluster
+	Node     *Node
+	NEdges   []*NEdge
+	Metadata ComponentMetadata
+}
+
+type ComponentMetadata struct {
+	Icon     string `qs:"icon"`
+	IconPath string `qs:"-"`
 }
 
 func (c *Component) FullName() string {
