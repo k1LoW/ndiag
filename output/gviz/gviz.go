@@ -206,7 +206,9 @@ func (g *Gviz) renderSVG(wr io.Writer, b []byte) (e error) {
 		}
 	}
 
-	wr.Write([]byte(doc.OutputXML(false)))
+	if _, err := wr.Write([]byte(doc.OutputXML(false))); err != nil {
+		return err
+	}
 
 	return nil
 }
