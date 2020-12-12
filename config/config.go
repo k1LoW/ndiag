@@ -347,6 +347,10 @@ func (cfg *Config) Build() error {
 			}
 		}
 	}
+	if cfg.Format() != "svg" && cfg.Format() != "png" {
+		return fmt.Errorf("invalid format: %s", cfg.Format())
+	}
+
 	if err := cfg.buildIconMap(); err != nil {
 		return err
 	}
@@ -508,7 +512,7 @@ func (cfg *Config) FindTag(name string) (*Tag, error) {
 func (cfg *Config) buildNodes() error {
 	for _, n := range cfg.Nodes {
 		if n.Metadata.Icon != "" {
-			n.Metadata.IconPath = filepath.Join(cfg.TempIconDir(), fmt.Sprintf("%s.png", n.Metadata.Icon))
+			n.Metadata.IconPath = filepath.Join(cfg.TempIconDir(), fmt.Sprintf("%s.%s", n.Metadata.Icon, cfg.Format()))
 		}
 	}
 	return nil
@@ -1029,7 +1033,7 @@ func (cfg *Config) parseComponent(comName string) (*Component, error) {
 			if _, err := cfg.iconMap.Get(m.Icon); err != nil {
 				return nil, fmt.Errorf("not found icon: %s", m.Icon)
 			}
-			m.IconPath = filepath.Join(cfg.TempIconDir(), fmt.Sprintf("%s.png", m.Icon))
+			m.IconPath = filepath.Join(cfg.TempIconDir(), fmt.Sprintf("%s.%s", m.Icon, cfg.Format()))
 		}
 		c.Metadata = m
 	} else {

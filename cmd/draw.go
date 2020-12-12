@@ -22,6 +22,7 @@ THE SOFTWARE.
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/k1LoW/ndiag/config"
@@ -54,11 +55,13 @@ var drawCmd = &cobra.Command{
 		}
 
 		switch format {
-		case "svg", "jpg", "png":
+		case "svg", "png":
 			cfg.Graph.Format = format
 			o = gviz.New(cfg)
 		case "dot":
 			o = dot.New(cfg)
+		default:
+			return fmt.Errorf("invalid format: %s", format)
 		}
 
 		d := &config.Diagram{
