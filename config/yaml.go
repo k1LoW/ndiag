@@ -71,10 +71,11 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 
 func (n *Node) UnmarshalYAML(data []byte) error {
 	raw := struct {
-		Name       string   `yaml:"name"`
-		Desc       string   `yaml:"desc"`
-		Components []string `yaml:"components,omitempty"`
-		Clusters   []string `yaml:"clusters,omitempty"`
+		Name       string       `yaml:"name"`
+		Desc       string       `yaml:"desc"`
+		Components []string     `yaml:"components,omitempty"`
+		Clusters   []string     `yaml:"clusters,omitempty"`
+		Metadata   NodeMetadata `yaml:"metadata,omitempty"`
 	}{}
 
 	if err := yaml.Unmarshal(data, &raw); err != nil {
@@ -89,6 +90,7 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	n.Desc = raw.Desc
 	n.rawComponents = raw.Components
 	n.rawClusters = raw.Clusters
+	n.Metadata = raw.Metadata
 	return nil
 }
 
