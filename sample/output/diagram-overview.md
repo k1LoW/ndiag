@@ -1,6 +1,6 @@
 # overview
 
-![diagram](diagram-overview.png)
+![diagram](diagram-overview.svg)
 
 
 

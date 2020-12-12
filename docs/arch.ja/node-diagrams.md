@@ -1,6 +1,6 @@
 # diagrams
 
-![diagram](node-diagrams.png)
+![diagram](node-diagrams.svg)
 
 [custom document](node-documents.md#components) を生成するための設定 ( [sample](/sample/input/ndiag.yml#L5-L12) )
 

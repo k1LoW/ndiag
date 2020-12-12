@@ -1,6 +1,6 @@
 # app
 
-![diagram](tag-app.png)
+![diagram](tag-app.svg)
 
 App-DB
 

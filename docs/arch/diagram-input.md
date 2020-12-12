@@ -1,6 +1,6 @@
 # input
 
-![diagram](diagram-input.png)
+![diagram](diagram-input.svg)
 
 
 

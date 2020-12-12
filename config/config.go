@@ -32,7 +32,7 @@ var DefaultConfigFilePaths = []string{"ndiag.yml"}
 var DefaultDescPath = "ndiag.descriptions"
 
 // DefaultFormat is the default diagram format
-const DefaultFormat = "png"
+const DefaultFormat = "svg"
 
 type NNode interface {
 	Id() string

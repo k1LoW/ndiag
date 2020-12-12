@@ -1,6 +1,6 @@
 # real nodes
 
-![diagram](node-real_nodes.png)
+![diagram](node-real_nodes.svg)
 
 信頼できる情報源から得たNode ( [sample](/sample/input/nodes.yml#L1-L7) )
 

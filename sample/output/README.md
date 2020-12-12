@@ -1,6 +1,6 @@
 # 3-Tier Architecture
 
-![diagram](diagram-overview.png)
+![diagram](diagram-overview.svg)
 
 
 

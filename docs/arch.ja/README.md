@@ -1,6 +1,6 @@
 # ndiag アーキテクチャ
 
-![diagram](diagram-overview.png)
+![diagram](diagram-overview.svg)
 
 本ドキュメントは、`ndiag doc` コマンドを実行したときのドキュメント生成の仕組みを紹介することでndiagのアーキテクチャを説明するものです。
 
