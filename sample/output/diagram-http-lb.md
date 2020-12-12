@@ -1,6 +1,6 @@
 # http-lb
 
-![diagram](diagram-http-lb.png)
+![diagram](diagram-http-lb.svg)
 
 
 

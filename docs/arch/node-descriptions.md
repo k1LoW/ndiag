@@ -1,6 +1,6 @@
 # descriptions
 
-![diagram](node-descriptions.png)
+![diagram](node-descriptions.svg)
 
 
 

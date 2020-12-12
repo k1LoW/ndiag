@@ -1,6 +1,6 @@
 # nodes
 
-![diagram](node-nodes.png)
+![diagram](node-nodes.svg)
 
 Nodeをまとめるための設定 ( [sample](/sample/input/ndiag.yml#L13-L32) )
 

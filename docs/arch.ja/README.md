@@ -1,6 +1,6 @@
 # ndiag アーキテクチャ
 
-![diagram](diagram-overview.png)
+![diagram](diagram-overview.svg)
 
 本ドキュメントは、`ndiag doc` コマンドを実行したときのドキュメント生成の仕組みを紹介することでndiagのアーキテクチャを説明するものです。
 
@@ -8,7 +8,7 @@
 
 サンプルとしてnginx, Rails, PostgreSQLで構成された[3層アーキテクチャのドキュメント](/sample/output/README.md)を例に説明します。
 
-![3tier](/sample/output/diagram-overview.png)
+![3tier](/sample/output/diagram-overview.svg)
 
 具体的に実行するコマンドは以下です。
 

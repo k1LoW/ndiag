@@ -1,6 +1,6 @@
 # ndiag architecture
 
-![diagram](diagram-overview.png)
+![diagram](diagram-overview.svg)
 
 This document explains how ndiag generates the architecture documentation when you actually run the following commands.
 

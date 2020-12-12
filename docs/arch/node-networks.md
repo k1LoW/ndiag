@@ -1,6 +1,6 @@
 # networks
 
-![diagram](node-networks.png)
+![diagram](node-networks.svg)
 
 
 

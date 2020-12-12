@@ -1,6 +1,6 @@
 # documents
 
-![diagram](node-documents.png)
+![diagram](node-documents.svg)
 
 
 
