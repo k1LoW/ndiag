@@ -37,6 +37,8 @@ nodes:
     clusters:
       - 'type:input'
       - 'file:nodes.yml'
+    metadata:
+      icon: gear
   -
     name: nodes
     components:
@@ -46,6 +48,8 @@ nodes:
     clusters:
       - 'type:input'
       - 'file:ndiag.yml'
+    metadata:
+      icon: pen
   -
     name: descriptions
     components:
@@ -64,6 +68,8 @@ nodes:
     clusters:
       - 'type:input'
       - 'file:ndiag.yml'
+    metadata:
+      icon: pen
   -
     name: networks
     components:
@@ -74,6 +80,8 @@ nodes:
     clusters:
       - 'type:input'
       - 'file:ndiag.yml'
+    metadata:
+      icon: pen
   -
     name: relations
     components:
@@ -81,6 +89,8 @@ nodes:
     clusters:
       - 'type:input'
       - 'file:ndiag.yml'
+    metadata:
+      icon: pen
   -
     name: ndiag
     components:
@@ -88,13 +98,15 @@ nodes:
   -
     name: documents
     components:
-      - 'index document?icon=text'
-      - 'layer group based document?icon=doc'
-      - 'layer based document?icon=doc'
-      - 'tag(relation) based document?icon=doc'
+      - 'index document'
+      - 'layer group based document'
+      - 'layer based document'
+      - 'tag(relation) based document'
     clusters:
       - 'type:output'
       - 'file:generated documents'
+    metadata:
+      icon: doc
 
 networks:
   -
