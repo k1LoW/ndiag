@@ -1015,7 +1015,7 @@ func (cfg *Config) parseComponent(comName string) (*Component, error) {
 			if _, err := cfg.iconMap.Get(m.Icon); err != nil {
 				return nil, fmt.Errorf("not found icon: %s", m.Icon)
 			}
-			m.Icon = filepath.Join(cfg.TempIconDir(), fmt.Sprintf("%s.png", m.Icon))
+			m.IconPath = filepath.Join(cfg.TempIconDir(), fmt.Sprintf("%s.png", m.Icon))
 		}
 		c.Metadata = m
 	} else {

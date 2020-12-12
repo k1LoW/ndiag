@@ -15,7 +15,8 @@ type Component struct {
 }
 
 type ComponentMetadata struct {
-	Icon string `qs:"icon"`
+	Icon     string `qs:"icon"`
+	IconPath string `qs:"-"`
 }
 
 func (c *Component) FullName() string {
