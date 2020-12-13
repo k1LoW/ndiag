@@ -71,11 +71,13 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 
 func (n *Node) UnmarshalYAML(data []byte) error {
 	raw := struct {
-		Name       string       `yaml:"name"`
-		Desc       string       `yaml:"desc"`
-		Components []string     `yaml:"components,omitempty"`
-		Clusters   []string     `yaml:"clusters,omitempty"`
-		Metadata   NodeMetadata `yaml:"metadata,omitempty"`
+		Name        string       `yaml:"name"`
+		Desc        string       `yaml:"desc"`
+		Match       string       `yaml:"match,omitempty"`
+		MatchRegexp string       `yaml:"matchRegexp,omitempty"`
+		Components  []string     `yaml:"components,omitempty"`
+		Clusters    []string     `yaml:"clusters,omitempty"`
+		Metadata    NodeMetadata `yaml:"metadata,omitempty"`
 	}{}
 
 	if err := yaml.Unmarshal(data, &raw); err != nil {
@@ -86,7 +88,17 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	}
 
 	n.Name = raw.Name
-	n.nameRe = regexp.MustCompile(fmt.Sprintf("^%s$", strings.Replace(n.Name, "*", ".+", -1)))
+	n.Match = raw.Match
+	n.MatchRegexp = raw.MatchRegexp
+	if n.Match == "" {
+		n.Match = n.Name
+	}
+	if n.MatchRegexp == "" {
+		n.nameRe = regexp.MustCompile(fmt.Sprintf("^%s$", strings.Replace(n.Match, "*", ".+", -1)))
+	} else {
+		n.nameRe = regexp.MustCompile(n.MatchRegexp)
+	}
+
 	n.Desc = raw.Desc
 	n.rawComponents = raw.Components
 	n.rawClusters = raw.Clusters

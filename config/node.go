@@ -8,6 +8,8 @@ import (
 type Node struct {
 	Name          string       `yaml:"name"`
 	Desc          string       `yaml:"desc,omitempty"`
+	Match         string       `yaml:"match,omitempty"`
+	MatchRegexp   string       `yaml:"matchRegexp,omitempty"`
 	Components    []*Component `yaml:"components,omitempty"`
 	Clusters      Clusters     `yaml:"clusters,omitempty"`
 	Metadata      NodeMetadata `yaml:"metadata,omitempty"`
