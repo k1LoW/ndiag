@@ -8,7 +8,6 @@ import (
 
 	"github.com/elliotchance/orderedmap"
 	"github.com/k1LoW/ndiag/config"
-	"github.com/k1LoW/tbls/dict"
 )
 
 type Output interface {
@@ -20,7 +19,7 @@ var nl2brRep = strings.NewReplacer("\r\n", "<br>", "\n", "<br>", "\r", "<br>")
 var crRep = strings.NewReplacer("\r", "")
 var clusterRep = strings.NewReplacer(":", "")
 
-func Funcs(d *dict.Dict) map[string]interface{} {
+func Funcs(cfg *config.Config) map[string]interface{} {
 	return template.FuncMap{
 		"trim": func(s string) string {
 			return strings.TrimRight(s, "\r\n")
@@ -149,7 +148,7 @@ func Funcs(d *dict.Dict) map[string]interface{} {
 			return false
 		},
 		"lookup": func(text string) string {
-			return d.Lookup(text)
+			return cfg.Dict.Lookup(text)
 		},
 	}
 }
