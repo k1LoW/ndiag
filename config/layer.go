@@ -15,5 +15,5 @@ type LayerMetadata struct {
 }
 
 func (l Layer) String() string {
-	return Name
+	return l.Name
 }

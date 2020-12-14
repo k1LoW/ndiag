@@ -164,10 +164,10 @@ func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*N
 		hBelongTo := false
 		tBelongTo := false
 		for _, l := range layers {
-			if e.Src.Cluster == nil || strings.EqualFold(e.Src.Cluster.Layer, l) {
+			if e.Src.Cluster == nil || strings.EqualFold(e.Src.Cluster.Layer.Name, l) {
 				hBelongTo = true
 			}
-			if e.Dst.Cluster == nil || strings.EqualFold(e.Dst.Cluster.Layer, l) {
+			if e.Dst.Cluster == nil || strings.EqualFold(e.Dst.Cluster.Layer.Name, l) {
 				tBelongTo = true
 			}
 		}
@@ -504,6 +504,15 @@ func (cfg *Config) FindTag(name string) (*Tag, error) {
 	return nil, fmt.Errorf("tag not found: %s", name)
 }
 
+func (cfg *Config) FindLayer(s string) (*Layer, error) {
+	for _, l := range cfg.Layers() {
+		if s == l.Name {
+			return l, nil
+		}
+	}
+	return nil, fmt.Errorf("layer not found: %s", s)
+}
+
 func (cfg *Config) buildNodes() error {
 	for _, n := range cfg.Nodes {
 		if n.Metadata.Icon != "" {
@@ -629,20 +638,23 @@ func (cfg *Config) parseClusterLabel(label string) (*Cluster, error) {
 	if len(splitted) != 2 {
 		return nil, fmt.Errorf("invalid cluster id: %s", label)
 	}
-	layer := splitted[0]
+	layerStr := splitted[0]
 	name := splitted[1]
-	current := cfg.clusters.Find(layer, name)
+	current := cfg.clusters.Find(layerStr, name)
 	if current != nil {
 		return current, nil
+	}
+	layer, err := cfg.FindLayer(layerStr)
+	if err != nil {
+		layer = &Layer{Name: layerStr}
+		cfg.layers = append(cfg.layers, layer)
 	}
 	newC := &Cluster{
 		Layer: layer,
 		Name:  name,
 	}
 	cfg.clusters = append(cfg.clusters, newC)
-	if !cfg.layerContains(layer) {
-		cfg.layers = append(cfg.layers, &Layer{Name: layer})
-	}
+
 	return newC, nil
 }
 
@@ -861,7 +873,7 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 
 	// build a direct member node of a cluster
 	for _, c := range clusters {
-		if c.Layer == leaf {
+		if c.Layer.Name == leaf {
 			continue
 		}
 		nodes := []*Node{}
@@ -882,7 +894,7 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 		root := Clusters{}
 	NN:
 		for _, c := range clusters {
-			if c.Parent == nil && (c.Layer == leaf || len(c.Nodes) > 0) {
+			if c.Parent == nil && (c.Layer.Name == leaf || len(c.Nodes) > 0) {
 				for _, n := range c.Nodes {
 					for _, rn := range remain {
 						if n == rn {
@@ -1069,15 +1081,6 @@ func sepJoin(ss []string) string {
 
 func sepContains(s string) bool {
 	return strings.Contains(escRep.Replace(s), Sep)
-}
-
-func (cfg *Config) layerContains(e string) bool {
-	for _, l := range cfg.Layers {
-		if e == l.Name {
-			return true
-		}
-	}
-	return false
 }
 
 func merge(a, b []string) []string {
