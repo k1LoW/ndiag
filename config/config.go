@@ -52,11 +52,6 @@ type NEdge struct {
 	Attrs    []*Attr
 }
 
-type Layer struct {
-	Name string
-	Desc string
-}
-
 type Config struct {
 	Name              string             `yaml:"name"`
 	Desc              string             `yaml:"desc,omitempty"`
@@ -645,7 +640,7 @@ func (cfg *Config) parseClusterLabel(label string) (*Cluster, error) {
 		Name:  name,
 	}
 	cfg.clusters = append(cfg.clusters, newC)
-	if !layerContains(cfg.layers, layer) {
+	if !cfg.layerContains(layer) {
 		cfg.layers = append(cfg.layers, &Layer{Name: layer})
 	}
 	return newC, nil
@@ -1076,9 +1071,9 @@ func sepContains(s string) bool {
 	return strings.Contains(escRep.Replace(s), Sep)
 }
 
-func layerContains(s []*Layer, e string) bool {
-	for _, v := range s {
-		if e == v.Name {
+func (cfg *Config) layerContains(e string) bool {
+	for _, l := range cfg.Layers {
+		if e == l.Name {
 			return true
 		}
 	}
