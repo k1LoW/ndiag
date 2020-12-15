@@ -326,3 +326,34 @@ func (cfg *Config) readDescFile(f string) (string, error) {
 	}
 	return string(b), err
 }
+
+func (cfg *Config) buildColors() error {
+	cfg.colorSets = defaultColorSets(cfg.BaseColor, cfg.TextColor)
+
+	// layers
+	for i, l := range cfg.Layers() {
+		if l.Metadata.Color == nil {
+			l.Metadata.Color = cfg.colorSets[i].Color
+		}
+		if l.Metadata.FillColor == nil {
+			l.Metadata.FillColor = cfg.colorSets[i].FillColor
+		}
+		if l.Metadata.TextColor == nil {
+			l.Metadata.TextColor = cfg.colorSets[i].TextColor
+		}
+	}
+
+	// clusters
+	for _, c := range cfg.Clusters() {
+		if c.Metadata.Color == nil {
+			c.Metadata.Color = c.Layer.Metadata.Color
+		}
+		if c.Metadata.FillColor == nil {
+			c.Metadata.FillColor = c.Layer.Metadata.FillColor
+		}
+		if c.Metadata.TextColor == nil {
+			c.Metadata.TextColor = c.Layer.Metadata.TextColor
+		}
+	}
+	return nil
+}

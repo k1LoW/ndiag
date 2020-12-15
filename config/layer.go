@@ -3,9 +3,9 @@ package config
 import "image/color"
 
 type Layer struct {
-	Name      string
-	Desc      string
-	Meatadata LayerMetadata
+	Name     string
+	Desc     string
+	Metadata LayerMetadata
 }
 
 type LayerMetadata struct {

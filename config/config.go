@@ -66,6 +66,8 @@ type Config struct {
 	Nodes             []*Node            `yaml:"nodes"`
 	Relations         []*Relation        `yaml:"relations,omitempty"`
 	Dict              *dict.Dict         `yaml:"dict,omitempty"`
+	BaseColor         string             `yaml:"baseColor,omitempty"`
+	TextColor         string             `yaml:"textColor,omitempty"`
 	CustomIcons       []*glyph.Blueprint `yaml:"customIcons,omitempty"`
 	rawRelations      []*rawRelation
 	realNodes         []*RealNode
@@ -76,6 +78,7 @@ type Config struct {
 	nodeComponents    []*Component
 	nEdges            []*NEdge
 	tags              []*Tag
+	colorSets         []ColorSet
 	iconMap           *glyph.Map
 	tempIconDir       string
 }
@@ -148,6 +151,10 @@ func (cfg *Config) NEdges() []*NEdge {
 
 func (cfg *Config) Tags() []*Tag {
 	return cfg.tags
+}
+
+func (cfg *Config) ColorSets() []ColorSet {
+	return cfg.colorSets
 }
 
 func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*NEdge, error) {
@@ -342,6 +349,19 @@ func (cfg *Config) Build() error {
 			}
 		}
 	}
+	// set default
+	if cfg.DocPath == "" {
+		cfg.DocPath = DefaultDocPath
+	}
+	if cfg.DescPath == "" {
+		cfg.DescPath = DefaultDescPath
+	}
+	if cfg.BaseColor == "" {
+		cfg.BaseColor = DefaultBaseColor
+	}
+	if cfg.TextColor == "" {
+		cfg.TextColor = DefaultTextColor
+	}
 	if cfg.Format() != "svg" && cfg.Format() != "png" {
 		return fmt.Errorf("invalid format: %s", cfg.Format())
 	}
@@ -361,6 +381,9 @@ func (cfg *Config) Build() error {
 	if err := cfg.buildRelations(); err != nil {
 		return err
 	}
+	if err := cfg.buildColors(); err != nil {
+		return err
+	}
 	if err := cfg.checkUnique(); err != nil {
 		return err
 	}
@@ -369,13 +392,6 @@ func (cfg *Config) Build() error {
 			Name:   "Nodes",
 			Layers: []string{},
 		})
-	}
-	// set default
-	if cfg.DocPath == "" {
-		cfg.DocPath = DefaultDocPath
-	}
-	if cfg.DescPath == "" {
-		cfg.DescPath = DefaultDescPath
 	}
 	if err := cfg.buildDescriptions(); err != nil {
 		return err

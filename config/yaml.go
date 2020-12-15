@@ -27,6 +27,8 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 		Networks      []interface{}      `yaml:"networks"`
 		Relations     []interface{}      `yaml:"relations"`
 		Dict          *dict.Dict         `yaml:"dict,omitempty"`
+		BaseColor     string             `yaml:"baseColor,omitempty"`
+		TextColor     string             `yaml:"textColor,omitempty"`
 		CustomIcons   []*glyph.Blueprint `yaml:"customIcons,omitempty"`
 	}{}
 
@@ -49,6 +51,8 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	if raw.Dict != nil {
 		d.Dict = raw.Dict
 	}
+	d.BaseColor = raw.BaseColor
+	d.TextColor = raw.TextColor
 	d.CustomIcons = raw.CustomIcons
 
 	for _, rel := range raw.Networks {

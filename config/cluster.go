@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"image/color"
 	"strings"
 )
 
@@ -13,6 +14,13 @@ type Cluster struct {
 	Children   []*Cluster
 	Nodes      []*Node
 	Components []*Component
+	Metadata   ClusterMetadata
+}
+
+type ClusterMetadata struct {
+	Color     color.Color
+	FillColor color.Color
+	TextColor color.Color
 }
 
 func (c *Cluster) FullName() string {
