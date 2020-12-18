@@ -78,7 +78,7 @@ type Config struct {
 	nodeComponents    []*Component
 	nEdges            []*NEdge
 	tags              []*Tag
-	colorSets         []ColorSet
+	colorSets         ColorSets
 	iconMap           *glyph.Map
 	tempIconDir       string
 }
@@ -153,7 +153,7 @@ func (cfg *Config) Tags() []*Tag {
 	return cfg.tags
 }
 
-func (cfg *Config) ColorSets() []ColorSet {
+func (cfg *Config) ColorSets() ColorSets {
 	return cfg.colorSets
 }
 

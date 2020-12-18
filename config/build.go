@@ -333,13 +333,13 @@ func (cfg *Config) buildColors() error {
 	// layers
 	for i, l := range cfg.Layers() {
 		if l.Metadata.Color == nil {
-			l.Metadata.Color = cfg.colorSets[i].Color
+			l.Metadata.Color = cfg.colorSets.Get(i).Color
 		}
 		if l.Metadata.FillColor == nil {
-			l.Metadata.FillColor = cfg.colorSets[i].FillColor
+			l.Metadata.FillColor = cfg.colorSets.Get(i).FillColor
 		}
 		if l.Metadata.TextColor == nil {
-			l.Metadata.TextColor = cfg.colorSets[i].TextColor
+			l.Metadata.TextColor = cfg.colorSets.Get(i).TextColor
 		}
 	}
 
