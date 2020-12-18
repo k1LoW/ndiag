@@ -9,6 +9,7 @@ import (
 
 	"github.com/elliotchance/orderedmap"
 	"github.com/k1LoW/ndiag/config"
+	"github.com/muesli/gamut"
 )
 
 type Output interface {
@@ -51,13 +52,14 @@ func Funcs(cfg *config.Config) map[string]interface{} {
 		"component": func(c config.Component) string {
 			bc := cfg.BaseColor
 			tc := cfg.TextColor
+			boxColor := colorToHex(gamut.Blends(gamut.Hex(cfg.BaseColor), gamut.Hex("#FFFFFF"), 3)[1])
 
 			if c.Metadata.IconPath == "" {
 				label := fmt.Sprintf(`"%s"`, unescRep.Replace(c.Name))
 				return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="%s", fillcolor="#FFFFFF", fontcolor="%s" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label, bc, tc)
 			}
 			label := fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, c.Metadata.IconPath, unescRep.Replace(c.Name))
-			return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="%s66", fillcolor="#FFFFFF", fontcolor="%s" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label, bc, tc)
+			return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="%s", fillcolor="#FFFFFF", fontcolor="%s" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label, boxColor, tc)
 		},
 		"global_component": func(c config.Component) string {
 			tc := cfg.TextColor
