@@ -1,0 +1,66 @@
+---
+nodes:
+  -
+    name: lb
+    components:
+      - nginx
+    clusters:
+      - 'consul:dc1'
+      - 'group:lb'
+  -
+    name: app
+    components:
+      - rails
+    clusters:
+      - 'consul:dc1'
+  -
+    name: db
+    components:
+      - MySQL?icon=db
+    clusters:
+      - 'consul:dc1'
+
+networks:
+  -
+    tags:
+      - http
+    route:
+      - "internet"
+      - "group:lb:vip?icon=hex"
+  -
+    tags:
+      - http
+    route:
+      - "group:lb:vip"
+      - "lb:nginx?icon=lb-l7"
+  -
+    tags:
+      - http
+    route:
+      - "lb:nginx"
+      - "app:rails"
+  -
+    route:
+      - "app:rails?icon=cube4"
+      - "db:mysql"
+  -
+    route:
+      - "app:rails"
+      - "internet?icon=cloud"
+
+relations:
+  -
+    tags:
+      - http
+    components:
+      - 'lb:keepalived?icon=keepalived'
+      - "group:lb:vip"
+
+customIcons:
+  -
+    key: keepalived
+    lines:
+      - b1 b5 f9 j5 j1 f1 b1
+      - d2 d6
+      - h2 d4
+      - e4 h6

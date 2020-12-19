@@ -8,6 +8,7 @@ import (
 
 func TestLoadConfigAndRealNodes(t *testing.T) {
 	tests := []struct {
+		desc                    string
 		configFile              string
 		nodeListFiles           []string
 		wantNodeLen             int
@@ -55,6 +56,19 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantNEdgeLen:            5,
 			wantTagLen:              2,
 		},
+		{
+			desc:                    "Determine that it is the same component with or without query parameters.",
+			configFile:              "4_ndiag.yml",
+			nodeListFiles:           []string{},
+			wantNodeLen:             3,
+			wantRealNodeLen:         0,
+			wantClusterLen:          2,
+			wantGlobalComponentLen:  1,
+			wantClusterComponentLen: 1,
+			wantNodeComponentLen:    4,
+			wantNEdgeLen:            6,
+			wantTagLen:              2,
+		},
 	}
 	for i, tt := range tests {
 		d := New()
@@ -70,28 +84,28 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			t.Fatal(err)
 		}
 		if got := len(d.Nodes); got != tt.wantNodeLen {
-			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantNodeLen)
+			t.Errorf("TestLoadConfigAndRealNodes(%d) node len got %v\nwant %v", i, got, tt.wantNodeLen)
 		}
 		if got := len(d.realNodes); got != tt.wantRealNodeLen {
-			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantRealNodeLen)
+			t.Errorf("TestLoadConfigAndRealNodes(%d) real node len got %v\nwant %v", i, got, tt.wantRealNodeLen)
 		}
 		if got := len(d.Clusters()); got != tt.wantClusterLen {
-			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantClusterLen)
+			t.Errorf("TestLoadConfigAndRealNodes(%d) cluster len got %v\nwant %v", i, got, tt.wantClusterLen)
 		}
 		if got := len(d.GlobalComponents()); got != tt.wantGlobalComponentLen {
-			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantGlobalComponentLen)
+			t.Errorf("TestLoadConfigAndRealNodes(%d) global component len got %v\nwant %v", i, got, tt.wantGlobalComponentLen)
 		}
 		if got := len(d.ClusterComponents()); got != tt.wantClusterComponentLen {
-			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantClusterComponentLen)
+			t.Errorf("TestLoadConfigAndRealNodes(%d) cluster component len got %v\nwant %v", i, got, tt.wantClusterComponentLen)
 		}
 		if got := len(d.NodeComponents()); got != tt.wantNodeComponentLen {
-			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantNodeComponentLen)
+			t.Errorf("TestLoadConfigAndRealNodes(%d) node component len got %v\nwant %v", i, got, tt.wantNodeComponentLen)
 		}
 		if got := len(d.NEdges()); got != tt.wantNEdgeLen {
-			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantNEdgeLen)
+			t.Errorf("TestLoadConfigAndRealNodes(%d) nedge len got %v\nwant %v", i, got, tt.wantNEdgeLen)
 		}
 		if got := len(d.Tags()); got != tt.wantTagLen {
-			t.Errorf("TestLoadConfigAndRealNodes(%d) got %v\nwant %v", i, got, tt.wantTagLen)
+			t.Errorf("TestLoadConfigAndRealNodes(%d) tag len got %v\nwant %v", i, got, tt.wantTagLen)
 		}
 	}
 }
@@ -112,28 +126,28 @@ func TestBuildNestedCluster(t *testing.T) {
 		{"2_ndiag.yml", []string{"2_nodes.yml"}, []string{"group"}, 1, 2, 5},
 	}
 	for i, tt := range tests {
-		d := New()
-		if err := d.LoadConfigFile(filepath.Join(testdataDir(t), tt.configFile)); err != nil {
+		cfg := New()
+		if err := cfg.LoadConfigFile(filepath.Join(testdataDir(t), tt.configFile)); err != nil {
 			t.Fatal(err)
 		}
 		for _, n := range tt.nodeListFiles {
-			if err := d.LoadRealNodesFile(filepath.Join(testdataDir(t), n)); err != nil {
+			if err := cfg.LoadRealNodesFile(filepath.Join(testdataDir(t), n)); err != nil {
 				t.Fatal(err)
 			}
 		}
-		if err := d.Build(); err != nil {
+		if err := cfg.Build(); err != nil {
 			t.Fatal(err)
 		}
 
-		cNodeLen := len(d.Nodes)
-		cRealNodeLen := len(d.realNodes)
-		cClusterLen := len(d.Clusters())
-		cGlobalComponentLen := len(d.GlobalComponents())
-		cClusterComponentLen := len(d.ClusterComponents())
-		cNodeComponentLen := len(d.NodeComponents())
-		cRelationLen := len(d.Relations)
+		cNodeLen := len(cfg.Nodes)
+		cRealNodeLen := len(cfg.realNodes)
+		cClusterLen := len(cfg.Clusters())
+		cGlobalComponentLen := len(cfg.GlobalComponents())
+		cClusterComponentLen := len(cfg.ClusterComponents())
+		cNodeComponentLen := len(cfg.NodeComponents())
+		cRelationLen := len(cfg.Relations)
 
-		gotClusters, gotNodes, gotNEdges, err := d.BuildNestedClusters(tt.layers)
+		gotClusters, gotNodes, gotNEdges, err := cfg.BuildNestedClusters(tt.layers)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -147,29 +161,54 @@ func TestBuildNestedCluster(t *testing.T) {
 			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, tt.wantNEdgeLen)
 		}
 
-		if got := len(d.Nodes); got != cNodeLen {
+		if got := len(cfg.Nodes); got != cNodeLen {
 			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cNodeLen)
 		}
-		if got := len(d.realNodes); got != cRealNodeLen {
+		if got := len(cfg.realNodes); got != cRealNodeLen {
 			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cRealNodeLen)
 		}
-		if got := len(d.Clusters()); got != cClusterLen {
+		if got := len(cfg.Clusters()); got != cClusterLen {
 			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cClusterLen)
 		}
-		if got := len(d.GlobalComponents()); got != cGlobalComponentLen {
+		if got := len(cfg.GlobalComponents()); got != cGlobalComponentLen {
 			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cGlobalComponentLen)
 		}
-		if got := len(d.ClusterComponents()); got != cClusterComponentLen {
+		if got := len(cfg.ClusterComponents()); got != cClusterComponentLen {
 			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cClusterComponentLen)
 		}
-		if got := len(d.ClusterComponents()); got != cClusterComponentLen {
+		if got := len(cfg.ClusterComponents()); got != cClusterComponentLen {
 			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cClusterComponentLen)
 		}
-		if got := len(d.NodeComponents()); got != cNodeComponentLen {
+		if got := len(cfg.NodeComponents()); got != cNodeComponentLen {
 			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cNodeComponentLen)
 		}
-		if got := len(d.Relations); got != cRelationLen {
+		if got := len(cfg.Relations); got != cRelationLen {
 			t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, cRelationLen)
+		}
+	}
+}
+
+func TestComponentIcon(t *testing.T) {
+	cfg := New()
+	if err := cfg.LoadConfigFile(filepath.Join(testdataDir(t), "4_ndiag.yml")); err != nil {
+		t.Fatal(err)
+	}
+	if err := cfg.Build(); err != nil {
+		t.Fatal(err)
+	}
+	for _, c := range cfg.GlobalComponents() {
+		if c.Metadata.Icon == "" {
+			t.Errorf("icon does not set: %s", c.Id())
+		}
+	}
+	for _, c := range cfg.ClusterComponents() {
+		if c.Metadata.Icon == "" {
+			t.Errorf("icon does not set: %s", c.Id())
+		}
+	}
+	for _, c := range cfg.NodeComponents() {
+		if c.Metadata.Icon == "" {
+			t.Errorf("icon does not set: %s", c.Id())
 		}
 	}
 }

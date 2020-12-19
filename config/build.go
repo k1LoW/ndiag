@@ -42,8 +42,15 @@ func (cfg *Config) buildComponents() error {
 		if err != nil {
 			return err
 		}
-		// create global component from relations
-		cfg.globalComponents = append(cfg.globalComponents, com)
+		current, err := cfg.FindComponent(com.Id())
+		if err != nil {
+			// create global component from relations
+			cfg.globalComponents = append(cfg.globalComponents, com)
+		} else {
+			if err := current.OverrideMetadata(com); err != nil {
+				return err
+			}
+		}
 	}
 
 	// node components
@@ -60,7 +67,6 @@ func (cfg *Config) buildComponents() error {
 	}
 
 	for _, c := range nc.Keys() {
-		belongTo := false
 		splitted := sepSplit(c.(string))
 		nodeName := splitted[0]
 		comName := splitted[1]
@@ -68,21 +74,20 @@ func (cfg *Config) buildComponents() error {
 		if err != nil {
 			return fmt.Errorf("node '%s' not found: %s", nodeName, c)
 		}
-		newCom, err := cfg.parseComponent(comName)
+		com, err := cfg.parseComponent(comName)
 		if err != nil {
 			return err
 		}
-		newCom.Node = n
-		for _, com := range n.Components {
-			if strings.EqualFold(com.FullName(), newCom.FullName()) {
-				belongTo = true
-				break
-			}
-		}
-		if !belongTo {
+		com.Node = n
+		current, err := cfg.FindComponent(com.Id())
+		if err != nil {
 			// create node component from relations
-			n.Components = append(n.Components, newCom)
-			cfg.nodeComponents = append(cfg.nodeComponents, newCom)
+			n.Components = append(n.Components, com)
+			cfg.nodeComponents = append(cfg.nodeComponents, com)
+		} else {
+			if err := current.OverrideMetadata(com); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -94,14 +99,21 @@ func (cfg *Config) buildComponents() error {
 		belongTo := false
 		for _, cl := range cfg.Clusters() {
 			if strings.EqualFold(cl.FullName(), clName) {
-				// create cluster component from relations
 				com, err := cfg.parseComponent(comName)
 				if err != nil {
 					return err
 				}
 				com.Cluster = cl
-				cl.Components = append(cl.Components, com)
-				cfg.clusterComponents = append(cfg.clusterComponents, com)
+				current, err := cfg.FindComponent(com.Id())
+				if err != nil {
+					// create cluster component from relations
+					cl.Components = append(cl.Components, com)
+					cfg.clusterComponents = append(cfg.clusterComponents, com)
+				} else {
+					if err := current.OverrideMetadata(com); err != nil {
+						return err
+					}
+				}
 				belongTo = true
 				break
 			}
