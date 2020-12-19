@@ -1,3 +1,7 @@
+## [v0.7.1](https://github.com/k1LoW/ndiag/compare/v0.7.0...v0.7.1) (2020-12-19)
+
+* Fix component with icon [#41](https://github.com/k1LoW/ndiag/pull/41) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.7.0](https://github.com/k1LoW/ndiag/compare/v0.6.0...v0.7.0) (2020-12-19)
 
 * [BREAKING]Change diagram colors [#40](https://github.com/k1LoW/ndiag/pull/40) ([k1LoW](https://github.com/k1LoW))
