@@ -495,6 +495,7 @@ func (cfg *Config) FindComponent(s string) (*Component, error) {
 	splited := querySplit(s)
 	name := splited[0]
 	var components []*Component
+
 	switch sepCount(name) {
 	case 2: // cluster components
 		components = cfg.clusterComponents
@@ -504,7 +505,7 @@ func (cfg *Config) FindComponent(s string) (*Component, error) {
 		components = cfg.globalComponents
 	}
 	for _, c := range components {
-		if strings.EqualFold(c.FullName(), name) {
+		if strings.EqualFold(c.Id(), name) {
 			return c, nil
 		}
 	}

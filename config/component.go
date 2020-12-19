@@ -36,3 +36,14 @@ func (c *Component) FullName() string {
 func (c *Component) Id() string {
 	return strings.ToLower(c.FullName())
 }
+
+func (c *Component) OverrideMetadata(c2 *Component) error {
+	if c.Id() != c2.Id() {
+		return fmt.Errorf("can not merge: %s <-> %s", c.Id(), c2.Id())
+	}
+	if c2.Metadata.Icon != "" {
+		c.Metadata.Icon = c2.Metadata.Icon
+		c.Metadata.IconPath = c2.Metadata.IconPath
+	}
+	return nil
+}
