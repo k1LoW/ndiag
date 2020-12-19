@@ -4,8 +4,10 @@ digraph ndiag {
 {{ define "cluster" }}
   subgraph "cluster_{{ .cluster | id }}" {
     label = "{{ .cluster.Layer }}:{{ .cluster.Name | unesc }}";
-    style = "rounded,filled";
-    color = "#4B75B933"
+    style = "rounded,filled,setlinewidth(2)";
+    color = "{{ .cluster.Metadata.Color | colorhex }}"
+    fillcolor = "{{ .cluster.Metadata.FillColor | colorhex }}"
+    fontcolor = "{{ .cluster.Metadata.TextColor | colorhex }}"
     shape = box;
     fontname="Arial";
 

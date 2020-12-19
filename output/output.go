@@ -2,13 +2,14 @@ package output
 
 import (
 	"fmt"
+	"image/color"
 	"io"
 	"strings"
 	"text/template"
 
 	"github.com/elliotchance/orderedmap"
 	"github.com/k1LoW/ndiag/config"
-	"github.com/k1LoW/tbls/dict"
+	"github.com/muesli/gamut"
 )
 
 type Output interface {
@@ -20,7 +21,7 @@ var nl2brRep = strings.NewReplacer("\r\n", "<br>", "\n", "<br>", "\r", "<br>")
 var crRep = strings.NewReplacer("\r", "")
 var clusterRep = strings.NewReplacer(":", "")
 
-func Funcs(d *dict.Dict) map[string]interface{} {
+func Funcs(cfg *config.Config) map[string]interface{} {
 	return template.FuncMap{
 		"trim": func(s string) string {
 			return strings.TrimRight(s, "\r\n")
@@ -49,20 +50,25 @@ func Funcs(d *dict.Dict) map[string]interface{} {
 			}
 		},
 		"component": func(c config.Component) string {
+			bc := cfg.BaseColor
+			tc := cfg.TextColor
+			boxColor := colorToHex(gamut.Blends(gamut.Hex(cfg.BaseColor), gamut.Hex("#FFFFFF"), 3)[1])
+
 			if c.Metadata.IconPath == "" {
 				label := fmt.Sprintf(`"%s"`, unescRep.Replace(c.Name))
-				return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
+				return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="%s", fillcolor="#FFFFFF", fontcolor="%s" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label, bc, tc)
 			}
 			label := fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, c.Metadata.IconPath, unescRep.Replace(c.Name))
-			return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="#4B75B966", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
+			return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="%s", fillcolor="#FFFFFF", fontcolor="%s" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label, boxColor, tc)
 		},
 		"global_component": func(c config.Component) string {
+			tc := cfg.TextColor
 			if c.Metadata.IconPath == "" {
 				label := fmt.Sprintf(`"%s"`, unescRep.Replace(c.Name))
 				return fmt.Sprintf(`"%s"[label=%s, style="rounded,bold", shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
 			}
 			label := fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, c.Metadata.IconPath, unescRep.Replace(c.Name))
-			return fmt.Sprintf(`"%s"[label=%s, style="rounded,bold", fillcolor="#FFFFFF", fontcolor="#333333", shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
+			return fmt.Sprintf(`"%s"[label=%s, style="rounded,bold", fillcolor="#FFFFFF", fontcolor="%s", shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label, tc)
 		},
 		"summary": func(s string) string {
 			splitted := strings.Split(crRep.Replace(strings.TrimRight(s, "\r\n")), "\n")
@@ -149,8 +155,9 @@ func Funcs(d *dict.Dict) map[string]interface{} {
 			return false
 		},
 		"lookup": func(text string) string {
-			return d.Lookup(text)
+			return cfg.Dict.Lookup(text)
 		},
+		"colorhex": colorToHex,
 	}
 }
 
@@ -160,7 +167,7 @@ func componentLink(c *config.Component) string {
 	case c.Node != nil:
 		return fmt.Sprintf("[%s](%s)", c.Id(), config.MdPath("node", []string{c.Node.Id()}))
 	case c.Cluster != nil:
-		return fmt.Sprintf("[%s](%s#%s)", c.Id(), config.MdPath("layer", []string{c.Cluster.Layer}), clusterRep.Replace(c.Cluster.Id()))
+		return fmt.Sprintf("[%s](%s#%s)", c.Id(), config.MdPath("layer", []string{c.Cluster.Layer.Name}), clusterRep.Replace(c.Cluster.Id()))
 	default:
 		return c.Id()
 	}
@@ -185,4 +192,14 @@ func unique(in []string) []string {
 		u = append(u, s.(string))
 	}
 	return u
+}
+
+func colorToHex(c color.Color) string {
+	rgba := color.RGBAModel.Convert(c).(color.RGBA)
+	return fmt.Sprintf("#%.2x%.2x%.2x%.2x", rgba.R, rgba.G, rgba.B, rgba.A)
+}
+
+func colorToHexRGB(c color.Color) string {
+	rgba := color.NRGBAModel.Convert(c).(color.NRGBA)
+	return fmt.Sprintf("#%.2x%.2x%.2x", rgba.R, rgba.G, rgba.B)
 }

@@ -29,7 +29,7 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config.Dict)).Parse(ts))
+	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config)).Parse(ts))
 
 	clusters, remain, nEdges, err := d.config.BuildNestedClusters(diag.Layers)
 	if err != nil {
@@ -60,7 +60,7 @@ func (d *Dot) OutputLayer(wr io.Writer, l *config.Layer) error {
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config.Dict)).Parse(ts))
+	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config)).Parse(ts))
 
 	clusters, remain, nEdges, err := d.config.BuildNestedClusters([]string{l.Name})
 	if err != nil {
@@ -104,7 +104,7 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config.Dict)).Parse(ts))
+	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config)).Parse(ts))
 
 	clusters := config.Clusters{}
 	cIds := orderedmap.NewOrderedMap() // map[string]*config.Cluster{}
@@ -171,7 +171,7 @@ func (d *Dot) OutputTag(wr io.Writer, t *config.Tag) error {
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config.Dict)).Parse(ts))
+	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config)).Parse(ts))
 
 	clusters := config.Clusters{}
 	cIds := orderedmap.NewOrderedMap()
@@ -233,7 +233,7 @@ func (d *Dot) OutputRelation(wr io.Writer, rel *config.Relation) error {
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config.Dict)).Parse(ts))
+	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config)).Parse(ts))
 
 	clusters := config.Clusters{}
 	cIds := orderedmap.NewOrderedMap()
