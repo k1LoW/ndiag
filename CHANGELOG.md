@@ -1,3 +1,8 @@
+## [v0.7.2](https://github.com/k1LoW/ndiag/compare/v0.7.1...v0.7.2) (2020-12-20)
+
+* Bump up glyph version [#43](https://github.com/k1LoW/ndiag/pull/43) ([k1LoW](https://github.com/k1LoW))
+* Set edge id [#42](https://github.com/k1LoW/ndiag/pull/42) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.7.1](https://github.com/k1LoW/ndiag/compare/v0.7.0...v0.7.1) (2020-12-19)
 
 * Fix component with icon [#41](https://github.com/k1LoW/ndiag/pull/41) ([k1LoW](https://github.com/k1LoW))
