@@ -47,7 +47,9 @@ func (cfg *Config) buildComponents() error {
 			// create global component from relations
 			cfg.globalComponents = append(cfg.globalComponents, com)
 		} else {
-			current.OverrideMetadata(com)
+			if err := current.OverrideMetadata(com); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -83,7 +85,9 @@ func (cfg *Config) buildComponents() error {
 			n.Components = append(n.Components, com)
 			cfg.nodeComponents = append(cfg.nodeComponents, com)
 		} else {
-			current.OverrideMetadata(com)
+			if err := current.OverrideMetadata(com); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -106,7 +110,9 @@ func (cfg *Config) buildComponents() error {
 					cl.Components = append(cl.Components, com)
 					cfg.clusterComponents = append(cfg.clusterComponents, com)
 				} else {
-					current.OverrideMetadata(com)
+					if err := current.OverrideMetadata(com); err != nil {
+						return err
+					}
 				}
 				belongTo = true
 				break
