@@ -20,16 +20,17 @@ type ComponentMetadata struct {
 }
 
 func (c *Component) FullName() string {
-	if c.Node == nil {
-		if c.Cluster == nil {
-			// global components
-			return c.Name
-		}
+	switch {
+	case c.Node != nil:
+		// node components
+		return fmt.Sprintf("%s:%s", c.Node.FullName(), c.Name)
+	case c.Cluster != nil:
 		// cluster components
 		return fmt.Sprintf("%s:%s", c.Cluster.FullName(), c.Name)
+	default:
+		// global components
+		return c.Name
 	}
-	// node components
-	return fmt.Sprintf("%s:%s", c.Node.FullName(), c.Name)
 }
 
 func (c *Component) Id() string {
