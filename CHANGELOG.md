@@ -1,3 +1,12 @@
+## [v0.7.0](https://github.com/k1LoW/ndiag/compare/v0.6.0...v0.7.0) (2020-12-19)
+
+* [BREAKING]Change diagram colors [#40](https://github.com/k1LoW/ndiag/pull/40) ([k1LoW](https://github.com/k1LoW))
+* Add nodes.match and nodes.matchRegexp for grouping real nodes [#39](https://github.com/k1LoW/ndiag/pull/39) ([k1LoW](https://github.com/k1LoW))
+* Support SVG in SVG using Data URI [#38](https://github.com/k1LoW/ndiag/pull/38) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING] Allow zero real nodes [#37](https://github.com/k1LoW/ndiag/pull/37) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING] Support embedded icons and custom icons using k1LoW/glyph [#36](https://github.com/k1LoW/ndiag/pull/36) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING]Use dot command (Graphviz) when it exist. [#35](https://github.com/k1LoW/ndiag/pull/35) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.6.0](https://github.com/k1LoW/ndiag/compare/v0.5.0...v0.6.0) (2020-11-05)
 
 * Add task for updating ndiag documents [#26](https://github.com/k1LoW/ndiag/pull/26) ([k1LoW](https://github.com/k1LoW))
