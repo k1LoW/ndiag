@@ -68,8 +68,8 @@ digraph ndiag {
 {{ end }}
 {{ end }}
 
-{{ range $e := .Edges }}
-"{{ $e.Src | id }}" -> "{{ $e.Dst | id }}"[labelfontcolor="#333333", fontname="Arial"{{ $e.Attrs | attrs }}];
+{{ range $i, $e := .Edges }}
+"{{ $e.Src | id }}" -> "{{ $e.Dst | id }}"[id="edge-{{ $i }}", labelfontcolor="#333333", fontname="Arial"{{ $e.Attrs | attrs }}];
 {{ end }}
 
 }
