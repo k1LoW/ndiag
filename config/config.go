@@ -4,11 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/elliotchance/orderedmap"
 	"github.com/goccy/go-yaml"
@@ -621,9 +619,7 @@ func (cfg *Config) buildIconMap() error {
 		icm.Set(k, g)
 	}
 	cfg.iconMap = icm
-	rand.Seed(time.Now().UnixNano())
-	r := rand.Intn(100000)
-	cfg.tempIconDir = filepath.Join(os.TempDir(), fmt.Sprintf("ndiag.%06d", r))
+	cfg.tempIconDir = filepath.Join(os.TempDir(), fmt.Sprintf("ndiag.%06d", os.Getpid()))
 	return nil
 }
 
