@@ -1,3 +1,7 @@
+## [v0.7.4](https://github.com/k1LoW/ndiag/compare/v0.7.3...v0.7.4) (2020-12-25)
+
+* Remove empty tag [#45](https://github.com/k1LoW/ndiag/pull/45) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.7.3](https://github.com/k1LoW/ndiag/compare/v0.7.2...v0.7.3) (2020-12-21)
 
 * Fix tmpIconDir path rule [#44](https://github.com/k1LoW/ndiag/pull/44) ([k1LoW](https://github.com/k1LoW))
