@@ -67,7 +67,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    4,
 			wantNEdgeLen:            6,
-			wantTagLen:              2,
+			wantTagLen:              1,
 		},
 	}
 	for i, tt := range tests {
