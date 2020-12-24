@@ -187,6 +187,9 @@ func (cfg *Config) buildRelations() error {
 
 		// tags
 		for _, t := range rel.Tags {
+			if t == "" {
+				continue
+			}
 			var nt *Tag
 			nti, ok := relTags.Get(t)
 			if ok {
