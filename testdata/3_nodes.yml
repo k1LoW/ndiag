@@ -45,25 +45,25 @@ nodes:
 
 networks:
   -
-    tags:
+    labels:
       - http
     route:
       - "group:lb:vip"
       - "lb-1:nginx"
   -
-    tags:
+    labels:
       - http
     route:
       - "lb-1:nginx"
       - "app-1:rails"
   -
-    tags:
+    labels:
       - http
     route:
       - "lb-1:nginx"
       - "app-2:rails"
   -
-    tags:
+    labels:
       - http
     route:
       - "lb-1:nginx"
@@ -74,13 +74,13 @@ networks:
 
 relations:
   -
-    tags:
+    labels:
       - http
     components:
       - 'lb-1:keepalived'
       - "group:lb:vip"
   -
-    tags:
+    labels:
       - http
     components:
       - 'lb-2:keepalived'

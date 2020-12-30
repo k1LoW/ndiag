@@ -18,7 +18,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 		wantClusterComponentLen int
 		wantNodeComponentLen    int
 		wantNEdgeLen            int
-		wantTagLen              int
+		wantLabelLen            int
 	}{
 		{
 			configFile:              "1_ndiag.yml",
@@ -30,7 +30,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantClusterComponentLen: 0,
 			wantNodeComponentLen:    3,
 			wantNEdgeLen:            0,
-			wantTagLen:              0,
+			wantLabelLen:            0,
 		},
 		{
 			configFile:              "2_ndiag.yml",
@@ -42,7 +42,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    4,
 			wantNEdgeLen:            5,
-			wantTagLen:              2,
+			wantLabelLen:            2,
 		},
 		{
 			configFile:              "3_ndiag.yml",
@@ -54,7 +54,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    4,
 			wantNEdgeLen:            5,
-			wantTagLen:              2,
+			wantLabelLen:            2,
 		},
 		{
 			desc:                    "Determine that it is the same component with or without query parameters.",
@@ -67,7 +67,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    4,
 			wantNEdgeLen:            6,
-			wantTagLen:              1,
+			wantLabelLen:            1,
 		},
 	}
 	for i, tt := range tests {
@@ -104,8 +104,8 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 		if got := len(d.NEdges()); got != tt.wantNEdgeLen {
 			t.Errorf("TestLoadConfigAndRealNodes(%d) nedge len got %v\nwant %v", i, got, tt.wantNEdgeLen)
 		}
-		if got := len(d.Tags()); got != tt.wantTagLen {
-			t.Errorf("TestLoadConfigAndRealNodes(%d) tag len got %v\nwant %v", i, got, tt.wantTagLen)
+		if got := len(d.Labels()); got != tt.wantLabelLen {
+			t.Errorf("TestLoadConfigAndRealNodes(%d) label len got %v\nwant %v", i, got, tt.wantLabelLen)
 		}
 	}
 }

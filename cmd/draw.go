@@ -68,7 +68,7 @@ var drawCmd = &cobra.Command{
 			Name:   "-",
 			Desc:   "-",
 			Layers: layers,
-			Tags:   []string{},
+			Labels: []string{},
 		}
 
 		return o.OutputDiagram(os.Stdout, d)

@@ -183,34 +183,34 @@ var docCmd = &cobra.Command{
 			_ = dFile.Close()
 		}
 
-		// tags
-		if !cfg.HideTagGroups {
-			for k := range cfg.Tags() {
+		// labels
+		if !cfg.HideLabelGroups {
+			for k := range cfg.Labels() {
 				cfg, err := newConfig()
 				if err != nil {
 					return err
 				}
-				rel := cfg.Tags()[k]
+				rel := cfg.Labels()[k]
 
 				// generate md
 				o := md.New(cfg)
-				mPath := filepath.Join(cfg.DocPath, config.MdPath("tag", []string{rel.Id()}))
+				mPath := filepath.Join(cfg.DocPath, config.MdPath("label", []string{rel.Id()}))
 				file, err := os.Create(mPath)
 				if err != nil {
 					return err
 				}
-				if err := o.OutputTag(file, rel); err != nil {
+				if err := o.OutputLabel(file, rel); err != nil {
 					return err
 				}
 
 				// draw diagram
 				diag := gviz.New(cfg)
-				dPath := filepath.Join(cfg.DocPath, config.ImagePath("tag", []string{rel.Id()}, format))
+				dPath := filepath.Join(cfg.DocPath, config.ImagePath("label", []string{rel.Id()}, format))
 				dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 				if err != nil {
 					return err
 				}
-				if err := diag.OutputTag(dFile, rel); err != nil {
+				if err := diag.OutputLabel(dFile, rel); err != nil {
 					_ = dFile.Close()
 					return err
 				}
@@ -270,13 +270,13 @@ func diagExists(cfg *config.Config) error {
 		}
 	}
 
-	// tags
-	for _, rel := range cfg.Tags() {
-		mPath := filepath.Join(cfg.DocPath, config.ImagePath("tag", []string{rel.Id()}, format))
+	// labels
+	for _, rel := range cfg.Labels() {
+		mPath := filepath.Join(cfg.DocPath, config.ImagePath("label", []string{rel.Id()}, format))
 		if _, err := os.Lstat(mPath); err == nil {
 			return fmt.Errorf("%s already exist", mPath)
 		}
-		dPath := filepath.Join(cfg.DocPath, config.MdPath("tag", []string{rel.Id()}))
+		dPath := filepath.Join(cfg.DocPath, config.MdPath("label", []string{rel.Id()}))
 		if _, err := os.Lstat(dPath); err == nil {
 			return fmt.Errorf("%s already exist", dPath)
 		}

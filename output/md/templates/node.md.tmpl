@@ -15,13 +15,13 @@
 {{- range $i, $c := .Components }}
 | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> | {{ fromlinks $c.NEdges $c }} | {{ tolinks $c.NEdges $c }} |
 {{- end }}
-{{ if not .HideTagGroups }}
-## {{ "Tag groups" | lookup }}
+{{ if not .HideLabelGroups }}
+## {{ "Label groups" | lookup }}
 
 | {{ "Name" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- |
-{{- range $i, $t := .Tags }}
-| [{{ $t | fullname }}]({{ mdpath "tag" ($t | id) }}) | {{ if ne $t.Desc "" }}{{ $t.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_tag" ($t | id)}}">:pencil2:</a>{{ end }} |
+{{- range $i, $t := .Labels }}
+| [{{ $t | fullname }}]({{ mdpath "label" ($t | id) }}) | {{ if ne $t.Desc "" }}{{ $t.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_label" ($t | id)}}">:pencil2:</a>{{ end }} |
 {{- end }}
 {{- end }}
 {{- if not .HideRealNodes }}

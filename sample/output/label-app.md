@@ -1,12 +1,12 @@
 # app
 
-![diagram](tag-app.svg)
+![diagram](label-app.svg)
 
 App-DB
 
 
 <p align="right">
-  [ <a href="../input/ndiag.descriptions/_tag-app.md">:pencil2: Edit description</a> ]
+  [ <a href="../input/ndiag.descriptions/_label-app.md">:pencil2: Edit description</a> ]
 <p>
 
 ## Components

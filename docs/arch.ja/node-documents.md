@@ -16,7 +16,7 @@
 | documents:index document |  <a href="../ndiag.descriptions.ja/_component-documents_index_document.md">:pencil2:</a> | [ndiag:internal](node-ndiag.md) |  |
 | documents:layer group based document |  <a href="../ndiag.descriptions.ja/_component-documents_layer_group_based_document.md">:pencil2:</a> |  |  |
 | documents:layer based document |  <a href="../ndiag.descriptions.ja/_component-documents_layer_based_document.md">:pencil2:</a> | [ndiag:internal](node-ndiag.md) |  |
-| documents:tag(relation) based document |  <a href="../ndiag.descriptions.ja/_component-documents_tag(relation)_based_document.md">:pencil2:</a> | [ndiag:internal](node-ndiag.md) |  |
+| documents:label(relation) based document |  <a href="../ndiag.descriptions.ja/_component-documents_label(relation)_based_document.md">:pencil2:</a> | [ndiag:internal](node-ndiag.md) |  |
 | documents:custom document |  <a href="../ndiag.descriptions.ja/_component-documents_custom_document.md">:pencil2:</a> | [ndiag:internal](node-ndiag.md) |  |
 
 

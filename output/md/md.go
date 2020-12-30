@@ -45,18 +45,18 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 	}
 
 	nodes := m.config.Nodes
-	tags := m.config.Tags()
-	if len(d.Tags) > 0 {
-		tags = []*config.Tag{}
-		for _, t := range d.Tags {
-			tag, ok := m.config.FindTag(t)
+	labels := m.config.Labels()
+	if len(d.Labels) > 0 {
+		labels = []*config.Label{}
+		for _, t := range d.Labels {
+			label, ok := m.config.FindLabel(t)
 			if ok != nil {
-				return fmt.Errorf("tag not found: %s", t)
+				return fmt.Errorf("label not found: %s", t)
 			}
-			tags = append(tags, tag)
+			labels = append(labels, label)
 		}
 
-		nodes, err = m.config.PruneNodesByTags(nodes, d.Tags)
+		nodes, err = m.config.PruneNodesByLabels(nodes, d.Labels)
 		if err != nil {
 			return err
 		}
@@ -64,15 +64,15 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 
 	tmpl := template.Must(template.New(d.Name).Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Diagram":       d,
-		"Format":        m.config.Format(),
-		"DescPath":      relPath,
-		"Layers":        layers,
-		"Nodes":         nodes,
-		"Tags":          tags,
-		"HideLayers":    m.config.HideLayers,
-		"HideRealNodes": m.config.HideRealNodes,
-		"HideTagGroups": m.config.HideTagGroups,
+		"Diagram":         d,
+		"Format":          m.config.Format(),
+		"DescPath":        relPath,
+		"Layers":          layers,
+		"Nodes":           nodes,
+		"Labels":          labels,
+		"HideLayers":      m.config.HideLayers,
+		"HideRealNodes":   m.config.HideRealNodes,
+		"HideLabelGroups": m.config.HideLabelGroups,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
@@ -121,34 +121,34 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 		return err
 	}
 
-	tags := []*config.Tag{}
-	relTags := orderedmap.NewOrderedMap()
+	labels := []*config.Label{}
+	relLabels := orderedmap.NewOrderedMap()
 	for _, c := range n.Components {
 		for _, e := range c.NEdges {
-			for _, ts := range e.Relation.Tags {
-				for _, t := range m.config.Tags() {
+			for _, ts := range e.Relation.Labels {
+				for _, t := range m.config.Labels() {
 					if ts == t.Name {
-						relTags.Set(ts, t)
+						relLabels.Set(ts, t)
 					}
 				}
 			}
 		}
 	}
-	for _, k := range relTags.Keys() {
-		t, _ := relTags.Get(k)
-		tags = append(tags, t.(*config.Tag))
+	for _, k := range relLabels.Keys() {
+		t, _ := relLabels.Get(k)
+		labels = append(labels, t.(*config.Label))
 	}
 
 	tmpl := template.Must(template.New(n.Id()).Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Node":          n,
-		"Format":        m.config.Format(),
-		"DescPath":      relPath,
-		"Components":    n.Components,
-		"RealNodes":     n.RealNodes,
-		"Tags":          tags,
-		"HideRealNodes": m.config.HideRealNodes,
-		"HideTagGroups": m.config.HideTagGroups,
+		"Node":            n,
+		"Format":          m.config.Format(),
+		"DescPath":        relPath,
+		"Components":      n.Components,
+		"RealNodes":       n.RealNodes,
+		"Labels":          labels,
+		"HideRealNodes":   m.config.HideRealNodes,
+		"HideLabelGroups": m.config.HideLabelGroups,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
@@ -156,8 +156,8 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 	return nil
 }
 
-func (m *Md) OutputTag(wr io.Writer, t *config.Tag) error {
-	ts, err := m.box.FindString("tag.md.tmpl")
+func (m *Md) OutputLabel(wr io.Writer, t *config.Label) error {
+	ts, err := m.box.FindString("label.md.tmpl")
 	if err != nil {
 		return err
 	}
@@ -169,7 +169,7 @@ func (m *Md) OutputTag(wr io.Writer, t *config.Tag) error {
 
 	tmpl := template.Must(template.New(t.Id()).Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Tag":      t,
+		"Label":    t,
 		"Format":   m.config.Format(),
 		"DescPath": relPath,
 	}
@@ -226,7 +226,7 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 		"Diagrams": m.config.Diagrams,
 		"Layers":   m.config.Layers(),
 		"Nodes":    m.config.Nodes,
-		"Tags":     m.config.Tags(),
+		"Labels":   m.config.Labels(),
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err

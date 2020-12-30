@@ -4,7 +4,7 @@ docPath: docs/arch.ja
 descPath: docs/ndiag.descriptions.ja
 hideLayers: true
 hideRealNodes: true
-hideTagGroups: true
+hideLabelGroups: true
 graph:
   attrs:
     rankdir: LR
@@ -18,11 +18,11 @@ diagrams:
   -
     name: "input"
     layers: ["type", "file"]
-    tags: ["input"]
+    labels: ["input"]
   -
     name: "output"
     layers: ["type", "file"]
-    tags: ["output"]
+    labels: ["output"]
 nodes:
   -
     name: real nodes
@@ -56,7 +56,7 @@ nodes:
       - 'component descriptions?icon=write'
       - 'diagram descriptions?icon=write'
       - 'layer group descriptions?icon=write'
-      - 'tag group descriptions?icon=write'
+      - 'label group descriptions?icon=write'
     clusters:
       - 'type:input'
       - 'file:ndiag.descriptions/*.md'
@@ -101,7 +101,7 @@ nodes:
       - 'index document'
       - 'layer group based document'
       - 'layer based document'
-      - 'tag(relation) based document'
+      - 'label(relation) based document'
     clusters:
       - 'type:output'
       - 'file:generated documents'
@@ -110,141 +110,141 @@ nodes:
 
 networks:
   -
-    tags:
+    labels:
       - input
     route:
       - 'real nodes:lb-1'
       - 'nodes:lb-*'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'real nodes:lb-2'
       - 'nodes:lb-*'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'real nodes:app-1'
       - 'nodes:app-*'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'real nodes:app-2'
       - 'nodes:app-*'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'real nodes:app-3'
       - 'nodes:app-*'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'real nodes:db-1'
       - 'nodes:db-*'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'real nodes:db-2'
       - 'nodes:db-*'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'diagrams:overview'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'diagrams:http-lb'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'networks:internet->group\:lb\:vip'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'networks:group\:lb\:vip->lb-*\:nginx'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'networks:lb-*\:nginx->app-*\:rails'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'networks:app-*\:rails->db-*\:postgresql'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'relations:lb-*\:keepalived->group\:lb\:vip'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'descriptions:component descriptions'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'descriptions:diagram descriptions'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
       - 'descriptions:layer group descriptions'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - input
     route:
-      - 'descriptions:tag group descriptions'
+      - 'descriptions:label group descriptions'
       - 'ndiag:internal'
   -
-    tags:
+    labels:
       - output
     route:
       - 'ndiag:internal'
       - 'documents:index document'
   -
-    tags:
+    labels:
       - output
     route:
       - 'ndiag:internal'
       - 'documents:custom document'
   -
-    tags:
+    labels:
       - output
     route:
       - 'ndiag:internal'
       - 'documents:layer based document'
   -
-    tags:
+    labels:
       - output
     route:
       - 'ndiag:internal'
-      - 'documents:tag(relation) based document'
+      - 'documents:label(relation) based document'

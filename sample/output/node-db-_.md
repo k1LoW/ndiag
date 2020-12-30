@@ -15,11 +15,11 @@ Database
 | --- | --- | --- | --- |
 | db-*:postgresql |  <a href="../input/ndiag.descriptions/_component-db-__postgresql.md">:pencil2:</a> | [app-*:rails](node-app-_.md) |  |
 
-## Tag groups
+## Label groups
 
 | Name | Description |
 | --- | --- |
-| [app](tag-app.md) | App-DB |
+| [app](label-app.md) | App-DB |
 ## Real nodes
 
 - db-1

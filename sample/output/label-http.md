@@ -1,12 +1,12 @@
 # http
 
-![diagram](tag-http.svg)
+![diagram](label-http.svg)
 
 HTTP request flow
 
 
 <p align="right">
-  [ <a href="../input/ndiag.descriptions/_tag-http.md">:pencil2: Edit description</a> ]
+  [ <a href="../input/ndiag.descriptions/_label-http.md">:pencil2: Edit description</a> ]
 <p>
 
 ## Components

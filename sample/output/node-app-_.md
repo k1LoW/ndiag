@@ -16,12 +16,12 @@ Application
 | app-*:nginx |  <a href="../input/ndiag.descriptions/_component-app-__nginx.md">:pencil2:</a> | [lb-*:nginx](node-lb-_.md) | [app-*:rails](node-app-_.md) |
 | app-*:rails |  <a href="../input/ndiag.descriptions/_component-app-__rails.md">:pencil2:</a> | [app-*:nginx](node-app-_.md) | [db-*:postgresql](node-db-_.md) |
 
-## Tag groups
+## Label groups
 
 | Name | Description |
 | --- | --- |
-| [http](tag-http.md) | HTTP request flow |
-| [app](tag-app.md) | App-DB |
+| [http](label-http.md) | HTTP request flow |
+| [app](label-app.md) | App-DB |
 ## Real nodes
 
 - app-1

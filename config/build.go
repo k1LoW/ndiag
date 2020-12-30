@@ -168,12 +168,12 @@ func (cfg *Config) parseClusterLabel(label string) (*Cluster, error) {
 }
 
 func (cfg *Config) buildRelations() error {
-	relTags := orderedmap.NewOrderedMap()
+	relLabels := orderedmap.NewOrderedMap()
 	for _, rel := range cfg.rawRelations {
 		nrel := &Relation{
 			relationId: rel.Id(),
 			Type:       rel.Type,
-			Tags:       rel.Tags,
+			Labels:     rel.Labels,
 			Attrs:      rel.Attrs,
 		}
 		for _, r := range rel.Components {
@@ -185,29 +185,29 @@ func (cfg *Config) buildRelations() error {
 		}
 		cfg.Relations = append(cfg.Relations, nrel)
 
-		// tags
-		for _, t := range rel.Tags {
+		// labels
+		for _, t := range rel.Labels {
 			if t == "" {
 				continue
 			}
-			var nt *Tag
-			nti, ok := relTags.Get(t)
+			var nt *Label
+			nti, ok := relLabels.Get(t)
 			if ok {
-				nt = nti.(*Tag)
+				nt = nti.(*Label)
 			} else {
-				nt = &Tag{
+				nt = &Label{
 					Name: t,
 				}
-				relTags.Set(t, nt)
+				relLabels.Set(t, nt)
 			}
 			nt.Relations = append(nt.Relations, nrel)
 		}
 	}
 	cfg.nEdges = SplitRelations(cfg.Relations)
 
-	for _, k := range relTags.Keys() {
-		nt, _ := relTags.Get(k)
-		cfg.tags = append(cfg.tags, nt.(*Tag))
+	for _, k := range relLabels.Keys() {
+		nt, _ := relLabels.Get(k)
+		cfg.labels = append(cfg.labels, nt.(*Label))
 	}
 
 	return nil
@@ -311,12 +311,12 @@ func (cfg *Config) buildDescriptions() error {
 		c.Desc = desc
 	}
 
-	// tags
-	for _, t := range cfg.tags {
+	// labels
+	for _, t := range cfg.labels {
 		if t.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_tag", []string{t.Id()}))
+		desc, err := cfg.readDescFile(MdPath("_label", []string{t.Id()}))
 		if err != nil {
 			return err
 		}

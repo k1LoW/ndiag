@@ -24,12 +24,12 @@
 | [app-*](node-app-_.md) (3) | Application |
 | [db-*](node-db-_.md) (2) | Database |
 
-## Tag groups
+## Label groups
 
 | Name | Description |
 | --- | --- |
-| [http](tag-http.md) | HTTP request flow |
-| [app](tag-app.md) | App-DB |
+| [http](label-http.md) | HTTP request flow |
+| [app](label-app.md) | App-DB |
 
 ---
 

@@ -25,13 +25,13 @@
 {{- range $i, $n := .Nodes }}
 | [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}){{ if not $.HideRealNodes }} ({{ len $n.RealNodes }}){{ end }} | {{ if ne $n.Desc "" }}{{ $n.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_node" ($n | id)}}">:pencil2:</a>{{ end }} |
 {{- end }}
-{{ if not .HideTagGroups }}
-## {{ "Tag groups" | lookup }}
+{{ if not .HideLabelGroups }}
+## {{ "Label groups" | lookup }}
 
 | {{ "Name" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- |
-{{- range $i, $t := .Tags }}
-| [{{ $t | fullname }}]({{ mdpath "tag" ($t | id) }}) | {{ if ne $t.Desc "" }}{{ $t.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_tag" ($t | id)}}">:pencil2:</a>{{ end }} |
+{{- range $i, $t := .Labels }}
+| [{{ $t | fullname }}]({{ mdpath "label" ($t | id) }}) | {{ if ne $t.Desc "" }}{{ $t.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_label" ($t | id)}}">:pencil2:</a>{{ end }} |
 {{- end }}
 {{- end }}
 
