@@ -22,19 +22,19 @@ nodes:
 
 networks:
   -
-    tags:
+    labels:
       - http
     route:
       - "internet"
       - "group:lb:vip?icon=hex"
   -
-    tags:
+    labels:
       - http
     route:
       - "group:lb:vip"
       - "lb:nginx?icon=lb-l7"
   -
-    tags:
+    labels:
       - http
     route:
       - "lb:nginx"
@@ -50,7 +50,7 @@ networks:
 
 relations:
   -
-    tags:
+    labels:
       - http
     components:
       - 'lb:keepalived?icon=keepalived'

@@ -10,9 +10,9 @@ diagrams:
   -
     name: http-lb
     layers: ["vip_group"]
-    tags: ["http"]
+    labels: ["http"]
 ```
 
 `layers:` にClusterがうまく入子構造になるようにLayerを設定することで意図したグルーピングでNodeやComponentを配置した図とドキュメントの雛形を作成できます。
 
-また、`tags:` でTagを（複数）指定することで、Tagで関係性を持ったコンポーネントだけに限定した図とドキュメントの雛形を作成できます。
+また、`labels:` でLabelを（複数）指定することで、Labelで関係性を持ったコンポーネントだけに限定した図とドキュメントの雛形を作成できます。

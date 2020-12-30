@@ -22,26 +22,26 @@ nodes:
 
 networks:
   -
-    tags:
+    labels:
       - http
     route:
       - "internet"
       - "group:lb:vip"
   -
-    tags:
+    labels:
       - http
     route:
       - "group:lb:vip"
       - "lb-*:nginx"
   -
-    tags:
+    labels:
       - http
       - app
     route:
       - "lb-*:nginx"
       - "app-*:rails"
   -
-    tags:
+    labels:
       - app
     route:
       - "app-*:rails"
@@ -49,7 +49,7 @@ networks:
 
 relations:
   -
-    tags:
+    labels:
       - http
     components:
       - 'lb-*:keepalived'

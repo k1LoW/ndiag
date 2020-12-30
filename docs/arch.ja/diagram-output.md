@@ -22,17 +22,17 @@ ndiag.ymlで設定したLayerごとにドキュメントを生成します。
 
 - [output/layer-consul.md](/sample/output/layer-consul.md)
 
-### tag(relation) based document
+### label(relation) based document
 
-ndiag.ymlで設定したrelationsやnetworksに付与したTagごとにドキュメントを生成します。
+ndiag.ymlで設定したrelationsやnetworksに付与したLabelごとにドキュメントを生成します。
 
-Tagで表したComponentの関係を中心とした説明をすることに使用します。
+Labelで表したComponentの関係を中心とした説明をすることに使用します。
 
-- [output/tag-http.md](/sample/output/tag-http.md)
+- [output/label-http.md](/sample/output/label-http.md)
 
 ### custom document
 
-ndiag.ymlのdiagramsで設定したlayers、tagsを元にドキュメントを生成します。
+ndiag.ymlのdiagramsで設定したlayers、labelsを元にドキュメントを生成します。
 
 - [output/diagram-http-lb.md](/sample/output/diagram-http-lb.md)
 

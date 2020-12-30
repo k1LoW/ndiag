@@ -9,7 +9,7 @@ nodes:
 
 networks:
   -
-    tags:
+    labels:
       - http
     route:
       - "internet"

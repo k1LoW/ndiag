@@ -9,7 +9,7 @@ diagrams:
   -
     name: http-lb
     layers: ["vip_group"]
-    tags: ["http"]
+    labels: ["http"]
 nodes:
   -
     name: lb-*
@@ -34,19 +34,19 @@ nodes:
 
 networks:
   -
-    tags:
+    labels:
       - http
     route:
       - "internet?icon=cloud"
       - "vip_group:lb:vip"
   -
-    tags:
+    labels:
       - http
     route:
       - "vip_group:lb:vip"
       - "lb-*:nginx"
   -
-    tags:
+    labels:
       - http
       - app
     route:
@@ -54,7 +54,7 @@ networks:
       - "app-*:nginx"
       - "app-*:rails"
   -
-    tags:
+    labels:
       - app
     route:
       - "app-*:rails"
@@ -62,7 +62,7 @@ networks:
 
 relations:
   -
-    tags:
+    labels:
       - http
     components:
       - 'lb-*:keepalived?icon=keepalived'

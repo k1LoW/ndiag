@@ -59,7 +59,7 @@ type Config struct {
 	HideDiagrams      bool               `yaml:"hideDiagrams,omitempty"`
 	HideLayers        bool               `yaml:"hideLayers,omitempty"`
 	HideRealNodes     bool               `yaml:"hideRealNodes,omitempty"`
-	HideTagGroups     bool               `yaml:"hideTagGroups,omitempty"`
+	HideLabelGroups   bool               `yaml:"hideLabelGroups,omitempty"`
 	Diagrams          []*Diagram         `yaml:"diagrams"`
 	Nodes             []*Node            `yaml:"nodes"`
 	Relations         []*Relation        `yaml:"relations,omitempty"`
@@ -75,7 +75,7 @@ type Config struct {
 	clusterComponents []*Component
 	nodeComponents    []*Component
 	nEdges            []*NEdge
-	tags              []*Tag
+	labels            []*Label
 	colorSets         ColorSets
 	iconMap           *glyph.Map
 	tempIconDir       string
@@ -147,8 +147,8 @@ func (cfg *Config) NEdges() []*NEdge {
 	return cfg.nEdges
 }
 
-func (cfg *Config) Tags() []*Tag {
-	return cfg.tags
+func (cfg *Config) Labels() []*Label {
+	return cfg.labels
 }
 
 func (cfg *Config) ColorSets() ColorSets {
@@ -184,8 +184,8 @@ func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*N
 	return clusters, globalNodes, nEdges, nil
 }
 
-func (cfg *Config) PruneClustersByTags(clusters Clusters, nodes []*Node, components []*Component, nEdges []*NEdge, tags []string) (Clusters, []*Node, []*Component, []*NEdge, error) {
-	if len(tags) == 0 {
+func (cfg *Config) PruneClustersByLabels(clusters Clusters, nodes []*Node, components []*Component, nEdges []*NEdge, labels []string) (Clusters, []*Node, []*Component, []*NEdge, error) {
+	if len(labels) == 0 {
 		return clusters, nodes, components, nEdges, nil
 	}
 
@@ -194,8 +194,8 @@ func (cfg *Config) PruneClustersByTags(clusters Clusters, nodes []*Node, compone
 	cIds := orderedmap.NewOrderedMap()
 	comIds := orderedmap.NewOrderedMap()
 
-	for _, name := range tags {
-		t, err := cfg.FindTag(name)
+	for _, name := range labels {
+		t, err := cfg.FindLabel(name)
 		if err != nil {
 			return clusters, nodes, components, nEdges, err
 		}
@@ -262,15 +262,15 @@ func (cfg *Config) PruneClustersByTags(clusters Clusters, nodes []*Node, compone
 	return clusters, nodes, components, remainNEdges, nil
 }
 
-func (cfg *Config) PruneNodesByTags(nodes []*Node, tags []string) ([]*Node, error) {
-	if len(tags) == 0 {
+func (cfg *Config) PruneNodesByLabels(nodes []*Node, labels []string) ([]*Node, error) {
+	if len(labels) == 0 {
 		return nodes, nil
 	}
 	nIds := orderedmap.NewOrderedMap()
 	comIds := orderedmap.NewOrderedMap()
 
-	for _, name := range tags {
-		t, err := cfg.FindTag(name)
+	for _, name := range labels {
+		t, err := cfg.FindLabel(name)
 		if err != nil {
 			return nodes, nil
 		}
@@ -510,13 +510,13 @@ func (cfg *Config) FindComponent(s string) (*Component, error) {
 	return nil, fmt.Errorf("component not found: %s", name)
 }
 
-func (cfg *Config) FindTag(name string) (*Tag, error) {
-	for _, t := range cfg.Tags() {
+func (cfg *Config) FindLabel(name string) (*Label, error) {
+	for _, t := range cfg.Labels() {
 		if t.Name == name {
 			return t, nil
 		}
 	}
-	return nil, fmt.Errorf("tag not found: %s", name)
+	return nil, fmt.Errorf("label not found: %s", name)
 }
 
 func (cfg *Config) FindLayer(s string) (*Layer, error) {

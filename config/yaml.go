@@ -13,23 +13,23 @@ import (
 
 func (d *Config) UnmarshalYAML(data []byte) error {
 	raw := struct {
-		Name          string             `yaml:"name"`
-		Desc          string             `yaml:"desc,omitempty"`
-		DocPath       string             `yaml:"docPath"`
-		DescPath      string             `yaml:"descPath"`
-		Graph         *Graph             `yaml:"graph,omitempty"`
-		HideDiagrams  bool               `yaml:"hideDiagrams"`
-		HideLayers    bool               `yaml:"hideLayers"`
-		HideRealNodes bool               `yaml:"hideRealNodes"`
-		HideTagGroups bool               `yaml:"hideTagGroups"`
-		Diagrams      []*Diagram         `yaml:"diagrams"`
-		Nodes         []*Node            `yaml:"nodes"`
-		Networks      []interface{}      `yaml:"networks"`
-		Relations     []interface{}      `yaml:"relations"`
-		Dict          *dict.Dict         `yaml:"dict,omitempty"`
-		BaseColor     string             `yaml:"baseColor,omitempty"`
-		TextColor     string             `yaml:"textColor,omitempty"`
-		CustomIcons   []*glyph.Blueprint `yaml:"customIcons,omitempty"`
+		Name            string             `yaml:"name"`
+		Desc            string             `yaml:"desc,omitempty"`
+		DocPath         string             `yaml:"docPath"`
+		DescPath        string             `yaml:"descPath"`
+		Graph           *Graph             `yaml:"graph,omitempty"`
+		HideDiagrams    bool               `yaml:"hideDiagrams"`
+		HideLayers      bool               `yaml:"hideLayers"`
+		HideRealNodes   bool               `yaml:"hideRealNodes"`
+		HideLabelGroups bool               `yaml:"hideLabelGroups"`
+		Diagrams        []*Diagram         `yaml:"diagrams"`
+		Nodes           []*Node            `yaml:"nodes"`
+		Networks        []interface{}      `yaml:"networks"`
+		Relations       []interface{}      `yaml:"relations"`
+		Dict            *dict.Dict         `yaml:"dict,omitempty"`
+		BaseColor       string             `yaml:"baseColor,omitempty"`
+		TextColor       string             `yaml:"textColor,omitempty"`
+		CustomIcons     []*glyph.Blueprint `yaml:"customIcons,omitempty"`
 	}{}
 
 	if err := yaml.Unmarshal(data, &raw); err != nil {
@@ -45,7 +45,7 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	d.HideDiagrams = raw.HideDiagrams
 	d.HideLayers = raw.HideLayers
 	d.HideRealNodes = raw.HideRealNodes
-	d.HideTagGroups = raw.HideTagGroups
+	d.HideLabelGroups = raw.HideLabelGroups
 	d.Diagrams = raw.Diagrams
 	d.Nodes = raw.Nodes
 	if raw.Dict != nil {
@@ -112,7 +112,7 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 
 func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error) {
 	components := []string{}
-	tags := []string{}
+	labels := []string{}
 	switch v := rel.(type) {
 	case []interface{}:
 		for _, r := range v {
@@ -126,7 +126,7 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 			Components: components,
 			Attrs:      relType.Attrs,
 		}
-		rel.Tags = []string{rel.Id()}
+		rel.Labels = []string{rel.Id()}
 		return rel, nil
 	case map[string]interface{}:
 		var (
@@ -157,14 +157,14 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 				return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
 			}
 		}
-		ti, ok := v["tags"]
+		ti, ok := v["labels"]
 		if ok {
 			for _, t := range ti.([]interface{}) {
-				tags = append(tags, t.(string))
+				labels = append(labels, t.(string))
 			}
 		}
-		if len(tags) == 0 {
-			tags = []string{id}
+		if len(labels) == 0 {
+			labels = []string{id}
 		}
 		attrs := []*Attr{}
 		attrsi, ok := v["attrs"]
@@ -188,7 +188,7 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 			relationId: id,
 			Type:       relType,
 			Components: components,
-			Tags:       tags,
+			Labels:     labels,
 			Attrs:      attrs,
 		}, nil
 	default:

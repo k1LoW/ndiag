@@ -66,7 +66,7 @@ type Relation struct {
 	relationId string
 	Type       *RelationType
 	Components []*Component
-	Tags       []string
+	Labels     []string
 	Attrs      []*Attr
 }
 
@@ -82,7 +82,7 @@ type rawRelation struct {
 	relationId string
 	Type       *RelationType
 	Components []string
-	Tags       []string `json:"-"`
+	Labels     []string `json:"-"`
 	Attrs      []*Attr
 }
 
@@ -99,17 +99,17 @@ func (rel *rawRelation) Id() string {
 	return fmt.Sprintf("rel-%s", s[:12])
 }
 
-type Tag struct {
+type Label struct {
 	Name      string
 	Desc      string
 	Relations []*Relation
 }
 
-func (t *Tag) FullName() string {
+func (t *Label) FullName() string {
 	return t.Name
 }
 
-func (t *Tag) Id() string {
+func (t *Label) Id() string {
 	return strings.ToLower(t.FullName())
 }
 

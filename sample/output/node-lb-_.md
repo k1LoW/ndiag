@@ -16,12 +16,12 @@ Load balancer
 | lb-*:nginx |  <a href="../input/ndiag.descriptions/_component-lb-__nginx.md">:pencil2:</a> | [vip_group:lb:vip](layer-vip_group.md#vip_grouplb) | [app-*:nginx](node-app-_.md) |
 | lb-*:keepalived |  <a href="../input/ndiag.descriptions/_component-lb-__keepalived.md">:pencil2:</a> |  | [vip_group:lb:vip](layer-vip_group.md#vip_grouplb) |
 
-## Tag groups
+## Labels
 
 | Name | Description |
 | --- | --- |
-| [http](tag-http.md) | HTTP request flow |
-| [app](tag-app.md) | App-DB |
+| [http](label-http.md) | HTTP request flow |
+| [app](label-app.md) | App-DB |
 ## Real nodes
 
 - lb-1

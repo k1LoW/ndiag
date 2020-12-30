@@ -1,16 +1,16 @@
-# {{ .Tag | fullname }}
+# {{ .Label | fullname }}
 
-![diagram]({{ imgpath "tag" (.Tag | id) .Format }})
+![diagram]({{ imgpath "label" (.Label | id) .Format }})
 
-{{ .Tag.Desc }}
+{{ .Label.Desc }}
 
 <p align="right">
-  [ <a href="{{ .DescPath }}/{{ mdpath "_tag" (.Tag | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
+  [ <a href="{{ .DescPath }}/{{ mdpath "_label" (.Label | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
 <p>
 
 ## {{ "Components" | lookup }}
 
-{{- range $j, $rel := .Tag.Relations }}
+{{- range $j, $rel := .Label.Relations }}
 | # | {{ "Name" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- | --- |
 {{- range $i, $c := $rel.Components }}

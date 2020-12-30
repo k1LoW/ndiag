@@ -16,7 +16,7 @@
 | descriptions:component descriptions |  <a href="../ndiag.descriptions.ja/_component-descriptions_component_descriptions.md">:pencil2:</a> |  | [ndiag:internal](node-ndiag.md) |
 | descriptions:diagram descriptions |  <a href="../ndiag.descriptions.ja/_component-descriptions_diagram_descriptions.md">:pencil2:</a> |  | [ndiag:internal](node-ndiag.md) |
 | descriptions:layer group descriptions |  <a href="../ndiag.descriptions.ja/_component-descriptions_layer_group_descriptions.md">:pencil2:</a> |  | [ndiag:internal](node-ndiag.md) |
-| descriptions:tag group descriptions |  <a href="../ndiag.descriptions.ja/_component-descriptions_tag_group_descriptions.md">:pencil2:</a> |  | [ndiag:internal](node-ndiag.md) |
+| descriptions:label group descriptions |  <a href="../ndiag.descriptions.ja/_component-descriptions_label_group_descriptions.md">:pencil2:</a> |  | [ndiag:internal](node-ndiag.md) |
 
 
 ---

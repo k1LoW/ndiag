@@ -36,7 +36,7 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 		return err
 	}
 	components := d.config.GlobalComponents()
-	clusters, remain, components, nEdges, err = d.config.PruneClustersByTags(clusters, remain, components, nEdges, diag.Tags)
+	clusters, remain, components, nEdges, err = d.config.PruneClustersByLabels(clusters, remain, components, nEdges, diag.Labels)
 	if err != nil {
 		return err
 	}
@@ -166,7 +166,7 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 	return nil
 }
 
-func (d *Dot) OutputTag(wr io.Writer, t *config.Tag) error {
+func (d *Dot) OutputLabel(wr io.Writer, t *config.Label) error {
 	ts, err := d.box.FindString("diagram.dot.tmpl")
 	if err != nil {
 		return err

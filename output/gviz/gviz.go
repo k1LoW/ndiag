@@ -52,9 +52,9 @@ func (g *Gviz) OutputNode(wr io.Writer, n *config.Node) error {
 	return g.render(wr, buf.Bytes())
 }
 
-func (g *Gviz) OutputTag(wr io.Writer, t *config.Tag) error {
+func (g *Gviz) OutputLabel(wr io.Writer, t *config.Label) error {
 	buf := &bytes.Buffer{}
-	if err := g.dot.OutputTag(buf, t); err != nil {
+	if err := g.dot.OutputLabel(buf, t); err != nil {
 		return err
 	}
 	return g.render(wr, buf.Bytes())
