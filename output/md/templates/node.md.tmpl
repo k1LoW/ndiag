@@ -16,7 +16,7 @@
 | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> | {{ fromlinks $c.NEdges $c }} | {{ tolinks $c.NEdges $c }} |
 {{- end }}
 {{ if not .HideLabelGroups }}
-## {{ "Label groups" | lookup }}
+## {{ "Labels" | lookup }}
 
 | {{ "Name" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- |

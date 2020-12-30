@@ -22,7 +22,7 @@
 | [lb-*](node-lb-_.md) (2) | Load balancer |
 | [app-*](node-app-_.md) (3) | Application |
 
-## Label groups
+## Labels
 
 | Name | Description |
 | --- | --- |

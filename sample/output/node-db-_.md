@@ -15,7 +15,7 @@ Database
 | --- | --- | --- | --- |
 | db-*:postgresql |  <a href="../input/ndiag.descriptions/_component-db-__postgresql.md">:pencil2:</a> | [app-*:rails](node-app-_.md) |  |
 
-## Label groups
+## Labels
 
 | Name | Description |
 | --- | --- |

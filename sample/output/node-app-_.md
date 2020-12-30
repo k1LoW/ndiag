@@ -16,7 +16,7 @@ Application
 | app-*:nginx |  <a href="../input/ndiag.descriptions/_component-app-__nginx.md">:pencil2:</a> | [lb-*:nginx](node-lb-_.md) | [app-*:rails](node-app-_.md) |
 | app-*:rails |  <a href="../input/ndiag.descriptions/_component-app-__rails.md">:pencil2:</a> | [app-*:nginx](node-app-_.md) | [db-*:postgresql](node-db-_.md) |
 
-## Label groups
+## Labels
 
 | Name | Description |
 | --- | --- |

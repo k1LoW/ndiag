@@ -33,7 +33,7 @@
 | [db-*](node-db-_.md) (2) | Database |
 
 
-## Label groups
+## Labels
 
 | Name | Description |
 | --- | --- |
