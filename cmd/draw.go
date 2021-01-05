@@ -41,16 +41,8 @@ var drawCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var o output.Output
 
-		cfg := config.New()
-		if err := cfg.LoadConfigFile(detectConfigPath(configPath)); err != nil {
-			return err
-		}
-		for _, n := range nodeLists {
-			if err := cfg.LoadRealNodesFile(n); err != nil {
-				return err
-			}
-		}
-		if err := cfg.Build(); err != nil {
+		cfg, err := newConfig()
+		if err != nil {
 			return err
 		}
 
