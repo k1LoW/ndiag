@@ -14,10 +14,6 @@ Key features of `ndiag` are:
 $ ndiag doc -c ndiag.yml -n nodes.yml --rm-dist
 ```
 
-## Requirement
-
-- Graphviz
-
 ## Architecture
 
 - WIP [English](/docs/arch/README.md)
