@@ -4,11 +4,11 @@
 
 ## 出力 (アーキテクチャドキュメント)
 
-`ndiag doc` が出力するドキュメントは ndiag.yml の `docPath` に設定されたディレクトリに生成されます。
+`ndiag doc` が出力するドキュメントは ndiag.yml の `docPath` に設定されたディレクトリ（デフォルトは `archdoc` ）に生成されます。
 
 - [output/README.md (docPath)](/sample/output/README.md)
 
-ドキュメントは1つではなく、複数の異なる角度から生成します。
+ドキュメントは1つではなく、複数生成します。
 
 ### index document
 
@@ -22,7 +22,7 @@ ndiag.ymlで設定したLayerごとにドキュメントを生成します。
 
 - [output/layer-consul.md](/sample/output/layer-consul.md)
 
-### label(relation) based document
+### label based document
 
 ndiag.ymlで設定したrelationsやnetworksに付与したLabelごとにドキュメントを生成します。
 
