@@ -544,7 +544,7 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 			continue
 		}
 		if len(c) > 1 {
-			return nil, nil, fmt.Errorf("duplicate layer %s", leaf)
+			return nil, nil, fmt.Errorf("duplicate layer: %s", leaf)
 		}
 		belongTo = append(belongTo, n)
 		if len(layers) == 0 {
@@ -558,10 +558,13 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 			parent = layers[len(layers)-i]
 			pc = n.Clusters.FindByLayer(parent)
 			if len(pc) > 1 {
-				return nil, nil, fmt.Errorf("duplicate layer %s", parent)
+				return nil, nil, fmt.Errorf("duplicate layer: %s", parent)
 			}
 			if len(pc) == 0 {
 				continue
+			}
+			if c[0].Parent != nil && c[0].Parent.Id() != pc[0].Id() {
+				return nil, nil, fmt.Errorf("belong to two or more clusters: '%s' belongs to '%s' and '%s'", c[0].FullName(), c[0].Parent.FullName(), pc[0].FullName())
 			}
 			c[0].Parent = pc[0]
 			pc[0].Children = append(pc[0].Children, c[0])
