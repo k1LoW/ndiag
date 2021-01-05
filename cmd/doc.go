@@ -290,9 +290,13 @@ func newConfig() (*config.Config, error) {
 	if err := cfg.LoadConfigFile(detectConfigPath(configPath)); err != nil {
 		return nil, err
 	}
-	for _, n := range nodeLists {
-		if err := cfg.LoadRealNodesFile(n); err != nil {
-			return nil, err
+	if len(nodeLists) == 0 {
+		cfg.HideRealNodes = true
+	} else {
+		for _, n := range nodeLists {
+			if err := cfg.LoadRealNodesFile(n); err != nil {
+				return nil, err
+			}
 		}
 	}
 	if err := cfg.Build(); err != nil {
