@@ -1,3 +1,8 @@
+## [v0.8.1](https://github.com/k1LoW/ndiag/compare/v0.8.0...v0.8.1) (2021-01-05)
+
+* hide real nodes count when unload nodes.yml [#48](https://github.com/k1LoW/ndiag/pull/48) ([k1LoW](https://github.com/k1LoW))
+* throw error when cluster belong to two or more clusters [#47](https://github.com/k1LoW/ndiag/pull/47) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.8.0](https://github.com/k1LoW/ndiag/compare/v0.7.4...v0.8.0) (2020-12-31)
 
 * [BREAKING]tag -> label [#46](https://github.com/k1LoW/ndiag/pull/46) ([k1LoW](https://github.com/k1LoW))
