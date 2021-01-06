@@ -16,7 +16,7 @@
 $ ndiag doc -c sample/input/ndiag.yml -n sample/input/nodes.yml --rm-dist
 ```
 
-### アーキテクチャドキュメントの運用サイクル
+### ドキュメントの運用サイクル
 
 `ndiag doc` は nodes.yml, ndiag.yml, ndiag.descriptions/*.mdの3種類の入力からアーキテクチャドキュメントを出力します。
 
