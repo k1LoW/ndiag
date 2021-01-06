@@ -11,12 +11,12 @@ Key features of `ndiag` are:
 ## Usage
 
 ``` console
-$ ndiag doc -c ndiag.yml -n nodes.yml --rm-dist
+$ ndiag doc -c ndiag.yml --rm-dist
 ```
 
 ## Architecture
 
-- WIP [English](/docs/arch/README.md)
+- [English](/docs/arch/README.md) :construction: 
 - [日本語](/docs/arch.ja/README.md)
 
 ## Install
