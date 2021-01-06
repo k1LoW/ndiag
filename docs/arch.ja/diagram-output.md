@@ -12,7 +12,7 @@
 
 ### index document
 
-- [output/README.md (docPath)](/sample/output/README.md)
+[output/README.md (docPath)](/sample/output/README.md)
 
 ### layer based document
 
