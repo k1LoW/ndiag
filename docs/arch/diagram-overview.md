@@ -14,12 +14,7 @@
 
 | Name | Description |
 | --- | --- |
-| [real nodes](node-real_nodes.md) | <a href="../ndiag.descriptions/_node-real_nodes.md">:pencil2:</a> |
-| [nodes](node-nodes.md) | <a href="../ndiag.descriptions/_node-nodes.md">:pencil2:</a> |
-| [descriptions](node-descriptions.md) | <a href="../ndiag.descriptions/_node-descriptions.md">:pencil2:</a> |
-| [diagrams](node-diagrams.md) | <a href="../ndiag.descriptions/_node-diagrams.md">:pencil2:</a> |
-| [networks](node-networks.md) | <a href="../ndiag.descriptions/_node-networks.md">:pencil2:</a> |
-| [relations](node-relations.md) | <a href="../ndiag.descriptions/_node-relations.md">:pencil2:</a> |
+| [input files](node-input_files.md) | <a href="../ndiag.descriptions/_node-input_files.md">:pencil2:</a> |
 | [ndiag](node-ndiag.md) | `ndiag doc` command |
 | [documents](node-documents.md) | <a href="../ndiag.descriptions/_node-documents.md">:pencil2:</a> |
 

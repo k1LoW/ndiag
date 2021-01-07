@@ -13,7 +13,7 @@
 
 | Name | Description | From (Relation) | To (Relation) |
 | --- | --- | --- | --- |
-| ndiag:internal | ndiagの内部処理 <a href="../ndiag.descriptions.ja/_component-ndiag_internal.md">:pencil2:</a> | [nodes:lb-*](node-nodes.md) / [nodes:app-*](node-nodes.md) / [nodes:db-*](node-nodes.md) / [diagrams:overview](node-diagrams.md) / [diagrams:http-lb](node-diagrams.md) / [networks:internet->group\:lb\:vip](node-networks.md) / [networks:group\:lb\:vip->lb-*\:nginx](node-networks.md) / [networks:lb-*\:nginx->app-*\:rails](node-networks.md) / [networks:app-*\:rails->db-*\:postgresql](node-networks.md) / [relations:lb-*\:keepalived->group\:lb\:vip](node-relations.md) / [descriptions:component descriptions](node-descriptions.md) / [descriptions:diagram descriptions](node-descriptions.md) / [descriptions:layer group descriptions](node-descriptions.md) / [descriptions:label group descriptions](node-descriptions.md) | [documents:index document](node-documents.md) / [documents:custom document](node-documents.md) / [documents:layer based document](node-documents.md) / [documents:label(relation) based document](node-documents.md) |
+| ndiag:internal | ndiagの内部処理 <a href="../ndiag.descriptions.ja/_component-ndiag_internal.md">:pencil2:</a> | [input files:ndiag.yml](node-input_files.md) / [input files:nodes.yml](node-input_files.md) / [input files:ndiag.descriptions/*.md](node-input_files.md) | [input files:ndiag.descriptions/*.md](node-input_files.md) / [documents:index document](node-documents.md) / [documents:custom documents](node-documents.md) / [documents:layer based documents](node-documents.md) / [documents:label based documents](node-documents.md) |
 
 
 ---

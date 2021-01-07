@@ -13,83 +13,24 @@ dict:
 diagrams:
   -
     name: "overview"
-    layers: ["type", "file"]
+    layers: ["type"]
   -
     name: "input"
-    layers: ["type", "file"]
+    layers: ["type"]
     labels: ["input"]
   -
     name: "output"
-    layers: ["type", "file"]
+    layers: ["type"]
     labels: ["output"]
 nodes:
   -
-    name: real nodes
+    name: input files
     components:
-      - lb-1
-      - lb-2
-      - app-1
-      - app-2
-      - app-3
-      - db-1
-      - db-2
+      - ndiag.yml?icon=text
+      - nodes.yml?icon=text
+      - ndiag.descriptions/*.md?icon=doc
     clusters:
       - 'type:input'
-      - 'file:nodes.yml'
-    metadata:
-      icon: gear
-  -
-    name: nodes
-    components:
-      - lb-*
-      - app-*
-      - db-*
-    clusters:
-      - 'type:input'
-      - 'file:ndiag.yml'
-    metadata:
-      icon: pen
-  -
-    name: descriptions
-    components:
-      - 'component descriptions?icon=write'
-      - 'diagram descriptions?icon=write'
-      - 'layer group descriptions?icon=write'
-      - 'label group descriptions?icon=write'
-    clusters:
-      - 'type:input'
-      - 'file:ndiag.descriptions/*.md'
-  -
-    name: diagrams
-    components:
-      - 'overview'
-      - 'http-lb'
-    clusters:
-      - 'type:input'
-      - 'file:ndiag.yml'
-    metadata:
-      icon: pen
-  -
-    name: networks
-    components:
-      - 'internet->group\:lb\:vip'
-      - 'group\:lb\:vip->lb-*\:nginx'
-      - 'lb-*\:nginx->app-*\:rails'
-      - 'app-*\:rails->db-*\:postgresql'
-    clusters:
-      - 'type:input'
-      - 'file:ndiag.yml'
-    metadata:
-      icon: pen
-  -
-    name: relations
-    components:
-      - 'lb-*\:keepalived->group\:lb\:vip'
-    clusters:
-      - 'type:input'
-      - 'file:ndiag.yml'
-    metadata:
-      icon: pen
   -
     name: ndiag
     components:
@@ -97,132 +38,38 @@ nodes:
   -
     name: documents
     components:
-      - 'index document'
-      - 'layer group based document'
-      - 'layer based document'
-      - 'label(relation) based document'
+      - 'index document?icon=text'
+      - 'custom documents?icon=doc'
+      - 'layer based documents?icon=doc'
+      - 'label based documents?icon=doc'
     clusters:
       - 'type:output'
-      - 'file:generated documents'
-    metadata:
-      icon: doc
 
 networks:
   -
     labels:
       - input
     route:
-      - 'real nodes:lb-1'
-      - 'nodes:lb-*'
+      - 'input files:ndiag.yml'
       - 'ndiag:internal'
   -
     labels:
       - input
     route:
-      - 'real nodes:lb-2'
-      - 'nodes:lb-*'
+      - 'input files:nodes.yml'
       - 'ndiag:internal'
   -
     labels:
       - input
     route:
-      - 'real nodes:app-1'
-      - 'nodes:app-*'
+      - 'input files:ndiag.descriptions/*.md'
       - 'ndiag:internal'
   -
     labels:
-      - input
+      - output
     route:
-      - 'real nodes:app-2'
-      - 'nodes:app-*'
       - 'ndiag:internal'
-  -
-    labels:
-      - input
-    route:
-      - 'real nodes:app-3'
-      - 'nodes:app-*'
-      - 'ndiag:internal'
-  -
-    labels:
-      - input
-    route:
-      - 'real nodes:db-1'
-      - 'nodes:db-*'
-      - 'ndiag:internal'
-  -
-    labels:
-      - input
-    route:
-      - 'real nodes:db-2'
-      - 'nodes:db-*'
-      - 'ndiag:internal'
-  -
-    labels:
-      - input
-    route:
-      - 'diagrams:overview'
-      - 'ndiag:internal'
-  -
-    labels:
-      - input
-    route:
-      - 'diagrams:http-lb'
-      - 'ndiag:internal'
-  -
-    labels:
-      - input
-    route:
-      - 'networks:internet->group\:lb\:vip'
-      - 'ndiag:internal'
-  -
-    labels:
-      - input
-    route:
-      - 'networks:group\:lb\:vip->lb-*\:nginx'
-      - 'ndiag:internal'
-  -
-    labels:
-      - input
-    route:
-      - 'networks:lb-*\:nginx->app-*\:rails'
-      - 'ndiag:internal'
-  -
-    labels:
-      - input
-    route:
-      - 'networks:app-*\:rails->db-*\:postgresql'
-      - 'ndiag:internal'
-  -
-    labels:
-      - input
-    route:
-      - 'relations:lb-*\:keepalived->group\:lb\:vip'
-      - 'ndiag:internal'
-  -
-    labels:
-      - input
-    route:
-      - 'descriptions:component descriptions'
-      - 'ndiag:internal'
-  -
-    labels:
-      - input
-    route:
-      - 'descriptions:diagram descriptions'
-      - 'ndiag:internal'
-  -
-    labels:
-      - input
-    route:
-      - 'descriptions:layer group descriptions'
-      - 'ndiag:internal'
-  -
-    labels:
-      - input
-    route:
-      - 'descriptions:label group descriptions'
-      - 'ndiag:internal'
+      - 'input files:ndiag.descriptions/*.md'
   -
     labels:
       - output
@@ -234,16 +81,16 @@ networks:
       - output
     route:
       - 'ndiag:internal'
-      - 'documents:custom document'
+      - 'documents:custom documents'
   -
     labels:
       - output
     route:
       - 'ndiag:internal'
-      - 'documents:layer based document'
+      - 'documents:layer based documents'
   -
     labels:
       - output
     route:
       - 'ndiag:internal'
-      - 'documents:label(relation) based document'
+      - 'documents:label based documents'
