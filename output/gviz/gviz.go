@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"path/filepath"
 
 	"github.com/antchfx/xmlquery"
 	"github.com/goccy/go-graphviz"
@@ -87,29 +86,10 @@ func (g *Gviz) renderPNG(wr io.Writer, b []byte) (e error) {
 		return fmt.Errorf("%v: if the format is png, you need dot command", err)
 	}
 
-	tmpIconDir := g.config.TempIconDir()
-	if err := os.Mkdir(tmpIconDir, 0750); err != nil {
+	if err := g.config.IconMap().GeneratePNGGlyphIcons(); err != nil {
 		return err
 	}
-	defer os.RemoveAll(tmpIconDir)
-	for _, k := range g.config.IconMap().Keys() {
-		i, err := g.config.IconMap().Get(k)
-		if err != nil {
-			return err
-		}
-		p := filepath.Join(tmpIconDir, fmt.Sprintf("%s.png", k))
-		f, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666) // #nosec
-		if err != nil {
-			return err
-		}
-		if err := i.WriteImage(f); err != nil {
-			e = f.Close()
-			return err
-		}
-		if err := f.Close(); err != nil {
-			return err
-		}
-	}
+	defer g.config.IconMap().RemoveTempIconDir()
 
 	// use dot commad
 	dotFormatOption := fmt.Sprintf("-T%s", format)
@@ -137,29 +117,10 @@ func (g *Gviz) renderPNG(wr io.Writer, b []byte) (e error) {
 }
 
 func (g *Gviz) renderSVG(wr io.Writer, b []byte) (e error) {
-	tmpIconDir := g.config.TempIconDir()
-	if err := os.Mkdir(tmpIconDir, 0750); err != nil {
+	if err := g.config.IconMap().GenerateSVGGlyphIcons(); err != nil {
 		return err
 	}
-	defer os.RemoveAll(tmpIconDir)
-	for _, k := range g.config.IconMap().Keys() {
-		i, err := g.config.IconMap().Get(k)
-		if err != nil {
-			return err
-		}
-		p := filepath.Join(tmpIconDir, fmt.Sprintf("%s.svg", k))
-		f, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666) // #nosec
-		if err != nil {
-			return err
-		}
-		if err := i.Write(f); err != nil {
-			e = f.Close()
-			return err
-		}
-		if err := f.Close(); err != nil {
-			return err
-		}
-	}
+	defer g.config.IconMap().RemoveTempIconDir()
 
 	// use go-graphviz
 	gviz := graphviz.New()

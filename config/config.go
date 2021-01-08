@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -28,6 +27,7 @@ const DefaultDocPath = "archdoc"
 
 var DefaultConfigFilePaths = []string{"ndiag.yml"}
 var DefaultDescPath = "ndiag.descriptions"
+var DefaultIconPath = "ndiag.icons"
 
 // DefaultFormat is the default diagram format
 const DefaultFormat = "svg"
@@ -55,6 +55,7 @@ type Config struct {
 	Desc              string             `yaml:"desc,omitempty"`
 	DocPath           string             `yaml:"docPath"`
 	DescPath          string             `yaml:"descPath,omitempty"`
+	IconPath          string             `yaml:"iconPath,omitempty"`
 	Graph             *Graph             `yaml:"graph,omitempty"`
 	HideDiagrams      bool               `yaml:"hideDiagrams,omitempty"`
 	HideLayers        bool               `yaml:"hideLayers,omitempty"`
@@ -77,8 +78,7 @@ type Config struct {
 	nEdges            []*NEdge
 	labels            []*Label
 	colorSets         ColorSets
-	iconMap           *glyph.Map
-	tempIconDir       string
+	iconMap           *IconMap
 }
 
 type Graph struct {
@@ -111,12 +111,8 @@ func (cfg *Config) Format() string {
 	return DefaultFormat
 }
 
-func (cfg *Config) IconMap() *glyph.Map {
+func (cfg *Config) IconMap() *IconMap {
 	return cfg.iconMap
-}
-
-func (cfg *Config) TempIconDir() string {
-	return cfg.tempIconDir
 }
 
 func (cfg *Config) PrimaryDiagram() *Diagram {
@@ -353,6 +349,9 @@ func (cfg *Config) Build() error {
 	}
 	if cfg.DescPath == "" {
 		cfg.DescPath = DefaultDescPath
+	}
+	if cfg.IconPath == "" {
+		cfg.IconPath = DefaultIconPath
 	}
 	if cfg.BaseColor == "" {
 		cfg.BaseColor = DefaultBaseColor
@@ -612,20 +611,6 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 	return buildNestedClusters(clusters, layers, remain)
 }
 
-func (cfg *Config) buildIconMap() error {
-	icm := glyph.NewMapWithIncluded(glyph.Width(80.0), glyph.Height(80.0))
-	for _, i := range cfg.CustomIcons {
-		g, k, err := i.ToGlyphAndKey()
-		if err != nil {
-			return err
-		}
-		icm.Set(k, g)
-	}
-	cfg.iconMap = icm
-	cfg.tempIconDir = filepath.Join(os.TempDir(), fmt.Sprintf("ndiag.%06d", os.Getpid()))
-	return nil
-}
-
 func (cfg *Config) checkUnique() error {
 
 	ids := map[string]string{}
@@ -736,10 +721,11 @@ func (cfg *Config) parseComponent(comName string) (*Component, error) {
 			return nil, err
 		}
 		if m.Icon != "" {
-			if _, err := cfg.iconMap.Get(m.Icon); err != nil {
+			i, err := cfg.IconMap().Get(m.Icon)
+			if err != nil {
 				return nil, fmt.Errorf("not found icon: %s", m.Icon)
 			}
-			m.IconPath = filepath.Join(cfg.TempIconDir(), fmt.Sprintf("%s.%s", m.Icon, cfg.Format()))
+			m.IconPath = i.Path
 		}
 		c.Metadata = m
 	} else {

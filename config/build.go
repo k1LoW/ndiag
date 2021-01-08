@@ -13,7 +13,11 @@ import (
 func (cfg *Config) buildNodes() error {
 	for _, n := range cfg.Nodes {
 		if n.Metadata.Icon != "" {
-			n.Metadata.IconPath = filepath.Join(cfg.TempIconDir(), fmt.Sprintf("%s.%s", n.Metadata.Icon, cfg.Format()))
+			i, err := cfg.IconMap().Get(n.Metadata.Icon)
+			if err != nil {
+				return fmt.Errorf("not found icon: %s", n.Metadata.Icon)
+			}
+			n.Metadata.IconPath = i.Path
 		}
 	}
 	return nil
