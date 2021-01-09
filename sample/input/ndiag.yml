@@ -1,7 +1,6 @@
 ---
 name: 3-Tier Architecture
-docPath: sample/output
-descPath: sample/input/ndiag.descriptions
+docPath: ../output
 diagrams:
   -
     name: overview
