@@ -21,6 +21,7 @@ var pathRe = regexp.MustCompile(`\A.+/([^/]+)/([^/]+)/([^/]+)\.svg\z`)
 type K8sIcon struct{}
 
 func (f *K8sIcon) Fetch(iconPath string) error {
+	_, _ = fmt.Fprintf(os.Stderr, "Fetching from %s ...\n", archiveURL)
 	dir, err := ioutil.TempDir("", "ndiag-icon-k8s")
 	if err != nil {
 		return err
@@ -70,5 +71,6 @@ func (f *K8sIcon) Fetch(iconPath string) error {
 			return err
 		}
 	}
+	_, _ = fmt.Fprintf(os.Stderr, "%s\n", "Done.")
 	return nil
 }
