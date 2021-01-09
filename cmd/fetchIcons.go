@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Ken'ichiro Oyama <k1lowxb@gmail.com>
+Copyright © 2021 Ken'ichiro Oyama <k1lowxb@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,52 +22,46 @@ THE SOFTWARE.
 package cmd
 
 import (
-	"fmt"
-	"io/ioutil"
-	"log"
-	"os"
-
-	"github.com/k1LoW/ndiag/version"
+	"github.com/k1LoW/ndiag/icon"
+	"github.com/k1LoW/ndiag/icon/aws"
+	"github.com/k1LoW/ndiag/icon/gcp"
+	"github.com/k1LoW/ndiag/icon/k8s"
 	"github.com/spf13/cobra"
 )
 
-var (
-	force      bool
-	format     string
-	layers     []string
-	nodeLists  []string
-	configPath string
-	out        string
-	rmDist     bool
-	iconPrefix string
-)
+var fetchIconsCmd = &cobra.Command{
+	Use:       "fetch-icons",
+	Short:     "Fecth icon set from internet",
+	Long:      `Fecth icon set from internet.`,
+	Args:      cobra.OnlyValidArgs,
+	ValidArgs: []string{"aws", "gcp", "k8s"},
+	RunE: func(cmd *cobra.Command, args []string) error {
+		target := args[0]
+		var fetcher icon.Fetcher
 
-var rootCmd = &cobra.Command{
-	Use:          "ndiag",
-	Short:        `ndiag is a "high-level architecture" diagramming/documentation tool`,
-	Long:         `ndiag is a "high-level architecture" diagramming/documentation tool.`,
-	Version:      version.Version,
-	SilenceUsage: true,
-}
-
-func Execute() {
-	rootCmd.SetOut(os.Stdout)
-	rootCmd.SetErr(os.Stderr)
-
-	log.SetOutput(ioutil.Discard)
-	if env := os.Getenv("DEBUG"); env != "" {
-		debug, err := os.Create(fmt.Sprintf("%s.debug", version.Name))
+		cfg, err := newConfig()
 		if err != nil {
-			rootCmd.PrintErrln(err)
-			os.Exit(1)
+			return err
 		}
-		log.SetOutput(debug)
-	}
 
-	if err := rootCmd.Execute(); err != nil {
-		rootCmd.PrintErrln(err)
-		os.Exit(1)
-	}
+		switch target {
+		case "aws":
+			fetcher = &aws.AWSIcon{}
+		case "gcp":
+			fetcher = &gcp.GCPIcon{}
+		case "k8s":
+			fetcher = &k8s.K8sIcon{}
+		}
+
+		if iconPrefix == "" {
+			iconPrefix = target
+		}
+		return fetcher.Fetch(cfg.IconPath, iconPrefix)
+	},
 }
 
-func init() {}
+func init() {
+	rootCmd.AddCommand(fetchIconsCmd)
+	fetchIconsCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
+	fetchIconsCmd.Flags().StringVarP(&iconPrefix, "prefix", "", "", "icon key prefix")
+}
