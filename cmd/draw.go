@@ -38,6 +38,7 @@ var drawCmd = &cobra.Command{
 	Use:   "draw",
 	Short: "Draw diagram",
 	Long:  `Draw diagram.`,
+	Args:  cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var o output.Output
 

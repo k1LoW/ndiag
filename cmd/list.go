@@ -38,6 +38,7 @@ var listIconsCmd = &cobra.Command{
 	Use:   "icons",
 	Short: "List available icons",
 	Long:  `List available icons.`,
+	Args:  cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cfg, err := newConfig()
 		if err != nil {
