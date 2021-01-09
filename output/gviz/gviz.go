@@ -4,14 +4,18 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
+	"image"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"path/filepath"
 
 	"github.com/antchfx/xmlquery"
 	"github.com/goccy/go-graphviz"
+	issvg "github.com/h2non/go-is-svg"
 	"github.com/k1LoW/ndiag/config"
 	"github.com/k1LoW/ndiag/output/dot"
 )
@@ -87,29 +91,10 @@ func (g *Gviz) renderPNG(wr io.Writer, b []byte) (e error) {
 		return fmt.Errorf("%v: if the format is png, you need dot command", err)
 	}
 
-	tmpIconDir := g.config.TempIconDir()
-	if err := os.Mkdir(tmpIconDir, 0750); err != nil {
+	if err := g.config.IconMap().GeneratePNGGlyphIcons(); err != nil {
 		return err
 	}
-	defer os.RemoveAll(tmpIconDir)
-	for _, k := range g.config.IconMap().Keys() {
-		i, err := g.config.IconMap().Get(k)
-		if err != nil {
-			return err
-		}
-		p := filepath.Join(tmpIconDir, fmt.Sprintf("%s.png", k))
-		f, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666) // #nosec
-		if err != nil {
-			return err
-		}
-		if err := i.WriteImage(f); err != nil {
-			e = f.Close()
-			return err
-		}
-		if err := f.Close(); err != nil {
-			return err
-		}
-	}
+	defer g.config.IconMap().RemoveTempIconDir()
 
 	// use dot commad
 	dotFormatOption := fmt.Sprintf("-T%s", format)
@@ -137,29 +122,10 @@ func (g *Gviz) renderPNG(wr io.Writer, b []byte) (e error) {
 }
 
 func (g *Gviz) renderSVG(wr io.Writer, b []byte) (e error) {
-	tmpIconDir := g.config.TempIconDir()
-	if err := os.Mkdir(tmpIconDir, 0750); err != nil {
+	if err := g.config.IconMap().GenerateSVGGlyphIcons(); err != nil {
 		return err
 	}
-	defer os.RemoveAll(tmpIconDir)
-	for _, k := range g.config.IconMap().Keys() {
-		i, err := g.config.IconMap().Get(k)
-		if err != nil {
-			return err
-		}
-		p := filepath.Join(tmpIconDir, fmt.Sprintf("%s.svg", k))
-		f, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666) // #nosec
-		if err != nil {
-			return err
-		}
-		if err := i.Write(f); err != nil {
-			e = f.Close()
-			return err
-		}
-		if err := f.Close(); err != nil {
-			return err
-		}
-	}
+	defer g.config.IconMap().RemoveTempIconDir()
 
 	// use go-graphviz
 	gviz := graphviz.New()
@@ -194,12 +160,20 @@ func (g *Gviz) renderSVG(wr io.Writer, b []byte) (e error) {
 				if err != nil {
 					return err
 				}
-				imgdoc, err := xmlquery.Parse(bytes.NewReader(imgf))
-				if err != nil {
-					return err
+				if issvg.Is(imgf) {
+					imgdoc, err := xmlquery.Parse(bytes.NewReader(imgf))
+					if err != nil {
+						return err
+					}
+					s := xmlquery.FindOne(imgdoc, "//svg")
+					xmlquery.AddAttr(img, "xlink:href", fmt.Sprintf("data:image/svg+xml;base64,%s", base64.StdEncoding.EncodeToString([]byte(s.OutputXML(true)))))
+				} else {
+					_, format, err := image.DecodeConfig(bytes.NewReader(imgf))
+					if err != nil {
+						return err
+					}
+					xmlquery.AddAttr(img, "xlink:href", fmt.Sprintf("data:image/%s;base64,%s", format, base64.StdEncoding.EncodeToString(imgf)))
 				}
-				s := xmlquery.FindOne(imgdoc, "//svg")
-				xmlquery.AddAttr(img, "xlink:href", fmt.Sprintf("data:image/svg+xml;base64,%s", base64.StdEncoding.EncodeToString([]byte(s.OutputXML(true)))))
 				img.Attr = append(img.Attr[:i], img.Attr[i+1:]...)
 				break
 			}

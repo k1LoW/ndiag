@@ -1,0 +1,25 @@
+---
+iconPath: 5_ndiag.icons
+nodes:
+  -
+    name: app
+    components:
+      - rails
+    clusters:
+      - 'consul:dc1'
+  -
+    name: db
+    components:
+      - MySQL?icon=db
+    clusters:
+      - 'consul:dc1'
+
+networks:
+  -
+    route:
+      - "app:rails?icon=extra"
+      - "db:mysql"
+  -
+    route:
+      - "app:rails"
+      - "internet?icon=path-to-extra"
