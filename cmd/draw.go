@@ -36,8 +36,8 @@ import (
 // drawCmd represents the draw command
 var drawCmd = &cobra.Command{
 	Use:   "draw",
-	Short: "draw diagram",
-	Long:  `draw diagram.`,
+	Short: "Draw diagram",
+	Long:  `Draw diagram.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var o output.Output
 

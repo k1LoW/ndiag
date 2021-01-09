@@ -42,10 +42,11 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:     "ndiag",
-	Short:   "ndiag",
-	Long:    `ndiag.`,
-	Version: version.Version,
+	Use:          "ndiag",
+	Short:        `ndiag is a "high-level architecture" diagramming/documentation tool`,
+	Long:         `ndiag is a "high-level architecture" diagramming/documentation tool.`,
+	Version:      version.Version,
+	SilenceUsage: true,
 }
 
 func Execute() {

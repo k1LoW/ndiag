@@ -36,8 +36,8 @@ import (
 // docCmd represents the doc command
 var docCmd = &cobra.Command{
 	Use:   "doc",
-	Short: "generate architecture document",
-	Long:  `generate architecture document.`,
+	Short: "Generate architecture document",
+	Long:  `Generate architecture document.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cfg, err := newConfig()
 		if err != nil {
@@ -98,7 +98,7 @@ var docCmd = &cobra.Command{
 					return err
 				}
 				if err := o.OutputDiagram(file, d); err != nil {
-					return err
+a					return err
 				}
 			}
 			// draw diagram

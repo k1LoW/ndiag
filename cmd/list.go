@@ -30,14 +30,14 @@ import (
 
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "list ndiag resources",
-	Long:  `list ndiag resources.`,
+	Short: "List ndiag resources",
+	Long:  `List ndiag resources.`,
 }
 
 var listIconsCmd = &cobra.Command{
 	Use:   "icons",
-	Short: "list icons",
-	Long:  `list icons.`,
+	Short: "List available icons",
+	Long:  `List available icons.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cfg, err := newConfig()
 		if err != nil {
