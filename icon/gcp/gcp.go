@@ -11,11 +11,13 @@ import (
 	"strings"
 
 	"github.com/k1LoW/ndiag/icon"
+	"github.com/stoewer/go-strcase"
 )
 
 const archiveURL = "https://cloud.google.com/icons/files/google-cloud-icons.zip"
 
 var pathRe = regexp.MustCompile(`\A.+/([^/]+)\.svg\z`)
+var rep = strings.NewReplacer("-512-color", "", "-521-color", "", "-color", "", " (1)", "", "_", "-")
 
 type GCPIcon struct{}
 
@@ -38,10 +40,11 @@ func (f *GCPIcon) Fetch(iconPath, prefix string) error {
 		return err
 	}
 
-	rep := strings.NewReplacer("-512-color", "", "-521-color", "", " (1)", "")
-
 	for _, f := range r.File {
 		if strings.Contains(f.Name, "__MACOSX") {
+			continue
+		}
+		if strings.Contains(f.Name, "Expanded Product Card Icons") {
 			continue
 		}
 		if f.FileInfo().IsDir() {
@@ -61,7 +64,7 @@ func (f *GCPIcon) Fetch(iconPath, prefix string) error {
 			_ = rc.Close()
 			return err
 		}
-		path := filepath.Join(iconPath, prefix, fmt.Sprintf("%s.%s", strings.ToLower(rep.Replace(matched[1])), "svg"))
+		path := filepath.Join(iconPath, prefix, fmt.Sprintf("%s.%s", strcase.KebabCase(rep.Replace(matched[1])), "svg"))
 		if err := ioutil.WriteFile(path, buf, f.Mode()); err != nil {
 			_ = rc.Close()
 			return err

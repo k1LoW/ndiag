@@ -16,4 +16,5 @@ require (
 	github.com/olekukonko/tablewriter v0.0.4
 	github.com/pasztorpisti/qs v0.0.0-20171216220353-8d6c33ee906c
 	github.com/spf13/cobra v1.1.1
+	github.com/stoewer/go-strcase v1.2.0
 )

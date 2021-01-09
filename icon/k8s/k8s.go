@@ -16,6 +16,7 @@ import (
 const archiveURL = "https://github.com/kubernetes/community/archive/master.zip"
 
 var pathRe = regexp.MustCompile(`\A.+/([^/]+)/([^/]+)/([^/]+)\.svg\z`)
+var rep = strings.NewReplacer("control_plane_components", "control-plane", "infrastructure_components", "infra", "_", "-")
 
 type K8sIcon struct{}
 
@@ -58,9 +59,9 @@ func (f *K8sIcon) Fetch(iconPath, prefix string) error {
 		}
 		var path string
 		if matched[2] == "labeled" {
-			path = filepath.Join(iconPath, prefix, matched[1], fmt.Sprintf("%s.%s", matched[3], "svg"))
+			path = rep.Replace(filepath.Join(iconPath, prefix, matched[1], fmt.Sprintf("%s.%s", matched[3], "svg")))
 		} else {
-			path = filepath.Join(iconPath, prefix, matched[1], matched[3], fmt.Sprintf("%s.%s", matched[2], "svg"))
+			path = rep.Replace(filepath.Join(iconPath, prefix, matched[1], matched[3], fmt.Sprintf("%s.%s", matched[2], "svg")))
 		}
 		if err := os.MkdirAll(filepath.Dir(path), 0750); err != nil {
 			return err
