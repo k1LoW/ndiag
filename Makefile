@@ -38,7 +38,7 @@ ndiag_draw: build
 ndiag_doc: build
 	./ndiag doc -c ndiag_ndiag.yml --rm-dist
 	./ndiag doc -c ndiag_ndiag.ja.yml --rm-dist
-	./ndiag doc -c sample/input/ndiag.yml -n sample/input/nodes.yml --rm-dist
+	./ndiag doc -c sample/3-tier/input/ndiag.yml -n sample/3-tier/input/nodes.yml --rm-dist
 
 ci_doc: depsdev ndiag_doc
 	$(eval DIFF_EXIST := $(shell git checkout go.* && git diff --exit-code --quiet || echo "exist"))
