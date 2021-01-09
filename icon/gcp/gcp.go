@@ -1,4 +1,4 @@
-package k8s
+package gcp
 
 import (
 	"archive/zip"
@@ -13,15 +13,15 @@ import (
 	"github.com/k1LoW/ndiag/icon"
 )
 
-const archiveURL = "https://github.com/kubernetes/community/archive/master.zip"
+const archiveURL = "https://cloud.google.com/icons/files/google-cloud-icons.zip"
 
-var pathRe = regexp.MustCompile(`\A.+/([^/]+)/([^/]+)/([^/]+)\.svg\z`)
+var pathRe = regexp.MustCompile(`\A.+/([^/]+)\.svg\z`)
 
-type K8sIcon struct{}
+type GCPIcon struct{}
 
-func (f *K8sIcon) Fetch(iconPath, prefix string) error {
+func (f *GCPIcon) Fetch(iconPath, prefix string) error {
 	_, _ = fmt.Fprintf(os.Stderr, "Fetching from %s ...\n", archiveURL)
-	dir, err := ioutil.TempDir("", "ndiag-icon-k8s")
+	dir, err := ioutil.TempDir("", "ndiag-icon-gcp")
 	if err != nil {
 		return err
 	}
@@ -34,8 +34,14 @@ func (f *K8sIcon) Fetch(iconPath, prefix string) error {
 	if err != nil {
 		return err
 	}
+	if err := os.MkdirAll(filepath.Join(iconPath, prefix), 0750); err != nil {
+		return err
+	}
+
+	rep := strings.NewReplacer("-512-color", "", "-521-color", "", " (1)", "")
+
 	for _, f := range r.File {
-		if !strings.Contains(f.Name, "icons/svg") {
+		if strings.Contains(f.Name, "__MACOSX") {
 			continue
 		}
 		if f.FileInfo().IsDir() {
@@ -45,7 +51,6 @@ func (f *K8sIcon) Fetch(iconPath, prefix string) error {
 		if len(matched) == 0 {
 			continue
 		}
-
 		rc, err := f.Open()
 		if err != nil {
 			return err
@@ -56,15 +61,7 @@ func (f *K8sIcon) Fetch(iconPath, prefix string) error {
 			_ = rc.Close()
 			return err
 		}
-		var path string
-		if matched[2] == "labeled" {
-			path = filepath.Join(iconPath, prefix, matched[1], fmt.Sprintf("%s.%s", matched[3], "svg"))
-		} else {
-			path = filepath.Join(iconPath, prefix, matched[1], matched[3], fmt.Sprintf("%s.%s", matched[2], "svg"))
-		}
-		if err := os.MkdirAll(filepath.Dir(path), 0750); err != nil {
-			return err
-		}
+		path := filepath.Join(iconPath, prefix, fmt.Sprintf("%s.%s", strings.ToLower(rep.Replace(matched[1])), "svg"))
 		if err := ioutil.WriteFile(path, buf, f.Mode()); err != nil {
 			_ = rc.Close()
 			return err
