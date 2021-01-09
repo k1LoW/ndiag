@@ -182,7 +182,7 @@ func (cfg *Config) buildIconMap() error {
 }
 
 func isImg(path string) bool {
-	imgf, err := ioutil.ReadFile(path)
+	imgf, err := ioutil.ReadFile(filepath.Clean(path))
 	if err != nil {
 		return false
 	}
