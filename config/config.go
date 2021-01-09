@@ -68,6 +68,7 @@ type Config struct {
 	BaseColor         string             `yaml:"baseColor,omitempty"`
 	TextColor         string             `yaml:"textColor,omitempty"`
 	CustomIcons       []*glyph.Blueprint `yaml:"customIcons,omitempty"`
+	basePath          string
 	rawRelations      []*rawRelation
 	realNodes         []*RealNode
 	layers            []*Layer
@@ -307,7 +308,7 @@ func (cfg *Config) PruneNodesByLabels(nodes []*Node, labels []string) ([]*Node, 
 	return nodes, nil
 }
 
-func (cfg *Config) LoadConfig(in []byte) error {
+func (cfg *Config) loadConfig(in []byte) error {
 	if err := yaml.Unmarshal(in, cfg); err != nil {
 		return err
 	}
@@ -319,7 +320,11 @@ func (cfg *Config) LoadConfigFile(path string) error {
 	if err != nil {
 		return err
 	}
-	return cfg.LoadConfig(buf)
+	cfg.basePath, err = filepath.Abs(filepath.Dir(path))
+	if err != nil {
+		return err
+	}
+	return cfg.loadConfig(buf)
 }
 
 func (cfg *Config) LoadRealNodes(in []byte) error {
@@ -347,11 +352,32 @@ func (cfg *Config) Build() error {
 	if cfg.DocPath == "" {
 		cfg.DocPath = DefaultDocPath
 	}
+	if !filepath.IsAbs(cfg.DocPath) {
+		docPath, err := filepath.Abs(filepath.Join(cfg.basePath, cfg.DocPath))
+		if err != nil {
+			return err
+		}
+		cfg.DocPath = docPath
+	}
 	if cfg.DescPath == "" {
 		cfg.DescPath = DefaultDescPath
 	}
+	if !filepath.IsAbs(cfg.DescPath) {
+		descPath, err := filepath.Abs(filepath.Join(cfg.basePath, cfg.DescPath))
+		if err != nil {
+			return err
+		}
+		cfg.DescPath = descPath
+	}
 	if cfg.IconPath == "" {
 		cfg.IconPath = DefaultIconPath
+	}
+	if !filepath.IsAbs(cfg.IconPath) {
+		iconPath, err := filepath.Abs(filepath.Join(cfg.basePath, cfg.IconPath))
+		if err != nil {
+			return err
+		}
+		cfg.IconPath = iconPath
 	}
 	if cfg.BaseColor == "" {
 		cfg.BaseColor = DefaultBaseColor
