@@ -47,11 +47,15 @@ var fetchIconsCmd = &cobra.Command{
 			fetcher = &k8s.K8sIcon{}
 		}
 
-		return fetcher.Fetch(cfg.IconPath)
+		if iconPrefix == "" {
+			iconPrefix = target
+		}
+		return fetcher.Fetch(cfg.IconPath, iconPrefix)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(fetchIconsCmd)
 	fetchIconsCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
+	fetchIconsCmd.Flags().StringVarP(&iconPrefix, "prefix", "", "", "prefix of icon key")
 }

@@ -13,14 +13,13 @@ import (
 	"github.com/k1LoW/ndiag/icon"
 )
 
-const prefix = "k8s"
 const archiveURL = "https://github.com/kubernetes/community/archive/master.zip"
 
 var pathRe = regexp.MustCompile(`\A.+/([^/]+)/([^/]+)/([^/]+)\.svg\z`)
 
 type K8sIcon struct{}
 
-func (f *K8sIcon) Fetch(iconPath string) error {
+func (f *K8sIcon) Fetch(iconPath, prefix string) error {
 	_, _ = fmt.Fprintf(os.Stderr, "Fetching from %s ...\n", archiveURL)
 	dir, err := ioutil.TempDir("", "ndiag-icon-k8s")
 	if err != nil {

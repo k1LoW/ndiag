@@ -10,7 +10,7 @@ import (
 )
 
 type Fetcher interface {
-	Fetch(iconPath string) error
+	Fetch(iconPath, prefix string) error
 }
 
 func Download(src, dest string) (string, error) {

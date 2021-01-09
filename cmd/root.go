@@ -39,6 +39,7 @@ var (
 	configPath string
 	out        string
 	rmDist     bool
+	iconPrefix string
 )
 
 var rootCmd = &cobra.Command{
