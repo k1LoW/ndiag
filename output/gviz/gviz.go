@@ -4,6 +4,10 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
+	"image"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"io"
 	"io/ioutil"
 	"os"
@@ -11,6 +15,7 @@ import (
 
 	"github.com/antchfx/xmlquery"
 	"github.com/goccy/go-graphviz"
+	issvg "github.com/h2non/go-is-svg"
 	"github.com/k1LoW/ndiag/config"
 	"github.com/k1LoW/ndiag/output/dot"
 )
@@ -155,12 +160,20 @@ func (g *Gviz) renderSVG(wr io.Writer, b []byte) (e error) {
 				if err != nil {
 					return err
 				}
-				imgdoc, err := xmlquery.Parse(bytes.NewReader(imgf))
-				if err != nil {
-					return err
+				if issvg.Is(imgf) {
+					imgdoc, err := xmlquery.Parse(bytes.NewReader(imgf))
+					if err != nil {
+						return err
+					}
+					s := xmlquery.FindOne(imgdoc, "//svg")
+					xmlquery.AddAttr(img, "xlink:href", fmt.Sprintf("data:image/svg+xml;base64,%s", base64.StdEncoding.EncodeToString([]byte(s.OutputXML(true)))))
+				} else {
+					_, format, err := image.DecodeConfig(bytes.NewReader(imgf))
+					if err != nil {
+						return err
+					}
+					xmlquery.AddAttr(img, "xlink:href", fmt.Sprintf("data:image/%s;base64,%s", format, base64.StdEncoding.EncodeToString(imgf)))
 				}
-				s := xmlquery.FindOne(imgdoc, "//svg")
-				xmlquery.AddAttr(img, "xlink:href", fmt.Sprintf("data:image/svg+xml;base64,%s", base64.StdEncoding.EncodeToString([]byte(s.OutputXML(true)))))
 				img.Attr = append(img.Attr[:i], img.Attr[i+1:]...)
 				break
 			}

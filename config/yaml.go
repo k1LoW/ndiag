@@ -17,6 +17,7 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 		Desc            string             `yaml:"desc,omitempty"`
 		DocPath         string             `yaml:"docPath"`
 		DescPath        string             `yaml:"descPath"`
+		IconPath        string             `yaml:"iconPath,omitempty"`
 		Graph           *Graph             `yaml:"graph,omitempty"`
 		HideDiagrams    bool               `yaml:"hideDiagrams"`
 		HideLayers      bool               `yaml:"hideLayers"`
@@ -39,6 +40,7 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	d.Desc = raw.Desc
 	d.DocPath = raw.DocPath
 	d.DescPath = raw.DescPath
+	d.IconPath = raw.IconPath
 	if raw.Graph != nil {
 		d.Graph = raw.Graph
 	}

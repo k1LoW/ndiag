@@ -8,8 +8,10 @@ require (
 	github.com/gobuffalo/packr/v2 v2.8.0
 	github.com/goccy/go-graphviz v0.0.8
 	github.com/goccy/go-yaml v1.8.4
+	github.com/h2non/go-is-svg v0.0.0-20160927212452-35e8c4b0612c
 	github.com/k1LoW/glyph v0.5.1-0.20201221052747-56ff967c0df8
 	github.com/k1LoW/tbls v1.43.1
+	github.com/karrick/godirwalk v1.16.1
 	github.com/muesli/gamut v0.2.0
 	github.com/pasztorpisti/qs v0.0.0-20171216220353-8d6c33ee906c
 	github.com/spf13/cobra v1.1.1

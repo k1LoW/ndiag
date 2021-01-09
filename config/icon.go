@@ -1,12 +1,18 @@
 package config
 
 import (
+	"bytes"
 	"fmt"
+	"image"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 
+	issvg "github.com/h2non/go-is-svg"
 	"github.com/k1LoW/glyph"
+	"github.com/karrick/godirwalk"
 )
 
 type Icon struct {
@@ -120,6 +126,7 @@ func (cfg *Config) buildIconMap() error {
 		}
 		gm.Set(k, g)
 	}
+	// set glyph.Glyph
 	for _, k := range gm.Keys() {
 		g, err := gm.Get(k)
 		if err != nil {
@@ -131,6 +138,59 @@ func (cfg *Config) buildIconMap() error {
 		}
 		im.Set(k, i)
 	}
+	// set icon images
+	depth := 5
+	if _, err := os.Lstat(cfg.IconPath); err == nil {
+		err := godirwalk.Walk(cfg.IconPath, &godirwalk.Options{
+			Callback: func(path string, de *godirwalk.Dirent) error {
+				if strings.Contains(path, ".git") {
+					return godirwalk.SkipThis
+				}
+				d, err := de.IsDirOrSymlinkToDir()
+				if err != nil {
+					return err
+				}
+				rel, err := filepath.Rel(cfg.IconPath, path)
+				if err != nil {
+					return err
+				}
+				if d {
+					if strings.Count(filepath.ToSlash(rel), "/") > depth {
+						return godirwalk.SkipThis
+					}
+					return nil
+				}
+				if !isImg(path) {
+					return nil
+				}
+				k := strings.ReplaceAll(filepath.ToSlash(strings.TrimSuffix(rel, filepath.Ext(rel))), "/", "-")
+				i := &Icon{
+					Path:  path,
+					Glyph: nil,
+				}
+				im.Set(k, i)
+				return nil
+			},
+			Unsorted: false,
+		})
+		if err != nil {
+			return err
+		}
+	}
 	cfg.iconMap = im
 	return nil
+}
+
+func isImg(path string) bool {
+	imgf, err := ioutil.ReadFile(path)
+	if err != nil {
+		return false
+	}
+	if issvg.Is(imgf) {
+		return true
+	}
+	if _, _, err := image.DecodeConfig(bytes.NewReader(imgf)); err != nil {
+		return false
+	}
+	return true
 }
