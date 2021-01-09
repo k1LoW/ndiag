@@ -57,5 +57,5 @@ var fetchIconsCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(fetchIconsCmd)
 	fetchIconsCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
-	fetchIconsCmd.Flags().StringVarP(&iconPrefix, "prefix", "", "", "prefix of icon key")
+	fetchIconsCmd.Flags().StringVarP(&iconPrefix, "prefix", "", "", "icon key prefix")
 }
