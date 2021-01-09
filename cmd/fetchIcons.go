@@ -23,6 +23,7 @@ package cmd
 
 import (
 	"github.com/k1LoW/ndiag/icon"
+	"github.com/k1LoW/ndiag/icon/aws"
 	"github.com/k1LoW/ndiag/icon/gcp"
 	"github.com/k1LoW/ndiag/icon/k8s"
 	"github.com/spf13/cobra"
@@ -33,7 +34,7 @@ var fetchIconsCmd = &cobra.Command{
 	Short:     "Fecth icon set from internet",
 	Long:      `Fecth icon set from internet.`,
 	Args:      cobra.OnlyValidArgs,
-	ValidArgs: []string{"k8s", "gcp"},
+	ValidArgs: []string{"aws", "gcp", "k8s"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		target := args[0]
 		var fetcher icon.Fetcher
@@ -44,10 +45,12 @@ var fetchIconsCmd = &cobra.Command{
 		}
 
 		switch target {
-		case "k8s":
-			fetcher = &k8s.K8sIcon{}
+		case "aws":
+			fetcher = &aws.AWSIcon{}
 		case "gcp":
 			fetcher = &gcp.GCPIcon{}
+		case "k8s":
+			fetcher = &k8s.K8sIcon{}
 		}
 
 		if iconPrefix == "" {
