@@ -53,6 +53,18 @@ func Funcs(cfg *config.Config) map[string]interface{} {
 				return fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, i.Path, label)
 			}
 		},
+		"cluster_label": func(c config.Cluster) string {
+			label := unescRep.Replace(c.FullName())
+			if c.Metadata.Icon == "" {
+				return fmt.Sprintf(`"%s"`, label)
+			} else {
+				i, err := cfg.IconMap().Get(c.Metadata.Icon)
+				if err != nil {
+					panic(err)
+				}
+				return fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, i.Path, label)
+			}
+		},
 		"component": func(c config.Component) string {
 			bc := cfg.BaseColor
 			tc := cfg.TextColor

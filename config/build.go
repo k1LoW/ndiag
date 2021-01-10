@@ -255,7 +255,6 @@ func (cfg *Config) buildRelations() error {
 			Attrs:      rel.Attrs,
 		}
 		for _, r := range rel.Components {
-			_, _ = fmt.Fprintf(os.Stderr, "rel.Components %v\n", r)
 			c, err := cfg.FindComponent(r)
 			if err != nil {
 				return err
