@@ -1,0 +1,17 @@
+---
+nodes:
+  -
+    name: app
+    components:
+      - react app
+    clusters:
+      - "group:app?icon=cube4"
+networks:
+  -
+    route:
+      - "internet?icon=cloud"
+      - "app:react app"
+  -
+    route:
+      - "app:react app"
+      - "platform:payment?icon=hex2:api"

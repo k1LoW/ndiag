@@ -18,9 +18,10 @@ type Cluster struct {
 }
 
 type ClusterMetadata struct {
-	Color     color.Color
-	FillColor color.Color
-	TextColor color.Color
+	Icon      string      `qs:"icon"`
+	Color     color.Color `qs:"-"`
+	FillColor color.Color `qs:"-"`
+	TextColor color.Color `qs:"-"`
 }
 
 func (c *Cluster) FullName() string {
@@ -29,6 +30,21 @@ func (c *Cluster) FullName() string {
 
 func (c *Cluster) Id() string {
 	return strings.ToLower(c.FullName())
+}
+
+func (c *Cluster) OverrideMetadata(c2 *Cluster) error {
+	if c.Id() != c2.Id() {
+		return fmt.Errorf("can not merge: %s <-> %s", c.Id(), c2.Id())
+	}
+	if c2.Metadata.Icon != "" {
+		c.Metadata.Icon = c2.Metadata.Icon
+	}
+	if c2.Metadata.Color != nil {
+		c.Metadata.Color = c2.Metadata.Color
+		c.Metadata.FillColor = c2.Metadata.FillColor
+		c.Metadata.TextColor = c2.Metadata.TextColor
+	}
+	return nil
 }
 
 type Clusters []*Cluster

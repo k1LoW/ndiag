@@ -39,6 +39,27 @@ func TestComponentIcon(t *testing.T) {
 	}
 }
 
+func TestClusterIcon(t *testing.T) {
+	tempDir, err := ioutil.TempDir("", "ndiag")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.RemoveAll(tempDir)
+	cfg := New()
+	if err := cfg.LoadConfigFile(filepath.Join(testdataDir(t), "7_ndiag.yml")); err != nil {
+		t.Fatal(err)
+	}
+	cfg.DescPath = tempDir
+	if err := cfg.Build(); err != nil {
+		t.Fatal(err)
+	}
+	for _, c := range cfg.Clusters() {
+		if c.Metadata.Icon == "" {
+			t.Errorf("icon does not set: %s", c.Id())
+		}
+	}
+}
+
 func TestIconImage(t *testing.T) {
 	tempDir, err := ioutil.TempDir("", "ndiag")
 	if err != nil {
