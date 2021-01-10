@@ -43,6 +43,8 @@ ndiag_doc: build
 	./ndiag doc -c sample/k8s/input/ndiag.yml --rm-dist
 	./ndiag fetch-icons gcp -c sample/gcp/input/ndiag.yml && touch sample/gcp/input/ndiag.icons/.gitkeep && echo "*.svg" > sample/gcp/input/ndiag.icons/.gitignore
 	./ndiag doc -c sample/gcp/input/ndiag.yml --rm-dist
+	./ndiag fetch-icons aws -c sample/aws/input/ndiag.yml && touch sample/aws/input/ndiag.icons/.gitkeep && echo "*.svg" > sample/aws/input/ndiag.icons/.gitignore
+	./ndiag doc -c sample/aws/input/ndiag.yml --rm-dist
 
 ci_doc: depsdev ndiag_doc
 	$(eval DIFF_EXIST := $(shell git checkout go.* && git diff --exit-code --quiet || echo "exist"))

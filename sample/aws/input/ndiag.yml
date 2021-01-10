@@ -1,0 +1,47 @@
+---
+name: Git to S3 Webhooks
+docPath: ../output
+diagrams:
+  -
+    name: overview
+    layers: ["platform"]
+nodes:
+  -
+    name: Lambda
+    components:
+      - 'function1?icon=aws-res-lambda-lambda-function'
+      - 'function2?icon=aws-res-lambda-lambda-function'
+    clusters:
+      - 'platform:aws'
+    metadata:
+      icon: aws-lambda
+  -
+    name: S3
+    components:
+      - 'SSH Key bucket?icon=aws-res-simple-storage-bucket-with-objects'
+      - 'output bucket?icon=aws-res-simple-storage-bucket-with-objects'
+    clusters:
+      - 'platform:aws'
+relations:
+  -
+    type: network
+    components:
+      - 'Git users?icon=user'
+      - 'Thirt-party Git repository'
+      - 'lambda:function1'
+      - 'lambda:function2'
+  -
+    type: network
+    components:
+      - 'lambda:function2'
+      - 'S3:SSH Key bucket'
+  -
+    type: network
+    components:
+      - 'lambda:function2'
+      - 'S3:output bucket'
+  -
+    type: network
+    components:
+      - 'lambda:function2'
+      - 'platform:aws:kms?icon=aws-res-identity-access-management-add-on'
