@@ -172,7 +172,7 @@ func (cfg *Config) buildComponents() error {
 func (cfg *Config) buildClusters() error {
 	for _, n := range cfg.Nodes {
 		for _, c := range n.rawClusters {
-			cluster, err := cfg.parseClusterLabel(c)
+			cluster, err := cfg.parseAndCollectCluster(c)
 			if err != nil {
 				return err
 			}
@@ -180,16 +180,28 @@ func (cfg *Config) buildClusters() error {
 			n.Clusters = append(n.Clusters, cluster)
 		}
 	}
+	for _, rel := range cfg.rawRelations {
+		for _, r := range rel.Components {
+			if sepCount(r) != 2 {
+				continue
+			}
+			splited := sepSplit(r)
+			clusterId := sepJoin(splited[:2])
+			if _, err := cfg.parseAndCollectCluster(clusterId); err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }
 
-func (cfg *Config) parseClusterLabel(label string) (*Cluster, error) {
-	if !strings.Contains(label, Sep) {
-		return nil, fmt.Errorf("invalid cluster id: %s", label)
+func (cfg *Config) parseAndCollectCluster(clusterId string) (*Cluster, error) {
+	if !sepContains(clusterId) {
+		return nil, fmt.Errorf("invalid cluster id: %s", clusterId)
 	}
-	splitted := sepSplit(label)
+	splitted := sepSplit(clusterId)
 	if len(splitted) != 2 {
-		return nil, fmt.Errorf("invalid cluster id: %s", label)
+		return nil, fmt.Errorf("invalid cluster id: %s", clusterId)
 	}
 	layerStr := splitted[0]
 	name := splitted[1]
