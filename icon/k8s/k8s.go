@@ -68,7 +68,7 @@ func (f *K8sIcon) Fetch(iconPath, prefix string) error {
 			return err
 		}
 
-		buf, err = icon.ResizeSVG(buf, config.IconWidth, config.IconHeight)
+		buf, err = icon.OptimizeSVG(buf, config.IconWidth, config.IconHeight)
 		if err != nil {
 			return err
 		}

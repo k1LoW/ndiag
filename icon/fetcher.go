@@ -52,23 +52,45 @@ func Download(src, dest string) (string, error) {
 	return p, nil
 }
 
-func ResizeSVG(buf []byte, width, height float64) ([]byte, error) {
+func OptimizeSVG(buf []byte, width, height float64) ([]byte, error) {
 	imgdoc, err := xmlquery.Parse(bytes.NewReader(buf))
 	if err != nil {
 		return nil, err
 	}
 	s := xmlquery.FindOne(imgdoc, "//svg")
 	attrs := []xml.Attr{}
+	hasSize := false
 	for _, a := range s.Attr {
 		switch {
 		case a.Name.Local == "width":
+			hasSize = true
 			a.Value = fmt.Sprintf("%spx", strconv.FormatFloat(width, 'f', 2, 64))
 		case a.Name.Local == "height":
+			hasSize = true
 			a.Value = fmt.Sprintf("%spx", strconv.FormatFloat(height, 'f', 2, 64))
 		}
 		attrs = append(attrs, a)
 	}
-	s.Attr = attrs
+	if hasSize {
+		s.Attr = attrs
+	} else {
+		s.Attr = append([]xml.Attr{
+			xml.Attr{
+				Name:  xml.Name{Local: "width"},
+				Value: fmt.Sprintf("%spx", strconv.FormatFloat(width, 'f', 2, 64)),
+			},
+			xml.Attr{
+				Name:  xml.Name{Local: "height"},
+				Value: fmt.Sprintf("%spx", strconv.FormatFloat(height, 'f', 2, 64)),
+			},
+		}, attrs...)
+	}
+
 	// If there are no line breaks, Graphviz will not recognize it as SVG.
-	return []byte(strings.Replace(strings.Replace(imgdoc.OutputXML(false), "?>", "?>\n", 1), "-->", "-->\n", 1)), nil
+	docstr := strings.Replace(strings.Replace(imgdoc.OutputXML(false), "?>", "?>\n", 1), "-->", "-->\n", 1)
+	if strings.Contains(docstr, "<?xml?>") {
+		docstr = strings.Replace(docstr, "<?xml?>", `<?xml version="1.0"?>`, 1)
+	}
+
+	return []byte(docstr), nil
 }
