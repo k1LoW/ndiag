@@ -15,6 +15,9 @@ import (
 	"github.com/karrick/godirwalk"
 )
 
+const IconWidth = 80.0
+const IconHeight = 80.0
+
 type Icon struct {
 	Path  string
 	Glyph *glyph.Glyph
@@ -118,7 +121,7 @@ func (m *IconMap) RemoveTempIconDir() error {
 func (cfg *Config) buildIconMap() error {
 	tempIconDir := filepath.Join(os.TempDir(), fmt.Sprintf("ndiag.%06d", os.Getpid()))
 	im := NewIconMap(tempIconDir)
-	gm := glyph.NewMapWithIncluded(glyph.Width(80.0), glyph.Height(80.0))
+	gm := glyph.NewMapWithIncluded(glyph.Width(IconWidth), glyph.Height(IconHeight))
 	for _, i := range cfg.CustomIcons {
 		g, k, err := i.ToGlyphAndKey()
 		if err != nil {
