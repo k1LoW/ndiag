@@ -21,6 +21,7 @@ See https://github.com/kubernetes/community/tree/master/icons#usage-example
 
 | Name | Description |
 | --- | --- |
+| [cluster](layer-cluster.md) | <a href="../input/ndiag.descriptions/_layer-cluster.md">:pencil2:</a> |
 | [netpol](layer-netpol.md) | <a href="../input/ndiag.descriptions/_layer-netpol.md">:pencil2:</a> |
 | [limits](layer-limits.md) | <a href="../input/ndiag.descriptions/_layer-limits.md">:pencil2:</a> |
 | [quota](layer-quota.md) | <a href="../input/ndiag.descriptions/_layer-quota.md">:pencil2:</a> |
