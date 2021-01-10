@@ -1,10 +1,10 @@
 ndiag
 *.test.yml
-dist/
-doc/
-archdoc/
-ndiag.descriptions/
-ndiag.icons/
+/dist/
+/doc/
+/archdoc/
+/ndiag.descriptions/
+/ndiag.icons/
 coverage.txt
 *-packr.go
 .envrc

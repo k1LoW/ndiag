@@ -1,0 +1,54 @@
+---
+name: Exposed Pod with 3 replicas
+docPath: ../output
+nodes:
+  - name: my-namespace
+    clusters:
+      - 'netpol:a'
+      - 'limits:b'
+      - 'quota:c'
+    metadata:
+      icon: k8s-resources-ns
+relations:
+  -
+    type: network
+    components:
+      - 'browser?icon=browser'
+      - 'my-namespace:your.domain.com?icon=k8s-resources-ing'
+  -
+    type: network
+    components:
+      - 'my-namespace:your.domain.com?icon=k8s-resources-ing'
+      - 'my-namespace:my-svc?icon=k8s-resources-svc'
+  -
+    type: network
+    components:
+      - 'my-namespace:my-svc'
+      - 'my-namespace:pod-a?icon=k8s-resources-pod'
+  -
+    type: network
+    components:
+      - 'my-namespace:my-svc'
+      - 'my-namespace:pod-b?icon=k8s-resources-pod'
+  -
+    type: network
+    components:
+      - 'my-namespace:my-svc'
+      - 'my-namespace:pod-c?icon=k8s-resources-pod'
+  -
+    components:
+      - 'my-namespace:my-hpa?icon=k8s-resources-hpa'
+      - 'my-namespace:my-deploy?icon=k8s-resources-deploy'
+      - 'my-namespace:my-rs?icon=k8s-resources-rs'
+  -
+    components:
+      - 'my-namespace:my-rs'
+      - 'my-namespace:pod-a'
+  -
+    components:
+      - 'my-namespace:my-rs'
+      - 'my-namespace:pod-b'
+  -
+    components:
+      - 'my-namespace:my-rs'
+      - 'my-namespace:pod-c'

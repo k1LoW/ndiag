@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/k1LoW/ndiag/config"
 	"github.com/k1LoW/ndiag/icon"
 	"github.com/stoewer/go-strcase"
 )
@@ -67,6 +68,12 @@ func (f *AWSIcon) Fetch(iconPath, prefix string) error {
 			_ = rc.Close()
 			return err
 		}
+
+		buf, err = icon.OptimizeSVG(buf, config.IconWidth, config.IconHeight)
+		if err != nil {
+			return err
+		}
+
 		if err := ioutil.WriteFile(path, buf, f.Mode()); err != nil {
 			_ = rc.Close()
 			return err

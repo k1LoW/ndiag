@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/k1LoW/ndiag/config"
 	"github.com/k1LoW/ndiag/icon"
 )
 
@@ -66,6 +67,12 @@ func (f *K8sIcon) Fetch(iconPath, prefix string) error {
 		if err := os.MkdirAll(filepath.Dir(path), 0750); err != nil {
 			return err
 		}
+
+		buf, err = icon.OptimizeSVG(buf, config.IconWidth, config.IconHeight)
+		if err != nil {
+			return err
+		}
+
 		if err := ioutil.WriteFile(path, buf, f.Mode()); err != nil {
 			_ = rc.Close()
 			return err

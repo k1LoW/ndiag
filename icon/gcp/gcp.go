@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/k1LoW/ndiag/config"
 	"github.com/k1LoW/ndiag/icon"
 	"github.com/stoewer/go-strcase"
 )
@@ -65,6 +66,12 @@ func (f *GCPIcon) Fetch(iconPath, prefix string) error {
 			return err
 		}
 		path := filepath.Join(iconPath, prefix, fmt.Sprintf("%s.%s", strcase.KebabCase(rep.Replace(matched[1])), "svg"))
+
+		buf, err = icon.OptimizeSVG(buf, config.IconWidth, config.IconHeight)
+		if err != nil {
+			return err
+		}
+
 		if err := ioutil.WriteFile(path, buf, f.Mode()); err != nil {
 			_ = rc.Close()
 			return err
