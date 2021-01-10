@@ -53,11 +53,10 @@ func (cfg *Config) buildDefault() error {
 func (cfg *Config) buildNodes() error {
 	for _, n := range cfg.Nodes {
 		if n.Metadata.Icon != "" {
-			i, err := cfg.IconMap().Get(n.Metadata.Icon)
+			_, err := cfg.IconMap().Get(n.Metadata.Icon)
 			if err != nil {
 				return fmt.Errorf("not found icon: %s", n.Metadata.Icon)
 			}
-			n.Metadata.IconPath = i.Path
 		}
 	}
 	return nil

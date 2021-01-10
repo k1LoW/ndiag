@@ -732,11 +732,10 @@ func (cfg *Config) parseComponent(comName string) (*Component, error) {
 			return nil, err
 		}
 		if m.Icon != "" {
-			i, err := cfg.IconMap().Get(m.Icon)
+			_, err := cfg.IconMap().Get(m.Icon)
 			if err != nil {
 				return nil, fmt.Errorf("not found icon: %s", m.Icon)
 			}
-			m.IconPath = i.Path
 		}
 		c.Metadata = m
 	} else {
