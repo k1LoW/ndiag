@@ -10,6 +10,46 @@ import (
 	"github.com/elliotchance/orderedmap"
 )
 
+func (cfg *Config) buildDefault() error {
+	if cfg.DocPath == "" {
+		cfg.DocPath = DefaultDocPath
+	}
+	if !filepath.IsAbs(cfg.DocPath) {
+		docPath, err := filepath.Abs(filepath.Join(cfg.basePath, cfg.DocPath))
+		if err != nil {
+			return err
+		}
+		cfg.DocPath = docPath
+	}
+	if cfg.DescPath == "" {
+		cfg.DescPath = DefaultDescPath
+	}
+	if !filepath.IsAbs(cfg.DescPath) {
+		descPath, err := filepath.Abs(filepath.Join(cfg.basePath, cfg.DescPath))
+		if err != nil {
+			return err
+		}
+		cfg.DescPath = descPath
+	}
+	if cfg.IconPath == "" {
+		cfg.IconPath = DefaultIconPath
+	}
+	if !filepath.IsAbs(cfg.IconPath) {
+		iconPath, err := filepath.Abs(filepath.Join(cfg.basePath, cfg.IconPath))
+		if err != nil {
+			return err
+		}
+		cfg.IconPath = iconPath
+	}
+	if cfg.BaseColor == "" {
+		cfg.BaseColor = DefaultBaseColor
+	}
+	if cfg.TextColor == "" {
+		cfg.TextColor = DefaultTextColor
+	}
+	return nil
+}
+
 func (cfg *Config) buildNodes() error {
 	for _, n := range cfg.Nodes {
 		if n.Metadata.Icon != "" {

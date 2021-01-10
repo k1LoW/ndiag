@@ -338,57 +338,12 @@ func (cfg *Config) LoadRealNodes(in []byte) error {
 }
 
 func (cfg *Config) Build() error {
-	if cfg.HideDiagrams && len(cfg.Diagrams) > 1 {
-		return errors.New("can't make hideDiagrams true if you have more than one diagrams defined")
+	if err := cfg.checkFormat(); err != nil {
+		return err
 	}
-	if len(cfg.realNodes) > 0 {
-		for _, n := range cfg.Nodes {
-			if len(n.RealNodes) == 0 {
-				return fmt.Errorf("'%s' does not have any real nodes", n.FullName())
-			}
-		}
+	if err := cfg.buildDefault(); err != nil {
+		return err
 	}
-	// set default
-	if cfg.DocPath == "" {
-		cfg.DocPath = DefaultDocPath
-	}
-	if !filepath.IsAbs(cfg.DocPath) {
-		docPath, err := filepath.Abs(filepath.Join(cfg.basePath, cfg.DocPath))
-		if err != nil {
-			return err
-		}
-		cfg.DocPath = docPath
-	}
-	if cfg.DescPath == "" {
-		cfg.DescPath = DefaultDescPath
-	}
-	if !filepath.IsAbs(cfg.DescPath) {
-		descPath, err := filepath.Abs(filepath.Join(cfg.basePath, cfg.DescPath))
-		if err != nil {
-			return err
-		}
-		cfg.DescPath = descPath
-	}
-	if cfg.IconPath == "" {
-		cfg.IconPath = DefaultIconPath
-	}
-	if !filepath.IsAbs(cfg.IconPath) {
-		iconPath, err := filepath.Abs(filepath.Join(cfg.basePath, cfg.IconPath))
-		if err != nil {
-			return err
-		}
-		cfg.IconPath = iconPath
-	}
-	if cfg.BaseColor == "" {
-		cfg.BaseColor = DefaultBaseColor
-	}
-	if cfg.TextColor == "" {
-		cfg.TextColor = DefaultTextColor
-	}
-	if cfg.Format() != "svg" && cfg.Format() != "png" {
-		return fmt.Errorf("invalid format: %s", cfg.Format())
-	}
-
 	if err := cfg.buildIconMap(); err != nil {
 		return err
 	}
@@ -420,6 +375,19 @@ func (cfg *Config) Build() error {
 		return err
 	}
 
+	return nil
+}
+
+func (cfg *Config) BuildForFetchIcons() error {
+	if err := cfg.checkFormat(); err != nil {
+		return err
+	}
+	if err := cfg.buildDefault(); err != nil {
+		return err
+	}
+	if err := cfg.buildIconMap(); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -635,6 +603,23 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 	}
 
 	return buildNestedClusters(clusters, layers, remain)
+}
+
+func (cfg *Config) checkFormat() error {
+	if cfg.HideDiagrams && len(cfg.Diagrams) > 1 {
+		return errors.New("can't make hideDiagrams true if you have more than one diagrams defined")
+	}
+	if len(cfg.realNodes) > 0 {
+		for _, n := range cfg.Nodes {
+			if len(n.RealNodes) == 0 {
+				return fmt.Errorf("'%s' does not have any real nodes", n.FullName())
+			}
+		}
+	}
+	if cfg.Format() != "svg" && cfg.Format() != "png" {
+		return fmt.Errorf("invalid format: %s", cfg.Format())
+	}
+	return nil
 }
 
 func (cfg *Config) checkUnique() error {
