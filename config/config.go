@@ -483,8 +483,7 @@ func (cfg *Config) FindNode(name string) (*Node, error) {
 }
 
 func (cfg *Config) FindComponent(s string) (*Component, error) {
-	splited := querySplit(s)
-	name := splited[0]
+	name := queryTrim(s)
 	var components []*Component
 
 	switch sepCount(name) {
@@ -732,11 +731,10 @@ func (cfg *Config) parseComponent(comName string) (*Component, error) {
 			return nil, err
 		}
 		if m.Icon != "" {
-			i, err := cfg.IconMap().Get(m.Icon)
+			_, err := cfg.IconMap().Get(m.Icon)
 			if err != nil {
 				return nil, fmt.Errorf("not found icon: %s", m.Icon)
 			}
-			m.IconPath = i.Path
 		}
 		c.Metadata = m
 	} else {
@@ -756,6 +754,16 @@ func querySplit(s string) []string {
 
 func queryContains(s string) bool {
 	return strings.Contains(qRep.Replace(s), Q)
+}
+
+func queryTrim(s string) string {
+	splitted := sepSplit(s)
+	trimed := []string{}
+	for _, ss := range splitted {
+		splitted := querySplit(ss)
+		trimed = append(trimed, splitted[0])
+	}
+	return sepJoin(trimed)
 }
 
 func sepCount(s string) int {

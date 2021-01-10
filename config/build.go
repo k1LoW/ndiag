@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/elliotchance/orderedmap"
+	"github.com/pasztorpisti/qs"
 )
 
 func (cfg *Config) buildDefault() error {
@@ -53,11 +54,10 @@ func (cfg *Config) buildDefault() error {
 func (cfg *Config) buildNodes() error {
 	for _, n := range cfg.Nodes {
 		if n.Metadata.Icon != "" {
-			i, err := cfg.IconMap().Get(n.Metadata.Icon)
+			_, err := cfg.IconMap().Get(n.Metadata.Icon)
 			if err != nil {
 				return fmt.Errorf("not found icon: %s", n.Metadata.Icon)
 			}
-			n.Metadata.IconPath = i.Path
 		}
 	}
 	return nil
@@ -142,7 +142,7 @@ func (cfg *Config) buildComponents() error {
 		comName := splitted[2]
 		belongTo := false
 		for _, cl := range cfg.Clusters() {
-			if strings.EqualFold(cl.FullName(), clName) {
+			if strings.EqualFold(cl.FullName(), queryTrim(clName)) {
 				com, err := cfg.parseComponent(comName)
 				if err != nil {
 					return err
@@ -199,25 +199,47 @@ func (cfg *Config) parseAndCollectCluster(clusterId string) (*Cluster, error) {
 	if !sepContains(clusterId) {
 		return nil, fmt.Errorf("invalid cluster id: %s", clusterId)
 	}
-	splitted := sepSplit(clusterId)
-	if len(splitted) != 2 {
+	if sepCount(clusterId) != 1 {
 		return nil, fmt.Errorf("invalid cluster id: %s", clusterId)
 	}
+	splitted := sepSplit(clusterId)
 	layerStr := splitted[0]
 	name := splitted[1]
-	current := cfg.clusters.Find(layerStr, name)
-	if current != nil {
-		return current, nil
+
+	var m ClusterMetadata
+	if queryContains(name) {
+		splited := querySplit(name)
+		name = splited[0]
+		if err := qs.Unmarshal(&m, splited[1]); err != nil {
+			return nil, err
+		}
+		if m.Icon != "" {
+			_, err := cfg.IconMap().Get(m.Icon)
+			if err != nil {
+				return nil, fmt.Errorf("not found icon: %s", m.Icon)
+			}
+		}
 	}
+
 	layer, err := cfg.FindLayer(layerStr)
 	if err != nil {
 		layer = &Layer{Name: layerStr}
 		cfg.layers = append(cfg.layers, layer)
 	}
 	newC := &Cluster{
-		Layer: layer,
-		Name:  name,
+		Layer:    layer,
+		Name:     name,
+		Metadata: m,
 	}
+
+	current := cfg.clusters.Find(layerStr, name)
+	if current != nil {
+		if err := current.OverrideMetadata(newC); err != nil {
+			return nil, err
+		}
+		return current, nil
+	}
+
 	cfg.clusters = append(cfg.clusters, newC)
 
 	return newC, nil

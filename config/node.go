@@ -20,8 +20,7 @@ type Node struct {
 }
 
 type NodeMetadata struct {
-	Icon     string `yaml:"icon,omitempty"`
-	IconPath string `yaml:"-"`
+	Icon string `yaml:"icon,omitempty"`
 }
 
 func (n *Node) FullName() string {

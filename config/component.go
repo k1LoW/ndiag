@@ -15,8 +15,7 @@ type Component struct {
 }
 
 type ComponentMetadata struct {
-	Icon     string `qs:"icon"`
-	IconPath string `qs:"-"`
+	Icon string `qs:"icon"`
 }
 
 func (c *Component) FullName() string {
@@ -43,7 +42,6 @@ func (c *Component) OverrideMetadata(c2 *Component) error {
 	}
 	if c2.Metadata.Icon != "" {
 		c.Metadata.Icon = c2.Metadata.Icon
-		c.Metadata.IconPath = c2.Metadata.IconPath
 	}
 	return nil
 }
