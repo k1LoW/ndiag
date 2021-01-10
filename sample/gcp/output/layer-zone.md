@@ -22,8 +22,8 @@
 
 | Name | Description |
 | --- | --- |
-| zone:platform:cloud load balancing | <a href="../input/ndiag.descriptions/_component-zone_platform_cloud_load_balancing.md">:pencil2:</a> |
-| zone:platform:persistent disk snapshot | <a href="../input/ndiag.descriptions/_component-zone_platform_persistent_disk_snapshot.md">:pencil2:</a> |
+| zone:platform:Cloud Load Balancing | <a href="../input/ndiag.descriptions/_component-zone_platform_cloud_load_balancing.md">:pencil2:</a> |
+| zone:platform:Persistent Disk Snapshot | <a href="../input/ndiag.descriptions/_component-zone_platform_persistent_disk_snapshot.md">:pencil2:</a> |
 ### Nodes
 
 | Name | Description |

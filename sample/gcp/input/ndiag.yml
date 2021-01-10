@@ -9,14 +9,14 @@ nodes:
   -
     name: Service Instance
     components:
-      - 'compute engine'
+      - 'Compute Engine'
     clusters:
       - 'zone:platform'
       - 'instance-group:a'
   -
     name: Heartbeat and Snapshot System
     components:
-      - 'compute engine'
+      - 'Compute Engine'
     clusters:
       - 'zone:platform'
       - 'instance-group:b'
@@ -25,8 +25,8 @@ relations:
     type: network
     components:
       - 'browser?icon=browser'
-      - 'cloud dns?icon=gcp-cloud-dns'
-      - 'zone:platform:cloud load balancing?icon=gcp-cloud-load-balancing'
+      - 'Cloud DNS?icon=gcp-cloud-dns'
+      - 'zone:platform:Cloud Load Balancing?icon=gcp-cloud-load-balancing'
   -
     type: network
     components:
@@ -42,4 +42,4 @@ relations:
     type: network
     components:
       - 'Service Instance:compute engine?icon=gcp-compute-engine'
-      - 'zone:platform:persistent disk snapshot?icon=gcp-persistent-disk'
+      - 'zone:platform:Persistent Disk Snapshot?icon=gcp-persistent-disk'
