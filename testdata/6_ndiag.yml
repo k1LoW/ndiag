@@ -1,0 +1,6 @@
+---
+networks:
+  -
+    route:
+      - "internet"
+      - "group:lb:vip"
