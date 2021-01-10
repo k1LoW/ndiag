@@ -4,7 +4,6 @@ docPath: ../output
 nodes:
   - name: my-namespace
     clusters:
-      - 'cluster:k8s'
       - 'netpol:a'
       - 'limits:b'
       - 'quota:c'
