@@ -40,7 +40,7 @@ var fetchIconsCmd = &cobra.Command{
 		target := args[0]
 		var fetcher icon.Fetcher
 
-		cfg, err := newConfigForFetchIcons()
+		cfg, err := newConfigForIcons()
 		if err != nil {
 			return err
 		}
@@ -61,12 +61,12 @@ var fetchIconsCmd = &cobra.Command{
 	},
 }
 
-func newConfigForFetchIcons() (*config.Config, error) {
+func newConfigForIcons() (*config.Config, error) {
 	cfg := config.New()
 	if err := cfg.LoadConfigFile(detectConfigPath(configPath)); err != nil {
 		return nil, err
 	}
-	if err := cfg.BuildForFetchIcons(); err != nil {
+	if err := cfg.BuildForIcons(); err != nil {
 		return nil, err
 	}
 	return cfg, nil

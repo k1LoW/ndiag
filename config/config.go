@@ -378,7 +378,7 @@ func (cfg *Config) Build() error {
 	return nil
 }
 
-func (cfg *Config) BuildForFetchIcons() error {
+func (cfg *Config) BuildForIcons() error {
 	if err := cfg.checkFormat(); err != nil {
 		return err
 	}

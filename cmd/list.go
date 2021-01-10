@@ -40,13 +40,11 @@ var listIconsCmd = &cobra.Command{
 	Long:  `List available icons.`,
 	Args:  cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		cfg, err := newConfig()
+		cfg, err := newConfigForIcons()
 		if err != nil {
 			return err
 		}
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetBorder(false)
-		table.SetColumnSeparator("...")
 		for _, k := range cfg.IconMap().Keys() {
 			i, err := cfg.IconMap().Get(k)
 			if err != nil {
