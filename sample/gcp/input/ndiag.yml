@@ -1,0 +1,45 @@
+---
+name: Simple Compute Engine Usage
+docPath: ../output
+diagrams:
+  -
+    name: overview
+    layers: ["zone", "instance-group"]
+nodes:
+  -
+    name: Service Instance
+    components:
+      - 'compute engine'
+    clusters:
+      - 'zone:platform'
+      - 'instance-group:a'
+  -
+    name: Heartbeat and Snapshot System
+    components:
+      - 'compute engine'
+    clusters:
+      - 'zone:platform'
+      - 'instance-group:b'
+relations:
+  -
+    type: network
+    components:
+      - 'browser?icon=browser'
+      - 'cloud dns?icon=gcp-cloud-dns'
+      - 'zone:platform:cloud load balancing?icon=gcp-cloud-load-balancing'
+  -
+    type: network
+    components:
+      - 'zone:platform:cloud load balancing?icon=gcp-cloud-load-balancing'
+      - 'Service Instance:compute engine?icon=gcp-compute-engine'
+  -
+    type: network
+    components:
+      - 'Service Instance:compute engine?icon=gcp-compute-engine'
+      - 'Heartbeat and Snapshot System:compute engine?icon=gcp-compute-engine'
+      - 'Service Instance:compute engine?icon=gcp-compute-engine'
+  -
+    type: network
+    components:
+      - 'Service Instance:compute engine?icon=gcp-compute-engine'
+      - 'zone:platform:persistent disk snapshot?icon=gcp-persistent-disk'
