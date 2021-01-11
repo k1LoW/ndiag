@@ -26,6 +26,7 @@ import (
 	"github.com/k1LoW/ndiag/icon"
 	"github.com/k1LoW/ndiag/icon/aws"
 	"github.com/k1LoW/ndiag/icon/gcp"
+	"github.com/k1LoW/ndiag/icon/hashicorp"
 	"github.com/k1LoW/ndiag/icon/k8s"
 	"github.com/spf13/cobra"
 )
@@ -35,7 +36,7 @@ var fetchIconsCmd = &cobra.Command{
 	Short:     "Fecth icon set from internet",
 	Long:      `Fecth icon set from internet.`,
 	Args:      cobra.OnlyValidArgs,
-	ValidArgs: []string{"aws", "gcp", "k8s"},
+	ValidArgs: []string{"aws", "gcp", "hashicorp", "k8s"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		target := args[0]
 		var fetcher icon.Fetcher
@@ -50,6 +51,8 @@ var fetchIconsCmd = &cobra.Command{
 			fetcher = &aws.AWSIcon{}
 		case "gcp":
 			fetcher = &gcp.GCPIcon{}
+		case "hashicorp":
+			fetcher = &hashicorp.HashicorpIcon{}
 		case "k8s":
 			fetcher = &k8s.K8sIcon{}
 		}

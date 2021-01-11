@@ -23,12 +23,12 @@ var rep = strings.NewReplacer("_Light", "", "_48", "", "loT", "iot", "IoT", "iot
 var rep2 = strings.NewReplacer("res-amazon", "res", "res-aws", "res", "arch-aws-", "", "arch-amazon-", "")
 
 func (f *AWSIcon) Fetch(iconPath, prefix string) error {
-	_, _ = fmt.Fprintf(os.Stderr, "Fetching icons from %s ...\n", archiveURL)
 	dir, err := ioutil.TempDir("", "ndiag-icon-aws")
 	if err != nil {
 		return err
 	}
 	defer os.RemoveAll(dir)
+	_, _ = fmt.Fprintf(os.Stderr, "Fetching icons from %s ...\n", archiveURL)
 	ap, err := icon.Download(archiveURL, dir)
 	if err != nil {
 		return err

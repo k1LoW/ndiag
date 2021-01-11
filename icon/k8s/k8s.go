@@ -23,12 +23,12 @@ var rep = strings.NewReplacer("control_plane_components", "control-plane", "infr
 type K8sIcon struct{}
 
 func (f *K8sIcon) Fetch(iconPath, prefix string) error {
-	_, _ = fmt.Fprintf(os.Stderr, "Fetching icons from %s ...\n", archiveURL)
 	dir, err := ioutil.TempDir("", "ndiag-icon-k8s")
 	if err != nil {
 		return err
 	}
 	defer os.RemoveAll(dir)
+	_, _ = fmt.Fprintf(os.Stderr, "Fetching icons from %s ...\n", archiveURL)
 	ap, err := icon.Download(archiveURL, dir)
 	if err != nil {
 		return err
