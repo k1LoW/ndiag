@@ -84,6 +84,27 @@ func (f *K8sIcon) Fetch(iconPath, prefix string) error {
 			return err
 		}
 	}
+
+	// logo
+	_, _ = fmt.Fprintf(os.Stderr, "Fetching icon from %s ...\n", logoURL)
+	lp, err := icon.Download(logoURL, dir)
+	if err != nil {
+		return err
+	}
+	b, err := ioutil.ReadFile(lp)
+	if err != nil {
+		return err
+	}
+	b, err = icon.OptimizeSVG(b, config.IconWidth, config.IconHeight)
+	if err != nil {
+		return err
+	}
+	path := filepath.Join(iconPath, prefix, "logo.svg")
+	if err := ioutil.WriteFile(path, b, 0600); err != nil {
+		return err
+	}
+	counter[path] = struct{}{}
+
 	_, _ = fmt.Fprintf(os.Stderr, "%d icons fetched\n", len(counter))
 	_, _ = fmt.Fprintf(os.Stderr, "%s\n", "Done.")
 	return nil
