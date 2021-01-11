@@ -63,7 +63,7 @@ func (f *K8sIcon) Fetch(iconPath, prefix string) error {
 		if matched[2] == "labeled" {
 			path = rep.Replace(filepath.Join(iconPath, prefix, matched[1], fmt.Sprintf("%s.%s", matched[3], "svg")))
 		} else {
-			path = rep.Replace(filepath.Join(iconPath, prefix, matched[1], matched[3], fmt.Sprintf("%s.%s", matched[2], "svg")))
+			path = rep.Replace(filepath.Join(iconPath, prefix, matched[1], fmt.Sprintf("%s-%s.%s", matched[3], matched[2], "svg")))
 		}
 		if err := os.MkdirAll(filepath.Dir(path), 0750); err != nil {
 			return err
