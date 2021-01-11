@@ -15,6 +15,7 @@ import (
 )
 
 const archiveURL = "https://d1.awsstatic.com/webteam/architecture-icons/Q32020/AWS-Architecture-Assets-For-Light-and-Dark-BG_20200911.478ff05b80f909792f7853b1a28de8e28eac67f4.zip"
+const logoURL = "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg"
 
 type AWSIcon struct{}
 
@@ -83,6 +84,27 @@ func (f *AWSIcon) Fetch(iconPath, prefix string) error {
 			return err
 		}
 	}
+
+	// logo
+	_, _ = fmt.Fprintf(os.Stderr, "Fetching icon from %s ...\n", logoURL)
+	lp, err := icon.Download(logoURL, dir)
+	if err != nil {
+		return err
+	}
+	b, err := ioutil.ReadFile(lp)
+	if err != nil {
+		return err
+	}
+	b, err = icon.OptimizeSVG(b, config.IconWidth, config.IconHeight)
+	if err != nil {
+		return err
+	}
+	path := filepath.Join(iconPath, prefix, "logo.svg")
+	if err := ioutil.WriteFile(path, b, 0600); err != nil {
+		return err
+	}
+	counter[path] = struct{}{}
+
 	_, _ = fmt.Fprintf(os.Stderr, "%d icons fetched\n", len(counter))
 	_, _ = fmt.Fprintf(os.Stderr, "%s\n", "Done.")
 	return nil
