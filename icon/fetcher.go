@@ -4,17 +4,22 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
+	"image/png"
 	"io"
 	"net"
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/antchfx/xmlquery"
+	"github.com/nfnt/resize"
 )
+
+var sizeRe = regexp.MustCompile("^A([0-9.]+)")
 
 type Fetcher interface {
 	Fetch(iconPath, prefix string) error
@@ -52,39 +57,67 @@ func Download(src, dest string) (string, error) {
 	return p, nil
 }
 
-func OptimizeSVG(buf []byte, width, height float64) ([]byte, error) {
-	imgdoc, err := xmlquery.Parse(bytes.NewReader(buf))
+func OptimizeSVG(b []byte, width, height float64) ([]byte, error) {
+	size := height // At the moment we only use height out of width and height.
+
+	imgdoc, err := xmlquery.Parse(bytes.NewReader(b))
 	if err != nil {
 		return nil, err
 	}
 	s := xmlquery.FindOne(imgdoc, "//svg")
 	attrs := []xml.Attr{}
-	hasSize := false
+	hasViewBox := false
+	cw := 0.0
+	ch := 0.0
+	nw := 0.0
+	nh := 0.0
 	for _, a := range s.Attr {
 		switch {
 		case a.Name.Local == "width":
-			hasSize = true
-			a.Value = fmt.Sprintf("%spx", strconv.FormatFloat(width, 'f', 2, 64))
+			if !hasViewBox {
+				matched := sizeRe.FindStringSubmatch(a.Value)
+				if len(matched) > 0 {
+					cw, _ = strconv.ParseFloat(matched[1], 64)
+				}
+			}
 		case a.Name.Local == "height":
-			hasSize = true
-			a.Value = fmt.Sprintf("%spx", strconv.FormatFloat(height, 'f', 2, 64))
+			if !hasViewBox {
+				matched := sizeRe.FindStringSubmatch(a.Value)
+				if len(matched) > 0 {
+					ch, _ = strconv.ParseFloat(matched[1], 64)
+				}
+			}
+		case a.Name.Local == "viewBox":
+			splitted := strings.Split(a.Value, " ")
+			if len(splitted) == 4 {
+				hasViewBox = true
+				cw, _ = strconv.ParseFloat(splitted[2], 64)
+				ch, _ = strconv.ParseFloat(splitted[3], 64)
+			}
+			attrs = append(attrs, a)
+		default:
+			attrs = append(attrs, a)
 		}
-		attrs = append(attrs, a)
 	}
-	if hasSize {
-		s.Attr = attrs
-	} else {
-		s.Attr = append([]xml.Attr{
-			xml.Attr{
-				Name:  xml.Name{Local: "width"},
-				Value: fmt.Sprintf("%spx", strconv.FormatFloat(width, 'f', 2, 64)),
-			},
-			xml.Attr{
-				Name:  xml.Name{Local: "height"},
-				Value: fmt.Sprintf("%spx", strconv.FormatFloat(height, 'f', 2, 64)),
-			},
-		}, attrs...)
+	if cw > 0 && ch > 0 {
+		nw = size
+		nh = size
+		if cw > ch {
+			// Extend the size horizontally only if width > height
+			nw = size * (cw / ch)
+		}
 	}
+
+	s.Attr = append([]xml.Attr{
+		xml.Attr{
+			Name:  xml.Name{Local: "width"},
+			Value: fmt.Sprintf("%spx", strconv.FormatFloat(nw, 'f', 2, 64)),
+		},
+		xml.Attr{
+			Name:  xml.Name{Local: "height"},
+			Value: fmt.Sprintf("%spx", strconv.FormatFloat(nh, 'f', 2, 64)),
+		},
+	}, attrs...)
 
 	// If there are no line breaks, Graphviz will not recognize it as SVG.
 	docstr := strings.Replace(strings.Replace(imgdoc.OutputXML(false), "?>", "?>\n", 1), "-->", "-->\n", 1)
@@ -93,4 +126,26 @@ func OptimizeSVG(buf []byte, width, height float64) ([]byte, error) {
 	}
 
 	return []byte(docstr), nil
+}
+
+func ResizePNG(b []byte, width, height float64) ([]byte, error) {
+	size := height // At the moment we only use height out of width and height.
+
+	i, err := png.Decode(bytes.NewReader(b))
+	if err != nil {
+		return nil, err
+	}
+	rct := i.Bounds()
+	w := uint(size)
+	h := uint(size)
+	if rct.Dx() > rct.Dy() {
+		// Extend the size horizontally only if width > height
+		w = uint(size * (float64(rct.Dx()) / float64(rct.Dy())))
+	}
+	r := resize.Resize(w, h, i, resize.Bilinear)
+	buf := new(bytes.Buffer)
+	if err := png.Encode(buf, r); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
 }
