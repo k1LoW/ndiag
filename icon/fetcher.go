@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
+	"image/png"
 	"io"
 	"net"
 	"net/http"
@@ -14,6 +15,7 @@ import (
 	"time"
 
 	"github.com/antchfx/xmlquery"
+	"github.com/nfnt/resize"
 )
 
 type Fetcher interface {
@@ -52,8 +54,8 @@ func Download(src, dest string) (string, error) {
 	return p, nil
 }
 
-func OptimizeSVG(buf []byte, width, height float64) ([]byte, error) {
-	imgdoc, err := xmlquery.Parse(bytes.NewReader(buf))
+func OptimizeSVG(b []byte, width, height float64) ([]byte, error) {
+	imgdoc, err := xmlquery.Parse(bytes.NewReader(b))
 	if err != nil {
 		return nil, err
 	}
@@ -93,4 +95,25 @@ func OptimizeSVG(buf []byte, width, height float64) ([]byte, error) {
 	}
 
 	return []byte(docstr), nil
+}
+
+func ResizePNG(b []byte, width, height float64) ([]byte, error) {
+	i, err := png.Decode(bytes.NewReader(b))
+	if err != nil {
+		return nil, err
+	}
+	rct := i.Bounds()
+	w := uint(width)
+	h := uint(height)
+	if rct.Dx() > rct.Dy() {
+		w = uint(float64(w) * (float64(rct.Dx()) / float64(rct.Dy())))
+	} else {
+		h = uint(float64(h) * (float64(rct.Dy()) / float64(rct.Dx())))
+	}
+	r := resize.Resize(w, h, i, resize.Bilinear)
+	buf := new(bytes.Buffer)
+	if err := png.Encode(buf, r); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
 }
