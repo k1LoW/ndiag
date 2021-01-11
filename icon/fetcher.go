@@ -69,8 +69,8 @@ func OptimizeSVG(b []byte, width, height float64) ([]byte, error) {
 	hasViewBox := false
 	cw := 0.0
 	ch := 0.0
-	nw := 0.0
-	nh := 0.0
+	nw := size
+	nh := size
 	for _, a := range s.Attr {
 		switch {
 		case a.Name.Local == "width":
@@ -100,8 +100,6 @@ func OptimizeSVG(b []byte, width, height float64) ([]byte, error) {
 		}
 	}
 	if cw > 0 && ch > 0 {
-		nw = size
-		nh = size
 		if cw > ch {
 			// Extend the size horizontally only if width > height
 			nw = size * (cw / ch)
