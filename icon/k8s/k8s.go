@@ -91,7 +91,7 @@ func (f *K8sIcon) Fetch(iconPath, prefix string) error {
 	if err != nil {
 		return err
 	}
-	b, err := ioutil.ReadFile(lp)
+	b, err := ioutil.ReadFile(filepath.Clean(lp))
 	if err != nil {
 		return err
 	}
