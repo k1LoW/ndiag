@@ -22,7 +22,7 @@ var rep = strings.NewReplacer("_Light", "", "_48", "", "loT", "iot", "IoT", "iot
 var rep2 = strings.NewReplacer("res-amazon", "res", "res-aws", "res", "arch-aws-", "", "arch-amazon-", "")
 
 func (f *AWSIcon) Fetch(iconPath, prefix string) error {
-	_, _ = fmt.Fprintf(os.Stderr, "Fetching from %s ...\n", archiveURL)
+	_, _ = fmt.Fprintf(os.Stderr, "Fetching icons from %s ...\n", archiveURL)
 	dir, err := ioutil.TempDir("", "ndiag-icon-aws")
 	if err != nil {
 		return err
@@ -62,19 +62,19 @@ func (f *AWSIcon) Fetch(iconPath, prefix string) error {
 
 		path := filepath.Join(iconPath, prefix, fn)
 
-		buf := make([]byte, f.UncompressedSize)
-		_, err = io.ReadFull(rc, buf)
+		b := make([]byte, f.UncompressedSize)
+		_, err = io.ReadFull(rc, b)
 		if err != nil {
 			_ = rc.Close()
 			return err
 		}
 
-		buf, err = icon.OptimizeSVG(buf, config.IconWidth, config.IconHeight)
+		b, err = icon.OptimizeSVG(b, config.IconWidth, config.IconHeight)
 		if err != nil {
 			return err
 		}
 
-		if err := ioutil.WriteFile(path, buf, f.Mode()); err != nil {
+		if err := ioutil.WriteFile(path, b, f.Mode()); err != nil {
 			_ = rc.Close()
 			return err
 		}

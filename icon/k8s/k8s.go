@@ -15,6 +15,7 @@ import (
 )
 
 const archiveURL = "https://github.com/kubernetes/community/archive/master.zip"
+const logoURL = "https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo_with_border.svg"
 
 var pathRe = regexp.MustCompile(`\A.+/([^/]+)/([^/]+)/([^/]+)\.svg\z`)
 var rep = strings.NewReplacer("control_plane_components", "control-plane", "infrastructure_components", "infra", "_", "-")
@@ -22,7 +23,7 @@ var rep = strings.NewReplacer("control_plane_components", "control-plane", "infr
 type K8sIcon struct{}
 
 func (f *K8sIcon) Fetch(iconPath, prefix string) error {
-	_, _ = fmt.Fprintf(os.Stderr, "Fetching from %s ...\n", archiveURL)
+	_, _ = fmt.Fprintf(os.Stderr, "Fetching icons from %s ...\n", archiveURL)
 	dir, err := ioutil.TempDir("", "ndiag-icon-k8s")
 	if err != nil {
 		return err

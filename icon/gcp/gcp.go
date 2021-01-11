@@ -23,7 +23,7 @@ var rep = strings.NewReplacer("-512-color", "", "-521-color", "", "-color", "", 
 type GCPIcon struct{}
 
 func (f *GCPIcon) Fetch(iconPath, prefix string) error {
-	_, _ = fmt.Fprintf(os.Stderr, "Fetching from %s ...\n", archiveURL)
+	_, _ = fmt.Fprintf(os.Stderr, "Fetching icons from %s ...\n", archiveURL)
 	dir, err := ioutil.TempDir("", "ndiag-icon-gcp")
 	if err != nil {
 		return err
@@ -59,20 +59,20 @@ func (f *GCPIcon) Fetch(iconPath, prefix string) error {
 		if err != nil {
 			return err
 		}
-		buf := make([]byte, f.UncompressedSize)
-		_, err = io.ReadFull(rc, buf)
+		b := make([]byte, f.UncompressedSize)
+		_, err = io.ReadFull(rc, b)
 		if err != nil {
 			_ = rc.Close()
 			return err
 		}
 		path := filepath.Join(iconPath, prefix, fmt.Sprintf("%s.%s", strcase.KebabCase(rep.Replace(matched[1])), "svg"))
 
-		buf, err = icon.OptimizeSVG(buf, config.IconWidth, config.IconHeight)
+		b, err = icon.OptimizeSVG(b, config.IconWidth, config.IconHeight)
 		if err != nil {
 			return err
 		}
 
-		if err := ioutil.WriteFile(path, buf, f.Mode()); err != nil {
+		if err := ioutil.WriteFile(path, b, f.Mode()); err != nil {
 			_ = rc.Close()
 			return err
 		}
