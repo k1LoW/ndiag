@@ -40,7 +40,7 @@ func (f *GCPIcon) Fetch(iconPath, prefix string) error {
 	if err := os.MkdirAll(filepath.Join(iconPath, prefix), 0750); err != nil {
 		return err
 	}
-
+	counter := map[string]struct{}{}
 	for _, f := range r.File {
 		if strings.Contains(f.Name, "__MACOSX") {
 			continue
@@ -76,10 +76,12 @@ func (f *GCPIcon) Fetch(iconPath, prefix string) error {
 			_ = rc.Close()
 			return err
 		}
+		counter[path] = struct{}{}
 		if err := rc.Close(); err != nil {
 			return err
 		}
 	}
+	_, _ = fmt.Fprintf(os.Stderr, "%d icons fetched\n", len(counter))
 	_, _ = fmt.Fprintf(os.Stderr, "%s\n", "Done.")
 	return nil
 }
