@@ -1,3 +1,13 @@
+## [v0.9.0](https://github.com/k1LoW/ndiag/compare/v0.8.1...v0.9.0) (2021-01-12)
+
+* Fetch more icons [#57](https://github.com/k1LoW/ndiag/pull/57) ([k1LoW](https://github.com/k1LoW))
+* Support cluster icon [#56](https://github.com/k1LoW/ndiag/pull/56) ([k1LoW](https://github.com/k1LoW))
+* Allow no nodes [#55](https://github.com/k1LoW/ndiag/pull/55) ([k1LoW](https://github.com/k1LoW))
+* Optimize fetched SVG icons [#54](https://github.com/k1LoW/ndiag/pull/54) ([k1LoW](https://github.com/k1LoW))
+* Add command `ndiag fetch-icons` [#53](https://github.com/k1LoW/ndiag/pull/53) ([k1LoW](https://github.com/k1LoW))
+* Add command 'ndiag list icons' [#52](https://github.com/k1LoW/ndiag/pull/52) ([k1LoW](https://github.com/k1LoW))
+* Support additional icon images ( ndiag.icons/ ) [#51](https://github.com/k1LoW/ndiag/pull/51) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.8.1](https://github.com/k1LoW/ndiag/compare/v0.8.0...v0.8.1) (2021-01-05)
 
 * hide real nodes count when unload nodes.yml [#48](https://github.com/k1LoW/ndiag/pull/48) ([k1LoW](https://github.com/k1LoW))
