@@ -1,6 +1,6 @@
 # Exposed Pod with 3 replicas
 
-![diagram](diagram-nodes.svg)
+![diagram](diagram-overview.svg)
 
 See https://github.com/kubernetes/community/tree/master/icons#usage-example
 
@@ -14,13 +14,14 @@ See https://github.com/kubernetes/community/tree/master/icons#usage-example
 
 | Name | Description |
 | --- | --- |
-| [Nodes](diagram-nodes.md) | <a href="../input/ndiag.descriptions/_diagram-nodes.md">:pencil2:</a> |
+| [overview](diagram-overview.md) | <a href="../input/ndiag.descriptions/_diagram-overview.md">:pencil2:</a> |
 
 
 ## Layers
 
 | Name | Description |
 | --- | --- |
+| [k8s](layer-k8s.md) | <a href="../input/ndiag.descriptions/_layer-k8s.md">:pencil2:</a> |
 | [netpol](layer-netpol.md) | <a href="../input/ndiag.descriptions/_layer-netpol.md">:pencil2:</a> |
 | [limits](layer-limits.md) | <a href="../input/ndiag.descriptions/_layer-limits.md">:pencil2:</a> |
 | [quota](layer-quota.md) | <a href="../input/ndiag.descriptions/_layer-quota.md">:pencil2:</a> |

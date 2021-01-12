@@ -1,9 +1,13 @@
 ---
 name: Exposed Pod with 3 replicas
 docPath: ../output
+diagrams:
+  - name: overview
+    layers: ["k8s"]
 nodes:
   - name: my-namespace
     clusters:
+      - 'k8s:my-cluster?icon=k8s-logo'
       - 'netpol:a'
       - 'limits:b'
       - 'quota:c'
