@@ -19,7 +19,7 @@ import (
 	"github.com/nfnt/resize"
 )
 
-var sizeRe = regexp.MustCompile("^A([0-9.]+)")
+var sizeRe = regexp.MustCompile(`\A([0-9.]+)`)
 
 type Fetcher interface {
 	Fetch(iconPath, prefix string) error
@@ -116,6 +116,13 @@ func OptimizeSVG(b []byte, width, height float64) ([]byte, error) {
 			Value: fmt.Sprintf("%spx", strconv.FormatFloat(nh, 'f', 2, 64)),
 		},
 	}, attrs...)
+
+	if !hasViewBox {
+		s.Attr = append(s.Attr, xml.Attr{
+			Name:  xml.Name{Local: "viewBox"},
+			Value: fmt.Sprintf("0 0 %g %g", cw, ch),
+		})
+	}
 
 	// If there are no line breaks, Graphviz will not recognize it as SVG.
 	docstr := strings.Replace(strings.Replace(imgdoc.OutputXML(false), "?>", "?>\n", 1), "-->", "-->\n", 1)
