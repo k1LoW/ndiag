@@ -1,3 +1,7 @@
+## [v0.9.1](https://github.com/k1LoW/ndiag/compare/v0.9.0...v0.9.1) (2021-01-12)
+
+* Fix icon.OptimizeSVG resize logic [#58](https://github.com/k1LoW/ndiag/pull/58) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.9.0](https://github.com/k1LoW/ndiag/compare/v0.8.1...v0.9.0) (2021-01-12)
 
 * Fetch more icons [#57](https://github.com/k1LoW/ndiag/pull/57) ([k1LoW](https://github.com/k1LoW))
