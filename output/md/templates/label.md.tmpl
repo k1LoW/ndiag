@@ -8,7 +8,7 @@
   [ <a href="{{ .DescPath }}/{{ mdpath "_label" (.Label | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
 <p>
 
-## {{ "Components" | lookup }}
+## {{ "Relations" | lookup }}
 
 {{- range $j, $rel := .Label.Relations }}
 | # | {{ "Name" | lookup }} | {{ "Description" | lookup }} |

@@ -9,7 +9,7 @@ App-DB
   [ <a href="../input/ndiag.descriptions/_label-app.md">:pencil2: Edit description</a> ]
 <p>
 
-## Components
+## Relations
 | # | Name | Description |
 | --- | --- | --- |
 | 0 | lb-*:nginx |  <a href="../input/ndiag.descriptions/_component-lb-__nginx.md">:pencil2:</a> |

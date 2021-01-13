@@ -9,7 +9,7 @@ HTTP request flow
   [ <a href="../input/ndiag.descriptions/_label-http.md">:pencil2: Edit description</a> ]
 <p>
 
-## Components
+## Relations
 | # | Name | Description |
 | --- | --- | --- |
 | 0 | internet |  <a href="../input/ndiag.descriptions/_component-internet.md">:pencil2:</a> |
