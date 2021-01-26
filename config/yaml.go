@@ -130,7 +130,7 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 			Components: components,
 			Attrs:      relType.Attrs,
 		}
-		rel.Labels = []string{rel.Id()}
+		rel.Labels = []string{}
 		return rel, nil
 	case map[string]interface{}:
 		var (
@@ -166,9 +166,6 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 			for _, t := range ti.([]interface{}) {
 				labels = append(labels, t.(string))
 			}
-		}
-		if len(labels) == 0 {
-			labels = []string{id}
 		}
 		attrs := []*Attr{}
 		attrsi, ok := v["attrs"]

@@ -43,7 +43,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    4,
 			wantNEdgeLen:            5,
-			wantLabelLen:            2,
+			wantLabelLen:            1,
 		},
 		{
 			configFile:              "3_ndiag.yml",
@@ -55,7 +55,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    4,
 			wantNEdgeLen:            5,
-			wantLabelLen:            2,
+			wantLabelLen:            1,
 		},
 		{
 			desc:                    "Determine that it is the same component with or without query parameters.",
