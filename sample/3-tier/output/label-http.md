@@ -10,21 +10,41 @@ HTTP request flow
 <p>
 
 ## Relations
+
+<p align="right">
+  [ <a href="../input/ndiag.descriptions/_relation-5210b225c860.md">:pencil2: Edit description</a> ]
+<p>
+
 | # | Component | Description |
 | --- | --- | --- |
 | 0 | internet |  <a href="../input/ndiag.descriptions/_component-internet.md">:pencil2:</a> |
 | 1 | vip_group:lb:vip |  <a href="../input/ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
+
+
+<p align="right">
+  [ <a href="../input/ndiag.descriptions/_relation-26f058629792.md">:pencil2: Edit description</a> ]
+<p>
 
 | # | Component | Description |
 | --- | --- | --- |
 | 0 | vip_group:lb:vip |  <a href="../input/ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
 | 1 | lb-*:nginx |  <a href="../input/ndiag.descriptions/_component-lb-__nginx.md">:pencil2:</a> |
 
+
+<p align="right">
+  [ <a href="../input/ndiag.descriptions/_relation-156b344c3734.md">:pencil2: Edit description</a> ]
+<p>
+
 | # | Component | Description |
 | --- | --- | --- |
 | 0 | lb-*:nginx |  <a href="../input/ndiag.descriptions/_component-lb-__nginx.md">:pencil2:</a> |
 | 1 | app-*:nginx |  <a href="../input/ndiag.descriptions/_component-app-__nginx.md">:pencil2:</a> |
 | 2 | app-*:rails |  <a href="../input/ndiag.descriptions/_component-app-__rails.md">:pencil2:</a> |
+
+
+<p align="right">
+  [ <a href="../input/ndiag.descriptions/_relation-50c15086f6ec.md">:pencil2: Edit description</a> ]
+<p>
 
 | # | Component | Description |
 | --- | --- | --- |

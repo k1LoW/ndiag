@@ -390,15 +390,27 @@ func (cfg *Config) buildDescriptions() error {
 	}
 
 	// labels
-	for _, t := range cfg.labels {
-		if t.Desc != "" {
+	for _, l := range cfg.labels {
+		if l.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_label", []string{t.Id()}))
+		desc, err := cfg.readDescFile(MdPath("_label", []string{l.Id()}))
 		if err != nil {
 			return err
 		}
-		t.Desc = desc
+		l.Desc = desc
+	}
+
+	// relations
+	for _, r := range cfg.Relations {
+		if r.Desc != "" {
+			continue
+		}
+		desc, err := cfg.readDescFile(MdPath("_relation", []string{r.Id()}))
+		if err != nil {
+			return err
+		}
+		r.Desc = desc
 	}
 
 	return nil

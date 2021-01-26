@@ -10,11 +10,21 @@ App-DB
 <p>
 
 ## Relations
+
+<p align="right">
+  [ <a href="../input/ndiag.descriptions/_relation-156b344c3734.md">:pencil2: Edit description</a> ]
+<p>
+
 | # | Component | Description |
 | --- | --- | --- |
 | 0 | lb-*:nginx |  <a href="../input/ndiag.descriptions/_component-lb-__nginx.md">:pencil2:</a> |
 | 1 | app-*:nginx |  <a href="../input/ndiag.descriptions/_component-app-__nginx.md">:pencil2:</a> |
 | 2 | app-*:rails |  <a href="../input/ndiag.descriptions/_component-app-__rails.md">:pencil2:</a> |
+
+
+<p align="right">
+  [ <a href="../input/ndiag.descriptions/_relation-7aaba31b8414.md">:pencil2: Edit description</a> ]
+<p>
 
 | # | Component | Description |
 | --- | --- | --- |
