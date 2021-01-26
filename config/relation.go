@@ -64,6 +64,7 @@ var RelationTypeNetwork = &RelationType{
 
 type Relation struct {
 	relationId string
+	Desc       string
 	Type       *RelationType
 	Components []*Component
 	Labels     []string
@@ -80,6 +81,7 @@ func (n *Relation) Id() string {
 
 type rawRelation struct {
 	RelationId string `json:"id"`
+	Desc       string
 	Type       *RelationType
 	Components []string
 	Labels     []string `json:"-"`
