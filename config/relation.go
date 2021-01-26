@@ -79,7 +79,7 @@ func (n *Relation) Id() string {
 }
 
 type rawRelation struct {
-	relationId string
+	RelationId string `json:"id"`
 	Type       *RelationType
 	Components []string
 	Labels     []string `json:"-"`
@@ -87,8 +87,8 @@ type rawRelation struct {
 }
 
 func (rel *rawRelation) Id() string {
-	if rel.relationId != "" {
-		return strings.ToLower(rel.relationId)
+	if rel.RelationId != "" {
+		return strings.ToLower(rel.RelationId)
 	}
 	h := sha256.New()
 	key, _ := json.Marshal(rel)
@@ -96,7 +96,7 @@ func (rel *rawRelation) Id() string {
 		return ""
 	}
 	s := fmt.Sprintf("%x", h.Sum(nil))
-	return fmt.Sprintf("rel-%s", s[:12])
+	return s[:12]
 }
 
 type Label struct {
