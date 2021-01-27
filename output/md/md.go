@@ -181,31 +181,6 @@ func (m *Md) OutputLabel(wr io.Writer, t *config.Label) error {
 	return nil
 }
 
-func (m *Md) OutputRelation(wr io.Writer, rel *config.Relation) error {
-	ts, err := m.box.FindString("relation.md.tmpl")
-	if err != nil {
-		return err
-	}
-
-	relPath, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
-	if err != nil {
-		return err
-	}
-
-	tmpl := template.Must(template.New(rel.Id()).Funcs(output.Funcs(m.config)).Parse(ts))
-	tmplData := map[string]interface{}{
-		"Relation": rel,
-		"Format":   m.config.Format(),
-		"DescPath": relPath,
-	}
-
-	if err := tmpl.Execute(wr, tmplData); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (m *Md) OutputIndex(wr io.Writer) error {
 	ts, err := m.box.FindString("index.md.tmpl")
 	if err != nil {

@@ -9,14 +9,24 @@ App-DB
   [ <a href="../input/ndiag.descriptions/_label-app.md">:pencil2: Edit description</a> ]
 <p>
 
-## Components
-| # | Name | Description |
+## Relations
+
+<p align="right">
+  [ <a href="../input/ndiag.descriptions/_relation-lb-__nginx-84bca39.md">:pencil2: Edit description</a> ]
+<p>
+
+| # | Component | Description |
 | --- | --- | --- |
 | 0 | lb-*:nginx |  <a href="../input/ndiag.descriptions/_component-lb-__nginx.md">:pencil2:</a> |
 | 1 | app-*:nginx |  <a href="../input/ndiag.descriptions/_component-app-__nginx.md">:pencil2:</a> |
 | 2 | app-*:rails |  <a href="../input/ndiag.descriptions/_component-app-__rails.md">:pencil2:</a> |
 
-| # | Name | Description |
+
+<p align="right">
+  [ <a href="../input/ndiag.descriptions/_relation-app-__rails-7e8f28c.md">:pencil2: Edit description</a> ]
+<p>
+
+| # | Component | Description |
 | --- | --- | --- |
 | 0 | app-*:rails |  <a href="../input/ndiag.descriptions/_component-app-__rails.md">:pencil2:</a> |
 | 1 | db-*:postgresql |  <a href="../input/ndiag.descriptions/_component-db-__postgresql.md">:pencil2:</a> |

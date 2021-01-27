@@ -117,6 +117,8 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 	labels := []string{}
 	switch v := rel.(type) {
 	case []interface{}:
+		// networks:
+		//   - ["internet", "lb:nginx", "app:nginx", "app:rails"]
 		for _, r := range v {
 			components = append(components, r.(string))
 		}
@@ -128,7 +130,7 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 			Components: components,
 			Attrs:      relType.Attrs,
 		}
-		rel.Labels = []string{rel.Id()}
+		rel.Labels = []string{}
 		return rel, nil
 	case map[string]interface{}:
 		var (
@@ -165,9 +167,6 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 				labels = append(labels, t.(string))
 			}
 		}
-		if len(labels) == 0 {
-			labels = []string{id}
-		}
 		attrs := []*Attr{}
 		attrsi, ok := v["attrs"]
 		if ok {
@@ -187,7 +186,7 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 		attrs = append(relType.Attrs, attrs...)
 
 		return &rawRelation{
-			relationId: id,
+			RelationId: id,
 			Type:       relType,
 			Components: components,
 			Labels:     labels,

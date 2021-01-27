@@ -71,7 +71,7 @@ var docCmd = &cobra.Command{
 			return err
 		}
 
-		// cleanup empty descriptions/*.md
+		// cleanup empty ndiag.descriptions/*.md
 		descs, err := ioutil.ReadDir(cfg.DescPath)
 		if err != nil {
 			return err

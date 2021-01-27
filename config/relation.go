@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"sort"
 	"strings"
 
 	"github.com/elliotchance/orderedmap"
@@ -64,6 +65,7 @@ var RelationTypeNetwork = &RelationType{
 
 type Relation struct {
 	relationId string
+	Desc       string
 	Type       *RelationType
 	Components []*Component
 	Labels     []string
@@ -79,7 +81,8 @@ func (n *Relation) Id() string {
 }
 
 type rawRelation struct {
-	relationId string
+	RelationId string `json:"id"`
+	Desc       string
 	Type       *RelationType
 	Components []string
 	Labels     []string `json:"-"`
@@ -87,16 +90,27 @@ type rawRelation struct {
 }
 
 func (rel *rawRelation) Id() string {
-	if rel.relationId != "" {
-		return strings.ToLower(rel.relationId)
+	if rel.RelationId != "" {
+		return strings.ToLower(rel.RelationId)
 	}
 	h := sha256.New()
-	key, _ := json.Marshal(rel)
+	seed := []string{}
+	seed = append(seed, rel.Type.Name)
+	for _, c := range rel.Components {
+		seed = append(seed, queryTrim(c))
+	}
+	sort.Slice(rel.Labels, func(i, j int) bool {
+		return rel.Labels[i] < rel.Labels[j]
+	})
+	for _, l := range rel.Labels {
+		seed = append(seed, l)
+	}
+	key := strings.Join(seed, "-")
 	if _, err := io.WriteString(h, string(key)); err != nil {
 		return ""
 	}
 	s := fmt.Sprintf("%x", h.Sum(nil))
-	return fmt.Sprintf("rel-%s", s[:12])
+	return fmt.Sprintf("%s-%s", queryTrim(rel.Components[0]), s[:7])
 }
 
 type Label struct {

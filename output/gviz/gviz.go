@@ -64,14 +64,6 @@ func (g *Gviz) OutputLabel(wr io.Writer, t *config.Label) error {
 	return g.render(wr, buf.Bytes())
 }
 
-func (g *Gviz) OutputRelation(wr io.Writer, rel *config.Relation) error {
-	buf := &bytes.Buffer{}
-	if err := g.dot.OutputRelation(buf, rel); err != nil {
-		return err
-	}
-	return g.render(wr, buf.Bytes())
-}
-
 func (g *Gviz) render(wr io.Writer, b []byte) error {
 	format := g.config.Format()
 	switch format {

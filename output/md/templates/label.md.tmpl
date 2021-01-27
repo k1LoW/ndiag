@@ -8,10 +8,15 @@
   [ <a href="{{ .DescPath }}/{{ mdpath "_label" (.Label | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
 <p>
 
-## {{ "Components" | lookup }}
+## {{ "Relations" | lookup }}
 
 {{- range $j, $rel := .Label.Relations }}
-| # | {{ "Name" | lookup }} | {{ "Description" | lookup }} |
+{{ $rel.Desc }}
+<p align="right">
+  [ <a href="{{ $.DescPath }}/{{ mdpath "_relation" ($rel | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
+<p>
+
+| # | {{ "Component" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- | --- |
 {{- range $i, $c := $rel.Components }}
 | {{ $i }} | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |
