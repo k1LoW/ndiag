@@ -10,6 +10,7 @@ HTTP request flow
 <p>
 
 ## Relations
+internet -> vip
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_relation-5210b225c860.md">:pencil2: Edit description</a> ]
