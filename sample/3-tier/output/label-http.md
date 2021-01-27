@@ -10,9 +10,10 @@ HTTP request flow
 <p>
 
 ## Relations
+internet -> vip
 
 <p align="right">
-  [ <a href="../input/ndiag.descriptions/_relation-internet-5e788ca.md">:pencil2: Edit description</a> ]
+  [ <a href="../input/ndiag.descriptions/_relation-internet-c6eb5ba.md">:pencil2: Edit description</a> ]
 <p>
 
 | # | Component | Description |
@@ -22,7 +23,7 @@ HTTP request flow
 
 
 <p align="right">
-  [ <a href="../input/ndiag.descriptions/_relation-vip_group_lb_vip-0138c45.md">:pencil2: Edit description</a> ]
+  [ <a href="../input/ndiag.descriptions/_relation-vip_group_lb_vip-630ad09.md">:pencil2: Edit description</a> ]
 <p>
 
 | # | Component | Description |
@@ -32,7 +33,7 @@ HTTP request flow
 
 
 <p align="right">
-  [ <a href="../input/ndiag.descriptions/_relation-lb-__nginx-ef3d2d7.md">:pencil2: Edit description</a> ]
+  [ <a href="../input/ndiag.descriptions/_relation-lb-__nginx-84bca39.md">:pencil2: Edit description</a> ]
 <p>
 
 | # | Component | Description |
@@ -43,7 +44,7 @@ HTTP request flow
 
 
 <p align="right">
-  [ <a href="../input/ndiag.descriptions/_relation-lb-__keepalived-6782dfd.md">:pencil2: Edit description</a> ]
+  [ <a href="../input/ndiag.descriptions/_relation-lb-__keepalived-5e60b00.md">:pencil2: Edit description</a> ]
 <p>
 
 | # | Component | Description |

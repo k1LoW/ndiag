@@ -95,7 +95,7 @@ func (rel *rawRelation) Id() string {
 	}
 	h := sha256.New()
 	seed := []string{}
-	seed = append(seed, fmt.Sprintf("%v", rel.Type))
+	seed = append(seed, rel.Type.Name)
 	for _, c := range rel.Components {
 		seed = append(seed, queryTrim(c))
 	}
