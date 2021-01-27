@@ -6,7 +6,7 @@ Key features of `ndiag` are:
 
 - **N**ode-based: draw diagrams of nodes and their components. Nodes usually represent VMs, servers, or container hosts, but you can also redefine nodes.
 - **N**ested-clusters: nodes can be clustered in layers.
-- **N**-diagrams: generate multiple diagrams from a single configuration pair.
+- **N**-diagrams: generate multiple diagrams from a single configuration.
 
 ## Usage
 
