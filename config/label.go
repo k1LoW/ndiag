@@ -1,6 +1,9 @@
 package config
 
-import "strings"
+import (
+	"sort"
+	"strings"
+)
 
 type Label struct {
 	Name      string
@@ -8,10 +11,18 @@ type Label struct {
 	Relations []*Relation
 }
 
-func (t *Label) FullName() string {
-	return t.Name
+type Labels []*Label
+
+func (l *Label) FullName() string {
+	return l.Name
 }
 
-func (t *Label) Id() string {
-	return strings.ToLower(t.FullName())
+func (l *Label) Id() string {
+	return strings.ToLower(l.FullName())
+}
+
+func (labels Labels) Sort() {
+	sort.Slice(labels, func(i, j int) bool {
+		return labels[i].Name < labels[j].Name
+	})
 }

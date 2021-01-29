@@ -45,9 +45,9 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 	}
 
 	nodes := m.config.Nodes
-	labels := m.config.Labels()
+	labels := config.Labels{}
 	if len(d.Labels) > 0 {
-		labels = []*config.Label{}
+		labels = config.Labels{}
 		for _, s := range d.Labels {
 			label, ok := m.config.FindLabel(s)
 			if ok != nil {
@@ -60,7 +60,10 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 		if err != nil {
 			return err
 		}
+	} else {
+		labels = m.config.Labels()
 	}
+	labels.Sort()
 
 	tmpl := template.Must(template.New(d.Name).Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
@@ -121,7 +124,7 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 		return err
 	}
 
-	labels := []*config.Label{}
+	labels := config.Labels{}
 	relLabels := orderedmap.NewOrderedMap()
 	for _, c := range n.Components {
 		for _, e := range c.NEdges {
@@ -134,6 +137,7 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 		l, _ := relLabels.Get(k)
 		labels = append(labels, l.(*config.Label))
 	}
+	labels.Sort()
 
 	tmpl := template.Must(template.New(n.Id()).Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
@@ -187,6 +191,8 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 	if err != nil {
 		return err
 	}
+
+	m.config.Labels().Sort()
 
 	tmpl := template.Must(template.New("index").Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{

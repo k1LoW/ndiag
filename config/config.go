@@ -77,7 +77,7 @@ type Config struct {
 	clusterComponents []*Component
 	nodeComponents    []*Component
 	nEdges            []*NEdge
-	labels            []*Label
+	labels            Labels
 	colorSets         ColorSets
 	iconMap           *IconMap
 }
@@ -148,7 +148,7 @@ func (cfg *Config) NEdges() []*NEdge {
 	return cfg.nEdges
 }
 
-func (cfg *Config) Labels() []*Label {
+func (cfg *Config) Labels() Labels {
 	return cfg.labels
 }
 
