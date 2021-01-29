@@ -156,7 +156,7 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 	return nil
 }
 
-func (m *Md) OutputLabel(wr io.Writer, t *config.Label) error {
+func (m *Md) OutputLabel(wr io.Writer, l *config.Label) error {
 	ts, err := m.box.FindString("label.md.tmpl")
 	if err != nil {
 		return err
@@ -167,9 +167,9 @@ func (m *Md) OutputLabel(wr io.Writer, t *config.Label) error {
 		return err
 	}
 
-	tmpl := template.Must(template.New(t.Id()).Funcs(output.Funcs(m.config)).Parse(ts))
+	tmpl := template.Must(template.New(l.Id()).Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Label":    t,
+		"Label":    l,
 		"Format":   m.config.Format(),
 		"DescPath": relPath,
 	}
