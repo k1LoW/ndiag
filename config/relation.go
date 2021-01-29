@@ -68,7 +68,7 @@ type Relation struct {
 	Desc       string
 	Type       *RelationType
 	Components []*Component
-	Labels     []string
+	Labels     []*Label
 	Attrs      []*Attr
 }
 
@@ -111,20 +111,6 @@ func (rel *rawRelation) Id() string {
 	}
 	s := fmt.Sprintf("%x", h.Sum(nil))
 	return fmt.Sprintf("%s-%s", queryTrim(rel.Components[0]), s[:7])
-}
-
-type Label struct {
-	Name      string
-	Desc      string
-	Relations []*Relation
-}
-
-func (t *Label) FullName() string {
-	return t.Name
-}
-
-func (t *Label) Id() string {
-	return strings.ToLower(t.FullName())
 }
 
 func SplitRelations(relations []*Relation) []*NEdge {

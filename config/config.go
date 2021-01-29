@@ -196,11 +196,11 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, nodes []*Node, compo
 	comIds := orderedmap.NewOrderedMap()
 
 	for _, name := range labels {
-		t, err := cfg.FindLabel(name)
+		l, err := cfg.FindLabel(name)
 		if err != nil {
 			return clusters, nodes, components, nEdges, err
 		}
-		edges := SplitRelations(t.Relations)
+		edges := SplitRelations(l.Relations)
 
 		for _, e := range edges {
 			switch {
@@ -271,11 +271,11 @@ func (cfg *Config) PruneNodesByLabels(nodes []*Node, labels []string) ([]*Node, 
 	comIds := orderedmap.NewOrderedMap()
 
 	for _, name := range labels {
-		t, err := cfg.FindLabel(name)
+		l, err := cfg.FindLabel(name)
 		if err != nil {
 			return nodes, nil
 		}
-		edges := SplitRelations(t.Relations)
+		edges := SplitRelations(l.Relations)
 
 		for _, e := range edges {
 			switch {

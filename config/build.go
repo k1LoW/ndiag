@@ -255,10 +255,14 @@ func (cfg *Config) parseAndCollectCluster(clusterId string) (*Cluster, error) {
 
 func (cfg *Config) buildRelations() error {
 	for _, rel := range cfg.rawRelations {
+		labels := []*Label{}
+		for _, s := range rel.Labels {
+			labels = append(labels, cfg.FindOrCreateLabel(s))
+		}
 		nrel := &Relation{
 			relationId: rel.Id(),
 			Type:       rel.Type,
-			Labels:     rel.Labels,
+			Labels:     labels,
 			Attrs:      rel.Attrs,
 		}
 		for _, r := range rel.Components {
@@ -271,11 +275,7 @@ func (cfg *Config) buildRelations() error {
 		cfg.Relations = append(cfg.Relations, nrel)
 
 		// labels
-		for _, s := range rel.Labels {
-			if s == "" {
-				continue
-			}
-			l := cfg.FindOrCreateLabel(s)
+		for _, l := range nrel.Labels {
 			l.Relations = append(l.Relations, nrel)
 		}
 	}

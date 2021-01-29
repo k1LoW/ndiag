@@ -48,10 +48,10 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 	labels := m.config.Labels()
 	if len(d.Labels) > 0 {
 		labels = []*config.Label{}
-		for _, t := range d.Labels {
-			label, ok := m.config.FindLabel(t)
+		for _, s := range d.Labels {
+			label, ok := m.config.FindLabel(s)
 			if ok != nil {
-				return fmt.Errorf("label not found: %s", t)
+				return fmt.Errorf("label not found: %s", s)
 			}
 			labels = append(labels, label)
 		}
@@ -125,18 +125,14 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 	relLabels := orderedmap.NewOrderedMap()
 	for _, c := range n.Components {
 		for _, e := range c.NEdges {
-			for _, ts := range e.Relation.Labels {
-				for _, t := range m.config.Labels() {
-					if ts == t.Name {
-						relLabels.Set(ts, t)
-					}
-				}
+			for _, l := range e.Relation.Labels {
+				relLabels.Set(l.Id(), l)
 			}
 		}
 	}
 	for _, k := range relLabels.Keys() {
-		t, _ := relLabels.Get(k)
-		labels = append(labels, t.(*config.Label))
+		l, _ := relLabels.Get(k)
+		labels = append(labels, l.(*config.Label))
 	}
 
 	tmpl := template.Must(template.New(n.Id()).Funcs(output.Funcs(m.config)).Parse(ts))
