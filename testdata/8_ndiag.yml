@@ -1,0 +1,14 @@
+---
+nodes:
+  -
+    name: app
+    components:
+      - react app?label=node&label=ts
+    clusters:
+      - "vip_group:app"
+networks:
+  -
+    route:
+      - "internet?label=global"
+      - "vip_group:app:vip?label=cluster"
+      - "app:react app"

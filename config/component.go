@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -11,11 +12,13 @@ type Component struct {
 	Cluster  *Cluster
 	Node     *Node
 	NEdges   []*NEdge
+	Labels   []*Label
 	Metadata ComponentMetadata
 }
 
 type ComponentMetadata struct {
-	Icon string `qs:"icon"`
+	Icon   string   `qs:"icon"`
+	Labels []string `qs:"label"`
 }
 
 func (c *Component) FullName() string {
@@ -43,5 +46,23 @@ func (c *Component) OverrideMetadata(c2 *Component) error {
 	if c2.Metadata.Icon != "" {
 		c.Metadata.Icon = c2.Metadata.Icon
 	}
+	if len(c2.Metadata.Labels) > 0 {
+		c.Metadata.Labels = uniqueAndSort(append(c.Metadata.Labels, c2.Metadata.Labels...))
+	}
 	return nil
+}
+
+func uniqueAndSort(in []string) []string {
+	m := map[string]struct{}{}
+	for _, s := range in {
+		m[s] = struct{}{}
+	}
+	u := []string{}
+	for s := range m {
+		u = append(u, s)
+	}
+	sort.Slice(u, func(i, j int) bool {
+		return u[i] < u[j]
+	})
+	return u
 }

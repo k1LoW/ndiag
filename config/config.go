@@ -140,6 +140,10 @@ func (cfg *Config) NodeComponents() []*Component {
 	return cfg.nodeComponents
 }
 
+func (cfg *Config) Components() []*Component {
+	return append(append(cfg.globalComponents, cfg.nodeComponents...), cfg.clusterComponents...)
+}
+
 func (cfg *Config) NEdges() []*NEdge {
 	return cfg.nEdges
 }
@@ -503,12 +507,25 @@ func (cfg *Config) FindComponent(s string) (*Component, error) {
 }
 
 func (cfg *Config) FindLabel(name string) (*Label, error) {
-	for _, t := range cfg.Labels() {
-		if t.Name == name {
-			return t, nil
+	for _, l := range cfg.Labels() {
+		if l.Name == name {
+			return l, nil
 		}
 	}
 	return nil, fmt.Errorf("label not found: %s", name)
+}
+
+func (cfg *Config) FindOrCreateLabel(name string) *Label {
+	for _, l := range cfg.Labels() {
+		if l.Name == name {
+			return l
+		}
+	}
+	l := &Label{
+		Name: name,
+	}
+	cfg.labels = append(cfg.labels, l)
+	return l
 }
 
 func (cfg *Config) FindLayer(s string) (*Layer, error) {
