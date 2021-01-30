@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"sort"
@@ -19,11 +20,12 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 		DescPath        string             `yaml:"descPath"`
 		IconPath        string             `yaml:"iconPath,omitempty"`
 		Graph           *Graph             `yaml:"graph,omitempty"`
-		HideViews    bool               `yaml:"hideViews"`
+		HideViews       bool               `yaml:"hideViews"`
 		HideLayers      bool               `yaml:"hideLayers"`
 		HideRealNodes   bool               `yaml:"hideRealNodes"`
 		HideLabelGroups bool               `yaml:"hideLabelGroups"`
-		Views        []*View         `yaml:"views"`
+		Views           []*View            `yaml:"views"`
+		Old             []*View            `yaml:"diagrams"` // TODO: Remove
 		Nodes           []*Node            `yaml:"nodes"`
 		Networks        []interface{}      `yaml:"networks"`
 		Relations       []interface{}      `yaml:"relations"`
@@ -35,6 +37,9 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 
 	if err := yaml.Unmarshal(data, &raw); err != nil {
 		return err
+	}
+	if len(raw.Old) > 0 {
+		return errors.New("`diagrams:` is deprecated. Please use `views:` instead of `diagrams:`.")
 	}
 	d.Name = raw.Name
 	d.Desc = raw.Desc

@@ -60,11 +60,11 @@ type Config struct {
 	DescPath          string             `yaml:"descPath,omitempty"`
 	IconPath          string             `yaml:"iconPath,omitempty"`
 	Graph             *Graph             `yaml:"graph,omitempty"`
-	HideViews      bool               `yaml:"hideViews,omitempty"`
+	HideViews         bool               `yaml:"hideViews,omitempty"`
 	HideLayers        bool               `yaml:"hideLayers,omitempty"`
 	HideRealNodes     bool               `yaml:"hideRealNodes,omitempty"`
 	HideLabelGroups   bool               `yaml:"hideLabelGroups,omitempty"`
-	Views          []*View         `yaml:"views"`
+	Views             []*View            `yaml:"views"`
 	Nodes             []*Node            `yaml:"nodes"`
 	Relations         []*Relation        `yaml:"relations,omitempty"`
 	Dict              *dict.Dict         `yaml:"dict,omitempty"`
