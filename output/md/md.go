@@ -45,13 +45,13 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 	}
 
 	nodes := m.config.Nodes
-	labels := m.config.Labels()
+	labels := config.Labels{}
 	if len(d.Labels) > 0 {
-		labels = []*config.Label{}
-		for _, t := range d.Labels {
-			label, ok := m.config.FindLabel(t)
+		labels = config.Labels{}
+		for _, s := range d.Labels {
+			label, ok := m.config.FindLabel(s)
 			if ok != nil {
-				return fmt.Errorf("label not found: %s", t)
+				return fmt.Errorf("label not found: %s", s)
 			}
 			labels = append(labels, label)
 		}
@@ -60,7 +60,10 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 		if err != nil {
 			return err
 		}
+	} else {
+		labels = m.config.Labels()
 	}
+	labels.Sort()
 
 	tmpl := template.Must(template.New(d.Name).Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
@@ -121,23 +124,23 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 		return err
 	}
 
-	labels := []*config.Label{}
+	labels := config.Labels{}
 	relLabels := orderedmap.NewOrderedMap()
 	for _, c := range n.Components {
+		for _, l := range c.Labels {
+			relLabels.Set(l.Id(), l)
+		}
 		for _, e := range c.NEdges {
-			for _, ts := range e.Relation.Labels {
-				for _, t := range m.config.Labels() {
-					if ts == t.Name {
-						relLabels.Set(ts, t)
-					}
-				}
+			for _, l := range e.Relation.Labels {
+				relLabels.Set(l.Id(), l)
 			}
 		}
 	}
 	for _, k := range relLabels.Keys() {
-		t, _ := relLabels.Get(k)
-		labels = append(labels, t.(*config.Label))
+		l, _ := relLabels.Get(k)
+		labels = append(labels, l.(*config.Label))
 	}
+	labels.Sort()
 
 	tmpl := template.Must(template.New(n.Id()).Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
@@ -156,7 +159,7 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 	return nil
 }
 
-func (m *Md) OutputLabel(wr io.Writer, t *config.Label) error {
+func (m *Md) OutputLabel(wr io.Writer, l *config.Label) error {
 	ts, err := m.box.FindString("label.md.tmpl")
 	if err != nil {
 		return err
@@ -167,9 +170,9 @@ func (m *Md) OutputLabel(wr io.Writer, t *config.Label) error {
 		return err
 	}
 
-	tmpl := template.Must(template.New(t.Id()).Funcs(output.Funcs(m.config)).Parse(ts))
+	tmpl := template.Must(template.New(l.Id()).Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Label":    t,
+		"Label":    l,
 		"Format":   m.config.Format(),
 		"DescPath": relPath,
 	}
@@ -191,6 +194,8 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 	if err != nil {
 		return err
 	}
+
+	m.config.Labels().Sort()
 
 	tmpl := template.Must(template.New("index").Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{

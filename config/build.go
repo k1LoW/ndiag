@@ -166,6 +166,14 @@ func (cfg *Config) buildComponents() error {
 			return fmt.Errorf("cluster '%s' not found: %s", clName, c)
 		}
 	}
+
+	// find or create labels
+	for _, c := range cfg.Components() {
+		for _, l := range c.Metadata.Labels {
+			c.Labels = append(c.Labels, cfg.FindOrCreateLabel(l))
+		}
+	}
+
 	return nil
 }
 
@@ -246,12 +254,15 @@ func (cfg *Config) parseAndCollectCluster(clusterId string) (*Cluster, error) {
 }
 
 func (cfg *Config) buildRelations() error {
-	relLabels := orderedmap.NewOrderedMap()
 	for _, rel := range cfg.rawRelations {
+		labels := []*Label{}
+		for _, s := range rel.Labels {
+			labels = append(labels, cfg.FindOrCreateLabel(s))
+		}
 		nrel := &Relation{
 			relationId: rel.Id(),
 			Type:       rel.Type,
-			Labels:     rel.Labels,
+			Labels:     labels,
 			Attrs:      rel.Attrs,
 		}
 		for _, r := range rel.Components {
@@ -264,29 +275,11 @@ func (cfg *Config) buildRelations() error {
 		cfg.Relations = append(cfg.Relations, nrel)
 
 		// labels
-		for _, t := range rel.Labels {
-			if t == "" {
-				continue
-			}
-			var nt *Label
-			nti, ok := relLabels.Get(t)
-			if ok {
-				nt = nti.(*Label)
-			} else {
-				nt = &Label{
-					Name: t,
-				}
-				relLabels.Set(t, nt)
-			}
-			nt.Relations = append(nt.Relations, nrel)
+		for _, l := range nrel.Labels {
+			l.Relations = append(l.Relations, nrel)
 		}
 	}
 	cfg.nEdges = SplitRelations(cfg.Relations)
-
-	for _, k := range relLabels.Keys() {
-		nt, _ := relLabels.Get(k)
-		cfg.labels = append(cfg.labels, nt.(*Label))
-	}
 
 	return nil
 }
