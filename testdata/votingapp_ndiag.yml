@@ -1,4 +1,4 @@
-# https://github.com/dockersamples/example-voting-app/blob/master/docker-stack.yml
+# https://github.com/dockerexamples/example-voting-app/blob/master/docker-stack.yml
 nodes:
   -
     name: redis

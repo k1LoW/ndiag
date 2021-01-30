@@ -1,4 +1,4 @@
-Nodeをまとめるための設定 ( [sample](/sample/input/ndiag.yml#L13-L32) )
+Nodeをまとめるための設定 ( [example](/example/input/ndiag.yml#L13-L32) )
 
 nodes.ymlに以下のように3つのNodeがあり、
 

@@ -2,7 +2,7 @@
 
 ![diagram](node-documents.svg)
 
-出力されるアーキテクチャドキュメント ( [sample](/sample/output/README.md) )
+出力されるアーキテクチャドキュメント ( [example](/example/output/README.md) )
 
 
 <p align="right">

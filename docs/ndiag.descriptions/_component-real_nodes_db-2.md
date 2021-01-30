@@ -1,1 +1,1 @@
-in [nodes.yml](/sample/input/nodes.yml)
+in [nodes.yml](/example/input/nodes.yml)

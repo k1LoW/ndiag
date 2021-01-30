@@ -6,14 +6,14 @@
 
 #### 説明に利用するサンプルアーキテクチャ
 
-サンプルとしてnginx, Rails, PostgreSQLで構成された[3層アーキテクチャのドキュメント](/sample/3-tier/output/README.md)を例に説明します。
+サンプルとしてnginx, Rails, PostgreSQLで構成された[3層アーキテクチャのドキュメント](/example/3-tier/output/README.md)を例に説明します。
 
-![3tier](/sample/3-tier/output/diagram-overview.svg)
+![3tier](/example/3-tier/output/diagram-overview.svg)
 
 具体的に実行するコマンドは以下です。
 
 ``` console
-$ ndiag doc -c sample/3-tier/input/ndiag.yml -n sample/3-tier/input/nodes.yml --rm-dist
+$ ndiag doc -c example/3-tier/input/ndiag.yml -n example/3-tier/input/nodes.yml --rm-dist
 ```
 
 ### ドキュメントの運用サイクル
@@ -109,7 +109,7 @@ component id = `[node name]:[component name]`
 | --- | --- |
 | [input files](node-input_files.md) | <a href="../ndiag.descriptions.ja/_node-input_files.md">:pencil2:</a> |
 | [ndiag](node-ndiag.md) | `ndiag doc` コマンド |
-| [documents](node-documents.md) | 出力されるアーキテクチャドキュメント ( [sample](/sample/output/README.md) ) |
+| [documents](node-documents.md) | 出力されるアーキテクチャドキュメント ( [example](/example/output/README.md) ) |
 
 
 

@@ -2,14 +2,14 @@
 
 #### 説明に利用するサンプルアーキテクチャ
 
-サンプルとしてnginx, Rails, PostgreSQLで構成された[3層アーキテクチャのドキュメント](/sample/3-tier/output/README.md)を例に説明します。
+サンプルとしてnginx, Rails, PostgreSQLで構成された[3層アーキテクチャのドキュメント](/example/3-tier/output/README.md)を例に説明します。
 
-![3tier](/sample/3-tier/output/diagram-overview.svg)
+![3tier](/example/3-tier/output/diagram-overview.svg)
 
 具体的に実行するコマンドは以下です。
 
 ``` console
-$ ndiag doc -c sample/3-tier/input/ndiag.yml -n sample/3-tier/input/nodes.yml --rm-dist
+$ ndiag doc -c example/3-tier/input/ndiag.yml -n example/3-tier/input/nodes.yml --rm-dist
 ```
 
 ### ドキュメントの運用サイクル

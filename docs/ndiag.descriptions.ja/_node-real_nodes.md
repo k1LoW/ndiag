@@ -1,4 +1,4 @@
-信頼できる情報源から得たNode ( [sample](/sample/input/nodes.yml#L1-L7) )
+信頼できる情報源から得たNode ( [example](/example/input/nodes.yml#L1-L7) )
 
 例では、Terraformの `*.tf` や `*.tfstate`、Chefの `nodes/` ファイルから得たインスタンスの情報をNodeとしています。
 

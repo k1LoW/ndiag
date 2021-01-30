@@ -17,7 +17,7 @@
 | --- | --- |
 | [input files](node-input_files.md) | <a href="../ndiag.descriptions.ja/_node-input_files.md">:pencil2:</a> |
 | [ndiag](node-ndiag.md) | `ndiag doc` コマンド |
-| [documents](node-documents.md) | 出力されるアーキテクチャドキュメント ( [sample](/sample/output/README.md) ) |
+| [documents](node-documents.md) | 出力されるアーキテクチャドキュメント ( [example](/example/output/README.md) ) |
 
 
 ---

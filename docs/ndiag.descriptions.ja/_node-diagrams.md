@@ -1,4 +1,4 @@
-[custom document](node-documents.md#components) を生成するための設定 ( [sample](/sample/input/ndiag.yml#L5-L12) )
+[custom document](node-documents.md#components) を生成するための設定 ( [example](/example/input/ndiag.yml#L5-L12) )
 
 サンプルアーキテクチャのndiag.ymlの `diagrams:` の設定は以下のようになっています。
 
