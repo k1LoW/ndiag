@@ -310,8 +310,8 @@ func (cfg *Config) buildDescriptions() error {
 		if d.Desc != "" {
 			continue
 		}
-		path := MdPath("_view", []string{d.Id()})
-		oldPath := MdPath("_diagram", []string{d.Id()})
+		path := filepath.Join(cfg.DescPath, MdPath("_view", []string{d.Id()}))
+		oldPath := filepath.Join(cfg.DescPath, MdPath("_diagram", []string{d.Id()}))
 		if _, err := os.Stat(oldPath); err == nil {
 			if _, err := os.Stat(path); err == nil {
 				return fmt.Errorf("old description file exists: %s", oldPath)
@@ -320,7 +320,7 @@ func (cfg *Config) buildDescriptions() error {
 				return err
 			}
 		}
-		desc, err := cfg.readDescFile(path)
+		desc, err := cfg.readDescFile(MdPath("_view", []string{d.Id()}))
 		if err != nil {
 			return err
 		}
