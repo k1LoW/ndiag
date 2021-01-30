@@ -14,13 +14,15 @@ type Node struct {
 	Clusters      Clusters     `yaml:"clusters,omitempty"`
 	Metadata      NodeMetadata `yaml:"metadata,omitempty"`
 	RealNodes     []*RealNode  `yaml:"-"`
+	Labels        Labels
 	nameRe        *regexp.Regexp
 	rawComponents []string
 	rawClusters   []string
 }
 
 type NodeMetadata struct {
-	Icon string `yaml:"icon,omitempty"`
+	Icon   string   `yaml:"icon,omitempty"`
+	Labels []string `yaml:"labels,omitempty"`
 }
 
 func (n *Node) FullName() string {

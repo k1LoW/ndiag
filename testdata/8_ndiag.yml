@@ -6,6 +6,10 @@ nodes:
       - react app?label=node&label=ts
     clusters:
       - "vip_group:app"
+    metadata:
+      labels:
+        - node
+        - ubuntu
 networks:
   -
     route:

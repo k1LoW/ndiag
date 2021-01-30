@@ -59,6 +59,9 @@ func (cfg *Config) buildNodes() error {
 				return fmt.Errorf("not found icon: %s", n.Metadata.Icon)
 			}
 		}
+		for _, s := range n.Metadata.Labels {
+			n.Labels = append(n.Labels, cfg.FindOrCreateLabel(s))
+		}
 	}
 	return nil
 }
