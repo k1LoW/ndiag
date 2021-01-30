@@ -29,10 +29,10 @@ func Funcs(cfg *config.Config) map[string]interface{} {
 		"nl2br": func(s string) string {
 			return nl2brRep.Replace(s)
 		},
-		"id": func(e config.NNode) string {
+		"id": func(e config.Element) string {
 			return unescRep.Replace(e.Id())
 		},
-		"fullname": func(e config.NNode) string {
+		"fullname": func(e config.Element) string {
 			return unescRep.Replace(e.FullName())
 		},
 		"unesc": func(s string) string {
@@ -133,7 +133,7 @@ func Funcs(cfg *config.Config) map[string]interface{} {
 		},
 		"componentlink": componentLink,
 		"rellink":       relLink,
-		"fromlinks": func(edges []*config.NEdge, base *config.Component) string {
+		"fromlinks": func(edges []*config.Edge, base *config.Component) string {
 			links := []string{}
 			for _, e := range edges {
 				if e.Src.Id() != base.Id() {
@@ -142,7 +142,7 @@ func Funcs(cfg *config.Config) map[string]interface{} {
 			}
 			return strings.Join(unique(links), " / ")
 		},
-		"tolinks": func(edges []*config.NEdge, base *config.Component) string {
+		"tolinks": func(edges []*config.Edge, base *config.Component) string {
 			links := []string{}
 			for _, e := range edges {
 				if e.Dst.Id() != base.Id() {
@@ -170,7 +170,7 @@ func Funcs(cfg *config.Config) map[string]interface{} {
 			}
 			return dict
 		},
-		"is_linked": func(c *config.Component, edges []*config.NEdge) bool {
+		"is_linked": func(c *config.Component, edges []*config.Edge) bool {
 			for _, e := range edges {
 				if c.Id() == e.Src.Id() || c.Id() == e.Dst.Id() {
 					return true

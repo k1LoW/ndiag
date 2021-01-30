@@ -32,17 +32,20 @@ var DefaultIconPath = "ndiag.icons"
 // DefaultFormat is the default diagram format
 const DefaultFormat = "svg"
 
-type NNode interface {
+// Element is graph element
+type Element interface {
 	Id() string
 	FullName() string
 }
 
+// Attr is attribute of graph element/edge
 type Attr struct {
 	Key   string
 	Value string
 }
 
-type NEdge struct {
+// Edge is graph edge
+type Edge struct {
 	Src      *Component
 	Dst      *Component
 	Desc     string
@@ -76,7 +79,7 @@ type Config struct {
 	globalComponents  []*Component
 	clusterComponents []*Component
 	nodeComponents    []*Component
-	nEdges            []*NEdge
+	edges             []*Edge
 	labels            Labels
 	colorSets         ColorSets
 	iconMap           *IconMap
@@ -144,8 +147,8 @@ func (cfg *Config) Components() []*Component {
 	return append(append(cfg.globalComponents, cfg.nodeComponents...), cfg.clusterComponents...)
 }
 
-func (cfg *Config) NEdges() []*NEdge {
-	return cfg.nEdges
+func (cfg *Config) Edges() []*Edge {
+	return cfg.edges
 }
 
 func (cfg *Config) Labels() Labels {
@@ -156,17 +159,17 @@ func (cfg *Config) ColorSets() ColorSets {
 	return cfg.colorSets
 }
 
-func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*NEdge, error) {
-	nEdges := []*NEdge{}
+func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*Edge, error) {
+	edges := []*Edge{}
 	if len(layers) == 0 {
-		return Clusters{}, cfg.Nodes, cfg.nEdges, nil
+		return Clusters{}, cfg.Nodes, cfg.edges, nil
 	}
 	clusters, globalNodes, err := buildNestedClusters(cfg.Clusters(), layers, cfg.Nodes)
 	if err != nil {
 		return clusters, globalNodes, nil, err
 	}
 
-	for _, e := range cfg.nEdges {
+	for _, e := range cfg.edges {
 		hBelongTo := false
 		tBelongTo := false
 		for _, l := range layers {
@@ -178,19 +181,19 @@ func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*N
 			}
 		}
 		if hBelongTo && tBelongTo {
-			nEdges = append(nEdges, e)
+			edges = append(edges, e)
 		}
 	}
 
-	return clusters, globalNodes, nEdges, nil
+	return clusters, globalNodes, edges, nil
 }
 
-func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node, globalComponents []*Component, nEdges []*NEdge, labels []string) (Clusters, []*Node, []*Component, []*NEdge, error) {
+func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node, globalComponents []*Component, edges []*Edge, labels []string) (Clusters, []*Node, []*Component, []*Edge, error) {
 	if len(labels) == 0 {
-		return clusters, globalNodes, globalComponents, nEdges, nil
+		return clusters, globalNodes, globalComponents, edges, nil
 	}
 
-	remainNEdges := []*NEdge{}
+	filteredEdges := []*Edge{}
 	nIds := orderedmap.NewOrderedMap()
 	cIds := orderedmap.NewOrderedMap()
 	comIds := orderedmap.NewOrderedMap()
@@ -199,7 +202,7 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 	for _, s := range labels {
 		l, err := cfg.FindLabel(s)
 		if err != nil {
-			return clusters, globalNodes, globalComponents, nEdges, err
+			return clusters, globalNodes, globalComponents, edges, err
 		}
 		allowLabels = append(allowLabels, l)
 	}
@@ -223,13 +226,13 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 		}
 	}
 
-	// collect filtered cluster/nodes/components/nEdges using nEdges
-	for _, e := range nEdges {
+	// collect filtered cluster/nodes/components/edges using edges
+	for _, e := range edges {
 		if len(e.Relation.Labels.Subtract(allowLabels)) == 0 {
 			continue
 		}
 
-		remainNEdges = append(remainNEdges, e)
+		filteredEdges = append(filteredEdges, e)
 
 		// src
 		comIds.Set(e.Src.Id(), e.Src)
@@ -293,7 +296,7 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 	}
 	globalComponents = filteredComponents
 
-	return clusters, globalNodes, globalComponents, remainNEdges, nil
+	return clusters, globalNodes, globalComponents, filteredEdges, nil
 }
 
 func (cfg *Config) PruneNodesByLabels(nodes []*Node, labels []string) ([]*Node, error) {
@@ -577,12 +580,12 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 	leaf := layers[len(layers)-1]
 	layers = layers[:len(layers)-1]
 
-	remain := []*Node{}
+	globalNodes := []*Node{}
 	belongTo := []*Node{}
 	for _, n := range nodes {
 		c := n.Clusters.FindByLayer(leaf)
 		if len(c) == 0 {
-			remain = append(remain, n)
+			globalNodes = append(globalNodes, n)
 			continue
 		}
 		if len(c) > 1 {
@@ -639,7 +642,7 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 		for _, c := range clusters {
 			if c.Parent == nil && (c.Layer.Name == leaf || len(c.Nodes) > 0) {
 				for _, n := range c.Nodes {
-					for _, rn := range remain {
+					for _, rn := range globalNodes {
 						if n == rn {
 							continue NN
 						}
@@ -651,7 +654,7 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 		clusters = root
 	}
 
-	return buildNestedClusters(clusters, layers, remain)
+	return buildNestedClusters(clusters, layers, globalNodes)
 }
 
 func (cfg *Config) checkFormat() error {

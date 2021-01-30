@@ -31,12 +31,12 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 	}
 	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config)).Parse(ts))
 
-	clusters, remain, nEdges, err := d.config.BuildNestedClusters(diag.Layers)
+	clusters, globalNodes, edges, err := d.config.BuildNestedClusters(diag.Layers)
 	if err != nil {
 		return err
 	}
 	globalComponents := d.config.GlobalComponents()
-	clusters, remain, globalComponents, nEdges, err = d.config.PruneClustersByLabels(clusters, remain, globalComponents, nEdges, diag.Labels)
+	clusters, globalNodes, globalComponents, edges, err = d.config.PruneClustersByLabels(clusters, globalNodes, globalComponents, edges, diag.Labels)
 	if err != nil {
 		return err
 	}
@@ -44,9 +44,9 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 	if err := tmpl.Execute(wr, map[string]interface{}{
 		"GraphAttrs":       d.config.Graph.Attrs(),
 		"Clusters":         clusters,
-		"RemainNodes":      remain,
+		"GlobalNodes":      globalNodes,
 		"GlobalComponents": globalComponents,
-		"Edges":            config.MergeEdges(nEdges),
+		"Edges":            config.MergeEdges(edges),
 		"HideUnlinked":     false,
 		"HideRealNodes":    d.config.HideRealNodes,
 	}); err != nil {
@@ -62,14 +62,14 @@ func (d *Dot) OutputLayer(wr io.Writer, l *config.Layer) error {
 	}
 	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config)).Parse(ts))
 
-	clusters, remain, nEdges, err := d.config.BuildNestedClusters([]string{l.Name})
+	clusters, globalNodes, edges, err := d.config.BuildNestedClusters([]string{l.Name})
 	if err != nil {
 		return err
 	}
-	edges := []*config.NEdge{}
+	filteredEdges := []*config.Edge{}
 L:
-	for _, e := range nEdges {
-		for _, n := range remain {
+	for _, e := range edges {
+		for _, n := range globalNodes {
 			// remove rel with global nodes
 			if strings.HasPrefix(e.Src.Id(), fmt.Sprintf("%s:", n.Id())) {
 				continue L
@@ -82,15 +82,15 @@ L:
 		if (e.Src.Node == nil && e.Src.Cluster == nil) || (e.Dst.Node == nil && e.Dst.Cluster == nil) {
 			continue L
 		}
-		edges = append(edges, e)
+		filteredEdges = append(filteredEdges, e)
 	}
 
 	if err := tmpl.Execute(wr, map[string]interface{}{
 		"GraphAttrs":       d.config.Graph.Attrs(),
 		"Clusters":         clusters,
-		"RemainNodes":      []*config.Node{},
+		"GlobalNodes":      []*config.Node{},
 		"GlobalComponents": []*config.Component{},
-		"Edges":            config.MergeEdges(edges),
+		"Edges":            config.MergeEdges(filteredEdges),
 		"HideUnlinked":     false,
 		"HideRealNodes":    d.config.HideRealNodes,
 	}); err != nil {
@@ -113,9 +113,9 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 	nIds.Set(n.Id(), n)
 	globalComponents := []*config.Component{}
 	gIds := orderedmap.NewOrderedMap() // map[string]*config.Component{}
-	edges := []*config.NEdge{}
+	edges := []*config.Edge{}
 
-	for _, e := range d.config.NEdges() {
+	for _, e := range d.config.Edges() {
 		if (e.Src.Node == nil || e.Src.Node.Id() != n.Id()) && (e.Dst.Node == nil || e.Dst.Node.Id() != n.Id()) {
 			continue
 		}
@@ -156,7 +156,7 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 		"GraphAttrs":       d.config.Graph.Attrs(),
 		"MainNodeId":       n.Id(),
 		"Clusters":         clusters,
-		"RemainNodes":      nodes,
+		"GlobalNodes":      nodes,
 		"GlobalComponents": globalComponents,
 		"Edges":            config.MergeEdges(edges),
 		"HideRealNodes":    d.config.HideRealNodes,
@@ -173,13 +173,13 @@ func (d *Dot) OutputLabel(wr io.Writer, l *config.Label) error {
 	}
 	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config)).Parse(ts))
 
-	clusters, globalNodes, nEdges, err := d.config.BuildNestedClusters([]string{})
+	clusters, globalNodes, edges, err := d.config.BuildNestedClusters([]string{})
 	if err != nil {
 		return err
 	}
 
 	globalComponents := d.config.GlobalComponents()
-	clusters, globalNodes, globalComponents, nEdges, err = d.config.PruneClustersByLabels(clusters, globalNodes, globalComponents, nEdges, []string{l.Name})
+	clusters, globalNodes, globalComponents, edges, err = d.config.PruneClustersByLabels(clusters, globalNodes, globalComponents, edges, []string{l.Name})
 	if err != nil {
 		return err
 	}
@@ -187,9 +187,9 @@ func (d *Dot) OutputLabel(wr io.Writer, l *config.Label) error {
 	if err := tmpl.Execute(wr, map[string]interface{}{
 		"GraphAttrs":       d.config.Graph.Attrs(),
 		"Clusters":         clusters,
-		"RemainNodes":      globalNodes,
+		"GlobalNodes":      globalNodes,
 		"GlobalComponents": globalComponents,
-		"Edges":            nEdges,
+		"Edges":            edges,
 		"HideUnlinked":     false,
 		"HideRealNodes":    d.config.HideRealNodes,
 	}); err != nil {
