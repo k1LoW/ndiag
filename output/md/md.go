@@ -130,7 +130,7 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 		for _, l := range c.Labels {
 			relLabels.Set(l.Id(), l)
 		}
-		for _, e := range c.NEdges {
+		for _, e := range c.Edges {
 			for _, l := range e.Relation.Labels {
 				relLabels.Set(l.Id(), l)
 			}

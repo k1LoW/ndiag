@@ -279,7 +279,7 @@ func (cfg *Config) buildRelations() error {
 			l.Relations = append(l.Relations, nrel)
 		}
 	}
-	cfg.nEdges = SplitRelations(cfg.Relations)
+	cfg.edges = SplitRelations(cfg.Relations)
 
 	return nil
 }

@@ -11,7 +11,7 @@ type Component struct {
 	Desc     string
 	Cluster  *Cluster
 	Node     *Node
-	NEdges   []*NEdge
+	Edges   []*Edge
 	Labels   Labels
 	Metadata ComponentMetadata
 }

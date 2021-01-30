@@ -18,7 +18,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 		wantGlobalComponentLen  int
 		wantClusterComponentLen int
 		wantNodeComponentLen    int
-		wantNEdgeLen            int
+		wantEdgeLen            int
 		wantLabelLen            int
 	}{
 		{
@@ -30,7 +30,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantGlobalComponentLen:  0,
 			wantClusterComponentLen: 0,
 			wantNodeComponentLen:    3,
-			wantNEdgeLen:            0,
+			wantEdgeLen:            0,
 			wantLabelLen:            0,
 		},
 		{
@@ -42,7 +42,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantGlobalComponentLen:  1,
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    4,
-			wantNEdgeLen:            5,
+			wantEdgeLen:            5,
 			wantLabelLen:            1,
 		},
 		{
@@ -54,7 +54,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantGlobalComponentLen:  1,
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    4,
-			wantNEdgeLen:            5,
+			wantEdgeLen:            5,
 			wantLabelLen:            1,
 		},
 		{
@@ -67,7 +67,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantGlobalComponentLen:  1,
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    4,
-			wantNEdgeLen:            6,
+			wantEdgeLen:            6,
 			wantLabelLen:            1,
 		},
 		{
@@ -80,7 +80,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantGlobalComponentLen:  1,
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    0,
-			wantNEdgeLen:            1,
+			wantEdgeLen:            1,
 			wantLabelLen:            0,
 		},
 		{
@@ -93,7 +93,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantGlobalComponentLen:  1,
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    1,
-			wantNEdgeLen:            2,
+			wantEdgeLen:            2,
 			wantLabelLen:            4,
 		},
 	}
@@ -135,8 +135,8 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			if got := len(d.NodeComponents()); got != tt.wantNodeComponentLen {
 				t.Errorf("TestLoadConfigAndRealNodes(%d) node component len got %v\nwant %v", i, got, tt.wantNodeComponentLen)
 			}
-			if got := len(d.NEdges()); got != tt.wantNEdgeLen {
-				t.Errorf("TestLoadConfigAndRealNodes(%d) nedge len got %v\nwant %v", i, got, tt.wantNEdgeLen)
+			if got := len(d.Edges()); got != tt.wantEdgeLen {
+				t.Errorf("TestLoadConfigAndRealNodes(%d) nedge len got %v\nwant %v", i, got, tt.wantEdgeLen)
 			}
 			if got := len(d.Labels()); got != tt.wantLabelLen {
 				t.Errorf("TestLoadConfigAndRealNodes(%d) label len got %v\nwant %v", i, got, tt.wantLabelLen)
@@ -152,7 +152,7 @@ func TestBuildNestedCluster(t *testing.T) {
 		layers            []string
 		wantClusterLen    int
 		wantGlobalNodeLen int
-		wantNEdgeLen      int
+		wantEdgeLen      int
 	}{
 		{"1_ndiag.yml", []string{"1_nodes.yml"}, []string{}, 0, 3, 0},
 		{"1_ndiag.yml", []string{"1_nodes.yml"}, []string{"consul"}, 1, 0, 0},
@@ -189,7 +189,7 @@ func TestBuildNestedCluster(t *testing.T) {
 			cNodeComponentLen := len(cfg.NodeComponents())
 			cRelationLen := len(cfg.Relations)
 
-			gotClusters, gotNodes, gotNEdges, err := cfg.BuildNestedClusters(tt.layers)
+			gotClusters, gotNodes, gotEdges, err := cfg.BuildNestedClusters(tt.layers)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -199,8 +199,8 @@ func TestBuildNestedCluster(t *testing.T) {
 			if got := len(gotNodes); got != tt.wantGlobalNodeLen {
 				t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, tt.wantGlobalNodeLen)
 			}
-			if got := len(gotNEdges); got != tt.wantNEdgeLen {
-				t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, tt.wantNEdgeLen)
+			if got := len(gotEdges); got != tt.wantEdgeLen {
+				t.Errorf("TestBuildNestedCluster(%d) got %v want %v", i, got, tt.wantEdgeLen)
 			}
 
 			if got := len(cfg.Nodes); got != cNodeLen {
