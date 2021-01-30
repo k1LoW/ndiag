@@ -209,8 +209,16 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 
 	// collect filtered nodes
 	for _, n := range cfg.Nodes {
+		if len(n.Labels.Subtract(allowLabels)) > 0 {
+			nIds.Set(n.Id(), n)
+			for _, c := range n.Components {
+				comIds.Set(c.Id(), c)
+			}
+			continue
+		}
 		for _, c := range n.Components {
 			if len(c.Labels.Subtract(allowLabels)) > 0 {
+				comIds.Set(c.Id(), c)
 				nIds.Set(n.Id(), n)
 			}
 		}

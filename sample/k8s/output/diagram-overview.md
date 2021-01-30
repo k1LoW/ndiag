@@ -25,6 +25,9 @@
 
 | Name | Description |
 | --- | --- |
+| [limits:b](label-limits_b.md) | <a href="../input/ndiag.descriptions/_label-limits_b.md">:pencil2:</a> |
+| [netpol:a](label-netpol_a.md) | <a href="../input/ndiag.descriptions/_label-netpol_a.md">:pencil2:</a> |
+| [quota:c](label-quota_c.md) | <a href="../input/ndiag.descriptions/_label-quota_c.md">:pencil2:</a> |
 
 ---
 

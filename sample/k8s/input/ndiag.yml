@@ -8,11 +8,12 @@ nodes:
   - name: my-namespace
     clusters:
       - 'k8s:my-cluster?icon=k8s-logo'
-      - 'netpol:a'
-      - 'limits:b'
-      - 'quota:c'
     metadata:
       icon: k8s-resources-ns
+      labels:
+        - 'netpol:a'
+        - 'limits:b'
+        - 'quota:c'
 relations:
   -
     type: network
