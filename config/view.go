@@ -5,14 +5,14 @@ import (
 	"strings"
 )
 
-type Diagram struct {
+type View struct {
 	Name   string   `yaml:"name"`
 	Desc   string   `yaml:"desc,omitempty"`
 	Layers []string `yaml:"layers"`
 	Labels []string `yaml:"labels,omitempty"`
 }
 
-func (d *Diagram) FullName() string {
+func (d *View) FullName() string {
 	switch {
 	case d.Name != "":
 		return d.Name
@@ -27,6 +27,6 @@ func (d *Diagram) FullName() string {
 	}
 }
 
-func (d *Diagram) Id() string {
+func (d *View) Id() string {
 	return strings.ToLower(d.FullName())
 }

@@ -1,6 +1,6 @@
 # {{ .Config.Name }}
 
-![diagram]({{ imgpath "diagram" (.Diagram | id) .Format }})
+![view]({{ imgpath "view" (.View | id) .Format }})
 
 {{ .Config.Desc }}
 
@@ -8,13 +8,13 @@
   [ <a href="{{ .DescPath }}/{{ mdpath "_index" "" }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
 <p>
 
-{{ if not .Config.HideDiagrams }}
-## {{ "Diagrams" | lookup }}
+{{ if not .Config.HideViews }}
+## {{ "Views" | lookup }}
 
 | {{ "Name" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- |
-{{- range $i, $d := .Diagrams }}
-| [{{ $d.Name }}]({{ mdpath "diagram" ($d | id) }}) | {{ if ne $d.Desc "" }}{{ $d.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_diagram" ($d | id) }}">:pencil2:</a>{{ end }} |
+{{- range $i, $d := .Views }}
+| [{{ $d.Name }}]({{ mdpath "view" ($d | id) }}) | {{ if ne $d.Desc "" }}{{ $d.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_view" ($d | id) }}">:pencil2:</a>{{ end }} |
 {{- end }}
 {{- end }}
 

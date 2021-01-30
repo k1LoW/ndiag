@@ -1,7 +1,7 @@
 ---
 name: 3-Tier Architecture
 docPath: ../output
-diagrams:
+views:
   -
     name: overview
     layers: ["consul", "vip_group"]

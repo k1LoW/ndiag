@@ -1,6 +1,6 @@
 # S3
 
-![diagram](node-s3.svg)
+![view](node-s3.svg)
 
 
 

@@ -1,12 +1,11 @@
-# overview
+# output
 
-![diagram](diagram-overview.svg)
+![view](view-output.svg)
 
-全体イメージ
 
 
 <p align="right">
-  [ <a href="../ndiag.descriptions.ja/_diagram-overview.md">:pencil2: Edit description</a> ]
+  [ <a href="../ndiag.descriptions.ja/_view-output.md">:pencil2: Edit description</a> ]
 <p>
 
 

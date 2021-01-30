@@ -1,6 +1,6 @@
 # Exposed Pod with 3 replicas
 
-![diagram](diagram-overview.svg)
+![view](view-overview.svg)
 
 See https://github.com/kubernetes/community/tree/master/icons#usage-example
 
@@ -10,11 +10,11 @@ See https://github.com/kubernetes/community/tree/master/icons#usage-example
 <p>
 
 
-## Diagrams
+## Views
 
 | Name | Description |
 | --- | --- |
-| [overview](diagram-overview.md) | <a href="../input/ndiag.descriptions/_diagram-overview.md">:pencil2:</a> |
+| [overview](view-overview.md) | <a href="../input/ndiag.descriptions/_view-overview.md">:pencil2:</a> |
 
 
 ## Layers

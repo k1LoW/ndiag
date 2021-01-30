@@ -1,6 +1,6 @@
 # lb-*
 
-![diagram](node-lb-_.svg)
+![view](node-lb-_.svg)
 
 Load balancer
 

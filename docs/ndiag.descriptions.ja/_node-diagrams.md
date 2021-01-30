@@ -1,9 +1,9 @@
 [custom document](node-documents.md#components) を生成するための設定 ( [example](/example/input/ndiag.yml#L5-L12) )
 
-サンプルアーキテクチャのndiag.ymlの `diagrams:` の設定は以下のようになっています。
+サンプルアーキテクチャのndiag.ymlの `views:` の設定は以下のようになっています。
 
 ``` yaml
-diagrams:
+views:
   -
     name: overview
     layers: ["consul", "vip_group"]

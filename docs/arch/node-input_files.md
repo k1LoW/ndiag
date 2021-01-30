@@ -1,6 +1,6 @@
 # input files
 
-![diagram](node-input_files.svg)
+![view](node-input_files.svg)
 
 
 

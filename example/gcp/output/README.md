@@ -1,6 +1,6 @@
 # Simple Compute Engine Usage
 
-![diagram](diagram-overview.svg)
+![view](view-overview.svg)
 
 See https://docs.google.com/presentation/d/1vjm5YdmOH5LrubFhHf1vlqW2O9Z2UqdWA8biN3e8K5U/edit#slide=id.g19bd855f64_0_292
 
@@ -10,11 +10,11 @@ See https://docs.google.com/presentation/d/1vjm5YdmOH5LrubFhHf1vlqW2O9Z2UqdWA8bi
 <p>
 
 
-## Diagrams
+## Views
 
 | Name | Description |
 | --- | --- |
-| [overview](diagram-overview.md) | <a href="../input/ndiag.descriptions/_diagram-overview.md">:pencil2:</a> |
+| [overview](view-overview.md) | <a href="../input/ndiag.descriptions/_view-overview.md">:pencil2:</a> |
 
 
 ## Layers

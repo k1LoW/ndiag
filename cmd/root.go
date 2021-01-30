@@ -44,8 +44,8 @@ var (
 
 var rootCmd = &cobra.Command{
 	Use:          "ndiag",
-	Short:        `ndiag is a "high-level architecture" diagramming/documentation tool`,
-	Long:         `ndiag is a "high-level architecture" diagramming/documentation tool.`,
+	Short:        `ndiag is a "high-level architecture" viewming/documentation tool`,
+	Long:         `ndiag is a "high-level architecture" viewming/documentation tool.`,
 	Version:      version.Version,
 	SilenceUsage: true,
 }

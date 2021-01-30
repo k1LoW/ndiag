@@ -9,7 +9,7 @@ graph:
     rankdir: LR
 dict:
   'Nodes': 'Components'
-diagrams:
+views:
   -
     name: "overview"
     layers: ["type"]

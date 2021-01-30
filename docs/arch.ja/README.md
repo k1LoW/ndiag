@@ -1,6 +1,6 @@
 # ndiag アーキテクチャ
 
-![diagram](diagram-overview.svg)
+![view](view-overview.svg)
 
 本ドキュメントは、`ndiag doc` コマンドを実行したときのドキュメント生成の仕組みを紹介することでndiagのアーキテクチャを説明するものです。
 
@@ -8,7 +8,7 @@
 
 サンプルとしてnginx, Rails, PostgreSQLで構成された[3層アーキテクチャのドキュメント](/example/3-tier/output/README.md)を例に説明します。
 
-![3tier](/example/3-tier/output/diagram-overview.svg)
+![3tier](/example/3-tier/output/view-overview.svg)
 
 具体的に実行するコマンドは以下です。
 
@@ -30,8 +30,8 @@ ndiagを使ったアーキテクチャドキュメントの運用サイクルは
 
 入力と出力の処理の詳細は以下より確認できます。
 
-- [入力](diagram-input.md)
-- [出力](diagram-output.md)
+- [入力](view-input.md)
+- [出力](view-output.md)
 
 ### Node
 
@@ -97,9 +97,9 @@ component id = `[node name]:[component name]`
 
 | Name | Description |
 | --- | --- |
-| [overview](diagram-overview.md) | 全体イメージ |
-| [input](diagram-input.md) | 入力 ... |
-| [output](diagram-output.md) | 出力 (アーキテクチャドキュメント) ... |
+| [overview](view-overview.md) | <a href="../ndiag.descriptions.ja/_view-overview.md">:pencil2:</a> |
+| [input](view-input.md) | <a href="../ndiag.descriptions.ja/_view-input.md">:pencil2:</a> |
+| [output](view-output.md) | <a href="../ndiag.descriptions.ja/_view-output.md">:pencil2:</a> |
 
 
 

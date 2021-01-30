@@ -32,9 +32,9 @@ func New(cfg *config.Config) *Gviz {
 	}
 }
 
-func (g *Gviz) OutputDiagram(wr io.Writer, d *config.Diagram) error {
+func (g *Gviz) OutputView(wr io.Writer, d *config.View) error {
 	buf := &bytes.Buffer{}
-	if err := g.dot.OutputDiagram(buf, d); err != nil {
+	if err := g.dot.OutputView(buf, d); err != nil {
 		return err
 	}
 	return g.render(wr, buf.Bytes())

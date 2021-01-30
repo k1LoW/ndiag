@@ -1,6 +1,6 @@
 # netpol:a
 
-![diagram](label-netpol_a.svg)
+![view](label-netpol_a.svg)
 
 
 

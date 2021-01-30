@@ -1,7 +1,7 @@
 ---
 name: Simple Compute Engine Usage
 docPath: ../output
-diagrams:
+views:
   -
     name: overview
     layers: ["zone", "instance-group"]

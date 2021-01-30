@@ -19,11 +19,11 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 		DescPath        string             `yaml:"descPath"`
 		IconPath        string             `yaml:"iconPath,omitempty"`
 		Graph           *Graph             `yaml:"graph,omitempty"`
-		HideDiagrams    bool               `yaml:"hideDiagrams"`
+		HideViews    bool               `yaml:"hideViews"`
 		HideLayers      bool               `yaml:"hideLayers"`
 		HideRealNodes   bool               `yaml:"hideRealNodes"`
 		HideLabelGroups bool               `yaml:"hideLabelGroups"`
-		Diagrams        []*Diagram         `yaml:"diagrams"`
+		Views        []*View         `yaml:"views"`
 		Nodes           []*Node            `yaml:"nodes"`
 		Networks        []interface{}      `yaml:"networks"`
 		Relations       []interface{}      `yaml:"relations"`
@@ -44,11 +44,11 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	if raw.Graph != nil {
 		d.Graph = raw.Graph
 	}
-	d.HideDiagrams = raw.HideDiagrams
+	d.HideViews = raw.HideViews
 	d.HideLayers = raw.HideLayers
 	d.HideRealNodes = raw.HideRealNodes
 	d.HideLabelGroups = raw.HideLabelGroups
-	d.Diagrams = raw.Diagrams
+	d.Views = raw.Views
 	d.Nodes = raw.Nodes
 	if raw.Dict != nil {
 		d.Dict = raw.Dict

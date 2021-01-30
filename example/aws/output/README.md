@@ -1,6 +1,6 @@
 # Git to S3 Webhooks
 
-![diagram](diagram-overview.svg)
+![view](view-overview.svg)
 
 See https://d1.awsstatic.com/webteam/architecture-icons/Q32020/AWS-Architecture-Icons-Deck_For-Light-BG_20200911.pptx.b238f9167071d2e7dccf32957782161dd1fe7a56.zip
 
@@ -10,11 +10,11 @@ See https://d1.awsstatic.com/webteam/architecture-icons/Q32020/AWS-Architecture-
 <p>
 
 
-## Diagrams
+## Views
 
 | Name | Description |
 | --- | --- |
-| [overview](diagram-overview.md) | <a href="../input/ndiag.descriptions/_diagram-overview.md">:pencil2:</a> |
+| [overview](view-overview.md) | <a href="../input/ndiag.descriptions/_view-overview.md">:pencil2:</a> |
 
 
 ## Layers

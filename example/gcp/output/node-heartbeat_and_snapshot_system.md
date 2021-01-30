@@ -1,6 +1,6 @@
 # Heartbeat and Snapshot System
 
-![diagram](node-heartbeat_and_snapshot_system.svg)
+![view](node-heartbeat_and_snapshot_system.svg)
 
 
 

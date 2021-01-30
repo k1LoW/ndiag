@@ -1,11 +1,11 @@
-# {{ .Diagram.Name }}
+# {{ .View.Name }}
 
-![diagram]({{ imgpath "diagram"  (.Diagram | id) .Format }})
+![view]({{ imgpath "view"  (.View | id) .Format }})
 
-{{ .Diagram.Desc }}
+{{ .View.Desc }}
 
 <p align="right">
-  [ <a href="{{ .DescPath }}/{{ mdpath "_diagram" (.Diagram | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
+  [ <a href="{{ .DescPath }}/{{ mdpath "_view" (.View | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
 <p>
 
 {{ if not .HideLayers }}

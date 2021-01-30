@@ -13,7 +13,7 @@ import (
 )
 
 type Output interface {
-	OutputDiagram(wr io.Writer, d *config.Diagram) error
+	OutputView(wr io.Writer, d *config.View) error
 }
 
 var unescRep = strings.NewReplacer(fmt.Sprintf("%s%s", config.Esc, config.Sep), config.Sep)

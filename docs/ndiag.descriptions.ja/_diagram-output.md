@@ -28,6 +28,6 @@ Labelで表したComponentの関係を中心とした説明をすることに使
 
 ### custom document
 
-ndiag.ymlのdiagramsで設定したlayers、labelsを元にドキュメントを生成します。
+ndiag.ymlのviewsで設定したlayers、labelsを元にドキュメントを生成します。
 
-- [output/diagram-http-lb.md](/example/3-tier/output/diagram-http-lb.md)
+- [output/view-http-lb.md](/example/3-tier/output/view-http-lb.md)
