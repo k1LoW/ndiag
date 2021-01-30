@@ -18,7 +18,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 		wantGlobalComponentLen  int
 		wantClusterComponentLen int
 		wantNodeComponentLen    int
-		wantEdgeLen            int
+		wantEdgeLen             int
 		wantLabelLen            int
 	}{
 		{
@@ -30,7 +30,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantGlobalComponentLen:  0,
 			wantClusterComponentLen: 0,
 			wantNodeComponentLen:    3,
-			wantEdgeLen:            0,
+			wantEdgeLen:             0,
 			wantLabelLen:            0,
 		},
 		{
@@ -42,7 +42,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantGlobalComponentLen:  1,
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    4,
-			wantEdgeLen:            5,
+			wantEdgeLen:             5,
 			wantLabelLen:            1,
 		},
 		{
@@ -54,7 +54,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantGlobalComponentLen:  1,
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    4,
-			wantEdgeLen:            5,
+			wantEdgeLen:             5,
 			wantLabelLen:            1,
 		},
 		{
@@ -67,7 +67,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantGlobalComponentLen:  1,
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    4,
-			wantEdgeLen:            6,
+			wantEdgeLen:             6,
 			wantLabelLen:            1,
 		},
 		{
@@ -80,11 +80,11 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantGlobalComponentLen:  1,
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    0,
-			wantEdgeLen:            1,
+			wantEdgeLen:             1,
 			wantLabelLen:            0,
 		},
 		{
-			desc:                    "Component labels",
+			desc:                    "Labels",
 			configFile:              "8_ndiag.yml",
 			nodeListFiles:           []string{},
 			wantNodeLen:             1,
@@ -93,8 +93,8 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantGlobalComponentLen:  1,
 			wantClusterComponentLen: 1,
 			wantNodeComponentLen:    1,
-			wantEdgeLen:            2,
-			wantLabelLen:            4,
+			wantEdgeLen:             2,
+			wantLabelLen:            5,
 		},
 	}
 	for i, tt := range tests {
@@ -152,7 +152,7 @@ func TestBuildNestedCluster(t *testing.T) {
 		layers            []string
 		wantClusterLen    int
 		wantGlobalNodeLen int
-		wantEdgeLen      int
+		wantEdgeLen       int
 	}{
 		{"1_ndiag.yml", []string{"1_nodes.yml"}, []string{}, 0, 3, 0},
 		{"1_ndiag.yml", []string{"1_nodes.yml"}, []string{"consul"}, 1, 0, 0},
