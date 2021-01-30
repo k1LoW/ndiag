@@ -1,3 +1,11 @@
+## [v0.10.0](https://github.com/k1LoW/ndiag/compare/v0.9.1...v0.10.0) (2021-01-30)
+
+* [BREAKING] Rename `diagrams:` -> `views:` [#63](https://github.com/k1LoW/ndiag/pull/63) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING] Support node label [#62](https://github.com/k1LoW/ndiag/pull/62) ([k1LoW](https://github.com/k1LoW))
+* Rename type/variables name [#61](https://github.com/k1LoW/ndiag/pull/61) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING] Support component label [#60](https://github.com/k1LoW/ndiag/pull/60) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING] Support relation.desc [#59](https://github.com/k1LoW/ndiag/pull/59) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.9.1](https://github.com/k1LoW/ndiag/compare/v0.9.0...v0.9.1) (2021-01-12)
 
 * Fix icon.OptimizeSVG resize logic [#58](https://github.com/k1LoW/ndiag/pull/58) ([k1LoW](https://github.com/k1LoW))
