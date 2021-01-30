@@ -46,7 +46,7 @@ digraph ndiag {
   {{ template "cluster" (dict "cluster" $c "edges" $.Edges "hideUnlinked" $.HideUnlinked "hideRealNodes" $.HideRealNodes) }}
 {{ end }}
 
-{{ range $n := .RemainNodes }}
+{{ range $n := .GlobalNodes }}
   subgraph "cluster_{{ $n.Name }}" {
     label = {{ node_label $n $.HideRealNodes }};
     style = "solid,bold";

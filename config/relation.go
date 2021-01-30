@@ -113,21 +113,21 @@ func (rel *rawRelation) Id() string {
 	return fmt.Sprintf("%s-%s", queryTrim(rel.Components[0]), s[:7])
 }
 
-func SplitRelations(relations []*Relation) []*NEdge {
+func SplitRelations(relations []*Relation) []*Edge {
 	var prev *Component
-	edges := []*NEdge{}
+	edges := []*Edge{}
 	for _, rel := range relations {
 		prev = nil
 		for _, r := range rel.Components {
 			if prev != nil {
-				edge := &NEdge{
+				edge := &Edge{
 					Src:      prev,
 					Dst:      r,
 					Relation: rel,
 					Attrs:    rel.Attrs,
 				}
-				prev.NEdges = append(prev.NEdges, edge)
-				r.NEdges = append(r.NEdges, edge)
+				prev.Edges = append(prev.Edges, edge)
+				r.Edges = append(r.Edges, edge)
 				edges = append(edges, edge)
 			}
 			prev = r
@@ -136,19 +136,19 @@ func SplitRelations(relations []*Relation) []*NEdge {
 	return edges
 }
 
-func MergeEdges(edges []*NEdge) []*NEdge {
+func MergeEdges(edges []*Edge) []*Edge {
 	eKeys0 := orderedmap.NewOrderedMap()
-	merged0 := []*NEdge{}
+	merged0 := []*Edge{}
 	for _, e := range edges {
 		eKeys0.Set(fmt.Sprintf("%s->%s", e.Src.Id(), e.Dst.Id()), e)
 	}
 	for _, k := range eKeys0.Keys() {
 		e, _ := eKeys0.Get(k)
-		merged0 = append(merged0, e.(*NEdge))
+		merged0 = append(merged0, e.(*Edge))
 	}
 
 	eKeys1 := orderedmap.NewOrderedMap()
-	merged1 := []*NEdge{}
+	merged1 := []*Edge{}
 	for _, e := range merged0 {
 		var k string
 		if e.Src.Id() < e.Dst.Id() {
@@ -167,7 +167,7 @@ func MergeEdges(edges []*NEdge) []*NEdge {
 	}
 	for _, k := range eKeys1.Keys() {
 		e, _ := eKeys1.Get(k)
-		merged1 = append(merged1, e.(*NEdge))
+		merged1 = append(merged1, e.(*Edge))
 	}
 	return merged1
 }
