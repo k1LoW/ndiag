@@ -1,6 +1,6 @@
 # 3-Tier Architecture
 
-![diagram](diagram-overview.svg)
+![view](view-overview.svg)
 
 
 
@@ -9,12 +9,12 @@
 <p>
 
 
-## Diagrams
+## Views
 
 | Name | Description |
 | --- | --- |
-| [overview](diagram-overview.md) | <a href="../input/ndiag.descriptions/_diagram-overview.md">:pencil2:</a> |
-| [http-lb](diagram-http-lb.md) | <a href="../input/ndiag.descriptions/_diagram-http-lb.md">:pencil2:</a> |
+| [overview](view-overview.md) | <a href="../input/ndiag.descriptions/_view-overview.md">:pencil2:</a> |
+| [http-lb](view-http-lb.md) | <a href="../input/ndiag.descriptions/_view-http-lb.md">:pencil2:</a> |
 
 
 ## Layers

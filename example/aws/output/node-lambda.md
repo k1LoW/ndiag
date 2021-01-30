@@ -1,6 +1,6 @@
 # Lambda
 
-![diagram](node-lambda.svg)
+![view](node-lambda.svg)
 
 
 

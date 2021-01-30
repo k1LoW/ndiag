@@ -24,12 +24,12 @@ func New(cfg *config.Config) *Dot {
 	}
 }
 
-func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
-	ts, err := d.box.FindString("diagram.dot.tmpl")
+func (d *Dot) OutputView(wr io.Writer, diag *config.View) error {
+	ts, err := d.box.FindString("view.dot.tmpl")
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config)).Parse(ts))
+	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(ts))
 
 	clusters, globalNodes, edges, err := d.config.BuildNestedClusters(diag.Layers)
 	if err != nil {
@@ -56,11 +56,11 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 }
 
 func (d *Dot) OutputLayer(wr io.Writer, l *config.Layer) error {
-	ts, err := d.box.FindString("diagram.dot.tmpl")
+	ts, err := d.box.FindString("view.dot.tmpl")
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config)).Parse(ts))
+	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(ts))
 
 	clusters, globalNodes, edges, err := d.config.BuildNestedClusters([]string{l.Name})
 	if err != nil {
@@ -104,7 +104,7 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config)).Parse(ts))
+	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(ts))
 
 	clusters := config.Clusters{}
 	cIds := orderedmap.NewOrderedMap() // map[string]*config.Cluster{}
@@ -167,11 +167,11 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 }
 
 func (d *Dot) OutputLabel(wr io.Writer, l *config.Label) error {
-	ts, err := d.box.FindString("diagram.dot.tmpl")
+	ts, err := d.box.FindString("view.dot.tmpl")
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config)).Parse(ts))
+	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(ts))
 
 	clusters, globalNodes, edges, err := d.config.BuildNestedClusters([]string{})
 	if err != nil {

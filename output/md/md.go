@@ -24,8 +24,8 @@ func New(cfg *config.Config) *Md {
 	}
 }
 
-func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
-	ts, err := m.box.FindString("diagram.md.tmpl")
+func (m *Md) OutputView(wr io.Writer, d *config.View) error {
+	ts, err := m.box.FindString("view.md.tmpl")
 	if err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func (m *Md) OutputDiagram(wr io.Writer, d *config.Diagram) error {
 
 	tmpl := template.Must(template.New(d.Name).Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Diagram":         d,
+		"View":         d,
 		"Format":          m.config.Format(),
 		"DescPath":        relPath,
 		"Layers":          layers,
@@ -200,10 +200,10 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 	tmpl := template.Must(template.New("index").Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
 		"Config":   m.config,
-		"Diagram":  m.config.PrimaryDiagram(),
+		"View":  m.config.PrimaryView(),
 		"Format":   m.config.Format(),
 		"DescPath": relPath,
-		"Diagrams": m.config.Diagrams,
+		"Views": m.config.Views,
 		"Layers":   m.config.Layers(),
 		"Nodes":    m.config.Nodes,
 		"Labels":   m.config.Labels(),

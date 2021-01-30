@@ -1,6 +1,6 @@
 # instance-group
 
-![diagram](layer-instance-group.svg)
+![view](layer-instance-group.svg)
 
 
 

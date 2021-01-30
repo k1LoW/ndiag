@@ -29,7 +29,7 @@ var DefaultConfigFilePaths = []string{"ndiag.yml"}
 var DefaultDescPath = "ndiag.descriptions"
 var DefaultIconPath = "ndiag.icons"
 
-// DefaultFormat is the default diagram format
+// DefaultFormat is the default view format
 const DefaultFormat = "svg"
 
 // Element is graph element
@@ -60,11 +60,11 @@ type Config struct {
 	DescPath          string             `yaml:"descPath,omitempty"`
 	IconPath          string             `yaml:"iconPath,omitempty"`
 	Graph             *Graph             `yaml:"graph,omitempty"`
-	HideDiagrams      bool               `yaml:"hideDiagrams,omitempty"`
+	HideViews      bool               `yaml:"hideViews,omitempty"`
 	HideLayers        bool               `yaml:"hideLayers,omitempty"`
 	HideRealNodes     bool               `yaml:"hideRealNodes,omitempty"`
 	HideLabelGroups   bool               `yaml:"hideLabelGroups,omitempty"`
-	Diagrams          []*Diagram         `yaml:"diagrams"`
+	Views          []*View         `yaml:"views"`
 	Nodes             []*Node            `yaml:"nodes"`
 	Relations         []*Relation        `yaml:"relations,omitempty"`
 	Dict              *dict.Dict         `yaml:"dict,omitempty"`
@@ -119,8 +119,8 @@ func (cfg *Config) IconMap() *IconMap {
 	return cfg.iconMap
 }
 
-func (cfg *Config) PrimaryDiagram() *Diagram {
-	return cfg.Diagrams[0]
+func (cfg *Config) PrimaryView() *View {
+	return cfg.Views[0]
 }
 
 func (cfg *Config) Layers() []*Layer {
@@ -413,8 +413,8 @@ func (cfg *Config) Build() error {
 	if err := cfg.checkUnique(); err != nil {
 		return err
 	}
-	if len(cfg.Diagrams) == 0 {
-		cfg.Diagrams = append(cfg.Diagrams, &Diagram{
+	if len(cfg.Views) == 0 {
+		cfg.Views = append(cfg.Views, &View{
 			Name:   "Nodes",
 			Layers: []string{},
 		})
@@ -666,8 +666,8 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 }
 
 func (cfg *Config) checkFormat() error {
-	if cfg.HideDiagrams && len(cfg.Diagrams) > 1 {
-		return errors.New("can't make hideDiagrams true if you have more than one diagrams defined")
+	if cfg.HideViews && len(cfg.Views) > 1 {
+		return errors.New("can't make hideViews true if you have more than one views defined")
 	}
 	if len(cfg.realNodes) > 0 {
 		for _, n := range cfg.Nodes {

@@ -84,32 +84,50 @@ var docCmd = &cobra.Command{
 			}
 		}
 
-		// diagrams
-		for _, d := range cfg.Diagrams {
+		// views
+		for _, d := range cfg.Views {
 			cfg, err := newConfig()
 			if err != nil {
 				return err
 			}
-			if !cfg.HideDiagrams {
+			if !cfg.HideViews {
 				// generate md
 				o := md.New(cfg)
-				mPath := filepath.Join(cfg.DocPath, config.MdPath("diagram", []string{d.Id()}))
-				file, err := os.Create(mPath)
+				oldPath := filepath.Join(cfg.DocPath, config.MdPath("diagram", []string{d.Id()}))
+				path := filepath.Join(cfg.DocPath, config.MdPath("view", []string{d.Id()}))
+				if _, err := os.Stat(oldPath); err == nil {
+					if _, err := os.Stat(path); err == nil {
+						return fmt.Errorf("old file exists: %s", oldPath)
+					}
+					if err := os.Rename(oldPath, path); err != nil {
+						return err
+					}
+				}
+				file, err := os.Create(path)
 				if err != nil {
 					return err
 				}
-				if err := o.OutputDiagram(file, d); err != nil {
+				if err := o.OutputView(file, d); err != nil {
 					return err
 				}
 			}
-			// draw diagram
+			// draw view
 			diag := gviz.New(cfg)
-			dPath := filepath.Join(cfg.DocPath, config.ImagePath("diagram", []string{d.Id()}, format))
-			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
+			oldPath := filepath.Join(cfg.DocPath, config.ImagePath("diagram", []string{d.Id()}, format))
+			path := filepath.Join(cfg.DocPath, config.ImagePath("view", []string{d.Id()}, format))
+			if _, err := os.Stat(oldPath); err == nil {
+				if _, err := os.Stat(path); err == nil {
+					return fmt.Errorf("old diagram file exists: %s", oldPath)
+				}
+				if err := os.Rename(oldPath, path); err != nil {
+					return err
+				}
+			}
+			dFile, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 			if err != nil {
 				return err
 			}
-			if err := diag.OutputDiagram(dFile, d); err != nil {
+			if err := diag.OutputView(dFile, d); err != nil {
 				_ = dFile.Close()
 				return err
 			}
@@ -135,7 +153,7 @@ var docCmd = &cobra.Command{
 					return err
 				}
 
-				// draw diagram
+				// draw view
 				diag := gviz.New(cfg)
 				dPath := filepath.Join(cfg.DocPath, config.ImagePath("layer", []string{l.Name}, format))
 				dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
@@ -170,7 +188,7 @@ var docCmd = &cobra.Command{
 				return err
 			}
 
-			// draw diagram
+			// draw view
 			diag := gviz.New(cfg)
 			dPath := filepath.Join(cfg.DocPath, config.ImagePath("node", []string{n.Id()}, format))
 			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
@@ -204,7 +222,7 @@ var docCmd = &cobra.Command{
 					return err
 				}
 
-				// draw diagram
+				// draw view
 				diag := gviz.New(cfg)
 				dPath := filepath.Join(cfg.DocPath, config.ImagePath("label", []string{rel.Id()}, format))
 				dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
@@ -235,13 +253,13 @@ var docCmd = &cobra.Command{
 
 func diagExists(cfg *config.Config) error {
 	format := cfg.Format()
-	// diagrams
-	for _, d := range cfg.Diagrams {
-		mPath := filepath.Join(cfg.DocPath, config.MdPath("diagram", []string{d.Id()}))
+	// views
+	for _, d := range cfg.Views {
+		mPath := filepath.Join(cfg.DocPath, config.MdPath("view", []string{d.Id()}))
 		if _, err := os.Lstat(mPath); err == nil {
 			return fmt.Errorf("%s already exist", mPath)
 		}
-		dPath := filepath.Join(cfg.DocPath, config.ImagePath("diagram", []string{d.Id()}, format))
+		dPath := filepath.Join(cfg.DocPath, config.ImagePath("view", []string{d.Id()}, format))
 		if _, err := os.Lstat(dPath); err == nil {
 			return fmt.Errorf("%s already exist", dPath)
 		}

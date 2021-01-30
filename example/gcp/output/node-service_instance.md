@@ -1,6 +1,6 @@
 # Service Instance
 
-![diagram](node-service_instance.svg)
+![view](node-service_instance.svg)
 
 
 

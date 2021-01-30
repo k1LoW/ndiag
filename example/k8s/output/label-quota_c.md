@@ -1,6 +1,6 @@
 # quota:c
 
-![diagram](label-quota_c.svg)
+![view](label-quota_c.svg)
 
 
 

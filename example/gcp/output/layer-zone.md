@@ -1,6 +1,6 @@
 # zone
 
-![diagram](layer-zone.svg)
+![view](layer-zone.svg)
 
 
 

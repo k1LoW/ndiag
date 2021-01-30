@@ -1,6 +1,6 @@
 # platform
 
-![diagram](layer-platform.svg)
+![view](layer-platform.svg)
 
 
 

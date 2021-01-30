@@ -9,8 +9,8 @@ graph:
     rankdir: LR
 dict:
   'Nodes': '構成要素'
-  'Diagrams': '処理の流れ'
-diagrams:
+  'Views': '処理の流れ'
+views:
   -
     name: "overview"
     layers: ["type"]

@@ -1,6 +1,6 @@
 # ruby
 
-![diagram](label-ruby.svg)
+![view](label-ruby.svg)
 
 
 

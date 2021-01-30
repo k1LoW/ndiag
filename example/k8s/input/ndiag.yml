@@ -1,7 +1,7 @@
 ---
 name: Exposed Pod with 3 replicas
 docPath: ../output
-diagrams:
+views:
   - name: overview
     layers: ["k8s"]
 nodes:

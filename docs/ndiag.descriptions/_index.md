@@ -6,7 +6,7 @@ WIP
 
 [3-Tier Architecture](/example/3-tier/output/README.md)
 
-![3tier](/example/3-tier/output/diagram-overview.svg)
+![3tier](/example/3-tier/output/view-overview.svg)
 
 ``` console
 $ ndiag doc -c example/3-tier/input/ndiag.yml -n example/3-tier/input/nodes.yml --rm-dist

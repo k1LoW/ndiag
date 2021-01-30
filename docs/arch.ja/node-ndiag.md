@@ -1,6 +1,6 @@
 # ndiag
 
-![diagram](node-ndiag.svg)
+![view](node-ndiag.svg)
 
 `ndiag doc` コマンド
 

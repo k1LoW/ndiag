@@ -1,6 +1,6 @@
 # app
 
-![diagram](label-app.svg)
+![view](label-app.svg)
 
 App-DB
 

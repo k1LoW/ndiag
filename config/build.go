@@ -305,12 +305,22 @@ func (cfg *Config) buildDescriptions() error {
 		cfg.Desc = desc
 	}
 
-	// diagrams
-	for _, d := range cfg.Diagrams {
+	// views
+	for _, d := range cfg.Views {
 		if d.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_diagram", []string{d.Id()}))
+		path := MdPath("_view", []string{d.Id()})
+		oldPath := MdPath("_diagram", []string{d.Id()})
+		if _, err := os.Stat(oldPath); err == nil {
+			if _, err := os.Stat(path); err == nil {
+				return fmt.Errorf("old description file exists: %s", oldPath)
+			}
+			if err := os.Rename(oldPath, path); err != nil {
+				return err
+			}
+		}
+		desc, err := cfg.readDescFile(path)
 		if err != nil {
 			return err
 		}

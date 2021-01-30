@@ -1,6 +1,6 @@
 # k8s
 
-![diagram](layer-k8s.svg)
+![view](layer-k8s.svg)
 
 
 

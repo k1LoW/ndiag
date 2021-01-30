@@ -1,11 +1,11 @@
 # overview
 
-![diagram](diagram-overview.svg)
+![view](view-overview.svg)
 
 
 
 <p align="right">
-  [ <a href="../input/ndiag.descriptions/_diagram-overview.md">:pencil2: Edit description</a> ]
+  [ <a href="../input/ndiag.descriptions/_view-overview.md">:pencil2: Edit description</a> ]
 <p>
 
 

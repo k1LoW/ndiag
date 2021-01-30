@@ -4,7 +4,7 @@
 
 サンプルとしてnginx, Rails, PostgreSQLで構成された[3層アーキテクチャのドキュメント](/example/3-tier/output/README.md)を例に説明します。
 
-![3tier](/example/3-tier/output/diagram-overview.svg)
+![3tier](/example/3-tier/output/view-overview.svg)
 
 具体的に実行するコマンドは以下です。
 
@@ -26,8 +26,8 @@ ndiagを使ったアーキテクチャドキュメントの運用サイクルは
 
 入力と出力の処理の詳細は以下より確認できます。
 
-- [入力](diagram-input.md)
-- [出力](diagram-output.md)
+- [入力](view-input.md)
+- [出力](view-output.md)
 
 ### Node
 

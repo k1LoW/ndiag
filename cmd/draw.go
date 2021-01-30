@@ -36,8 +36,8 @@ import (
 // drawCmd represents the draw command
 var drawCmd = &cobra.Command{
 	Use:   "draw",
-	Short: "Draw diagram",
-	Long:  `Draw diagram.`,
+	Short: "Draw view",
+	Long:  `Draw view.`,
 	Args:  cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var o output.Output
@@ -57,14 +57,14 @@ var drawCmd = &cobra.Command{
 			return fmt.Errorf("invalid format: %s", format)
 		}
 
-		d := &config.Diagram{
+		d := &config.View{
 			Name:   "-",
 			Desc:   "-",
 			Layers: layers,
 			Labels: []string{},
 		}
 
-		return o.OutputDiagram(os.Stdout, d)
+		return o.OutputView(os.Stdout, d)
 	},
 }
 

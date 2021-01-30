@@ -1,6 +1,6 @@
 # limits:b
 
-![diagram](label-limits_b.svg)
+![view](label-limits_b.svg)
 
 
 

@@ -1,7 +1,7 @@
 ---
 name: Git to S3 Webhooks
 docPath: ../output
-diagrams:
+views:
   -
     name: overview
     layers: ["platform"]

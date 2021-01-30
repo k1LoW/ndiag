@@ -1,6 +1,6 @@
 # my-namespace
 
-![diagram](node-my-namespace.svg)
+![view](node-my-namespace.svg)
 
 
 

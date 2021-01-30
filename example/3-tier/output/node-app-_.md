@@ -1,6 +1,6 @@
 # app-*
 
-![diagram](node-app-_.svg)
+![view](node-app-_.svg)
 
 Application
 
