@@ -11,7 +11,7 @@ type Cluster struct {
 	Name       string
 	Desc       string
 	Parent     *Cluster
-	Children   []*Cluster
+	Children   Clusters
 	Nodes      []*Node
 	Components []*Component
 	Metadata   ClusterMetadata
@@ -66,4 +66,16 @@ func (cs Clusters) FindByLayer(layer string) Clusters {
 		}
 	}
 	return result
+}
+
+func (cs Clusters) Contains(t *Cluster) bool {
+	for _, c := range cs {
+		if c.Id() == t.Id() {
+			return true
+		}
+		if c.Children.Contains(t) {
+			return true
+		}
+	}
+	return false
 }

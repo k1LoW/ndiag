@@ -35,8 +35,8 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 	if err != nil {
 		return err
 	}
-	components := d.config.GlobalComponents()
-	clusters, remain, components, nEdges, err = d.config.PruneClustersByLabels(clusters, remain, components, nEdges, diag.Labels)
+	globalComponents := d.config.GlobalComponents()
+	clusters, remain, globalComponents, nEdges, err = d.config.PruneClustersByLabels(clusters, remain, globalComponents, nEdges, diag.Labels)
 	if err != nil {
 		return err
 	}
@@ -45,7 +45,7 @@ func (d *Dot) OutputDiagram(wr io.Writer, diag *config.Diagram) error {
 		"GraphAttrs":       d.config.Graph.Attrs(),
 		"Clusters":         clusters,
 		"RemainNodes":      remain,
-		"GlobalComponents": components,
+		"GlobalComponents": globalComponents,
 		"Edges":            config.MergeEdges(nEdges),
 		"HideUnlinked":     false,
 		"HideRealNodes":    d.config.HideRealNodes,
@@ -166,61 +166,31 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 	return nil
 }
 
-func (d *Dot) OutputLabel(wr io.Writer, t *config.Label) error {
+func (d *Dot) OutputLabel(wr io.Writer, l *config.Label) error {
 	ts, err := d.box.FindString("diagram.dot.tmpl")
 	if err != nil {
 		return err
 	}
 	tmpl := template.Must(template.New("diagram").Funcs(output.Funcs(d.config)).Parse(ts))
 
-	clusters := config.Clusters{}
-	cIds := orderedmap.NewOrderedMap()
-	nodes := []*config.Node{}
-	nIds := orderedmap.NewOrderedMap()
-	globalComponents := []*config.Component{}
-	gIds := orderedmap.NewOrderedMap()
-	edges := config.SplitRelations(t.Relations)
+	clusters, globalNodes, nEdges, err := d.config.BuildNestedClusters([]string{})
+	if err != nil {
+		return err
+	}
 
-	for _, e := range edges {
-		switch {
-		case e.Src.Node != nil:
-			nIds.Set(e.Src.Node.Id(), e.Src.Node)
-		case e.Src.Cluster != nil:
-			e.Src.Cluster.Nodes = nil
-			cIds.Set(e.Src.Cluster.Id(), e.Src.Cluster)
-		default:
-			gIds.Set(e.Src.Id(), e.Src)
-		}
-		switch {
-		case e.Dst.Node != nil:
-			nIds.Set(e.Dst.Node.Id(), e.Dst.Node)
-		case e.Dst.Cluster != nil:
-			e.Dst.Cluster.Nodes = nil
-			cIds.Set(e.Dst.Cluster.Id(), e.Dst.Cluster)
-		default:
-			gIds.Set(e.Dst.Id(), e.Dst)
-		}
-	}
-	for _, k := range nIds.Keys() {
-		n, _ := nIds.Get(k)
-		nodes = append(nodes, n.(*config.Node))
-	}
-	for _, k := range cIds.Keys() {
-		c, _ := cIds.Get(k)
-		clusters = append(clusters, c.(*config.Cluster))
-	}
-	for _, k := range gIds.Keys() {
-		c, _ := gIds.Get(k)
-		globalComponents = append(globalComponents, c.(*config.Component))
+	globalComponents := d.config.GlobalComponents()
+	clusters, globalNodes, globalComponents, nEdges, err = d.config.PruneClustersByLabels(clusters, globalNodes, globalComponents, nEdges, []string{l.Name})
+	if err != nil {
+		return err
 	}
 
 	if err := tmpl.Execute(wr, map[string]interface{}{
 		"GraphAttrs":       d.config.Graph.Attrs(),
 		"Clusters":         clusters,
-		"RemainNodes":      nodes,
+		"RemainNodes":      globalNodes,
 		"GlobalComponents": globalComponents,
-		"Edges":            edges,
-		"HideUnlinked":     true,
+		"Edges":            nEdges,
+		"HideUnlinked":     false,
 		"HideRealNodes":    d.config.HideRealNodes,
 	}); err != nil {
 		return err

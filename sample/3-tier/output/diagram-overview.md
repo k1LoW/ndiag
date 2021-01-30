@@ -30,6 +30,7 @@
 | --- | --- |
 | [app](label-app.md) | App-DB |
 | [http](label-http.md) | HTTP request flow |
+| [ruby](label-ruby.md) | <a href="../input/ndiag.descriptions/_label-ruby.md">:pencil2:</a> |
 
 ---
 

@@ -12,7 +12,7 @@ type Component struct {
 	Cluster  *Cluster
 	Node     *Node
 	NEdges   []*NEdge
-	Labels   []*Label
+	Labels   Labels
 	Metadata ComponentMetadata
 }
 

@@ -68,7 +68,7 @@ type Relation struct {
 	Desc       string
 	Type       *RelationType
 	Components []*Component
-	Labels     []*Label
+	Labels     Labels
 	Attrs      []*Attr
 }
 

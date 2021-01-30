@@ -26,3 +26,15 @@ func (labels Labels) Sort() {
 		return labels[i].Name < labels[j].Name
 	})
 }
+
+func (labels Labels) Subtract(labels2 Labels) Labels {
+	s := Labels{}
+	for _, l := range labels {
+		for _, l2 := range labels2 {
+			if l.Id() == l2.Id() {
+				s = append(s, l)
+			}
+		}
+	}
+	return s
+}

@@ -21,7 +21,7 @@ nodes:
     name: app-*
     components:
       - nginx?icon=proxy
-      - Rails?icon=cube4
+      - Rails?icon=cube4&label=ruby
     clusters:
       - 'consul:dc1'
   -

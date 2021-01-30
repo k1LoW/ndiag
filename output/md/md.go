@@ -127,6 +127,9 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 	labels := config.Labels{}
 	relLabels := orderedmap.NewOrderedMap()
 	for _, c := range n.Components {
+		for _, l := range c.Labels {
+			relLabels.Set(l.Id(), l)
+		}
 		for _, e := range c.NEdges {
 			for _, l := range e.Relation.Labels {
 				relLabels.Set(l.Id(), l)

@@ -185,9 +185,9 @@ func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*N
 	return clusters, globalNodes, nEdges, nil
 }
 
-func (cfg *Config) PruneClustersByLabels(clusters Clusters, nodes []*Node, components []*Component, nEdges []*NEdge, labels []string) (Clusters, []*Node, []*Component, []*NEdge, error) {
+func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node, globalComponents []*Component, nEdges []*NEdge, labels []string) (Clusters, []*Node, []*Component, []*NEdge, error) {
 	if len(labels) == 0 {
-		return clusters, nodes, components, nEdges, nil
+		return clusters, globalNodes, globalComponents, nEdges, nil
 	}
 
 	remainNEdges := []*NEdge{}
@@ -195,38 +195,71 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, nodes []*Node, compo
 	cIds := orderedmap.NewOrderedMap()
 	comIds := orderedmap.NewOrderedMap()
 
-	for _, name := range labels {
-		l, err := cfg.FindLabel(name)
+	allowLabels := Labels{}
+	for _, s := range labels {
+		l, err := cfg.FindLabel(s)
 		if err != nil {
-			return clusters, nodes, components, nEdges, err
+			return clusters, globalNodes, globalComponents, nEdges, err
 		}
-		edges := SplitRelations(l.Relations)
+		allowLabels = append(allowLabels, l)
+	}
 
-		for _, e := range edges {
-			switch {
-			case e.Src.Node != nil:
-				nIds.Set(e.Src.Node.Id(), e.Src.Node)
-				for _, c := range e.Src.Node.Clusters {
-					cIds.Set(c.Id(), c)
-				}
-			case e.Src.Cluster != nil:
-				cIds.Set(e.Src.Cluster.Id(), e.Src.Cluster)
+	// collect filtered nodes
+	for _, n := range cfg.Nodes {
+		for _, c := range n.Components {
+			if len(c.Labels.Subtract(allowLabels)) > 0 {
+				nIds.Set(n.Id(), n)
 			}
-			comIds.Set(e.Src.Id(), e.Src)
+		}
+	}
 
-			switch {
-			case e.Dst.Node != nil:
-				nIds.Set(e.Dst.Node.Id(), e.Dst.Node)
-				for _, c := range e.Dst.Node.Clusters {
-					cIds.Set(c.Id(), c)
-				}
-			case e.Dst.Cluster != nil:
-				cIds.Set(e.Dst.Cluster.Id(), e.Dst.Cluster)
+	// collect filtered components
+	for _, c := range cfg.Components() {
+		if len(c.Labels.Subtract(allowLabels)) > 0 {
+			comIds.Set(c.Id(), c)
+			if c.Cluster != nil {
+				cIds.Set(c.Cluster.Id(), c.Cluster)
 			}
-			comIds.Set(e.Dst.Id(), e.Dst)
+		}
+	}
+
+	// collect filtered cluster/nodes/components/nEdges using nEdges
+	for _, e := range nEdges {
+		if len(e.Relation.Labels.Subtract(allowLabels)) == 0 {
+			continue
 		}
 
-		remainNEdges = append(remainNEdges, edges...)
+		remainNEdges = append(remainNEdges, e)
+
+		// src
+		comIds.Set(e.Src.Id(), e.Src)
+		switch {
+		case e.Src.Node != nil:
+			// node component
+			nIds.Set(e.Src.Node.Id(), e.Src.Node)
+		case e.Src.Cluster != nil:
+			// cluster component
+			cIds.Set(e.Src.Cluster.Id(), e.Src.Cluster)
+		}
+
+		// dst
+		comIds.Set(e.Dst.Id(), e.Dst)
+		switch {
+		case e.Dst.Node != nil:
+			// node component
+			nIds.Set(e.Dst.Node.Id(), e.Dst.Node)
+		case e.Dst.Cluster != nil:
+			// cluster component
+			cIds.Set(e.Dst.Cluster.Id(), e.Dst.Cluster)
+		}
+	}
+
+	for _, k := range cIds.Keys() {
+		v, _ := cIds.Get(k)
+		c := v.(*Cluster)
+		if !clusters.Contains(c) {
+			clusters = append(clusters, c)
+		}
 	}
 
 	// prune cluster nodes
@@ -234,7 +267,7 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, nodes []*Node, compo
 
 	// global nodes
 	filteredNodes := []*Node{}
-	for _, n := range nodes {
+	for _, n := range globalNodes {
 		_, ok := nIds.Get(n.Id())
 		if ok {
 			filteredComponents := []*Component{}
@@ -248,19 +281,19 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, nodes []*Node, compo
 			filteredNodes = append(filteredNodes, n)
 		}
 	}
-	nodes = filteredNodes
+	globalNodes = filteredNodes
 
 	// global components
 	filteredComponents := []*Component{}
-	for _, c := range components {
+	for _, c := range globalComponents {
 		_, ok := comIds.Get(c.Id())
 		if ok {
 			filteredComponents = append(filteredComponents, c)
 		}
 	}
-	components = filteredComponents
+	globalComponents = filteredComponents
 
-	return clusters, nodes, components, remainNEdges, nil
+	return clusters, globalNodes, globalComponents, remainNEdges, nil
 }
 
 func (cfg *Config) PruneNodesByLabels(nodes []*Node, labels []string) ([]*Node, error) {
