@@ -97,9 +97,9 @@ component id = `[node name]:[component name]`
 
 | Name | Description |
 | --- | --- |
-| [overview](view-overview.md) | <a href="../ndiag.descriptions.ja/_view-overview.md">:pencil2:</a> |
-| [input](view-input.md) | <a href="../ndiag.descriptions.ja/_view-input.md">:pencil2:</a> |
-| [output](view-output.md) | <a href="../ndiag.descriptions.ja/_view-output.md">:pencil2:</a> |
+| [overview](view-overview.md) | 全体イメージ |
+| [input](view-input.md) | 入力 ... |
+| [output](view-output.md) | 出力 (アーキテクチャドキュメント) ... |
 
 
 
