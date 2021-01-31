@@ -1,3 +1,7 @@
+## [v0.10.1](https://github.com/k1LoW/ndiag/compare/v0.10.0...v0.10.1) (2021-01-31)
+
+* Fix description file migration logic [#64](https://github.com/k1LoW/ndiag/pull/64) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.10.0](https://github.com/k1LoW/ndiag/compare/v0.9.1...v0.10.0) (2021-01-30)
 
 * [BREAKING] Rename `diagrams:` -> `views:` [#63](https://github.com/k1LoW/ndiag/pull/63) ([k1LoW](https://github.com/k1LoW))
