@@ -13,16 +13,15 @@
 
 | Name | Description |
 | --- | --- |
-| [consul](layer-consul.md) | Consul DC |
 | [vip_group](layer-vip_group.md) | A group of virtual IP and nodes/components to handle it. |
 
 ## Nodes
 
 | Name (node count) | Description |
 | --- | --- |
-| [lb-*](node-lb-_.md) (2) | Load balancer |
-| [app-*](node-app-_.md) (3) | Application |
-| [db-*](node-db-_.md) (2) | Database |
+| [lb](node-lb.md) (2) | Load balancer |
+| [app](node-app.md) (3) | Application |
+| [db](node-db.md) (2) | Database |
 
 ## Labels
 
@@ -30,7 +29,7 @@
 | --- | --- |
 | [app](label-app.md) | App-DB |
 | [http](label-http.md) | HTTP request flow |
-| [ruby](label-ruby.md) | <a href="../input/ndiag.descriptions/_label-ruby.md">:pencil2:</a> |
+| [lang:ruby](label-lang_ruby.md) | Ruby |
 
 ---
 

@@ -1,4 +1,4 @@
-# consul
+# Consul
 
 ![view](layer-consul.svg)
 
@@ -10,7 +10,7 @@ Consul DC
 <p>
 
 
-## consul:dc1
+## Consul:dc1
 
 
 
@@ -23,9 +23,9 @@ Consul DC
 
 | Name (node count) | Description |
 | --- | --- |
-| [lb-*](node-lb-_.md) (2) | Load balancer |
-| [app-*](node-app-_.md) (3) | Application |
-| [db-*](node-db-_.md) (2) | Database |
+| [lb](node-lb.md) (2) | Load balancer |
+| [app](node-app.md) (3) | Application |
+| [db](node-db.md) (2) | Database |
 
 ---
 

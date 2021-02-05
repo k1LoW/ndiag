@@ -12,24 +12,24 @@ App-DB
 ## Relations
 
 <p align="right">
-  [ <a href="../input/ndiag.descriptions/_relation-lb-__nginx-84bca39.md">:pencil2: Edit description</a> ]
+  [ <a href="../input/ndiag.descriptions/_relation-lb_nginx-d49ef52.md">:pencil2: Edit description</a> ]
 <p>
 
 | # | Component | Description |
 | --- | --- | --- |
-| 0 | lb-*:nginx |  <a href="../input/ndiag.descriptions/_component-lb-__nginx.md">:pencil2:</a> |
-| 1 | app-*:nginx |  <a href="../input/ndiag.descriptions/_component-app-__nginx.md">:pencil2:</a> |
-| 2 | app-*:rails |  <a href="../input/ndiag.descriptions/_component-app-__rails.md">:pencil2:</a> |
+| 0 | lb:nginx |  <a href="../input/ndiag.descriptions/_component-lb_nginx.md">:pencil2:</a> |
+| 1 | app:nginx |  <a href="../input/ndiag.descriptions/_component-app_nginx.md">:pencil2:</a> |
+| 2 | app:rails app |  <a href="../input/ndiag.descriptions/_component-app_rails_app.md">:pencil2:</a> |
 
 
 <p align="right">
-  [ <a href="../input/ndiag.descriptions/_relation-app-__rails-7e8f28c.md">:pencil2: Edit description</a> ]
+  [ <a href="../input/ndiag.descriptions/_relation-app_rails_app-5315b66.md">:pencil2: Edit description</a> ]
 <p>
 
 | # | Component | Description |
 | --- | --- | --- |
-| 0 | app-*:rails |  <a href="../input/ndiag.descriptions/_component-app-__rails.md">:pencil2:</a> |
-| 1 | db-*:postgresql |  <a href="../input/ndiag.descriptions/_component-db-__postgresql.md">:pencil2:</a> |
+| 0 | app:rails app |  <a href="../input/ndiag.descriptions/_component-app_rails_app.md">:pencil2:</a> |
+| 1 | db:postgresql |  <a href="../input/ndiag.descriptions/_component-db_postgresql.md">:pencil2:</a> |
 
 
 ---

@@ -1,19 +1,19 @@
-# db-*
+# db
 
-![view](node-db-_.svg)
+![view](node-db.svg)
 
 Database
 
 
 <p align="right">
-  [ <a href="../input/ndiag.descriptions/_node-db-_.md">:pencil2: Edit description</a> ]
+  [ <a href="../input/ndiag.descriptions/_node-db.md">:pencil2: Edit description</a> ]
 <p>
 
 ## Components
 
 | Name | Description | From (Relation) | To (Relation) |
 | --- | --- | --- | --- |
-| db-*:postgresql |  <a href="../input/ndiag.descriptions/_component-db-__postgresql.md">:pencil2:</a> | [app-*:rails](node-app-_.md) |  |
+| db:postgresql |  <a href="../input/ndiag.descriptions/_component-db_postgresql.md">:pencil2:</a> | [app:rails app](node-app.md) |  |
 
 ## Labels
 

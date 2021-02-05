@@ -19,8 +19,8 @@
 
 | Name (node count) | Description |
 | --- | --- |
-| [lb-*](node-lb-_.md) (2) | Load balancer |
-| [app-*](node-app-_.md) (3) | Application |
+| [lb](node-lb.md) (2) | Load balancer |
+| [app](node-app.md) (3) | Application |
 
 ## Labels
 

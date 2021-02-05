@@ -28,7 +28,7 @@ A group of virtual IP and nodes/components to handle it.
 
 | Name (node count) | Description |
 | --- | --- |
-| [lb-*](node-lb-_.md) (2) | Load balancer |
+| [lb](node-lb.md) (2) | Load balancer |
 
 ---
 
