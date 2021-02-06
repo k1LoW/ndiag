@@ -344,7 +344,7 @@ func (cfg *Config) buildDescriptions() error {
 		if l.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_layer", []string{l.Name}))
+		desc, err := cfg.readDescFile(MdPath("_layer", []string{l.Id()}))
 		if err != nil {
 			return err
 		}

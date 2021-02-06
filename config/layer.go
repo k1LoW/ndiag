@@ -1,6 +1,9 @@
 package config
 
-import "image/color"
+import (
+	"image/color"
+	"strings"
+)
 
 type Layer struct {
 	Name     string
@@ -14,6 +17,14 @@ type LayerMetadata struct {
 	TextColor color.Color
 }
 
-func (l Layer) String() string {
+func (l *Layer) Id() string {
+	return strings.ToLower(l.FullName())
+}
+
+func (l *Layer) FullName() string {
+	return l.Name
+}
+
+func (l *Layer) String() string {
 	return l.Name
 }

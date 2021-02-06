@@ -24,26 +24,37 @@ Add `ndiag.yml` (Full version is [here](example/tutorial/final/ndiag.yml)).
 ---
 name: 3-Tier Architecture
 docPath: docs/arch
+views:
+  -
+    name: overview
+    layers: ["consul", "vip_group"]
+  -
+    name: http-lb
+    layers: ["vip_group"]
+    labels: ["http"]
 nodes:
   -
     name: lb
+    match: lb-*
     components:
-      - nginx?icon=lb-l7
+      - NGINX?icon=lb-l7
     clusters:
+      - 'Consul:dc1'
       - 'vip_group:lb'
   -
     name: app
+    match: app-*
     components:
       - NGINX?icon=proxy
       - Rails App?icon=cube4&label=lang:ruby
+    clusters:
+      - 'Consul:dc1'
   -
     name: db
+    match: db-*
     components:
       - PostgreSQL?icon=db
-
-networks:
-  -
-    labels:
+    clusters:
 [...]
 ```
 

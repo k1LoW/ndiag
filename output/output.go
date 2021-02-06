@@ -191,7 +191,7 @@ func componentLink(c *config.Component) string {
 	case c.Node != nil:
 		return fmt.Sprintf("[%s](%s)", c.Id(), config.MdPath("node", []string{c.Node.Id()}))
 	case c.Cluster != nil:
-		return fmt.Sprintf("[%s](%s#%s)", c.Id(), config.MdPath("layer", []string{c.Cluster.Layer.Name}), clusterRep.Replace(c.Cluster.Id()))
+		return fmt.Sprintf("[%s](%s#%s)", c.Id(), config.MdPath("layer", []string{c.Cluster.Layer.Id()}), clusterRep.Replace(c.Cluster.Id()))
 	default:
 		return c.Id()
 	}

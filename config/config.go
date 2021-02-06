@@ -173,10 +173,10 @@ func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*E
 		hBelongTo := false
 		tBelongTo := false
 		for _, l := range layers {
-			if e.Src.Cluster == nil || strings.EqualFold(e.Src.Cluster.Layer.Name, l) {
+			if e.Src.Cluster == nil || strings.EqualFold(e.Src.Cluster.Layer.Id(), l) {
 				hBelongTo = true
 			}
-			if e.Dst.Cluster == nil || strings.EqualFold(e.Dst.Cluster.Layer.Name, l) {
+			if e.Dst.Cluster == nil || strings.EqualFold(e.Dst.Cluster.Layer.Id(), l) {
 				tBelongTo = true
 			}
 		}
@@ -574,7 +574,7 @@ func (cfg *Config) FindOrCreateLabel(name string) *Label {
 
 func (cfg *Config) FindLayer(s string) (*Layer, error) {
 	for _, l := range cfg.Layers() {
-		if s == l.Name {
+		if strings.EqualFold(s, l.Id()) {
 			return l, nil
 		}
 	}
@@ -627,7 +627,7 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 
 	// build a direct member node of a cluster
 	for _, c := range clusters {
-		if c.Layer.Name == leaf {
+		if strings.EqualFold(c.Layer.Id(), leaf) {
 			continue
 		}
 		nodes := []*Node{}
@@ -648,7 +648,7 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 		root := Clusters{}
 	NN:
 		for _, c := range clusters {
-			if c.Parent == nil && (c.Layer.Name == leaf || len(c.Nodes) > 0) {
+			if c.Parent == nil && (strings.EqualFold(c.Layer.Id(), leaf) || len(c.Nodes) > 0) {
 				for _, n := range c.Nodes {
 					for _, rn := range globalNodes {
 						if n == rn {

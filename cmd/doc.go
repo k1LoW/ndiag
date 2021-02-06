@@ -144,7 +144,7 @@ var docCmd = &cobra.Command{
 
 				// generate md
 				o := md.New(cfg)
-				mPath := filepath.Join(cfg.DocPath, config.MdPath("layer", []string{l.Name}))
+				mPath := filepath.Join(cfg.DocPath, config.MdPath("layer", []string{l.Id()}))
 				file, err := os.Create(mPath)
 				if err != nil {
 					return err
@@ -155,7 +155,7 @@ var docCmd = &cobra.Command{
 
 				// draw view
 				diag := gviz.New(cfg)
-				dPath := filepath.Join(cfg.DocPath, config.ImagePath("layer", []string{l.Name}, format))
+				dPath := filepath.Join(cfg.DocPath, config.ImagePath("layer", []string{l.Id()}, format))
 				dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 				if err != nil {
 					return err
@@ -267,11 +267,11 @@ func diagExists(cfg *config.Config) error {
 
 	// layers
 	for _, l := range cfg.Layers() {
-		mPath := filepath.Join(cfg.DocPath, config.MdPath("layer", []string{l.Name}))
+		mPath := filepath.Join(cfg.DocPath, config.MdPath("layer", []string{l.Id()}))
 		if _, err := os.Lstat(mPath); err == nil {
 			return fmt.Errorf("%s already exist", mPath)
 		}
-		dPath := filepath.Join(cfg.DocPath, config.ImagePath("layer", []string{l.Name}, format))
+		dPath := filepath.Join(cfg.DocPath, config.ImagePath("layer", []string{l.Id()}, format))
 		if _, err := os.Lstat(dPath); err == nil {
 			return fmt.Errorf("%s already exist", dPath)
 		}
