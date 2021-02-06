@@ -25,7 +25,7 @@ type ClusterMetadata struct {
 }
 
 func (c *Cluster) FullName() string {
-	return fmt.Sprintf("%s:%s", c.Layer.Name, c.Name)
+	return fmt.Sprintf("%s:%s", c.Layer.FullName(), c.Name)
 }
 
 func (c *Cluster) Id() string {
@@ -51,7 +51,7 @@ type Clusters []*Cluster
 
 func (cs Clusters) Find(layer, name string) *Cluster {
 	for _, c := range cs {
-		if c.Layer.Name == layer && c.Name == name {
+		if strings.EqualFold(c.Layer.Id(), layer) && c.Name == name {
 			return c
 		}
 	}
@@ -61,7 +61,7 @@ func (cs Clusters) Find(layer, name string) *Cluster {
 func (cs Clusters) FindByLayer(layer string) Clusters {
 	result := Clusters{}
 	for _, c := range cs {
-		if c.Layer.Name == layer {
+		if strings.EqualFold(c.Layer.Id(), layer) {
 			result = append(result, c)
 		}
 	}

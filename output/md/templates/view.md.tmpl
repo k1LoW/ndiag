@@ -14,7 +14,7 @@
 | {{ "Name" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- |
 {{- range $i, $l := .Layers }}
-| [{{ $l.Name }}]({{ mdpath "layer" $l.Name }}) | {{ if ne $l.Desc "" }}{{ $l.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_layer" $l.Name }}">:pencil2:</a>{{ end }} |
+| [{{ $l.Name }}]({{ mdpath "layer" $l.Name }}) | {{ if ne $l.Desc "" }}{{ $l.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_layer" ($l | id) }}">:pencil2:</a>{{ end }} |
 {{- end }}
 {{- end }}
 

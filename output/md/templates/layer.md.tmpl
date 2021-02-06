@@ -5,7 +5,7 @@
 {{ .Layer.Desc }}
 
 <p align="right">
-  [ <a href="{{ .DescPath }}/{{ mdpath "_layer" .Layer.Name }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
+  [ <a href="{{ .DescPath }}/{{ mdpath "_layer" ( .Layer | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
 <p>
 
 {{ range $i, $c := .Clusters }}
