@@ -1,4 +1,4 @@
-# STEP7: Add description using GitHub Actions ans GitHub Web UI
+# STEP7: Add descriptions using GitHub Web UI and GitHub Actions
 
 ![view](view-overview.svg)
 

@@ -1,5 +1,5 @@
 ---
-name: 'STEP7: Add description using GitHub Actions ans GitHub Web UI'
+name: 'STEP7: Add descriptions using GitHub Web UI and GitHub Actions'
 docPath: docs/arch
 views:
   -

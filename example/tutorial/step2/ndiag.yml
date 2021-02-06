@@ -1,5 +1,5 @@
 ---
-name: 'STEP2: Define using "networks:"'
+name: 'STEP2: Define data flow (HTTP request/Database access etc) using "networks:"'
 docPath: docs/arch
 nodes:
   -

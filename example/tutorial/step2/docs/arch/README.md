@@ -1,4 +1,4 @@
-# STEP2: Define using "networks:"
+# STEP2: Define data flow (HTTP request/Database access etc) using "networks:"
 
 ![view](view-nodes.svg)
 
