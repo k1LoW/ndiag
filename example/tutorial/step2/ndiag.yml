@@ -1,0 +1,36 @@
+---
+name: 'STEP2: Define using "networks:"'
+docPath: docs/arch
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX
+  -
+    name: app
+    components:
+      - NGINX
+      - Rails App
+  -
+    name: db
+    components:
+      - PostgreSQL
+
+networks:
+  -
+    route:
+      - "internet"
+      - "vip"
+  -
+    route:
+      - "vip"
+      - "lb:nginx"
+  -
+    route:
+      - "lb:nginx"
+      - "app:nginx"
+      - "app:rails app"
+  -
+    route:
+      - "app:rails app"
+      - "db:postgresql"

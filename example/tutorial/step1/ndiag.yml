@@ -1,0 +1,17 @@
+---
+name: 'STEP1: Define the roles of the instance and the middlewares/apps on the instance using "Node" and "Component".'
+docPath: docs/arch
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX
+  -
+    name: app
+    components:
+      - NGINX
+      - Rails App
+  -
+    name: db
+    components:
+      - PostgreSQL
