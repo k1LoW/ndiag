@@ -1,0 +1,51 @@
+---
+name: 'STEP4: Add icons'
+docPath: docs/arch
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX?icon=lb-l7
+  -
+    name: app
+    components:
+      - NGINX?icon=proxy
+      - Rails App?icon=cube4
+  -
+    name: db
+    components:
+      - PostgreSQL?icon=db
+
+networks:
+  -
+    route:
+      - "internet?icon=cloud"
+      - "vip"
+  -
+    route:
+      - "vip"
+      - "lb:nginx"
+  -
+    route:
+      - "lb:nginx"
+      - "app:nginx"
+      - "app:rails app"
+  -
+    route:
+      - "app:rails app"
+      - "db:postgresql"
+
+relations:
+  -
+    components:
+      - 'lb:Keepalived?icon=keepalived'
+      - "vip"
+
+customIcons:
+  -
+    key: keepalived
+    lines:
+      - b1 b5 f9 j5 j1 f1 b1
+      - d2 d6
+      - h2 d4
+      - e4 h6
