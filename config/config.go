@@ -189,10 +189,6 @@ func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*E
 }
 
 func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node, globalComponents []*Component, edges []*Edge, labels []string) (Clusters, []*Node, []*Component, []*Edge, error) {
-	if len(labels) == 0 {
-		return clusters, globalNodes, globalComponents, edges, nil
-	}
-
 	filteredEdges := []*Edge{}
 	nIds := orderedmap.NewOrderedMap()
 	cIds := orderedmap.NewOrderedMap()
@@ -209,7 +205,7 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 
 	// collect filtered nodes
 	for _, n := range cfg.Nodes {
-		if len(n.Labels.Subtract(allowLabels)) > 0 {
+		if len(allowLabels) == 0 || len(n.Labels.Subtract(allowLabels)) > 0 {
 			nIds.Set(n.Id(), n)
 			for _, c := range n.Components {
 				comIds.Set(c.Id(), c)
@@ -217,7 +213,7 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 			continue
 		}
 		for _, c := range n.Components {
-			if len(c.Labels.Subtract(allowLabels)) > 0 {
+			if len(allowLabels) == 0 || len(c.Labels.Subtract(allowLabels)) > 0 {
 				comIds.Set(c.Id(), c)
 				nIds.Set(n.Id(), n)
 			}
@@ -226,7 +222,7 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 
 	// collect filtered components
 	for _, c := range cfg.Components() {
-		if len(c.Labels.Subtract(allowLabels)) > 0 {
+		if len(allowLabels) == 0 || len(c.Labels.Subtract(allowLabels)) > 0 {
 			comIds.Set(c.Id(), c)
 			if c.Cluster != nil {
 				cIds.Set(c.Cluster.Id(), c.Cluster)
@@ -236,7 +232,7 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 
 	// collect filtered cluster/nodes/components/edges using edges
 	for _, e := range edges {
-		if len(e.Relation.Labels.Subtract(allowLabels)) == 0 {
+		if len(allowLabels) != 0 && len(e.Relation.Labels.Subtract(allowLabels)) == 0 {
 			continue
 		}
 
