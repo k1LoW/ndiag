@@ -1,0 +1,80 @@
+---
+name: 3-Tier Architecture
+docPath: docs/arch
+views:
+  -
+    name: overview
+    layers: ["consul", "vip_group"]
+  -
+    name: http-lb
+    layers: ["vip_group"]
+    labels: ["http"]
+nodes:
+  -
+    name: lb
+    match: lb-*
+    components:
+      - NGINX?icon=lb-l7
+    clusters:
+      - 'Consul:dc1'
+      - 'vip_group:lb'
+  -
+    name: app
+    match: app-*
+    components:
+      - NGINX?icon=proxy
+      - Rails App?icon=cube4&label=lang:ruby
+    clusters:
+      - 'Consul:dc1'
+  -
+    name: db
+    match: db-*
+    components:
+      - PostgreSQL?icon=db
+    clusters:
+      - 'Consul:dc1'
+
+networks:
+  -
+    labels:
+      - http
+    route:
+      - "internet?icon=cloud"
+      - "vip_group:lb:vip"
+  -
+    labels:
+      - http
+    route:
+      - "vip_group:lb:vip"
+      - "lb:nginx"
+  -
+    labels:
+      - http
+      - app
+    route:
+      - "lb:nginx"
+      - "app:nginx"
+      - "app:rails app"
+  -
+    labels:
+      - app
+    route:
+      - "app:rails app"
+      - "db:postgresql"
+
+relations:
+  -
+    labels:
+      - http
+    components:
+      - 'lb:Keepalived?icon=keepalived'
+      - "vip_group:lb:vip"
+
+customIcons:
+  -
+    key: keepalived
+    lines:
+      - b1 b5 f9 j5 j1 f1 b1
+      - d2 d6
+      - h2 d4
+      - e4 h6
