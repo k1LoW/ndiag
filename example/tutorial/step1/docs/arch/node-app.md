@@ -13,7 +13,7 @@
 | Name | Description | From (Relation) | To (Relation) |
 | --- | --- | --- | --- |
 | app:nginx |  <a href="../../ndiag.descriptions/_component-app_nginx.md">:pencil2:</a> |  |  |
-| app:rails app |  <a href="../../ndiag.descriptions/_component-app_rails_app.md">:pencil2:</a> |  |  |
+| app:app |  <a href="../../ndiag.descriptions/_component-app_app.md">:pencil2:</a> |  |  |
 
 ## Labels
 

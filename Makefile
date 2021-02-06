@@ -48,6 +48,8 @@ ndiag_doc_tutorial: build
 	./ndiag doc -c example/tutorial/step3/ndiag.yml --rm-dist
 	./ndiag doc -c example/tutorial/step4/ndiag.yml --rm-dist
 	./ndiag doc -c example/tutorial/step5/ndiag.yml --rm-dist
+	./ndiag doc -c example/tutorial/step6/ndiag.yml --rm-dist
+	./ndiag doc -c example/tutorial/step7/ndiag.yml --rm-dist
 	./ndiag doc -c example/tutorial/final/ndiag.yml -n example/tutorial/final/nodes.yml --rm-dist
 
 ndiag_doc_fetch_icons: build

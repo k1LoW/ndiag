@@ -13,7 +13,7 @@ nodes:
     name: app
     components:
       - NGINX?icon=proxy
-      - Rails App?icon=cube4
+      - App?icon=cube4
     clusters:
       - 'consul:dc1'
   -
@@ -36,10 +36,10 @@ networks:
     route:
       - "lb:nginx"
       - "app:nginx"
-      - "app:rails app"
+      - "app:app"
   -
     route:
-      - "app:rails app"
+      - "app:app"
       - "db:postgresql"
 
 relations:

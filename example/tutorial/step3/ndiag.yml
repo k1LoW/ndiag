@@ -10,7 +10,7 @@ nodes:
     name: app
     components:
       - NGINX
-      - Rails App
+      - App
   -
     name: db
     components:
@@ -29,10 +29,10 @@ networks:
     route:
       - "lb:nginx"
       - "app:nginx"
-      - "app:rails app"
+      - "app:app"
   -
     route:
-      - "app:rails app"
+      - "app:app"
       - "db:postgresql"
 
 relations:

@@ -1,11 +1,11 @@
-# http-lb
+# app
 
-![view](view-http-lb.svg)
+![view](view-app.svg)
 
 
 
 <p align="right">
-  [ <a href="../../ndiag.descriptions/_view-http-lb.md">:pencil2: Edit description</a> ]
+  [ <a href="../../ndiag.descriptions/_view-app.md">:pencil2: Edit description</a> ]
 <p>
 
 
@@ -21,12 +21,13 @@
 | --- | --- |
 | [lb](node-lb.md) (2) | Load balancer |
 | [app](node-app.md) (3) | Application |
+| [db](node-db.md) (2) | Database |
 
 ## Labels
 
 | Name | Description |
 | --- | --- |
-| [http](label-http.md) | HTTP request flow |
+| [app](label-app.md) | App-DB |
 
 ---
 

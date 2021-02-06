@@ -6,9 +6,13 @@ views:
     name: overview
     layers: ["consul", "vip_group"]
   -
-    name: http-lb
+    name: http access
     layers: ["vip_group"]
     labels: ["http"]
+  -
+    name: app
+    layers: ["vip_group"]
+    labels: ["app"]
 nodes:
   -
     name: lb
@@ -23,7 +27,7 @@ nodes:
     match: app-*
     components:
       - NGINX?icon=proxy
-      - Rails App?icon=cube4&label=lang:ruby
+      - App?icon=cube4&label=lang:ruby
     clusters:
       - 'Consul:dc1'
   -
@@ -54,12 +58,12 @@ networks:
     route:
       - "lb:nginx"
       - "app:nginx"
-      - "app:rails app"
+      - "app:app"
   -
     labels:
       - app
     route:
-      - "app:rails app"
+      - "app:app"
       - "db:postgresql"
 
 relations:

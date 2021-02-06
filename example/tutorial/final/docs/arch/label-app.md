@@ -12,23 +12,23 @@ App-DB
 ## Relations
 
 <p align="right">
-  [ <a href="../../ndiag.descriptions/_relation-lb_nginx-d49ef52.md">:pencil2: Edit description</a> ]
+  [ <a href="../../ndiag.descriptions/_relation-lb_nginx-c4bbef6.md">:pencil2: Edit description</a> ]
 <p>
 
 | # | Component | Description |
 | --- | --- | --- |
 | 0 | lb:nginx |  <a href="../../ndiag.descriptions/_component-lb_nginx.md">:pencil2:</a> |
 | 1 | app:nginx |  <a href="../../ndiag.descriptions/_component-app_nginx.md">:pencil2:</a> |
-| 2 | app:rails app |  <a href="../../ndiag.descriptions/_component-app_rails_app.md">:pencil2:</a> |
+| 2 | app:app |  <a href="../../ndiag.descriptions/_component-app_app.md">:pencil2:</a> |
 
 
 <p align="right">
-  [ <a href="../../ndiag.descriptions/_relation-app_rails_app-5315b66.md">:pencil2: Edit description</a> ]
+  [ <a href="../../ndiag.descriptions/_relation-app_app-533bbc8.md">:pencil2: Edit description</a> ]
 <p>
 
 | # | Component | Description |
 | --- | --- | --- |
-| 0 | app:rails app |  <a href="../../ndiag.descriptions/_component-app_rails_app.md">:pencil2:</a> |
+| 0 | app:app |  <a href="../../ndiag.descriptions/_component-app_app.md">:pencil2:</a> |
 | 1 | db:postgresql |  <a href="../../ndiag.descriptions/_component-db_postgresql.md">:pencil2:</a> |
 
 
