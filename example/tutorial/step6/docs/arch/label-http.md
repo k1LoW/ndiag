@@ -42,7 +42,7 @@
 
 
 <p align="right">
-  [ <a href="../../ndiag.descriptions/_relation-lb_keepalived-123b9f7.md">:pencil2: Edit description</a> ]
+  [ <a href="../../ndiag.descriptions/_relation-lb_keepalived-462761b.md">:pencil2: Edit description</a> ]
 <p>
 
 | # | Component | Description |
