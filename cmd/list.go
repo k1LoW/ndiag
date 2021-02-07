@@ -52,7 +52,7 @@ var listIconsCmd = &cobra.Command{
 			}
 			path := i.Path
 			if i.IsGlyph() {
-				path = "[glyph]"
+				path = "[embedded icon using https://github.com/k1LoW/glyph]"
 			}
 			table.Append([]string{k, path})
 		}
