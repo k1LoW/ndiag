@@ -105,12 +105,12 @@ func (rel *rawRelation) Id() string {
 	for _, l := range rel.Labels {
 		seed = append(seed, l)
 	}
-	key := strings.Join(seed, "-")
+	key := strings.ToLower(strings.Join(seed, "-"))
 	if _, err := io.WriteString(h, string(key)); err != nil {
 		return ""
 	}
 	s := fmt.Sprintf("%x", h.Sum(nil))
-	return fmt.Sprintf("%s-%s", queryTrim(rel.Components[0]), s[:7])
+	return strings.ToLower(fmt.Sprintf("%s-%s", queryTrim(rel.Components[0]), s[:7]))
 }
 
 func SplitRelations(relations []*Relation) []*Edge {
