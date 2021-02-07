@@ -1,5 +1,5 @@
 ---
-name: 'STEP2: Define data flow (HTTP request/Database access etc) using "networks:"'
+name: Simple e-commerce service
 docPath: docs/arch
 nodes:
   -
@@ -30,6 +30,10 @@ networks:
       - "lb:nginx"
       - "app:nginx"
       - "app:app"
+  -
+    route:
+      - "app:app"
+      - "Payment API"
   -
     route:
       - "app:app"

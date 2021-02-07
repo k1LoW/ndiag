@@ -1,4 +1,4 @@
-# STEP4: Add icons
+# Simple e-commerce service
 
 ![view](view-nodes.svg)
 

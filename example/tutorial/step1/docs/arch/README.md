@@ -1,4 +1,4 @@
-# STEP1: Define the roles of the instance and the middlewares/apps on the instance using "Node" and "Component".
+# Simple e-commerce service
 
 ![view](view-nodes.svg)
 

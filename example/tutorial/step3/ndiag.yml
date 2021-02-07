@@ -1,5 +1,5 @@
 ---
-name: 'STEP3: Use "relations:" to represent Virtual IP (vip) handling by Keepalived.'
+name: Simple e-commerce service
 docPath: docs/arch
 nodes:
   -
@@ -34,6 +34,10 @@ networks:
     route:
       - "app:app"
       - "db:postgresql"
+  -
+    route:
+      - "app:app"
+      - "Payment API"
 
 relations:
   -

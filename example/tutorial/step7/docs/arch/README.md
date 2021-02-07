@@ -1,4 +1,4 @@
-# STEP7: Add descriptions using GitHub Web UI and GitHub Actions
+# Simple e-commerce service
 
 ![view](view-overview.svg)
 
@@ -24,6 +24,7 @@
 | --- | --- |
 | [Consul](layer-consul.md) | Consul DC |
 | [vip_group](layer-vip_group.md) | A group of virtual IP and nodes/components to handle it. |
+| [Service](layer-service.md) | <a href="../../ndiag.descriptions/_layer-service.md">:pencil2:</a> |
 
 ## Nodes
 

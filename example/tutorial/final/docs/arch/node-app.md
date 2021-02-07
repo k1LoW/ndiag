@@ -14,7 +14,7 @@ Application
 | Name | Description | From (Relation) | To (Relation) |
 | --- | --- | --- | --- |
 | app:nginx |  <a href="../../ndiag.descriptions/_component-app_nginx.md">:pencil2:</a> | [lb:nginx](node-lb.md) | [app:app](node-app.md) |
-| app:app |  <a href="../../ndiag.descriptions/_component-app_app.md">:pencil2:</a> | [app:nginx](node-app.md) | [db:postgresql](node-db.md) |
+| app:app |  <a href="../../ndiag.descriptions/_component-app_app.md">:pencil2:</a> | [app:nginx](node-app.md) | [db:postgresql](node-db.md) / [service:payment:payment api](layer-service.md#servicepayment) |
 
 ## Labels
 

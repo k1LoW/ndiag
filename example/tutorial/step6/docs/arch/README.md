@@ -1,4 +1,4 @@
-# STEP6: Create architecture views using "Label" and "views:"
+# Simple e-commerce service
 
 ![view](view-overview.svg)
 
@@ -24,6 +24,7 @@
 | --- | --- |
 | [Consul](layer-consul.md) | <a href="../../ndiag.descriptions/_layer-consul.md">:pencil2:</a> |
 | [vip_group](layer-vip_group.md) | <a href="../../ndiag.descriptions/_layer-vip_group.md">:pencil2:</a> |
+| [Service](layer-service.md) | <a href="../../ndiag.descriptions/_layer-service.md">:pencil2:</a> |
 
 ## Nodes
 

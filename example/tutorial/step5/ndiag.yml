@@ -1,5 +1,5 @@
 ---
-name: 'STEP5: Grouping nodes and components using "Cluster" and "Layer"'
+name: Simple e-commerce service
 docPath: docs/arch
 nodes:
   -
@@ -41,6 +41,10 @@ networks:
     route:
       - "app:app"
       - "db:postgresql"
+  -
+    route:
+      - "app:app"
+      - "Service:Payment:Payment API"
 
 relations:
   -

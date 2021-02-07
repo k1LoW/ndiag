@@ -1,5 +1,7 @@
 # Tutorial
 
+In this tutorial, we will create a simple e-commerce service architecture.
+
 ## STEP1: Define the roles of the instance and the middlewares/apps on the instance using "Node" and "Component"
 
 - [ndiag.yml](../example/tutorial/step1/ndiag.yml)

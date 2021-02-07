@@ -1,17 +1,17 @@
 ---
-name: 'STEP7: Add descriptions using GitHub Web UI and GitHub Actions'
+name: Simple e-commerce service
 docPath: docs/arch
 views:
   -
     name: overview
-    layers: ["consul", "vip_group"]
+    layers: ["consul", "vip_group", "service"]
   -
     name: http access
     layers: ["vip_group"]
     labels: ["http"]
   -
     name: app
-    layers: ["vip_group"]
+    layers: ["vip_group", "service"]
     labels: ["app"]
 nodes:
   -
@@ -62,6 +62,12 @@ networks:
     route:
       - "app:app"
       - "db:postgresql"
+  -
+    labels:
+      - app
+    route:
+      - "app:app"
+      - "Service:Payment:Payment API"
 
 relations:
   -

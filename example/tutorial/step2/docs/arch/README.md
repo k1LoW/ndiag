@@ -1,4 +1,4 @@
-# STEP2: Define data flow (HTTP request/Database access etc) using "networks:"
+# Simple e-commerce service
 
 ![view](view-nodes.svg)
 

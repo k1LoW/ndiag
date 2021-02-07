@@ -1,5 +1,5 @@
 ---
-name: 'STEP1: Define the roles of the instance and the middlewares/apps on the instance using "Node" and "Component".'
+name: Simple e-commerce service
 docPath: docs/arch
 nodes:
   -

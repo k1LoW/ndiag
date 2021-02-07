@@ -1,4 +1,4 @@
-# STEP3: Use "relations:" to represent Virtual IP (vip) handling by Keepalived.
+# Simple e-commerce service
 
 ![view](view-nodes.svg)
 
