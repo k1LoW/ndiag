@@ -12,7 +12,7 @@ App-DB
 ## Relations
 
 <p align="right">
-  [ <a href="../../ndiag.descriptions/_relation-lb_nginx-c4bbef6.md">:pencil2: Edit description</a> ]
+  [ <a href="../../ndiag.descriptions/_relation-lb_nginx-2750eb0.md">:pencil2: Edit description</a> ]
 <p>
 
 | # | Component | Description |
@@ -23,7 +23,7 @@ App-DB
 
 
 <p align="right">
-  [ <a href="../../ndiag.descriptions/_relation-app_app-533bbc8.md">:pencil2: Edit description</a> ]
+  [ <a href="../../ndiag.descriptions/_relation-app_app-fc502aa.md">:pencil2: Edit description</a> ]
 <p>
 
 | # | Component | Description |
@@ -33,7 +33,7 @@ App-DB
 
 
 <p align="right">
-  [ <a href="../../ndiag.descriptions/_relation-app_app-6ce8c65.md">:pencil2: Edit description</a> ]
+  [ <a href="../../ndiag.descriptions/_relation-app_app-34fd077.md">:pencil2: Edit description</a> ]
 <p>
 
 | # | Component | Description |
