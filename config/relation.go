@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"sort"
 	"strings"
 
 	"github.com/elliotchance/orderedmap"
@@ -95,15 +94,8 @@ func (rel *rawRelation) Id() string {
 	}
 	h := sha256.New()
 	seed := []string{}
-	seed = append(seed, rel.Type.Name)
 	for _, c := range rel.Components {
 		seed = append(seed, queryTrim(c))
-	}
-	sort.Slice(rel.Labels, func(i, j int) bool {
-		return rel.Labels[i] < rel.Labels[j]
-	})
-	for _, l := range rel.Labels {
-		seed = append(seed, l)
 	}
 	key := strings.ToLower(strings.Join(seed, "-"))
 	if _, err := io.WriteString(h, string(key)); err != nil {
