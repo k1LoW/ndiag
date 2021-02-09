@@ -85,7 +85,7 @@ View the document on GitHub.
 ## Architecture
 
 - [English](docs/arch/README.md) :construction:
-- [日本語](docs/arch.ja/README.md)
+- [日本語](docs/arch.ja/README.md) :construction:
 
 ## Install
 

@@ -1,4 +1,4 @@
-# Simple e-commerce service
+# Simple web service
 
 ![view](view-nodes.svg)
 

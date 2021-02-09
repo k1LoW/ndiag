@@ -1,38 +1,655 @@
 # Tutorial
 
-In this tutorial, we will create a simple e-commerce service architecture.
+In this tutorial, we will create a simple web service architecture.
+
+To install `ndiag` command, please check the ["Install" section](../README.md#install).
 
 ## STEP1: Define the roles of the instance and the middlewares/apps on the instance using "Node" and "Component"
 
-- [ndiag.yml](../example/tutorial/step1/ndiag.yml)
-- [output documents](../example/tutorial/step1/docs/arch/README.md)
+**:pushpin: Keyword:** `Node`, `Component`, `Node component`
+
+First, define the roles of the instances (`lb`, `app`, `db`) as "Node", and the middleware and applications in the instances as "Node component".
+
+Create a YAML document as `ndiag.yml` like the following
+
+```yaml
+---
+name: Simple web service
+docPath: docs/arch
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX
+  -
+    name: app
+    components:
+      - NGINX
+      - App
+  -
+    name: db
+    components:
+      - PostgreSQL
+```
+<details>
+
+<summary> Full version of <code>ndiag.yml</code> is here (click).</summary>
+
+``` yaml
+---
+name: Simple web service
+docPath: docs/arch
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX
+  -
+    name: app
+    components:
+      - NGINX
+      - App
+  -
+    name: db
+    components:
+      - PostgreSQL
+```
+
+[ref](../example/tutorial/step1/ndiag.yml)
+
+</details>
+
+Then, run `ndiag doc` command.
+
+``` console
+$ ndiag doc -c ndiag.yml --rm-dist
+```
+
+If the command is successful, two directories should be created as follows.
+
+``` console
+$ ls
+docs ndiag.descriptions ndiag.yml
+$ tree docs/
+docs/
+└── arch
+    ├── README.md
+    ├── node-app.md
+    ├── node-app.svg
+    ├── node-db.md
+    ├── node-db.svg
+    ├── node-lb.md
+    ├── node-lb.svg
+    ├── view-nodes.md
+    └── view-nodes.svg
+
+1 directory, 9 files
+$ tree ndiag.descriptions
+ndiag.descriptions
+├── _component-app_app.md
+├── _component-app_nginx.md
+├── _component-db_postgresql.md
+├── _component-lb_nginx.md
+├── _index.md
+├── _node-app.md
+├── _node-db.md
+├── _node-lb.md
+└── _view-nodes.md
+
+0 directories, 9 files
+```
+
+| Directory | |
+| --- | --- |
+| `docs/` | Generated documents |
+| `ndiad.descriptions` | Sub documents to set description of architecture elements ( It will be explained in STEP7 ) |
+
+### Output of this step:
+
+<img src="../example/tutorial/step1/docs/arch/view-nodes.svg" />
+
+[Generated documents](../example/tutorial/step1/docs/arch/README.md)
 
 ## STEP2: Define data flow (HTTP request/Database access etc) using "networks:"
 
-- [ndiag.yml](../example/tutorial/step2/ndiag.yml)
-- [output documents](../example/tutorial/step2/docs/arch/README.md)
+**:pushpin: Keyword:** `networks:`, `Global component`
 
-## STEP3: Use "relations:" to represent Virtual IP (vip) handling by Keepalived
+Define the data flow of HTTP requests, database access, etc. using `networks:`.
 
-- [ndiag.yml](../example/tutorial/step3/ndiag.yml)
-- [output documents](../example/tutorial/step3/docs/arch/README.md)
+In this case, "Node component" is specified by joining Node id (= Node name) and Component name with `:`.
 
-## STEP4: Add icons
+**:bulb: Example:** `lb:nginx` means "Component `NGINX`" that belongs to "Node `lb`"
 
-- [ndiag.yml](../example/tutorial/step4/ndiag.yml)
-- [output documents](../example/tutorial/step4/docs/arch/README.md)
+A Component that does not belong to Node (or Cluster) is called "Global component" ( `internet`, `vip`, `Payment API` ). It is specified by only the Component name.
 
-## STEP5: Grouping nodes and components using "Cluster" and "Layer"
+``` yaml
+[...]
 
-- [ndiag.yml](../example/tutorial/step5/ndiag.yml)
-- [output documents](../example/tutorial/step5/docs/arch/README.md)
+networks:
+  -
+    route:
+      - "internet"
+      - "vip"
+  -
+    route:
+      - "vip"
+      - "lb:nginx"
+  -
+    route:
+      - "lb:nginx"
+      - "app:nginx"
+      - "app:app"
+[...]
+```
+<details>
+
+<summary> Full version of <code>ndiag.yml</code> is here (click).</summary>
+
+``` yaml
+---
+name: Simple web service
+docPath: docs/arch
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX
+  -
+    name: app
+    components:
+      - NGINX
+      - App
+  -
+    name: db
+    components:
+      - PostgreSQL
+
+networks:
+  -
+    route:
+      - "internet"
+      - "vip"
+  -
+    route:
+      - "vip"
+      - "lb:nginx"
+  -
+    route:
+      - "lb:nginx"
+      - "app:nginx"
+      - "app:app"
+  -
+    route:
+      - "app:app"
+      - "Payment API"
+  -
+    route:
+      - "app:app"
+      - "db:postgresql"
+```
+
+[ref](../example/tutorial/step2/ndiag.yml)
+
+</details>
+
+### Output of this step:
+
+<img src="../example/tutorial/step2/docs/arch/view-nodes.svg" />
+
+[Generated documents](../example/tutorial/step2/docs/arch/README.md)
+
+## STEP3: Define that a Virtual IP (vip) is handled by Keepalived using "relations:"
+
+**:pushpin: Keyword:** `relations:`
+
+`relations:` expresses relations between generic Components.
+
+``` yaml
+[...]
+
+relations:
+  -
+    components:
+      - 'lb:Keepalived'
+      - "vip"
+```
+<details>
+
+<summary> Full version of <code>ndiag.yml</code> is here (click).</summary>
+
+``` yaml
+---
+name: Simple web service
+docPath: docs/arch
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX
+  -
+    name: app
+    components:
+      - NGINX
+      - App
+  -
+    name: db
+    components:
+      - PostgreSQL
+
+networks:
+  -
+    route:
+      - "internet"
+      - "vip"
+  -
+    route:
+      - "vip"
+      - "lb:nginx"
+  -
+    route:
+      - "lb:nginx"
+      - "app:nginx"
+      - "app:app"
+  -
+    route:
+      - "app:app"
+      - "db:postgresql"
+  -
+    route:
+      - "app:app"
+      - "Payment API"
+
+relations:
+  -
+    components:
+      - 'lb:Keepalived'
+      - "vip"
+```
+
+[ref](../example/tutorial/step3/ndiag.yml)
+
+</details>
+
+Actually, `networks:` is another expression for `type: network` in `relations:`.
+
+**:bulb: Example:**
+
+<table>
+  <tr><th> networks: </th><th> relations: </th></tr>
+  <tr>
+    <td>
+<pre>
+networks:
+  -
+    route:
+      - "internet"
+      - "vip"
+</pre>
+    </td>
+    <td>
+<pre>
+relations:
+  -
+    type: network
+    components:
+      - "internet"
+      - "vip"
+</pre>
+    </td>
+  </tr>
+</table>
+
+### Output of this step:
+
+<img src="../example/tutorial/step3/docs/arch/view-nodes.svg" />
+
+[Generated documents](../example/tutorial/step3/docs/arch/README.md)
+
+## STEP4: Grouping nodes and components using "Cluster" and "Layer"
+
+**:pushpin: Keyword:** `Cluster`, `Layer`, `Cluster component`
+
+Define groups of Nodes and Components using "Cluster" ( `clusters:` ).
+
+``` yaml
+[...]
+  -
+    name: db
+    components:
+      - PostgreSQL
+    clusters:
+      - 'consul:dc1'
+
+networks:
+  -
+    route:
+      - "internet"
+      - "vip_group:lb:vip"
+[...]
+```
+<details>
+
+<summary> Full version of <code>ndiag.yml</code> is here (click).</summary>
+
+``` yaml
+---
+name: Simple web service
+docPath: docs/arch
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX
+    clusters:
+      - 'Consul:dc1'
+      - 'vip_group:lb'
+  -
+    name: app
+    components:
+      - NGINX
+      - App
+    clusters:
+      - 'consul:dc1'
+  -
+    name: db
+    components:
+      - PostgreSQL
+    clusters:
+      - 'consul:dc1'
+
+networks:
+  -
+    route:
+      - "internet"
+      - "vip_group:lb:vip"
+  -
+    route:
+      - "vip_group:lb:vip"
+      - "lb:nginx"
+  -
+    route:
+      - "lb:nginx"
+      - "app:nginx"
+      - "app:app"
+  -
+    route:
+      - "app:app"
+      - "db:postgresql"
+  -
+    route:
+      - "app:app"
+      - "Service:Payment:Payment API"
+
+relations:
+  -
+    components:
+      - 'lb:Keepalived'
+      - "vip_group:lb:vip"
+```
+
+[ref](../example/tutorial/step4/ndiag.yml)
+
+</details>
+
+"Node" can belong to multiple Clusters.
+
+**:bulb: Example:**
+
+``` yaml
+[...]
+nodes:
+  -
+    name: instance
+    components:
+      - http-server
+    clusters:
+      - 'role:web'
+      - 'location:dc'
+      - 'os:ubuntu-focal'
+[...]
+```
+
+"Layer" can contain multiple Clusters. "Cluster" always belongs to a "Layer".
+
+"Cluster" is specified by joining Layer id (= Layer name) and Cluster name with `:`.
+
+**Example: "Layer `role`" has "Cluster `role:web`" and "Cluster `role:db`"**
+
+"Component" that belongs to "Cluster" instead of "Node" is called a "Cluster component".
+
+In this case, "Cluster component" is specified by joining Cluster id and Component name with `:`.
+
+**:bulb: Example:** `vip_group:lb:vip` means "Component `vip`" that belongs to "Cluster `vip_group:lb`"
+
+### Output of this step:
+
+<img src="../example/tutorial/step4/docs/arch/view-nodes.svg" />
+
+[Generated documents](../example/tutorial/step4/docs/arch/README.md)
+
+## STEP5: Add icons
+
+**:pushpin: Keyword:** `icon`
+
+``` yaml
+[...]
+  -
+    name: db
+    components:
+      - PostgreSQL?icon=db
+    clusters:
+      - 'consul:dc1'
+
+networks:
+  -
+    route:
+      - "internet?icon=cloud"
+      - "vip_group:lb:vip"
+[...]
+```
+<details>
+
+<summary> Full version of <code>ndiag.yml</code> is here (click).</summary>
+
+``` yaml
+---
+name: Simple web service
+docPath: docs/arch
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX?icon=lb-l7
+    clusters:
+      - 'Consul:dc1'
+      - 'vip_group:lb'
+  -
+    name: app
+    components:
+      - NGINX?icon=proxy
+      - App?icon=cube4
+    clusters:
+      - 'consul:dc1'
+  -
+    name: db
+    components:
+      - PostgreSQL?icon=db
+    clusters:
+      - 'consul:dc1'
+
+networks:
+  -
+    route:
+      - "internet?icon=cloud"
+      - "vip_group:lb:vip"
+  -
+    route:
+      - "vip_group:lb:vip"
+      - "lb:nginx"
+  -
+    route:
+      - "lb:nginx"
+      - "app:nginx"
+      - "app:app"
+  -
+    route:
+      - "app:app"
+      - "db:postgresql"
+  -
+    route:
+      - "app:app"
+      - "Service:Payment:Payment API"
+
+relations:
+  -
+    components:
+      - 'lb:Keepalived?icon=keepalived'
+      - "vip_group:lb:vip"
+
+customIcons:
+  -
+    key: keepalived
+    lines:
+      - b1 b5 f9 j5 j1 f1 b1
+      - d2 d6
+      - h2 d4
+      - e4 h6
+```
+
+[ref](../example/tutorial/step5/ndiag.yml)
+
+</details>
+
+### Output of this step:
+
+<img src="../example/tutorial/step5/docs/arch/view-nodes.svg" />
+
+[Generated documents](../example/tutorial/step5/docs/arch/README.md)
 
 ## STEP6: Create architecture views using "Label" and "views:"
 
-- [ndiag.yml](../example/tutorial/step6/ndiag.yml)
-- [output documents](../example/tutorial/step6/docs/arch/README.md)
+**:pushpin: Keyword:** `views:`, `Label`
+
+``` yaml
+[...]
+views:
+  -
+    name: overview
+    layers: ["consul", "vip_group", "service"]
+[...]
+```
+<details>
+
+<summary> Full version of <code>ndiag.yml</code> is here (click).</summary>
+
+``` yaml
+---
+name: Simple web service
+docPath: docs/arch
+views:
+  -
+    name: overview
+    layers: ["consul", "vip_group", "service"]
+  -
+    name: http access
+    layers: ["vip_group"]
+    labels: ["http"]
+  -
+    name: app
+    layers: ["vip_group", "service"]
+    labels: ["app"]
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX?icon=lb-l7
+    clusters:
+      - 'Consul:dc1'
+      - 'vip_group:lb'
+  -
+    name: app
+    components:
+      - NGINX?icon=proxy
+      - App?icon=cube4&label=lang:ruby
+    clusters:
+      - 'consul:dc1'
+  -
+    name: db
+    components:
+      - PostgreSQL?icon=db
+    clusters:
+      - 'consul:dc1'
+
+networks:
+  -
+    labels:
+      - http
+    route:
+      - "internet?icon=cloud"
+      - "vip_group:lb:vip"
+  -
+    labels:
+      - http
+    route:
+      - "vip_group:lb:vip"
+      - "lb:nginx"
+  -
+    labels:
+      - http
+      - app
+    route:
+      - "lb:nginx"
+      - "app:nginx"
+      - "app:app"
+  -
+    labels:
+      - app
+    route:
+      - "app:app"
+      - "db:postgresql"
+  -
+    labels:
+      - app
+    route:
+      - "app:app"
+      - "Service:Payment:Payment API"
+
+relations:
+  -
+    labels:
+      - http
+    components:
+      - 'lb:Keepalived?icon=keepalived'
+      - "vip_group:lb:vip"
+
+customIcons:
+  -
+    key: keepalived
+    lines:
+      - b1 b5 f9 j5 j1 f1 b1
+      - d2 d6
+      - h2 d4
+      - e4 h6
+```
+
+[ref](../example/tutorial/step6/ndiag.yml)
+
+</details>
+
+### Output of this step:
+
+<img src="../example/tutorial/step6/docs/arch/view-overview.svg" />
+
+[Generated documents](../example/tutorial/step6/docs/arch/README.md)
 
 ## STEP7: Add descriptions using GitHub Web UI and GitHub Actions
 
-- [ndiag.yml](../example/tutorial/step7/ndiag.yml)
-- [output documents](../example/tutorial/step7/docs/arch/README.md)
+:construction:
+
+### Output of this step:
+
+[Generated documents](../example/tutorial/step7/docs/arch/README.md)
+
+## STEP8: Strict mode
+
+:construction:

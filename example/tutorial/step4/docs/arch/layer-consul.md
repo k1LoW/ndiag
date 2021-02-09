@@ -1,39 +1,30 @@
-# Simple web service
+# Consul
 
-![view](view-nodes.svg)
+![view](layer-consul.svg)
 
 
 
 <p align="right">
-  [ <a href="../../ndiag.descriptions/_index.md">:pencil2: Edit description</a> ]
+  [ <a href="../../ndiag.descriptions/_layer-consul.md">:pencil2: Edit description</a> ]
 <p>
 
 
-## Views
-
-| Name | Description |
-| --- | --- |
-| [Nodes](view-nodes.md) | <a href="../../ndiag.descriptions/_view-nodes.md">:pencil2:</a> |
+## Consul:dc1
 
 
-## Layers
 
-| Name | Description |
-| --- | --- |
+<p align="right">
+  [ <a href="../../ndiag.descriptions/_cluster-consul_dc1.md">:pencil2: Edit description</a> ]
+<p>
 
-## Nodes
+
+### Nodes
 
 | Name | Description |
 | --- | --- |
 | [lb](node-lb.md) | <a href="../../ndiag.descriptions/_node-lb.md">:pencil2:</a> |
 | [app](node-app.md) | <a href="../../ndiag.descriptions/_node-app.md">:pencil2:</a> |
 | [db](node-db.md) | <a href="../../ndiag.descriptions/_node-db.md">:pencil2:</a> |
-
-
-## Labels
-
-| Name | Description |
-| --- | --- |
 
 ---
 

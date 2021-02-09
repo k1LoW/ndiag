@@ -1,5 +1,5 @@
 ---
-name: Simple e-commerce service
+name: Simple web service
 docPath: docs/arch
 views:
   -

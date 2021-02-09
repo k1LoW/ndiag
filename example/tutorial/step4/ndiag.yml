@@ -1,29 +1,36 @@
 ---
-name: Simple e-commerce service
+name: Simple web service
 docPath: docs/arch
 nodes:
   -
     name: lb
     components:
-      - NGINX?icon=lb-l7
+      - NGINX
+    clusters:
+      - 'Consul:dc1'
+      - 'vip_group:lb'
   -
     name: app
     components:
-      - NGINX?icon=proxy
-      - App?icon=cube4
+      - NGINX
+      - App
+    clusters:
+      - 'consul:dc1'
   -
     name: db
     components:
-      - PostgreSQL?icon=db
+      - PostgreSQL
+    clusters:
+      - 'consul:dc1'
 
 networks:
   -
     route:
-      - "internet?icon=cloud"
-      - "vip"
+      - "internet"
+      - "vip_group:lb:vip"
   -
     route:
-      - "vip"
+      - "vip_group:lb:vip"
       - "lb:nginx"
   -
     route:
@@ -37,19 +44,10 @@ networks:
   -
     route:
       - "app:app"
-      - "Payment API"
+      - "Service:Payment:Payment API"
 
 relations:
   -
     components:
-      - 'lb:Keepalived?icon=keepalived'
-      - "vip"
-
-customIcons:
-  -
-    key: keepalived
-    lines:
-      - b1 b5 f9 j5 j1 f1 b1
-      - d2 d6
-      - h2 d4
-      - e4 h6
+      - 'lb:Keepalived'
+      - "vip_group:lb:vip"

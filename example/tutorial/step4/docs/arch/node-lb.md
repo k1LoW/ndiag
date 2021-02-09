@@ -12,8 +12,8 @@
 
 | Name | Description | From (Relation) | To (Relation) |
 | --- | --- | --- | --- |
-| lb:nginx |  <a href="../../ndiag.descriptions/_component-lb_nginx.md">:pencil2:</a> | vip | [app:nginx](node-app.md) |
-| lb:keepalived |  <a href="../../ndiag.descriptions/_component-lb_keepalived.md">:pencil2:</a> |  | vip |
+| lb:nginx |  <a href="../../ndiag.descriptions/_component-lb_nginx.md">:pencil2:</a> | [vip_group:lb:vip](layer-vip_group.md#vip_grouplb) | [app:nginx](node-app.md) |
+| lb:keepalived |  <a href="../../ndiag.descriptions/_component-lb_keepalived.md">:pencil2:</a> |  | [vip_group:lb:vip](layer-vip_group.md#vip_grouplb) |
 
 ## Labels
 
