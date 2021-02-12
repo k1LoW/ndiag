@@ -203,7 +203,7 @@ var docCmd = &cobra.Command{
 		}
 
 		// labels
-		if !cfg.HideLabelGroups {
+		if !cfg.HideLabels {
 			for k := range cfg.Labels() {
 				cfg, err := newConfig()
 				if err != nil {

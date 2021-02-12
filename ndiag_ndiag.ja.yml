@@ -3,7 +3,7 @@ name: ndiag アーキテクチャ
 docPath: docs/arch.ja
 descPath: docs/ndiag.descriptions.ja
 hideLayers: true
-hideLabelGroups: true
+hideLabels: true
 graph:
   attrs:
     rankdir: LR
