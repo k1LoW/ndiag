@@ -9,11 +9,6 @@
 <p>
 
 
-## Views
-
-| Name | Description |
-| --- | --- |
-| [Nodes](view-nodes.md) | <a href="../../ndiag.descriptions/_view-nodes.md">:pencil2:</a> |
 
 
 ## Layers

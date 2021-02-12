@@ -63,7 +63,7 @@ type Config struct {
 	HideViews         bool               `yaml:"hideViews,omitempty"`
 	HideLayers        bool               `yaml:"hideLayers,omitempty"`
 	HideRealNodes     bool               `yaml:"hideRealNodes,omitempty"`
-	HideLabelGroups   bool               `yaml:"hideLabelGroups,omitempty"`
+	HideLabels        bool               `yaml:"hideLabels,omitempty"`
 	Views             []*View            `yaml:"views"`
 	Nodes             []*Node            `yaml:"nodes"`
 	Relations         []*Relation        `yaml:"relations,omitempty"`
@@ -414,6 +414,7 @@ func (cfg *Config) Build() error {
 			Name:   "Nodes",
 			Layers: []string{},
 		})
+		cfg.HideViews = true
 	}
 	if err := cfg.buildDescriptions(); err != nil {
 		return err

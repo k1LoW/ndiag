@@ -306,25 +306,27 @@ func (cfg *Config) buildDescriptions() error {
 	}
 
 	// views
-	for _, d := range cfg.Views {
-		if d.Desc != "" {
-			continue
-		}
-		path := filepath.Join(cfg.DescPath, MdPath("_view", []string{d.Id()}))
-		oldPath := filepath.Join(cfg.DescPath, MdPath("_diagram", []string{d.Id()}))
-		if _, err := os.Stat(oldPath); err == nil {
-			if _, err := os.Stat(path); err == nil {
-				return fmt.Errorf("old description file exists: %s", oldPath)
+	if !cfg.HideViews {
+		for _, d := range cfg.Views {
+			if d.Desc != "" {
+				continue
 			}
-			if err := os.Rename(oldPath, path); err != nil {
+			path := filepath.Join(cfg.DescPath, MdPath("_view", []string{d.Id()}))
+			oldPath := filepath.Join(cfg.DescPath, MdPath("_diagram", []string{d.Id()}))
+			if _, err := os.Stat(oldPath); err == nil {
+				if _, err := os.Stat(path); err == nil {
+					return fmt.Errorf("old description file exists: %s", oldPath)
+				}
+				if err := os.Rename(oldPath, path); err != nil {
+					return err
+				}
+			}
+			desc, err := cfg.readDescFile(MdPath("_view", []string{d.Id()}))
+			if err != nil {
 				return err
 			}
+			d.Desc = desc
 		}
-		desc, err := cfg.readDescFile(MdPath("_view", []string{d.Id()}))
-		if err != nil {
-			return err
-		}
-		d.Desc = desc
 	}
 
 	// clusters
