@@ -414,6 +414,7 @@ func (cfg *Config) Build() error {
 			Name:   "Nodes",
 			Layers: []string{},
 		})
+		cfg.HideViews = true
 	}
 	if err := cfg.buildDescriptions(); err != nil {
 		return err
