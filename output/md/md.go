@@ -75,7 +75,7 @@ func (m *Md) OutputView(wr io.Writer, d *config.View) error {
 		"Labels":          labels,
 		"HideLayers":      m.config.HideLayers,
 		"HideRealNodes":   m.config.HideRealNodes,
-		"HideLabelGroups": m.config.HideLabelGroups,
+		"HideLabels": m.config.HideLabels,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
@@ -151,7 +151,7 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 		"RealNodes":       n.RealNodes,
 		"Labels":          labels,
 		"HideRealNodes":   m.config.HideRealNodes,
-		"HideLabelGroups": m.config.HideLabelGroups,
+		"HideLabels": m.config.HideLabels,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err

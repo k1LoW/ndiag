@@ -23,7 +23,7 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 		HideViews       bool               `yaml:"hideViews"`
 		HideLayers      bool               `yaml:"hideLayers"`
 		HideRealNodes   bool               `yaml:"hideRealNodes"`
-		HideLabelGroups bool               `yaml:"hideLabelGroups"`
+		HideLabels bool               `yaml:"hideLabels"`
 		Views           []*View            `yaml:"views"`
 		Old             []*View            `yaml:"diagrams"` // TODO: Remove
 		Nodes           []*Node            `yaml:"nodes"`
@@ -52,7 +52,7 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 	d.HideViews = raw.HideViews
 	d.HideLayers = raw.HideLayers
 	d.HideRealNodes = raw.HideRealNodes
-	d.HideLabelGroups = raw.HideLabelGroups
+	d.HideLabels = raw.HideLabels
 	d.Views = raw.Views
 	d.Nodes = raw.Nodes
 	if raw.Dict != nil {
