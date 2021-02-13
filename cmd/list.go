@@ -45,6 +45,7 @@ var listIconsCmd = &cobra.Command{
 			return err
 		}
 		table := tablewriter.NewWriter(os.Stdout)
+		table.SetAutoWrapText(false)
 		for _, k := range cfg.IconMap().Keys() {
 			i, err := cfg.IconMap().Get(k)
 			if err != nil {
@@ -52,7 +53,7 @@ var listIconsCmd = &cobra.Command{
 			}
 			path := i.Path
 			if i.IsGlyph() {
-				path = "[embedded icon using https://github.com/k1LoW/glyph]"
+				path = "[embedded icon using github.com/k1LoW/glyph]"
 			}
 			table.Append([]string{k, path})
 		}
