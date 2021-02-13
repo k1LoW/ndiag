@@ -80,7 +80,8 @@ View the document on GitHub.
 
 ## Tutorial
 
-[Tutorial](docs/tutorial.md)
+- [English](docs/tutorial.md) :construction:
+- [日本語](docs/tutorial.ja.md) :construction:
 
 ## Architecture
 

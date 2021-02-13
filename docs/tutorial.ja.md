@@ -4,13 +4,11 @@
 
 `ndiag` コマンドのインストールは ["Install" セクション](../README.md#install)を確認してください。
 
-## STEP1: "Node"や"Component"を使ってインスタンスやインスタンス上のミドルウェアやアプリケーションを定義する
+## STEP1: "Node"や"Component"を使ってインスタンスやインスタンス上のミドルウェアやアプリケーションを表現する
 
 **:pushpin: キーワード:** `Node`, `Component`, `Node component`
 
-まずインスタンスのロールを"Node"で、インスタンス上のミドルウェアやアプリケーションを"Component"で定義します。
-
-以下のようなYAMLドキュメントを `ndiag.yml` として作成します。
+まず、以下のようなYAMLドキュメントを `ndiag.yml` として作成します。
 
 ```yaml
 ---
@@ -59,6 +57,10 @@ nodes:
 
 </details>
 
+この `ndiag.yml` では、インスタンスのロール (`lb`, `app`, `db`) を**Node**で、インスタンス上のミドルウェアやアプリケーションを**Component**で表現しています。
+
+NodeもComponentもシステムを構成する要素（アーキテクチャ要素）です。
+
 そして `ndiag doc` コマンドを実行します。
 
 ``` console
@@ -104,9 +106,7 @@ ndiag.descriptions
 | `docs/` | 生成されたドキュメント  |
 | `ndiad.descriptions` | アーキテクチャ要素の説明をセットするためのサブドキュメント ( STEP7で説明します ) |
 
-`docs/arch/README.md` を開いてみてください。もうドキュメントの雛形が完成しました。
-
-STEP2以降でアーキテクチャ要素を充実させていきます。
+`docs/arch/README.md` を開いてみてください。もうアーキテクチャドキュメントの雛形が完成しました。
 
 ### Output of this step:
 
@@ -114,17 +114,15 @@ STEP2以降でアーキテクチャ要素を充実させていきます。
 
 [Generated documents](../example/tutorial/step1/docs/arch/README.md)
 
-### Keyword
+### Point of this step:
 
-NodeもComponentもシステムを構成する要素（アーキテクチャ要素）です。
+Componentのうち、特にNodeに所属するComponentを**Node component**と呼びます。
 
-Componentのうち、特にNodeに所属するComponentをNode componentと呼びます。
-
-## STEP2: データの流れ(HTTPリクエスト/データベースアクセスなど) を"networks:"を使って定義する
+## STEP2: データの流れ(HTTPリクエスト/データベースアクセスなど) を"networks:"を使って表現する
 
 **:pushpin: Keyword:** `networks:`, `Global component`
 
-Component間のデータの流れ(HTTPリクエスト/データベースアクセスなど) を `ndiag.yml` に `networks:` を追加することで定義します。
+Component間のデータの流れ(HTTPリクエスト/データベースアクセスなど) を `ndiag.yml` に `networks:` を追加することで表現します。
 
 ``` yaml
 [...]
@@ -202,7 +200,7 @@ networks:
 $ ndiag doc -c ndiag.yml --rm-dist
 ```
 
-(STEP2以降も同じコマンドを実行してドキュメントを生成します。)
+(STEP2以降も `ndiag doc` コマンドを実行してドキュメントを生成します。)
 
 ### Output of this step:
 
@@ -212,19 +210,17 @@ $ ndiag doc -c ndiag.yml --rm-dist
 
 ### Point of this step:
 
-`networks:` 上ではNode componentを"Node id(= Node name)"と"Component name"を `:` で連結することで指定します。
+Node componentは、Node id(= Node name)とComponent nameを `:` で連結することで指定します。
 
-**:bulb: Example:** `lb:nginx` は "Node `lb` に所属する Component `NGINX`」 を意味します。
+**:bulb: Example:** `lb:nginx` は "Node `lb` に所属する Component `NGINX`" を意味します。
 
-Node（やCluster）に所属しないComponentと"Global component"と呼びます ( `internet`, `vip`, `Payment API` )。Global componentは"Component name"のみで指定します。
+Node（やCluster）に所属しないComponentと**Global component**と呼びます ( `internet`, `vip`, `Payment API` )。Global componentはComponent nameのみで指定します。
 
-## STEP3: データの流れ以外のComponent間の関係を"relations:"を使用して定義する
+## STEP3: データの流れ以外のComponent間の関係を"relations:"を使用して表現する
 
 **:pushpin: Keyword:** `relations:`
 
-このSTEPでは、Virtual IP (vip) をKeepalivedが扱っている(vipとKeepalivedが関連している)ことを表現します。
-
-データの流れ以外のComponent間の関係は以下のように `relations:` を使って定義します。
+データの流れ以外のComponent間の関係を、以下のように `relations:` を使って表現します。
 
 ``` yaml
 [...]
@@ -292,7 +288,7 @@ relations:
 
 </details>
 
-そして `ndiag doc` コマンドを実行します
+そして、 `ndiag doc` コマンドを実行します。
 
 ``` console
 $ ndiag doc -c ndiag.yml --rm-dist
@@ -309,6 +305,8 @@ $ ndiag doc -c ndiag.yml --rm-dist
 `networks:` の別の表現として `relations:` の `type: network` があります。どちらを利用しても構いません。
 
 **:bulb: Example:**
+
+以下の2つは同じ意味になります。
 
 <table>
   <tr><th> networks: </th><th> relations: </th></tr>
@@ -339,7 +337,7 @@ relations:
 
 **:pushpin: Keyword:** `Cluster`, `Layer`, `Cluster component`
 
-NodeやComponentのグループを `clusters:` で定義します。
+NodeやComponentのグループを `clusters:` で表現します。
 
 ``` yaml
 [...]
@@ -429,6 +427,8 @@ relations:
 
 ### Point of this step:
 
+ndiagではNodeやComponentを**Cluster**という要素でグルーピングできます。
+
 Nodeは複数のClusterに所属できます。
 
 **:bulb: Example:**
@@ -447,23 +447,25 @@ nodes:
 [...]
 ```
 
-"Layer" は複数のClusterを持つことが可能です。Clusterは常に1つのLayerに所属しています。
+Clusterは常に1つの**Layer**に所属しています。Layerは複数のClusterを持つことが可能です。
 
-Clusterは"Layer id (= Layer name)"と"Cluster name"を `:` で連結することで指定できます。
+図では、同じLayerに所属するClusterは同じ色の線で表現されます。
 
-**:bulb: Example: Layer `role` は 同じLayer id `role` を持つCluster `role:web` やCluster `role:db` を持っています。
+ClusterはLayer id (= Layer name)とCluster nameを `:` で連結することで指定できます。
 
-NodeではなくClusterに所属するComponentを"Cluster component"と呼びます。
+**:bulb: Example:** Layer `role` は 同じLayer id `role` を持つCluster `role:web` やCluster `role:db` を持っています。
 
-Cluster componentは"Clusetr id"と"Component name"を `:` で連結することで指定できます。
+また、NodeではなくClusterに所属するComponentを**Cluster component**と呼びます。
+
+Cluster componentはClusetr idとComponent nameを `:` で連結することで指定できます。
 
 **:bulb: Example:** `vip_group:lb:vip` は"Cluster `vip_group:lb`に所属するComponent `vip`"という意味です。
 
-## STEP5: Add icons
+## STEP5: アイコンを追加する
 
 **:pushpin: Keyword:** `icon`
 
-以下のようにComponentやNode、Clusterにアイコンを設定します。
+このSTEPでは、以下のようにComponentやNode、Clusterにアイコンを設定して図をわかりやすくします。
 
 ``` yaml
 [...]
@@ -495,7 +497,7 @@ nodes:
     components:
       - NGINX?icon=lb-l7
     clusters:
-      - 'Consul:dc1?icon=hashicorp-consul'
+      - 'Consul:dc1'
       - 'vip_group:lb'
   -
     name: app
@@ -554,7 +556,7 @@ customIcons:
 
 </details>
 
-そして `ndiag doc` コマンドを実行します。
+`ndiag doc` コマンドを実行するとアイコンを含んだ図でドキュメントが生成されます。
 
 ``` console
 $ ndiag doc -c ndiag.yml --rm-dist
@@ -568,15 +570,23 @@ $ ndiag doc -c ndiag.yml --rm-dist
 
 ### Point of this step:
 
-アイコンを付与できるのは以下の3つです。
+使用できるアイコンは `ndiag list icons` コマンドで確認できます。
 
-1. Component
-2. Node
-3. Cluster
+``` console
+$ ndiag list icons -c ndiag.yml
+```
 
-#### Component
+アイコンを追加する方法は以下の3つです。
 
-Component idやComponent nameにクエリパラメータでアイコンを指定することでComponentにアイコンを付与できます。
+1. `customIcons:` セクションでglyphの記述方式でアイコンを表現する
+2. アイコンディレクトリ(デフォルト: `ndiag.icons` )を作成し、SVGもしくはPNGファイルを配置する
+3. `ndiag fetch-isons` コマンドを実行して、追加のアイコンをアイコンディレクトリにダウンロードする。
+
+また、アイコンを付与できるアーキテクチャ要素は以下の3つです。
+
+**1. Component**
+
+Component idやComponent nameにクエリパラメータで `icon` を指定することでComponentにアイコンを付与できます。
 
 ``` yaml
 [...]
@@ -589,9 +599,9 @@ nodes:
 [...]
 ```
 
-#### Node
+**2. Node**
 
-Nodeにアイコンを付与する場合、以下のように `metadata:` パラメータでアイコンを指定します。
+Nodeにアイコンを付与する場合、以下のように `metadata:` に `icon:` を指定します。
 
 ``` yaml
 [...]
@@ -605,9 +615,9 @@ nodes:
 [...]
 ```
 
-#### Cluster
+**3. Cluster**
 
-Clusterにアイコンを付与する場合、Componentと同様に、以下のようにCluster idにクエリパラメータでアイコンを指定することで付与できます。
+Clusterにアイコンを付与する場合、Componentと同様に、以下のようにCluster idにクエリパラメータでアイコンを指定します。
 
 ``` yaml
 [...]
@@ -618,16 +628,27 @@ nodes:
 [,,,]
 ```
 
-## STEP6: Create architecture views using "Label" and "views:"
+## STEP6: "Label"や"views:"を使ってアーキテクチャのビュー("View")を作成する
 
-**:pushpin: Keyword:** `views:`, `Label`
+**:pushpin: Keyword:** `View`, `views:`, `Label`
+
+**View**はndiagにとって重要な概念です。
+
+STEP5までで、アーキテクチャ要素とそれらの関係を表現しました。
+
+STEP6では、アーキテクチャを様々な側面から説明するためにViewを作成します。
+
+ndiagでは**Label**を利用してアーキテクチャ要素をフィルタリングすることで、アーキテクチャをある関心事にフォーカスしたドキュメントをViewとして作成できます。
+
+Viewは`views:` で複数定義できます。
 
 ``` yaml
 [...]
 views:
   -
-    name: overview
-    layers: ["consul", "vip_group", "service"]
+    name: http access
+    layers: ["vip_group"]
+    labels: ["http"]
 [...]
 ```
 <details>
@@ -656,7 +677,7 @@ nodes:
     components:
       - NGINX?icon=lb-l7
     clusters:
-      - 'Consul:dc1?icon=hashicorp-consul'
+      - 'Consul:dc1'
       - 'vip_group:lb'
   -
     name: app
@@ -734,7 +755,58 @@ customIcons:
 
 [Generated documents](../example/tutorial/step6/docs/arch/README.md)
 
-## STEP7: Add descriptions using GitHub Web UI and GitHub Actions
+### Point of this step:
+
+Labelを付与できるアーキテクチャ要素は以下の3つです。
+
+**1. Component**
+
+Component idやComponent nameにクエリパラメータで `label` を指定することでComponentにLabelを付与できます。
+
+``` yaml
+[...]
+nodes:
+  -
+    name: app
+    components:
+      - App?label=ruby&label=rails
+[...]
+```
+
+**2. Node**
+
+NodeにLabelを付与する場合、以下のように `metadata:` に `labels:` を指定します。
+
+``` yaml
+[...]
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX
+    metadata:
+      labels:
+        - http
+[...]
+```
+
+**3. Relation (Network）**
+
+RelationもしくはNetworkにLabelを付与する場合、`labels:` を指定します。
+
+``` yaml
+[...]
+networks:
+  -
+    labels:
+      - http
+    route:
+      - "internet?icon=cloud"
+      - "vip_group:lb:vip"
+[...]
+```
+
+## STEP7: Add description of elements using GitHub Web UI and GitHub Actions
 
 :construction:
 

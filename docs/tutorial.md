@@ -1,16 +1,14 @@
 # Tutorial
 
-In this tutorial, we will create a simple web service architecture document.
+In this tutorial, we will create a simple web service architecture documents.
 
 To install `ndiag` command, please check the ["Install" section](../README.md#install).
 
-## STEP1: Define the roles of the instance and the middlewares/apps on the instance using "Node" and "Component"
+## STEP1: Represent the roles of the instance and the middlewares/apps on the instance using "Node" and "Component"
 
 **:pushpin: Keyword:** `Node`, `Component`, `Node component`
 
-First, define the roles of the instances (`lb`, `app`, `db`) as "Node", and the middleware and applications in the instances as "Component".
-
-Create a YAML document as `ndiag.yml` like the following
+First, Create a YAML document as `ndiag.yml` like the following
 
 ```yaml
 ---
@@ -59,6 +57,10 @@ nodes:
 
 </details>
 
+In this `ndiag.yml`, the roles of the instances (`lb`, `app`, `db`) is represented by **Node** and the middlewares and applications on the instances are represented by **Component**.
+
+Both Node and Component are elements that make up a system (architectural elements).
+
 Then, run `ndiag doc` command.
 
 ``` console
@@ -104,9 +106,7 @@ ndiag.descriptions
 | `docs/` | Generated documents |
 | `ndiad.descriptions` | Sub documents to set description of architecture elements ( It will be explained in STEP7 ) |
 
-`docs/arch/README.md` を開いてみてください。もうドキュメントの雛形が完成しました。
-
-STEP2以降でアーキテクチャ要素を充実させていきます。
+Open the file `docs/arch/README.md`. The documentation template is now complete.
 
 ### Output of this step:
 
@@ -116,15 +116,13 @@ STEP2以降でアーキテクチャ要素を充実させていきます。
 
 ### Point of this step:
 
-NodeもComponentもシステムを構成する要素（アーキテクチャ要素）です。
+A Component that belongs to Node is called Node component.
 
-Componentのうち、特にNodeに所属するComponentをNode componentと呼びます。
-
-## STEP2: Define data flow (HTTP request/Database access etc) using "networks:"
+## STEP2: Represent data flow (HTTP request/Database access etc) using "networks:"
 
 **:pushpin: Keyword:** `networks:`, `Global component`
 
-Component間のデータの流れ(HTTPリクエスト/データベースアクセスなど) を `ndiag.yml` に `networks:` を追加することで定義します。
+Data flow between components (HTTP requests/database access, etc.) is represented by adding `networks:` to `ndiag.yml`.
 
 ``` yaml
 [...]
@@ -202,7 +200,7 @@ Then, run `ndiag doc` command as in STEP1.
 $ ndiag doc -c ndiag.yml --rm-dist
 ```
 
-( After STEP2, execute the same command to generate the document. )
+( After STEP2, execute `ndiag doc` command to generate the document. )
 
 ### Output of this step:
 
@@ -218,13 +216,11 @@ Node component is specified by joining "Node id (= Node name)" and "Component na
 
 A Component that does not belong to Node (or Cluster) is called "Global component" ( `internet`, `vip`, `Payment API` ). It is specified by only the Component name.
 
-## STEP3: Define relationships between components other than the data flow using "relations:"
+## STEP3: Represent relationships between components other than the data flow using "relations:"
 
 **:pushpin: Keyword:** `relations:`
 
-このSTEPでは、Virtual IP (vip) をKeepalivedが扱っている(vipとKeepalivedが関連している)ことを表現します。
-
-データの流れ以外のComponent間の関係は以下のように `relations:` を使って定義します。
+The relations between Components, other than the data flow, are expressed using `relations:` as shown below.
 
 ``` yaml
 [...]
@@ -339,7 +335,7 @@ relations:
 
 **:pushpin: Keyword:** `Cluster`, `Layer`, `Cluster component`
 
-Define groups of Nodes and Components using "Cluster" ( `clusters:` ).
+Represent groups of Nodes and Components using `clusters:`.
 
 ``` yaml
 [...]
@@ -439,29 +435,53 @@ nodes:
 [...]
 ```
 
-"Layer" can contain multiple Clusters. "Cluster" always belongs to a "Layer".
-
-"Cluster" is specified by joining Layer id (= Layer name) and Cluster name with `:`.
-
-**:bulb: Example: "Layer `role`" can have "Cluster `role:web`" and "Cluster `role:db`"**
-
-"Component" that belongs to "Cluster" instead of "Node" is called a "Cluster component".
-
-In this case, "Cluster component" is specified by joining Cluster id and Component name with `:`.
-
-**:bulb: Example:** `vip_group:lb:vip` means "Component `vip`" that belongs to "Cluster `vip_group:lb`"
-
 ### Output of this step:
 
 <img src="../example/tutorial/step4/docs/arch/view-nodes.svg" />
 
 [Generated documents](../example/tutorial/step4/docs/arch/README.md)
 
+### Point of this step:
+
+In ndiag, Nodes and Components can be grouped by an element called **Cluster**.
+
+A Node can belong to multiple Clusters.
+
+**:bulb: Example:**
+
+``` yaml
+[...]
+nodes:
+  -
+    name: instance
+    components:
+      - http-server
+    clusters:
+      - 'role:web'
+      - 'location:dc'
+      - 'os:ubuntu-focal'
+[...]
+```
+
+"Cluster" always belongs to a "Layer". "Layer" can have multiple Clusters.
+
+In the figure, Clusters that belong to the same Layer are represented by lines of the same color.
+
+"Cluster" is specified by joining Layer id (= Layer name) and Cluster name with `:`.
+
+**:bulb: Example:** Layer `role` has a Cluster `role:web` and a Cluster `role:db` with the same Layer id `role`.
+
+Also, a Component that belongs to Cluster instead of Node is called **Cluster component**.
+
+Cluster component is specified by joining Cluster id and Component name with `:`.
+
+**:bulb: Example:** `vip_group:lb:vip` means "Component `vip`" that belongs to "Cluster `vip_group:lb`"
+
 ## STEP5: Add icons
 
 **:pushpin: Keyword:** `icon`
 
-Components, Nodes, and Clusters can be given icons.
+:construction:
 
 ``` yaml
 [...]
@@ -561,6 +581,8 @@ customIcons:
 ## STEP6: Create architecture views using "Label" and "views:"
 
 **:pushpin: Keyword:** `views:`, `Label`
+
+:construction:
 
 ``` yaml
 [...]
