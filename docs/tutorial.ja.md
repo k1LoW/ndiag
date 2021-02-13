@@ -1,16 +1,16 @@
 # Tutorial
 
-In this tutorial, we will create a simple web service architecture document.
+このチュートリアルでは簡単なWebサービスのアーキテクチャドキュメントを作成します。
 
-To install `ndiag` command, please check the ["Install" section](../README.md#install).
+`ndiag` コマンドのインストールは ["Install" セクション](../README.md#install)を確認してください。
 
-## STEP1: Define the roles of the instance and the middlewares/apps on the instance using "Node" and "Component"
+## STEP1: "Node"や"Component"を使ってインスタンスやインスタンス上のミドルウェアやアプリケーションを定義する
 
-**:pushpin: Keyword:** `Node`, `Component`, `Node component`
+**:pushpin: キーワード:** `Node`, `Component`, `Node component`
 
-First, define the roles of the instances (`lb`, `app`, `db`) as "Node", and the middleware and applications in the instances as "Component".
+まずインスタンスのロールを"Node"で、インスタンス上のミドルウェアやアプリケーションを"Component"で定義します。
 
-Create a YAML document as `ndiag.yml` like the following
+以下のようなYAMLドキュメントを `ndiag.yml` として作成します。
 
 ```yaml
 ---
@@ -59,13 +59,13 @@ nodes:
 
 </details>
 
-Then, run `ndiag doc` command.
+そして `ndiag doc` コマンドを実行します。
 
 ``` console
 $ ndiag doc -c ndiag.yml --rm-dist
 ```
 
-If the command is successful, two directories should be created as follows.
+コマンドが成功すると以下のような2つのディレクトリが作成されます。
 
 ``` console
 $ ls
@@ -99,10 +99,10 @@ ndiag.descriptions
 0 directories, 9 files
 ```
 
-| Directory | |
+| ディレクトリ  | |
 | --- | --- |
-| `docs/` | Generated documents |
-| `ndiad.descriptions` | Sub documents to set description of architecture elements ( It will be explained in STEP7 ) |
+| `docs/` | 生成されたドキュメント  |
+| `ndiad.descriptions` | アーキテクチャ要素の説明をセットするためのサブドキュメント ( STEP7で説明します ) |
 
 `docs/arch/README.md` を開いてみてください。もうドキュメントの雛形が完成しました。
 
@@ -114,13 +114,13 @@ STEP2以降でアーキテクチャ要素を充実させていきます。
 
 [Generated documents](../example/tutorial/step1/docs/arch/README.md)
 
-### Point of this step:
+### Keyword
 
 NodeもComponentもシステムを構成する要素（アーキテクチャ要素）です。
 
 Componentのうち、特にNodeに所属するComponentをNode componentと呼びます。
 
-## STEP2: Define data flow (HTTP request/Database access etc) using "networks:"
+## STEP2: データの流れ(HTTPリクエスト/データベースアクセスなど) を"networks:"を使って定義する
 
 **:pushpin: Keyword:** `networks:`, `Global component`
 
@@ -196,13 +196,13 @@ networks:
 
 </details>
 
-Then, run `ndiag doc` command as in STEP1.
+そして、STEP1と同様に `ndiag doc` コマンドを実行します。
 
 ``` console
 $ ndiag doc -c ndiag.yml --rm-dist
 ```
 
-( After STEP2, execute the same command to generate the document. )
+(STEP2以降も同じコマンドを実行してドキュメントを生成します。)
 
 ### Output of this step:
 
@@ -212,13 +212,13 @@ $ ndiag doc -c ndiag.yml --rm-dist
 
 ### Point of this step:
 
-Node component is specified by joining "Node id (= Node name)" and "Component name" with `:`.
+`networks:` 上ではNode componentを"Node id(= Node name)"と"Component name"を `:` で連結することで指定します。
 
-**:bulb: Example:** `lb:nginx` means "Component `NGINX`" that belongs to "Node `lb`"
+**:bulb: Example:** `lb:nginx` は "Node `lb` に所属する Component `NGINX`」 を意味します。
 
-A Component that does not belong to Node (or Cluster) is called "Global component" ( `internet`, `vip`, `Payment API` ). It is specified by only the Component name.
+Node（やCluster）に所属しないComponentと"Global component"と呼びます ( `internet`, `vip`, `Payment API` )。Global componentは"Component name"のみで指定します。
 
-## STEP3: Define relationships between components other than the data flow using "relations:"
+## STEP3: データの流れ以外のComponent間の関係を"relations:"を使用して定義する
 
 **:pushpin: Keyword:** `relations:`
 
@@ -292,7 +292,7 @@ relations:
 
 </details>
 
-Then, run `ndiag doc` command.
+そして `ndiag doc` コマンドを実行します
 
 ``` console
 $ ndiag doc -c ndiag.yml --rm-dist
@@ -306,7 +306,7 @@ $ ndiag doc -c ndiag.yml --rm-dist
 
 ### Point of this step:
 
-`networks:` is another expression for `type: network` in `relations:`. You can use either one.
+`networks:` の別の表現として `relations:` の `type: network` があります。どちらを利用しても構いません。
 
 **:bulb: Example:**
 
@@ -335,11 +335,11 @@ relations:
   </tr>
 </table>
 
-## STEP4: Grouping nodes and components using "Cluster" and "Layer"
+## STEP4: "Cluster" を使ってNodeやComponentをグルーピングする
 
 **:pushpin: Keyword:** `Cluster`, `Layer`, `Cluster component`
 
-Define groups of Nodes and Components using "Cluster" ( `clusters:` ).
+NodeやComponentのグループを `clusters:` で定義します。
 
 ``` yaml
 [...]
@@ -421,7 +421,15 @@ relations:
 
 </details>
 
-"Node" can belong to multiple Clusters.
+### Output of this step:
+
+<img src="../example/tutorial/step4/docs/arch/view-nodes.svg" />
+
+[Generated documents](../example/tutorial/step4/docs/arch/README.md)
+
+### Point of this step:
+
+Nodeは複数のClusterに所属できます。
 
 **:bulb: Example:**
 
@@ -439,29 +447,23 @@ nodes:
 [...]
 ```
 
-"Layer" can contain multiple Clusters. "Cluster" always belongs to a "Layer".
+"Layer" は複数のClusterを持つことが可能です。Clusterは常に1つのLayerに所属しています。
 
-"Cluster" is specified by joining Layer id (= Layer name) and Cluster name with `:`.
+Clusterは"Layer id (= Layer name)"と"Cluster name"を `:` で連結することで指定できます。
 
-**:bulb: Example: "Layer `role`" can have "Cluster `role:web`" and "Cluster `role:db`"**
+**:bulb: Example: Layer `role` は 同じLayer id `role` を持つCluster `role:web` やCluster `role:db` を持っています。
 
-"Component" that belongs to "Cluster" instead of "Node" is called a "Cluster component".
+NodeではなくClusterに所属するComponentを"Cluster component"と呼びます。
 
-In this case, "Cluster component" is specified by joining Cluster id and Component name with `:`.
+Cluster componentは"Clusetr id"と"Component name"を `:` で連結することで指定できます。
 
-**:bulb: Example:** `vip_group:lb:vip` means "Component `vip`" that belongs to "Cluster `vip_group:lb`"
-
-### Output of this step:
-
-<img src="../example/tutorial/step4/docs/arch/view-nodes.svg" />
-
-[Generated documents](../example/tutorial/step4/docs/arch/README.md)
+**:bulb: Example:** `vip_group:lb:vip` は"Cluster `vip_group:lb`に所属するComponent `vip`"という意味です。
 
 ## STEP5: Add icons
 
 **:pushpin: Keyword:** `icon`
 
-Components, Nodes, and Clusters can be given icons.
+以下のようにComponentやNode、Clusterにアイコンを設定します。
 
 ``` yaml
 [...]
@@ -493,7 +495,7 @@ nodes:
     components:
       - NGINX?icon=lb-l7
     clusters:
-      - 'Consul:dc1'
+      - 'Consul:dc1?icon=hashicorp-consul'
       - 'vip_group:lb'
   -
     name: app
@@ -552,11 +554,69 @@ customIcons:
 
 </details>
 
+そして `ndiag doc` コマンドを実行します。
+
+``` console
+$ ndiag doc -c ndiag.yml --rm-dist
+```
+
 ### Output of this step:
 
 <img src="../example/tutorial/step5/docs/arch/view-nodes.svg" />
 
 [Generated documents](../example/tutorial/step5/docs/arch/README.md)
+
+### Point of this step:
+
+アイコンを付与できるのは以下の3つです。
+
+1. Component
+2. Node
+3. Cluster
+
+#### Component
+
+Component idやComponent nameにクエリパラメータでアイコンを指定することでComponentにアイコンを付与できます。
+
+``` yaml
+[...]
+nodes:
+  -
+    name: app
+    components:
+      - NGINX?icon=proxy
+      - App?icon=cube4
+[...]
+```
+
+#### Node
+
+Nodeにアイコンを付与する場合、以下のように `metadata:` パラメータでアイコンを指定します。
+
+``` yaml
+[...]
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX
+    metadata:
+      icon: lb
+[...]
+```
+
+#### Cluster
+
+Clusterにアイコンを付与する場合、Componentと同様に、以下のようにCluster idにクエリパラメータでアイコンを指定することで付与できます。
+
+``` yaml
+[...]
+nodes:
+  - name: my-namespace
+    clusters:
+      - 'k8s:my-cluster?icon=k8s-logo'
+[,,,]
+```
 
 ## STEP6: Create architecture views using "Label" and "views:"
 
@@ -596,7 +656,7 @@ nodes:
     components:
       - NGINX?icon=lb-l7
     clusters:
-      - 'Consul:dc1'
+      - 'Consul:dc1?icon=hashicorp-consul'
       - 'vip_group:lb'
   -
     name: app

@@ -19,7 +19,7 @@ nodes:
     components:
       - NGINX?icon=lb-l7
     clusters:
-      - 'Consul:dc1'
+      - 'Consul:dc1?icon=hashicorp-consul'
       - 'vip_group:lb'
   -
     name: app
