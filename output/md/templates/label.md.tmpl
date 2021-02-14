@@ -10,7 +10,7 @@
 
 ## {{ "Relations" | lookup }}
 
-{{- range $j, $rel := .Label.Relations }}
+{{- range $j, $rel := .Relations }}
 {{ $rel.Desc }}
 <p align="right">
   [ <a href="{{ $.DescPath }}/{{ mdpath "_relation" ($rel | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]

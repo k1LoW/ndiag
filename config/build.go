@@ -276,11 +276,6 @@ func (cfg *Config) buildRelations() error {
 			nrel.Components = append(nrel.Components, c)
 		}
 		cfg.Relations = append(cfg.Relations, nrel)
-
-		// labels
-		for _, l := range nrel.Labels {
-			l.Relations = append(l.Relations, nrel)
-		}
 	}
 	cfg.edges = SplitRelations(cfg.Relations)
 

@@ -173,11 +173,14 @@ func (m *Md) OutputLabel(wr io.Writer, l *config.Label) error {
 		return err
 	}
 
+	relations := m.config.Relations.FindByLabels(config.Labels{l})
+
 	tmpl := template.Must(template.New(l.Id()).Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Label":    l,
-		"Format":   m.config.Format(),
-		"DescPath": relPath,
+		"Label":     l,
+		"Relations": relations,
+		"Format":    m.config.Format(),
+		"DescPath":  relPath,
 	}
 
 	if err := tmpl.Execute(wr, tmplData); err != nil {

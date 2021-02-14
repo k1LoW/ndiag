@@ -303,33 +303,35 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 	return clusters, globalNodes, globalComponents, filteredEdges, nil
 }
 
-func (cfg *Config) PruneNodesByLabels(nodes []*Node, labels []string) ([]*Node, error) {
-	if len(labels) == 0 {
+func (cfg *Config) PruneNodesByLabels(nodes []*Node, labelStrs []string) ([]*Node, error) {
+	if len(labelStrs) == 0 {
 		return nodes, nil
 	}
 	nIds := orderedmap.NewOrderedMap()
 	comIds := orderedmap.NewOrderedMap()
 
-	for _, name := range labels {
+	labels := Labels{}
+	for _, name := range labelStrs {
 		l, err := cfg.FindLabel(name)
 		if err != nil {
 			return nodes, nil
 		}
-		edges := SplitRelations(l.Relations)
-
-		for _, e := range edges {
-			switch {
-			case e.Src.Node != nil:
-				nIds.Set(e.Src.Node.Id(), e.Src.Node)
-			}
-			comIds.Set(e.Src.Id(), e.Src)
-
-			switch {
-			case e.Dst.Node != nil:
-				nIds.Set(e.Dst.Node.Id(), e.Dst.Node)
-			}
-			comIds.Set(e.Dst.Id(), e.Dst)
+		labels = append(labels, l)
+	}
+	relations := cfg.Relations.FindByLabels(labels)
+	edges := SplitRelations(relations)
+	for _, e := range edges {
+		switch {
+		case e.Src.Node != nil:
+			nIds.Set(e.Src.Node.Id(), e.Src.Node)
 		}
+		comIds.Set(e.Src.Id(), e.Src)
+
+		switch {
+		case e.Dst.Node != nil:
+			nIds.Set(e.Dst.Node.Id(), e.Dst.Node)
+		}
+		comIds.Set(e.Dst.Id(), e.Dst)
 	}
 
 	filteredNodes := []*Node{}
