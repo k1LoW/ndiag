@@ -8,7 +8,7 @@ import (
 type Label struct {
 	Name      string
 	Desc      string
-	Relations []*Relation
+	Relations Relations
 }
 
 type Labels []*Label

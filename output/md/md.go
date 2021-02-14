@@ -65,13 +65,16 @@ func (m *Md) OutputView(wr io.Writer, v *config.View) error {
 	}
 	labels.Sort()
 
+	relations := m.config.Relations.FindByLabels(labels)
+
 	tmpl := template.Must(template.New(v.Name).Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
 		"View":          v,
 		"Format":        m.config.Format(),
 		"DescPath":      relPath,
-		"Layers":        layers,
 		"Nodes":         nodes,
+		"Relations":     relations,
+		"Layers":        layers,
 		"Labels":        labels,
 		"HideLayers":    m.config.HideLayers,
 		"HideRealNodes": m.config.HideRealNodes,

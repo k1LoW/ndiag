@@ -8,6 +8,14 @@
   [ <a href="../input/ndiag.descriptions/_view-overview.md">:pencil2: Edit description</a> ]
 <p>
 
+## Nodes
+
+| Name | Description |
+| --- | --- |
+| [my-namespace](node-my-namespace.md) | <a href="../input/ndiag.descriptions/_node-my-namespace.md">:pencil2:</a> |
+
+## Relations
+
 
 ## Layers
 
@@ -15,11 +23,6 @@
 | --- | --- |
 | [k8s](layer-k8s.md) | <a href="../input/ndiag.descriptions/_layer-k8s.md">:pencil2:</a> |
 
-## Nodes
-
-| Name | Description |
-| --- | --- |
-| [my-namespace](node-my-namespace.md) | <a href="../input/ndiag.descriptions/_node-my-namespace.md">:pencil2:</a> |
 
 ## Labels
 

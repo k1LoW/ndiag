@@ -66,7 +66,7 @@ type Config struct {
 	HideLabels        bool               `yaml:"hideLabels,omitempty"`
 	Views             []*View            `yaml:"views"`
 	Nodes             []*Node            `yaml:"nodes"`
-	Relations         []*Relation        `yaml:"relations,omitempty"`
+	Relations         Relations          `yaml:"relations,omitempty"`
 	Dict              *dict.Dict         `yaml:"dict,omitempty"`
 	BaseColor         string             `yaml:"baseColor,omitempty"`
 	TextColor         string             `yaml:"textColor,omitempty"`

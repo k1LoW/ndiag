@@ -8,6 +8,29 @@
   [ <a href="{{ .DescPath }}/{{ mdpath "_view" (.View | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
 <p>
 
+## {{ "Nodes" | lookup }}
+
+| {{ "Name" | lookup }}{{ if not .HideRealNodes }} ({{ "node count" | lookup }}){{ end }} | {{ "Description" | lookup }} |
+| --- | --- |
+{{- range $i, $n := .Nodes }}
+| [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}){{ if not $.HideRealNodes }} ({{ len $n.RealNodes }}){{ end }} | {{ if ne $n.Desc "" }}{{ $n.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_node" ($n | id)}}">:pencil2:</a>{{ end }} |
+{{- end }}
+
+## {{ "Relations" | lookup }}
+
+{{- range $j, $rel := .Relations }}
+{{ $rel.Desc }}
+<p align="right">
+  [ <a href="{{ $.DescPath }}/{{ mdpath "_relation" ($rel | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
+<p>
+
+| # | {{ "Component" | lookup }} | {{ "Description" | lookup }} |
+| --- | --- | --- |
+{{- range $i, $c := $rel.Components }}
+| {{ $i }} | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |
+{{- end }}
+{{ end }}
+
 {{ if not .HideLayers }}
 ## {{ "Layers" | lookup }}
 
@@ -18,13 +41,6 @@
 {{- end }}
 {{- end }}
 
-## {{ "Nodes" | lookup }}
-
-| {{ "Name" | lookup }}{{ if not .HideRealNodes }} ({{ "node count" | lookup }}){{ end }} | {{ "Description" | lookup }} |
-| --- | --- |
-{{- range $i, $n := .Nodes }}
-| [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}){{ if not $.HideRealNodes }} ({{ len $n.RealNodes }}){{ end }} | {{ if ne $n.Desc "" }}{{ $n.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_node" ($n | id)}}">:pencil2:</a>{{ end }} |
-{{- end }}
 {{ if not .HideLabels }}
 ## {{ "Labels" | lookup }}
 

@@ -8,6 +8,56 @@
   [ <a href="../../ndiag.descriptions/_view-http_access.md">:pencil2: Edit description</a> ]
 <p>
 
+## Nodes
+
+| Name | Description |
+| --- | --- |
+| [lb](node-lb.md) | <a href="../../ndiag.descriptions/_node-lb.md">:pencil2:</a> |
+| [app](node-app.md) | <a href="../../ndiag.descriptions/_node-app.md">:pencil2:</a> |
+
+## Relations
+
+<p align="right">
+  [ <a href="../../ndiag.descriptions/_relation-internet-4046636.md">:pencil2: Edit description</a> ]
+<p>
+
+| # | Component | Description |
+| --- | --- | --- |
+| 0 | internet |  <a href="../../ndiag.descriptions/_component-internet.md">:pencil2:</a> |
+| 1 | vip_group:lb:vip |  <a href="../../ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
+
+
+<p align="right">
+  [ <a href="../../ndiag.descriptions/_relation-vip_group_lb_vip-f0e7297.md">:pencil2: Edit description</a> ]
+<p>
+
+| # | Component | Description |
+| --- | --- | --- |
+| 0 | vip_group:lb:vip |  <a href="../../ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
+| 1 | lb:nginx |  <a href="../../ndiag.descriptions/_component-lb_nginx.md">:pencil2:</a> |
+
+
+<p align="right">
+  [ <a href="../../ndiag.descriptions/_relation-lb_nginx-2750eb0.md">:pencil2: Edit description</a> ]
+<p>
+
+| # | Component | Description |
+| --- | --- | --- |
+| 0 | lb:nginx |  <a href="../../ndiag.descriptions/_component-lb_nginx.md">:pencil2:</a> |
+| 1 | app:nginx |  <a href="../../ndiag.descriptions/_component-app_nginx.md">:pencil2:</a> |
+| 2 | app:app |  <a href="../../ndiag.descriptions/_component-app_app.md">:pencil2:</a> |
+
+
+<p align="right">
+  [ <a href="../../ndiag.descriptions/_relation-lb_keepalived-afc5653.md">:pencil2: Edit description</a> ]
+<p>
+
+| # | Component | Description |
+| --- | --- | --- |
+| 0 | lb:keepalived |  <a href="../../ndiag.descriptions/_component-lb_keepalived.md">:pencil2:</a> |
+| 1 | vip_group:lb:vip |  <a href="../../ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
+
+
 
 ## Layers
 
@@ -15,12 +65,6 @@
 | --- | --- |
 | [vip_group](layer-vip_group.md) | <a href="../../ndiag.descriptions/_layer-vip_group.md">:pencil2:</a> |
 
-## Nodes
-
-| Name | Description |
-| --- | --- |
-| [lb](node-lb.md) | <a href="../../ndiag.descriptions/_node-lb.md">:pencil2:</a> |
-| [app](node-app.md) | <a href="../../ndiag.descriptions/_node-app.md">:pencil2:</a> |
 
 ## Labels
 
