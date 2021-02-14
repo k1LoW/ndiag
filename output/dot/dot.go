@@ -24,19 +24,19 @@ func New(cfg *config.Config) *Dot {
 	}
 }
 
-func (d *Dot) OutputView(wr io.Writer, diag *config.View) error {
+func (d *Dot) OutputView(wr io.Writer, v *config.View) error {
 	ts, err := d.box.FindString("view.dot.tmpl")
 	if err != nil {
 		return err
 	}
 	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(ts))
 
-	clusters, globalNodes, edges, err := d.config.BuildNestedClusters(diag.Layers)
+	clusters, globalNodes, edges, err := d.config.BuildNestedClusters(v.Layers)
 	if err != nil {
 		return err
 	}
 	globalComponents := d.config.GlobalComponents()
-	clusters, globalNodes, globalComponents, edges, err = d.config.PruneClustersByLabels(clusters, globalNodes, globalComponents, edges, diag.Labels)
+	clusters, globalNodes, globalComponents, edges, err = d.config.PruneClustersByLabels(clusters, globalNodes, globalComponents, edges, v.Labels)
 	if err != nil {
 		return err
 	}
