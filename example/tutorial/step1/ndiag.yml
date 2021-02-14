@@ -1,0 +1,17 @@
+---
+name: Simple web service
+docPath: docs/arch
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX
+  -
+    name: app
+    components:
+      - NGINX
+      - App
+  -
+    name: db
+    components:
+      - PostgreSQL

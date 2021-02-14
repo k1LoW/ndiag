@@ -1,0 +1,40 @@
+---
+name: Simple web service
+docPath: docs/arch
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX
+  -
+    name: app
+    components:
+      - NGINX
+      - App
+  -
+    name: db
+    components:
+      - PostgreSQL
+
+networks:
+  -
+    route:
+      - "internet"
+      - "vip"
+  -
+    route:
+      - "vip"
+      - "lb:nginx"
+  -
+    route:
+      - "lb:nginx"
+      - "app:nginx"
+      - "app:app"
+  -
+    route:
+      - "app:app"
+      - "Payment API"
+  -
+    route:
+      - "app:app"
+      - "db:postgresql"

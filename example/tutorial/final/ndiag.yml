@@ -1,14 +1,18 @@
 ---
-name: 3-Tier Architecture
+name: Simple web service
 docPath: docs/arch
 views:
   -
     name: overview
-    layers: ["consul", "vip_group"]
+    layers: ["consul", "vip_group", "service"]
   -
-    name: http-lb
+    name: http access
     layers: ["vip_group"]
     labels: ["http"]
+  -
+    name: app
+    layers: ["vip_group", "service"]
+    labels: ["app"]
 nodes:
   -
     name: lb
@@ -23,7 +27,7 @@ nodes:
     match: app-*
     components:
       - NGINX?icon=proxy
-      - Rails App?icon=cube4&label=lang:ruby
+      - App?icon=cube4&label=lang:ruby
     clusters:
       - 'Consul:dc1'
   -
@@ -54,13 +58,19 @@ networks:
     route:
       - "lb:nginx"
       - "app:nginx"
-      - "app:rails app"
+      - "app:app"
   -
     labels:
       - app
     route:
-      - "app:rails app"
+      - "app:app"
       - "db:postgresql"
+  -
+    labels:
+      - app
+    route:
+      - "app:app"
+      - "Service:Payment:Payment API"
 
 relations:
   -

@@ -1,4 +1,4 @@
-# 3-Tier Architecture
+# Simple web service
 
 ![view](view-overview.svg)
 
@@ -14,7 +14,8 @@
 | Name | Description |
 | --- | --- |
 | [overview](view-overview.md) | <a href="../../ndiag.descriptions/_view-overview.md">:pencil2:</a> |
-| [http-lb](view-http-lb.md) | <a href="../../ndiag.descriptions/_view-http-lb.md">:pencil2:</a> |
+| [http access](view-http_access.md) | <a href="../../ndiag.descriptions/_view-http_access.md">:pencil2:</a> |
+| [app](view-app.md) | <a href="../../ndiag.descriptions/_view-app.md">:pencil2:</a> |
 
 
 ## Layers
@@ -23,6 +24,7 @@
 | --- | --- |
 | [Consul](layer-consul.md) | Consul DC |
 | [vip_group](layer-vip_group.md) | A group of virtual IP and nodes/components to handle it. |
+| [Service](layer-service.md) | <a href="../../ndiag.descriptions/_layer-service.md">:pencil2:</a> |
 
 ## Nodes
 

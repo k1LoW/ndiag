@@ -78,10 +78,15 @@ View the document on GitHub.
 
 ![example](img/doc.png)
 
+## Tutorial
+
+- [English](docs/tutorial.md) :construction:
+- [日本語](docs/tutorial.ja.md) :construction:
+
 ## Architecture
 
-- [English](/docs/arch/README.md) :construction:
-- [日本語](/docs/arch.ja/README.md)
+- [English](docs/arch/README.md) :construction:
+- [日本語](docs/arch.ja/README.md) :construction:
 
 ## Install
 

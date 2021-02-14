@@ -35,12 +35,21 @@ ndiag_draw: build
 	./ndiag draw -c example/3-tier/input/ndiag.yml -n example/3-tier/input/nodes.yml -t dot -l consul -l vip_group > example.dot
 	./ndiag draw -c ndiag_ndiag.yml -t dot -l type -l file > ndiag.dot
 
-ndiag_doc: ndiag_doc_local ndiag_doc_fetch_icons
+ndiag_doc: ndiag_doc_local ndiag_doc_tutorial ndiag_doc_fetch_icons
 
 ndiag_doc_local: build
 	./ndiag doc -c ndiag_ndiag.yml --rm-dist
 	./ndiag doc -c ndiag_ndiag.ja.yml --rm-dist
 	./ndiag doc -c example/3-tier/input/ndiag.yml -n example/3-tier/input/nodes.yml --rm-dist
+
+ndiag_doc_tutorial: build
+	./ndiag doc -c example/tutorial/step1/ndiag.yml --rm-dist
+	./ndiag doc -c example/tutorial/step2/ndiag.yml --rm-dist
+	./ndiag doc -c example/tutorial/step3/ndiag.yml --rm-dist
+	./ndiag doc -c example/tutorial/step4/ndiag.yml --rm-dist
+	./ndiag doc -c example/tutorial/step5/ndiag.yml --rm-dist
+	./ndiag doc -c example/tutorial/step6/ndiag.yml --rm-dist
+	./ndiag doc -c example/tutorial/step7/ndiag.yml --rm-dist
 	./ndiag doc -c example/tutorial/final/ndiag.yml -n example/tutorial/final/nodes.yml --rm-dist
 
 ndiag_doc_fetch_icons: build

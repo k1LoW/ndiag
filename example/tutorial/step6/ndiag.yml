@@ -1,0 +1,87 @@
+---
+name: Simple web service
+docPath: docs/arch
+views:
+  -
+    name: overview
+    layers: ["consul", "vip_group", "service"]
+  -
+    name: http access
+    layers: ["vip_group"]
+    labels: ["http"]
+  -
+    name: app
+    layers: ["vip_group", "service"]
+    labels: ["app"]
+nodes:
+  -
+    name: lb
+    components:
+      - NGINX?icon=lb-l7
+    clusters:
+      - 'Consul:dc1'
+      - 'vip_group:lb'
+  -
+    name: app
+    components:
+      - NGINX?icon=proxy
+      - App?icon=cube4&label=lang:ruby
+    clusters:
+      - 'consul:dc1'
+  -
+    name: db
+    components:
+      - PostgreSQL?icon=db
+    clusters:
+      - 'consul:dc1'
+
+networks:
+  -
+    labels:
+      - http
+    route:
+      - "internet?icon=cloud"
+      - "vip_group:lb:vip"
+  -
+    labels:
+      - http
+    route:
+      - "vip_group:lb:vip"
+      - "lb:nginx"
+  -
+    labels:
+      - http
+      - app
+    route:
+      - "lb:nginx"
+      - "app:nginx"
+      - "app:app"
+  -
+    labels:
+      - app
+    route:
+      - "app:app"
+      - "db:postgresql"
+  -
+    labels:
+      - app
+    route:
+      - "app:app"
+      - "Service:Payment:Payment API"
+
+relations:
+  -
+    labels:
+      - http
+    components:
+      - 'lb:Keepalived?icon=keepalived'
+      - "vip_group:lb:vip"
+
+customIcons:
+  -
+    key: keepalived
+    lines:
+      - b1 b5 f9 j5 j1 f1 b1
+      - d2 d6
+      - h2 d4
+      - e4 h6

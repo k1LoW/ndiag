@@ -1,11 +1,11 @@
-# http-lb
+# http access
 
-![view](view-http-lb.svg)
+![view](view-http_access.svg)
 
 
 
 <p align="right">
-  [ <a href="../../ndiag.descriptions/_view-http-lb.md">:pencil2: Edit description</a> ]
+  [ <a href="../../ndiag.descriptions/_view-http_access.md">:pencil2: Edit description</a> ]
 <p>
 
 
@@ -17,10 +17,10 @@
 
 ## Nodes
 
-| Name (node count) | Description |
+| Name | Description |
 | --- | --- |
-| [lb](node-lb.md) (2) | Load balancer |
-| [app](node-app.md) (3) | Application |
+| [lb](node-lb.md) | Load balancer |
+| [app](node-app.md) | Application |
 
 ## Labels
 
