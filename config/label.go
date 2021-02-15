@@ -6,9 +6,8 @@ import (
 )
 
 type Label struct {
-	Name      string
-	Desc      string
-	Relations []*Relation
+	Name string
+	Desc string
 }
 
 type Labels []*Label

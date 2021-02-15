@@ -8,6 +8,13 @@
   [ <a href="../../ndiag.descriptions/_label-http.md">:pencil2: Edit description</a> ]
 <p>
 
+## Nodes
+
+| Name | Description |
+| --- | --- |
+| [lb](node-lb.md) | <a href="../../ndiag.descriptions/_node-lb.md">:pencil2:</a> |
+| [app](node-app.md) | <a href="../../ndiag.descriptions/_node-app.md">:pencil2:</a> |
+
 ## Relations
 
 <p align="right">
@@ -49,7 +56,6 @@
 | --- | --- | --- |
 | 0 | lb:keepalived |  <a href="../../ndiag.descriptions/_component-lb_keepalived.md">:pencil2:</a> |
 | 1 | vip_group:lb:vip |  <a href="../../ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
-
 
 ---
 

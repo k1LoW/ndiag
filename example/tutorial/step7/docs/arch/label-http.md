@@ -9,6 +9,13 @@ HTTP request flow
   [ <a href="../../ndiag.descriptions/_label-http.md">:pencil2: Edit description</a> ]
 <p>
 
+## Nodes
+
+| Name | Description |
+| --- | --- |
+| [lb](node-lb.md) | Load balancer |
+| [app](node-app.md) | Application |
+
 ## Relations
 
 <p align="right">
@@ -50,7 +57,6 @@ HTTP request flow
 | --- | --- | --- |
 | 0 | lb:keepalived |  <a href="../../ndiag.descriptions/_component-lb_keepalived.md">:pencil2:</a> |
 | 1 | vip_group:lb:vip |  <a href="../../ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
-
 
 ---
 

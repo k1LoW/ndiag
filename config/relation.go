@@ -71,12 +71,24 @@ type Relation struct {
 	Attrs      []*Attr
 }
 
-func (n *Relation) FullName() string {
-	return n.relationId
+func (r *Relation) FullName() string {
+	return r.relationId
 }
 
-func (n *Relation) Id() string {
-	return strings.ToLower(n.relationId)
+func (r *Relation) Id() string {
+	return strings.ToLower(r.relationId)
+}
+
+type Relations []*Relation
+
+func (relations Relations) FindByLabels(labels Labels) Relations {
+	filtered := Relations{}
+	for _, r := range relations {
+		if len(r.Labels.Subtract(labels)) > 0 {
+			filtered = append(filtered, r)
+		}
+	}
+	return filtered
 }
 
 type rawRelation struct {
@@ -105,7 +117,7 @@ func (rel *rawRelation) Id() string {
 	return strings.ToLower(fmt.Sprintf("%s-%s", queryTrim(rel.Components[0]), s[:7]))
 }
 
-func SplitRelations(relations []*Relation) []*Edge {
+func SplitRelations(relations Relations) []*Edge {
 	var prev *Component
 	edges := []*Edge{}
 	for _, rel := range relations {

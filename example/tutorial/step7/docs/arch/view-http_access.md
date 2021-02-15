@@ -8,19 +8,60 @@
   [ <a href="../../ndiag.descriptions/_view-http_access.md">:pencil2: Edit description</a> ]
 <p>
 
-
-## Layers
-
-| Name | Description |
-| --- | --- |
-| [vip_group](layer-vip_group.md) | A group of virtual IP and nodes/components to handle it. |
-
 ## Nodes
 
 | Name | Description |
 | --- | --- |
 | [lb](node-lb.md) | Load balancer |
 | [app](node-app.md) | Application |
+
+## Relations
+
+<p align="right">
+  [ <a href="../../ndiag.descriptions/_relation-internet-4046636.md">:pencil2: Edit description</a> ]
+<p>
+
+| # | Component | Description |
+| --- | --- | --- |
+| 0 | internet |  <a href="../../ndiag.descriptions/_component-internet.md">:pencil2:</a> |
+| 1 | vip_group:lb:vip |  <a href="../../ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
+
+
+<p align="right">
+  [ <a href="../../ndiag.descriptions/_relation-vip_group_lb_vip-f0e7297.md">:pencil2: Edit description</a> ]
+<p>
+
+| # | Component | Description |
+| --- | --- | --- |
+| 0 | vip_group:lb:vip |  <a href="../../ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
+| 1 | lb:nginx |  <a href="../../ndiag.descriptions/_component-lb_nginx.md">:pencil2:</a> |
+
+
+<p align="right">
+  [ <a href="../../ndiag.descriptions/_relation-lb_nginx-2750eb0.md">:pencil2: Edit description</a> ]
+<p>
+
+| # | Component | Description |
+| --- | --- | --- |
+| 0 | lb:nginx |  <a href="../../ndiag.descriptions/_component-lb_nginx.md">:pencil2:</a> |
+| 1 | app:nginx |  <a href="../../ndiag.descriptions/_component-app_nginx.md">:pencil2:</a> |
+| 2 | app:app |  <a href="../../ndiag.descriptions/_component-app_app.md">:pencil2:</a> |
+
+
+<p align="right">
+  [ <a href="../../ndiag.descriptions/_relation-lb_keepalived-afc5653.md">:pencil2: Edit description</a> ]
+<p>
+
+| # | Component | Description |
+| --- | --- | --- |
+| 0 | lb:keepalived |  <a href="../../ndiag.descriptions/_component-lb_keepalived.md">:pencil2:</a> |
+| 1 | vip_group:lb:vip |  <a href="../../ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
+
+## Layers
+
+| Name | Description |
+| --- | --- |
+| [vip_group](layer-vip_group.md) | A group of virtual IP and nodes/components to handle it. |
 
 ## Labels
 

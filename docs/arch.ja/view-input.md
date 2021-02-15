@@ -39,8 +39,6 @@
   [ <a href="../ndiag.descriptions.ja/_view-input.md">:pencil2: Edit description</a> ]
 <p>
 
-
-
 ## 構成要素
 
 | Name | Description |
@@ -48,6 +46,36 @@
 | [input files](node-input_files.md) | <a href="../ndiag.descriptions.ja/_node-input_files.md">:pencil2:</a> |
 | [ndiag](node-ndiag.md) | `ndiag doc` コマンド |
 
+## Relations
+
+<p align="right">
+  [ <a href="../ndiag.descriptions.ja/_relation-input_files_ndiag.yml-da3a497.md">:pencil2: Edit description</a> ]
+<p>
+
+| # | Component | Description |
+| --- | --- | --- |
+| 0 | input files:ndiag.yml |  <a href="../ndiag.descriptions.ja/_component-input_files_ndiag.yml.md">:pencil2:</a> |
+| 1 | ndiag:internal | ndiagの内部処理 <a href="../ndiag.descriptions.ja/_component-ndiag_internal.md">:pencil2:</a> |
+
+
+<p align="right">
+  [ <a href="../ndiag.descriptions.ja/_relation-input_files_nodes.yml-efaf14b.md">:pencil2: Edit description</a> ]
+<p>
+
+| # | Component | Description |
+| --- | --- | --- |
+| 0 | input files:nodes.yml |  <a href="../ndiag.descriptions.ja/_component-input_files_nodes.yml.md">:pencil2:</a> |
+| 1 | ndiag:internal | ndiagの内部処理 <a href="../ndiag.descriptions.ja/_component-ndiag_internal.md">:pencil2:</a> |
+
+
+<p align="right">
+  [ <a href="../ndiag.descriptions.ja/_relation-input_files_ndiag.descriptions__.md-1cdb9dd.md">:pencil2: Edit description</a> ]
+<p>
+
+| # | Component | Description |
+| --- | --- | --- |
+| 0 | input files:ndiag.descriptions/*.md |  <a href="../ndiag.descriptions.ja/_component-input_files_ndiag.descriptions__.md.md">:pencil2:</a> |
+| 1 | ndiag:internal | ndiagの内部処理 <a href="../ndiag.descriptions.ja/_component-ndiag_internal.md">:pencil2:</a> |
 
 ---
 
