@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-func ImagePath(prefix string, vals []string, format string) string {
+func MakeDiagramFilename(prefix string, vals []string, format string) string {
 	return safeFilename(fmt.Sprintf("%s-%s.%s", prefix, strings.Join(vals, "-"), format))
 }
 
-func MdPath(prefix string, vals []string) string {
+func MakeMdFilename(prefix string, vals []string) string {
 	if len(vals) == 0 {
 		return safeFilename(fmt.Sprintf("%s.md", prefix))
 	}

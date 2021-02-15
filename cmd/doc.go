@@ -93,8 +93,8 @@ var docCmd = &cobra.Command{
 			if !cfg.HideViews {
 				// generate md
 				o := md.New(cfg)
-				oldPath := filepath.Join(cfg.DocPath, config.MdPath("diagram", []string{v.Id()}))
-				path := filepath.Join(cfg.DocPath, config.MdPath("view", []string{v.Id()}))
+				oldPath := filepath.Join(cfg.DocPath, config.MakeMdFilename("diagram", []string{v.Id()}))
+				path := filepath.Join(cfg.DocPath, config.MakeMdFilename("view", []string{v.Id()}))
 				if _, err := os.Stat(oldPath); err == nil {
 					if _, err := os.Stat(path); err == nil {
 						return fmt.Errorf("old file exists: %s", oldPath)
@@ -113,8 +113,8 @@ var docCmd = &cobra.Command{
 			}
 			// draw view
 			diag := gviz.New(cfg)
-			oldPath := filepath.Join(cfg.DocPath, config.ImagePath("diagram", []string{v.Id()}, format))
-			path := filepath.Join(cfg.DocPath, config.ImagePath("view", []string{v.Id()}, format))
+			oldPath := filepath.Join(cfg.DocPath, config.MakeDiagramFilename("diagram", []string{v.Id()}, format))
+			path := filepath.Join(cfg.DocPath, config.MakeDiagramFilename("view", []string{v.Id()}, format))
 			if _, err := os.Stat(oldPath); err == nil {
 				if _, err := os.Stat(path); err == nil {
 					return fmt.Errorf("old diagram file exists: %s", oldPath)
@@ -144,7 +144,7 @@ var docCmd = &cobra.Command{
 
 				// generate md
 				o := md.New(cfg)
-				mPath := filepath.Join(cfg.DocPath, config.MdPath("layer", []string{l.Id()}))
+				mPath := filepath.Join(cfg.DocPath, config.MakeMdFilename("layer", []string{l.Id()}))
 				file, err := os.Create(mPath)
 				if err != nil {
 					return err
@@ -155,7 +155,7 @@ var docCmd = &cobra.Command{
 
 				// draw view
 				diag := gviz.New(cfg)
-				dPath := filepath.Join(cfg.DocPath, config.ImagePath("layer", []string{l.Id()}, format))
+				dPath := filepath.Join(cfg.DocPath, config.MakeDiagramFilename("layer", []string{l.Id()}, format))
 				dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 				if err != nil {
 					return err
@@ -179,7 +179,7 @@ var docCmd = &cobra.Command{
 			o := md.New(cfg)
 
 			// generate md
-			mPath := filepath.Join(cfg.DocPath, config.MdPath("node", []string{n.Id()}))
+			mPath := filepath.Join(cfg.DocPath, config.MakeMdFilename("node", []string{n.Id()}))
 			file, err := os.Create(mPath)
 			if err != nil {
 				return err
@@ -190,7 +190,7 @@ var docCmd = &cobra.Command{
 
 			// draw view
 			diag := gviz.New(cfg)
-			dPath := filepath.Join(cfg.DocPath, config.ImagePath("node", []string{n.Id()}, format))
+			dPath := filepath.Join(cfg.DocPath, config.MakeDiagramFilename("node", []string{n.Id()}, format))
 			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 			if err != nil {
 				return err
@@ -213,7 +213,7 @@ var docCmd = &cobra.Command{
 
 				// generate md
 				o := md.New(cfg)
-				mPath := filepath.Join(cfg.DocPath, config.MdPath("label", []string{rel.Id()}))
+				mPath := filepath.Join(cfg.DocPath, config.MakeMdFilename("label", []string{rel.Id()}))
 				file, err := os.Create(mPath)
 				if err != nil {
 					return err
@@ -224,7 +224,7 @@ var docCmd = &cobra.Command{
 
 				// draw view
 				diag := gviz.New(cfg)
-				dPath := filepath.Join(cfg.DocPath, config.ImagePath("label", []string{rel.Id()}, format))
+				dPath := filepath.Join(cfg.DocPath, config.MakeDiagramFilename("label", []string{rel.Id()}, format))
 				dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 				if err != nil {
 					return err
@@ -255,11 +255,11 @@ func diagExists(cfg *config.Config) error {
 	format := cfg.Format()
 	// views
 	for _, d := range cfg.Views {
-		mPath := filepath.Join(cfg.DocPath, config.MdPath("view", []string{d.Id()}))
+		mPath := filepath.Join(cfg.DocPath, config.MakeMdFilename("view", []string{d.Id()}))
 		if _, err := os.Lstat(mPath); err == nil {
 			return fmt.Errorf("%s already exist", mPath)
 		}
-		dPath := filepath.Join(cfg.DocPath, config.ImagePath("view", []string{d.Id()}, format))
+		dPath := filepath.Join(cfg.DocPath, config.MakeDiagramFilename("view", []string{d.Id()}, format))
 		if _, err := os.Lstat(dPath); err == nil {
 			return fmt.Errorf("%s already exist", dPath)
 		}
@@ -267,11 +267,11 @@ func diagExists(cfg *config.Config) error {
 
 	// layers
 	for _, l := range cfg.Layers() {
-		mPath := filepath.Join(cfg.DocPath, config.MdPath("layer", []string{l.Id()}))
+		mPath := filepath.Join(cfg.DocPath, config.MakeMdFilename("layer", []string{l.Id()}))
 		if _, err := os.Lstat(mPath); err == nil {
 			return fmt.Errorf("%s already exist", mPath)
 		}
-		dPath := filepath.Join(cfg.DocPath, config.ImagePath("layer", []string{l.Id()}, format))
+		dPath := filepath.Join(cfg.DocPath, config.MakeDiagramFilename("layer", []string{l.Id()}, format))
 		if _, err := os.Lstat(dPath); err == nil {
 			return fmt.Errorf("%s already exist", dPath)
 		}
@@ -279,11 +279,11 @@ func diagExists(cfg *config.Config) error {
 
 	// nodes
 	for _, n := range cfg.Nodes {
-		mPath := filepath.Join(cfg.DocPath, config.ImagePath("node", []string{n.Id()}, format))
+		mPath := filepath.Join(cfg.DocPath, config.MakeDiagramFilename("node", []string{n.Id()}, format))
 		if _, err := os.Lstat(mPath); err == nil {
 			return fmt.Errorf("%s already exist", mPath)
 		}
-		dPath := filepath.Join(cfg.DocPath, config.MdPath("node", []string{n.Id()}))
+		dPath := filepath.Join(cfg.DocPath, config.MakeMdFilename("node", []string{n.Id()}))
 		if _, err := os.Lstat(dPath); err == nil {
 			return fmt.Errorf("%s already exist", dPath)
 		}
@@ -291,11 +291,11 @@ func diagExists(cfg *config.Config) error {
 
 	// labels
 	for _, rel := range cfg.Labels() {
-		mPath := filepath.Join(cfg.DocPath, config.ImagePath("label", []string{rel.Id()}, format))
+		mPath := filepath.Join(cfg.DocPath, config.MakeDiagramFilename("label", []string{rel.Id()}, format))
 		if _, err := os.Lstat(mPath); err == nil {
 			return fmt.Errorf("%s already exist", mPath)
 		}
-		dPath := filepath.Join(cfg.DocPath, config.MdPath("label", []string{rel.Id()}))
+		dPath := filepath.Join(cfg.DocPath, config.MakeMdFilename("label", []string{rel.Id()}))
 		if _, err := os.Lstat(dPath); err == nil {
 			return fmt.Errorf("%s already exist", dPath)
 		}
