@@ -27,7 +27,7 @@ type Fetcher interface {
 
 func Download(src, dest string) (string, error) {
 	client := &http.Client{
-		Timeout: 30 * time.Second,
+		Timeout: 60 * time.Second,
 		Transport: &http.Transport{
 			Dial: (&net.Dialer{
 				Timeout: 5 * time.Second,
