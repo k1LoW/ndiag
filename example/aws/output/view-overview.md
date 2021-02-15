@@ -16,14 +16,11 @@
 | [S3](node-s3.md) | <a href="../input/ndiag.descriptions/_node-s3.md">:pencil2:</a> |
 
 ## Relations
-
-
 ## Layers
 
 | Name | Description |
 | --- | --- |
 | [platform](layer-platform.md) | <a href="../input/ndiag.descriptions/_layer-platform.md">:pencil2:</a> |
-
 
 ## Labels
 

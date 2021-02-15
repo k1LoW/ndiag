@@ -15,14 +15,11 @@
 | [my-namespace](node-my-namespace.md) | <a href="../input/ndiag.descriptions/_node-my-namespace.md">:pencil2:</a> |
 
 ## Relations
-
-
 ## Layers
 
 | Name | Description |
 | --- | --- |
 | [k8s](layer-k8s.md) | <a href="../input/ndiag.descriptions/_layer-k8s.md">:pencil2:</a> |
-
 
 ## Labels
 

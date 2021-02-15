@@ -8,6 +8,14 @@
   [ <a href="../../ndiag.descriptions/_label-app.md">:pencil2: Edit description</a> ]
 <p>
 
+## Nodes
+
+| Name | Description |
+| --- | --- |
+| [lb](node-lb.md) | <a href="../../ndiag.descriptions/_node-lb.md">:pencil2:</a> |
+| [app](node-app.md) | <a href="../../ndiag.descriptions/_node-app.md">:pencil2:</a> |
+| [db](node-db.md) | <a href="../../ndiag.descriptions/_node-db.md">:pencil2:</a> |
+
 ## Relations
 
 <p align="right">
@@ -39,7 +47,6 @@
 | --- | --- | --- |
 | 0 | app:app |  <a href="../../ndiag.descriptions/_component-app_app.md">:pencil2:</a> |
 | 1 | service:payment:payment api |  <a href="../../ndiag.descriptions/_component-service_payment_payment_api.md">:pencil2:</a> |
-
 
 ---
 

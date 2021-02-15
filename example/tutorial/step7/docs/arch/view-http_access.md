@@ -57,14 +57,11 @@
 | 0 | lb:keepalived |  <a href="../../ndiag.descriptions/_component-lb_keepalived.md">:pencil2:</a> |
 | 1 | vip_group:lb:vip |  <a href="../../ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
 
-
-
 ## Layers
 
 | Name | Description |
 | --- | --- |
 | [vip_group](layer-vip_group.md) | A group of virtual IP and nodes/components to handle it. |
-
 
 ## Labels
 

@@ -48,14 +48,11 @@
 | 0 | app:app |  <a href="../../ndiag.descriptions/_component-app_app.md">:pencil2:</a> |
 | 1 | service:payment:payment api |  <a href="../../ndiag.descriptions/_component-service_payment_payment_api.md">:pencil2:</a> |
 
-
-
 ## Layers
 
 | Name | Description |
 | --- | --- |
 | [vip_group](layer-vip_group.md) | A group of virtual IP and nodes/components to handle it. |
-
 
 ## Labels
 
