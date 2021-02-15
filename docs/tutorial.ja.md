@@ -53,7 +53,7 @@ nodes:
       - PostgreSQL
 ```
 
-[ref](../example/tutorial/step1/ndiag.yml)
+[ndiag.yml in repo](../example/tutorial/step1/ndiag.yml)
 
 </details>
 
@@ -108,19 +108,19 @@ ndiag.descriptions
 
 `docs/arch/README.md` を開いてみてください。もうアーキテクチャドキュメントの雛形が完成しました。
 
-### Output of this step:
+### :book: このSTEPで生成されたドキュメント
 
 <img src="../example/tutorial/step1/docs/arch/view-nodes.svg" />
 
 [Generated documents](../example/tutorial/step1/docs/arch/README.md)
 
-### Point of this step:
+### :memo: このSTEPでのポイント
 
 Componentのうち、特にNodeに所属するComponentを**Node component**と呼びます。
 
 ## STEP2: データの流れ(HTTPリクエスト/データベースアクセスなど) を"networks:"を使って表現する
 
-**:pushpin: Keyword:** `networks:`, `Global component`
+**:pushpin: キーワード:** `networks:`, `Global component`
 
 Component間のデータの流れ(HTTPリクエスト/データベースアクセスなど) を `ndiag.yml` に `networks:` を追加することで表現します。
 
@@ -190,7 +190,7 @@ networks:
       - "db:postgresql"
 ```
 
-[ref](../example/tutorial/step2/ndiag.yml)
+[ndiag.yml in repo](../example/tutorial/step2/ndiag.yml)
 
 </details>
 
@@ -202,13 +202,13 @@ $ ndiag doc -c ndiag.yml --rm-dist
 
 (STEP2以降も `ndiag doc` コマンドを実行してドキュメントを生成します。)
 
-### Output of this step:
+### :BOOK: このSTEPで生成されたドキュメント
 
 <img src="../example/tutorial/step2/docs/arch/view-nodes.svg" />
 
 [Generated documents](../example/tutorial/step2/docs/arch/README.md)
 
-### Point of this step:
+### :MEMO: このSTEPでのポイント
 
 Node componentは、Node id(= Node name)とComponent nameを `:` で連結することで指定します。
 
@@ -218,7 +218,7 @@ Node（やCluster）に所属しないComponentと**Global component**と呼び�
 
 ## STEP3: データの流れ以外のComponent間の関係を"relations:"を使用して表現する
 
-**:pushpin: Keyword:** `relations:`
+**:pushpin: キーワード:** `relations:`
 
 データの流れ以外のComponent間の関係を、以下のように `relations:` を使って表現します。
 
@@ -284,7 +284,7 @@ relations:
       - "vip"
 ```
 
-[ref](../example/tutorial/step3/ndiag.yml)
+[ndiag.yml in repo](../example/tutorial/step3/ndiag.yml)
 
 </details>
 
@@ -294,13 +294,13 @@ relations:
 $ ndiag doc -c ndiag.yml --rm-dist
 ```
 
-### Output of this step:
+### :book: このSTEPで生成されたドキュメント
 
 <img src="../example/tutorial/step3/docs/arch/view-nodes.svg" />
 
 [Generated documents](../example/tutorial/step3/docs/arch/README.md)
 
-### Point of this step:
+### :memo: このSTEPでのポイント
 
 `networks:` の別の表現として `relations:` の `type: network` があります。どちらを利用しても構いません。
 
@@ -335,7 +335,7 @@ relations:
 
 ## STEP4: "Cluster" を使ってNodeやComponentをグルーピングする
 
-**:pushpin: Keyword:** `Cluster`, `Layer`, `Cluster component`
+**:pushpin: キーワード:** `Cluster`, `Layer`, `Cluster component`
 
 NodeやComponentのグループを `clusters:` で表現します。
 
@@ -415,17 +415,17 @@ relations:
       - "vip_group:lb:vip"
 ```
 
-[ref](../example/tutorial/step4/ndiag.yml)
+[ndiag.yml in repo](../example/tutorial/step4/ndiag.yml)
 
 </details>
 
-### Output of this step:
+### :book: このSTEPで生成されたドキュメント
 
 <img src="../example/tutorial/step4/docs/arch/view-nodes.svg" />
 
 [Generated documents](../example/tutorial/step4/docs/arch/README.md)
 
-### Point of this step:
+### :memo: このSTEPでのポイント
 
 ndiagではNodeやComponentを**Cluster**という要素でグルーピングできます。
 
@@ -463,7 +463,7 @@ Cluster componentはClusetr idとComponent nameを `:` で連結することで�
 
 ## STEP5: アイコンを追加する
 
-**:pushpin: Keyword:** `icon`
+**:pushpin: キーワード:** `icon`
 
 このSTEPでは、以下のようにComponentやNode、Clusterにアイコンを設定して図をわかりやすくします。
 
@@ -552,7 +552,7 @@ customIcons:
       - e4 h6
 ```
 
-[ref](../example/tutorial/step5/ndiag.yml)
+[ndiag.yml in repo](../example/tutorial/step5/ndiag.yml)
 
 </details>
 
@@ -562,13 +562,13 @@ customIcons:
 $ ndiag doc -c ndiag.yml --rm-dist
 ```
 
-### Output of this step:
+### :book: このSTEPで生成されたドキュメント
 
 <img src="../example/tutorial/step5/docs/arch/view-nodes.svg" />
 
 [Generated documents](../example/tutorial/step5/docs/arch/README.md)
 
-### Point of this step:
+### :memo: このSTEPでのポイント
 
 使用できるアイコンは `ndiag list icons` コマンドで確認できます。
 
@@ -630,7 +630,7 @@ nodes:
 
 ## STEP6: "Label"や"views:"を使ってアーキテクチャのビュー("View")を作成する
 
-**:pushpin: Keyword:** `View`, `views:`, `Label`
+**:pushpin: キーワード:** `View`, `views:`, `Label`
 
 **View**はndiagにとって重要な概念です。
 
@@ -745,17 +745,17 @@ customIcons:
       - e4 h6
 ```
 
-[ref](../example/tutorial/step6/ndiag.yml)
+[ndiag.yml in repo](../example/tutorial/step6/ndiag.yml)
 
 </details>
 
-### Output of this step:
+### :book: このSTEPで生成されたドキュメント
 
 <img src="../example/tutorial/step6/docs/arch/view-overview.svg" />
 
 [Generated documents](../example/tutorial/step6/docs/arch/README.md)
 
-### Point of this step:
+### :memo: このSTEPでのポイント
 
 Labelを付与できるアーキテクチャ要素は以下の3つです。
 
@@ -810,7 +810,7 @@ networks:
 
 :construction:
 
-### Output of this step:
+### :book: このSTEPで生成されたドキュメント
 
 [Generated documents](../example/tutorial/step7/docs/arch/README.md)
 

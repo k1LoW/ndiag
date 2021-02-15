@@ -53,7 +53,7 @@ nodes:
       - PostgreSQL
 ```
 
-[ref](../example/tutorial/step1/ndiag.yml)
+[ndiag.yml in repo](../example/tutorial/step1/ndiag.yml)
 
 </details>
 
@@ -108,13 +108,13 @@ ndiag.descriptions
 
 Open the file `docs/arch/README.md`. The documentation template is now complete.
 
-### Output of this step:
+### :book: Generated documents of this STEP
 
 <img src="../example/tutorial/step1/docs/arch/view-nodes.svg" />
 
 [Generated documents](../example/tutorial/step1/docs/arch/README.md)
 
-### Point of this step:
+### :memo: Point of this STEP
 
 A Component that belongs to Node is called Node component.
 
@@ -190,7 +190,7 @@ networks:
       - "db:postgresql"
 ```
 
-[ref](../example/tutorial/step2/ndiag.yml)
+[ndiag.yml in repo](../example/tutorial/step2/ndiag.yml)
 
 </details>
 
@@ -202,13 +202,13 @@ $ ndiag doc -c ndiag.yml --rm-dist
 
 ( After STEP2, execute `ndiag doc` command to generate the document. )
 
-### Output of this step:
+### :book: Generated documents of this STEP
 
 <img src="../example/tutorial/step2/docs/arch/view-nodes.svg" />
 
 [Generated documents](../example/tutorial/step2/docs/arch/README.md)
 
-### Point of this step:
+### :memo: Point of this STEP
 
 Node component is specified by joining "Node id (= Node name)" and "Component name" with `:`.
 
@@ -284,7 +284,7 @@ relations:
       - "vip"
 ```
 
-[ref](../example/tutorial/step3/ndiag.yml)
+[ndiag.yml in repo](../example/tutorial/step3/ndiag.yml)
 
 </details>
 
@@ -294,13 +294,13 @@ Then, run `ndiag doc` command.
 $ ndiag doc -c ndiag.yml --rm-dist
 ```
 
-### Output of this step:
+### :book: Generated documents of this STEP
 
 <img src="../example/tutorial/step3/docs/arch/view-nodes.svg" />
 
 [Generated documents](../example/tutorial/step3/docs/arch/README.md)
 
-### Point of this step:
+### :memo: Point of this STEP
 
 `networks:` is another expression for `type: network` in `relations:`. You can use either one.
 
@@ -413,7 +413,7 @@ relations:
       - "vip_group:lb:vip"
 ```
 
-[ref](../example/tutorial/step4/ndiag.yml)
+[ndiag.yml in repo](../example/tutorial/step4/ndiag.yml)
 
 </details>
 
@@ -435,13 +435,13 @@ nodes:
 [...]
 ```
 
-### Output of this step:
+### :book: Generated documents of this STEP
 
 <img src="../example/tutorial/step4/docs/arch/view-nodes.svg" />
 
 [Generated documents](../example/tutorial/step4/docs/arch/README.md)
 
-### Point of this step:
+### :memo: Point of this STEP
 
 In ndiag, Nodes and Components can be grouped by an element called **Cluster**.
 
@@ -568,11 +568,11 @@ customIcons:
       - e4 h6
 ```
 
-[ref](../example/tutorial/step5/ndiag.yml)
+[ndiag.yml in repo](../example/tutorial/step5/ndiag.yml)
 
 </details>
 
-### Output of this step:
+### :book: Generated documents of this STEP
 
 <img src="../example/tutorial/step5/docs/arch/view-nodes.svg" />
 
@@ -686,11 +686,11 @@ customIcons:
       - e4 h6
 ```
 
-[ref](../example/tutorial/step6/ndiag.yml)
+[ndiag.yml in repo](../example/tutorial/step6/ndiag.yml)
 
 </details>
 
-### Output of this step:
+### :book: Generated documents of this STEP
 
 <img src="../example/tutorial/step6/docs/arch/view-overview.svg" />
 
@@ -700,7 +700,7 @@ customIcons:
 
 :construction:
 
-### Output of this step:
+### :book: Generated documents of this STEP
 
 [Generated documents](../example/tutorial/step7/docs/arch/README.md)
 
