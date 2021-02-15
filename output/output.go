@@ -107,29 +107,11 @@ func Funcs(cfg *config.Config) map[string]interface{} {
 				return fmt.Sprintf("%s ...", strings.TrimLeft(splitted[0], "# "))
 			}
 		},
-		"diagpath": func(prefix string, vals interface{}, format string) string {
-			var strs []string
-			switch v := vals.(type) {
-			case string:
-				strs = []string{v}
-			case []string:
-				strs = v
-			}
-			return config.MakeDiagramFilename(prefix, strs, format)
+		"diagpath": func(prefix, id, format string) string {
+			return config.MakeDiagramFilename(prefix, id, format)
 		},
-		"mdpath": func(prefix string, vals interface{}) string {
-			var strs []string
-			switch v := vals.(type) {
-			case string:
-				if v == "" {
-					strs = []string{}
-				} else {
-					strs = []string{v}
-				}
-			case []string:
-				strs = v
-			}
-			return config.MakeMdFilename(prefix, strs)
+		"mdpath": func(prefix, id string) string {
+			return config.MakeMdFilename(prefix, id)
 		},
 		"componentlink": componentLink,
 		"rellink":       relLink,
@@ -189,9 +171,9 @@ func Funcs(cfg *config.Config) map[string]interface{} {
 func componentLink(c *config.Component) string {
 	switch {
 	case c.Node != nil:
-		return fmt.Sprintf("[%s](%s)", c.Id(), config.MakeMdFilename("node", []string{c.Node.Id()}))
+		return fmt.Sprintf("[%s](%s)", c.Id(), config.MakeMdFilename("node", c.Node.Id()))
 	case c.Cluster != nil:
-		return fmt.Sprintf("[%s](%s#%s)", c.Id(), config.MakeMdFilename("layer", []string{c.Cluster.Layer.Id()}), clusterRep.Replace(c.Cluster.Id()))
+		return fmt.Sprintf("[%s](%s#%s)", c.Id(), config.MakeMdFilename("layer", c.Cluster.Layer.Id()), clusterRep.Replace(c.Cluster.Id()))
 	default:
 		return c.Id()
 	}
@@ -202,7 +184,7 @@ func relLink(rel *config.Relation) string {
 	for _, r := range rel.Components {
 		cIds = append(cIds, r.FullName())
 	}
-	return fmt.Sprintf("[%s](%s)", strings.Join(cIds, " -> "), config.MakeMdFilename("relation", []string{rel.Id()}))
+	return fmt.Sprintf("[%s](%s)", strings.Join(cIds, " -> "), config.MakeMdFilename("relation", rel.Id()))
 }
 
 func unique(in []string) []string {
