@@ -19,6 +19,12 @@
 | [vip_group](layer-vip_group.md) | <a href="../../ndiag.descriptions/_layer-vip_group.md">:pencil2:</a> |
 | [Service](layer-service.md) | <a href="../../ndiag.descriptions/_layer-service.md">:pencil2:</a> |
 
+
+## Labels
+
+| Name | Description |
+| --- | --- |
+
 ## Nodes
 
 | Name | Description |
@@ -26,12 +32,6 @@
 | [lb](node-lb.md) | <a href="../../ndiag.descriptions/_node-lb.md">:pencil2:</a> |
 | [app](node-app.md) | <a href="../../ndiag.descriptions/_node-app.md">:pencil2:</a> |
 | [db](node-db.md) | <a href="../../ndiag.descriptions/_node-db.md">:pencil2:</a> |
-
-
-## Labels
-
-| Name | Description |
-| --- | --- |
 
 ---
 

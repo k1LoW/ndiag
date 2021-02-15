@@ -23,18 +23,18 @@ See https://d1.awsstatic.com/webteam/architecture-icons/Q32020/AWS-Architecture-
 | --- | --- |
 | [platform](layer-platform.md) | <a href="../input/ndiag.descriptions/_layer-platform.md">:pencil2:</a> |
 
+
+## Labels
+
+| Name | Description |
+| --- | --- |
+
 ## Nodes
 
 | Name | Description |
 | --- | --- |
 | [Lambda](node-lambda.md) | <a href="../input/ndiag.descriptions/_node-lambda.md">:pencil2:</a> |
 | [S3](node-s3.md) | <a href="../input/ndiag.descriptions/_node-s3.md">:pencil2:</a> |
-
-
-## Labels
-
-| Name | Description |
-| --- | --- |
 
 ---
 
