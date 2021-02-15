@@ -9,6 +9,14 @@ App-DB
   [ <a href="../input/ndiag.descriptions/_label-app.md">:pencil2: Edit description</a> ]
 <p>
 
+## Nodes
+
+| Name (node count) | Description |
+| --- | --- |
+| [lb](node-lb.md) (2) | Load balancer |
+| [app](node-app.md) (3) | Application |
+| [db](node-db.md) (2) | Database |
+
 ## Relations
 
 <p align="right">
@@ -30,7 +38,6 @@ App-DB
 | --- | --- | --- |
 | 0 | app:rails app |  <a href="../input/ndiag.descriptions/_component-app_rails_app.md">:pencil2:</a> |
 | 1 | db:postgresql |  <a href="../input/ndiag.descriptions/_component-db_postgresql.md">:pencil2:</a> |
-
 
 ---
 

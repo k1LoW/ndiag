@@ -9,6 +9,14 @@ App-DB
   [ <a href="../../ndiag.descriptions/_label-app.md">:pencil2: Edit description</a> ]
 <p>
 
+## Nodes
+
+| Name | Description |
+| --- | --- |
+| [lb](node-lb.md) | Load balancer |
+| [app](node-app.md) | Application |
+| [db](node-db.md) | Database |
+
 ## Relations
 
 <p align="right">
@@ -40,7 +48,6 @@ App-DB
 | --- | --- | --- |
 | 0 | app:app |  <a href="../../ndiag.descriptions/_component-app_app.md">:pencil2:</a> |
 | 1 | service:payment:payment api |  <a href="../../ndiag.descriptions/_component-service_payment_payment_api.md">:pencil2:</a> |
-
 
 ---
 

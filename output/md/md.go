@@ -24,63 +24,8 @@ func New(cfg *config.Config) *Md {
 	}
 }
 
-func (m *Md) OutputView(wr io.Writer, d *config.View) error {
-	ts, err := m.box.FindString("view.md.tmpl")
-	if err != nil {
-		return err
-	}
-
-	relPath, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
-	if err != nil {
-		return err
-	}
-
-	layers := []*config.Layer{}
-	for _, n := range d.Layers {
-		for _, l := range m.config.Layers() {
-			if n == l.Name {
-				layers = append(layers, l)
-			}
-		}
-	}
-
-	nodes := m.config.Nodes
-	labels := config.Labels{}
-	if len(d.Labels) > 0 {
-		labels = config.Labels{}
-		for _, s := range d.Labels {
-			label, ok := m.config.FindLabel(s)
-			if ok != nil {
-				return fmt.Errorf("label not found: %s", s)
-			}
-			labels = append(labels, label)
-		}
-
-		nodes, err = m.config.PruneNodesByLabels(nodes, d.Labels)
-		if err != nil {
-			return err
-		}
-	} else {
-		labels = m.config.Labels()
-	}
-	labels.Sort()
-
-	tmpl := template.Must(template.New(d.Name).Funcs(output.Funcs(m.config)).Parse(ts))
-	tmplData := map[string]interface{}{
-		"View":         d,
-		"Format":          m.config.Format(),
-		"DescPath":        relPath,
-		"Layers":          layers,
-		"Nodes":           nodes,
-		"Labels":          labels,
-		"HideLayers":      m.config.HideLayers,
-		"HideRealNodes":   m.config.HideRealNodes,
-		"HideLabels": m.config.HideLabels,
-	}
-	if err := tmpl.Execute(wr, tmplData); err != nil {
-		return err
-	}
-	return nil
+func (m *Md) OutputView(wr io.Writer, v *config.View) error {
+	return m.outputView(wr, v, "view")
 }
 
 func (m *Md) OutputLayer(wr io.Writer, l *config.Layer) error {
@@ -144,14 +89,14 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 
 	tmpl := template.Must(template.New(n.Id()).Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
-		"Node":            n,
-		"Format":          m.config.Format(),
-		"DescPath":        relPath,
-		"Components":      n.Components,
-		"RealNodes":       n.RealNodes,
-		"Labels":          labels,
-		"HideRealNodes":   m.config.HideRealNodes,
-		"HideLabels": m.config.HideLabels,
+		"Node":          n,
+		"Format":        m.config.Format(),
+		"DescPath":      relPath,
+		"Components":    n.Components,
+		"RealNodes":     n.RealNodes,
+		"Labels":        labels,
+		"HideRealNodes": m.config.HideRealNodes,
+		"HideLabels":    m.config.HideLabels,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
@@ -160,28 +105,13 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 }
 
 func (m *Md) OutputLabel(wr io.Writer, l *config.Label) error {
-	ts, err := m.box.FindString("label.md.tmpl")
-	if err != nil {
-		return err
+	v := &config.View{
+		Name:   l.Name,
+		Desc:   l.Desc,
+		Layers: []string{},
+		Labels: []string{l.Id()},
 	}
-
-	relPath, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
-	if err != nil {
-		return err
-	}
-
-	tmpl := template.Must(template.New(l.Id()).Funcs(output.Funcs(m.config)).Parse(ts))
-	tmplData := map[string]interface{}{
-		"Label":    l,
-		"Format":   m.config.Format(),
-		"DescPath": relPath,
-	}
-
-	if err := tmpl.Execute(wr, tmplData); err != nil {
-		return err
-	}
-
-	return nil
+	return m.outputView(wr, v, "label")
 }
 
 func (m *Md) OutputIndex(wr io.Writer) error {
@@ -200,13 +130,85 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 	tmpl := template.Must(template.New("index").Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
 		"Config":   m.config,
-		"View":  m.config.PrimaryView(),
+		"View":     m.config.PrimaryView(),
 		"Format":   m.config.Format(),
 		"DescPath": relPath,
-		"Views": m.config.Views,
+		"Views":    m.config.Views,
 		"Layers":   m.config.Layers(),
 		"Nodes":    m.config.Nodes,
 		"Labels":   m.config.Labels(),
+	}
+	if err := tmpl.Execute(wr, tmplData); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Md) outputView(wr io.Writer, v *config.View, tType string) error {
+	ts, err := m.box.FindString("view.md.tmpl")
+	if err != nil {
+		return err
+	}
+
+	relPath, err := filepath.Rel(filepath.Join("root", m.config.DocPath), filepath.Join("root", m.config.DescPath))
+	if err != nil {
+		return err
+	}
+
+	layers := []*config.Layer{}
+	for _, n := range v.Layers {
+		for _, l := range m.config.Layers() {
+			if n == l.Name {
+				layers = append(layers, l)
+			}
+		}
+	}
+
+	nodes := m.config.Nodes
+	labels := config.Labels{}
+	if len(v.Labels) > 0 {
+		labels = config.Labels{}
+		for _, s := range v.Labels {
+			label, ok := m.config.FindLabel(s)
+			if ok != nil {
+				return fmt.Errorf("label not found: %s", s)
+			}
+			labels = append(labels, label)
+		}
+
+		nodes, err = m.config.PruneNodesByLabels(nodes, v.Labels)
+		if err != nil {
+			return err
+		}
+	} else {
+		labels = m.config.Labels()
+	}
+	labels.Sort()
+
+	relations := m.config.Relations.FindByLabels(labels)
+
+	hideLabels := m.config.HideLabels
+	hideLayers := m.config.HideLayers
+
+	switch tType {
+	case "label":
+		hideLabels = true
+		hideLayers = true
+	}
+
+	tmpl := template.Must(template.New(v.Name).Funcs(output.Funcs(m.config)).Parse(ts))
+	tmplData := map[string]interface{}{
+		"TemplateType":  tType,
+		"View":          v,
+		"Format":        m.config.Format(),
+		"DescPath":      relPath,
+		"Nodes":         nodes,
+		"Relations":     relations,
+		"Layers":        layers,
+		"Labels":        labels,
+		"HideLayers":    hideLayers,
+		"HideRealNodes": m.config.HideRealNodes,
+		"HideLabels":    hideLabels,
 	}
 	if err := tmpl.Execute(wr, tmplData); err != nil {
 		return err
