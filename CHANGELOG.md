@@ -1,3 +1,14 @@
+## [v0.11.0](https://github.com/k1LoW/ndiag/compare/v0.10.1...v0.11.0) (2021-02-15)
+
+* Expand client timeout [#73](https://github.com/k1LoW/ndiag/pull/73) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING] Refactor md output [#72](https://github.com/k1LoW/ndiag/pull/72) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING] Remove/Hide default view description [#71](https://github.com/k1LoW/ndiag/pull/71) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING] Change hideLabelGroups: to hideLabels: [#70](https://github.com/k1LoW/ndiag/pull/70) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING] The value of the type or label should not be used to generate the Relation id. [#69](https://github.com/k1LoW/ndiag/pull/69) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING] Force seed and id to be lowercase when generating id [#68](https://github.com/k1LoW/ndiag/pull/68) ([k1LoW](https://github.com/k1LoW))
+* If the layer specification is zero and the architecture contains cluster components, show clusters for cluster component. [#67](https://github.com/k1LoW/ndiag/pull/67) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING] Layer comparisons are not case-sensitive. [#65](https://github.com/k1LoW/ndiag/pull/65) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.10.1](https://github.com/k1LoW/ndiag/compare/v0.10.0...v0.10.1) (2021-01-31)
 
 * Fix description file migration logic [#64](https://github.com/k1LoW/ndiag/pull/64) ([k1LoW](https://github.com/k1LoW))
