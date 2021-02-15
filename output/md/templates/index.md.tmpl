@@ -28,14 +28,6 @@
 {{- end }}
 {{- end }}
 
-## {{ "Nodes" | lookup }}
-
-| {{ "Name" | lookup }}{{ if not .Config.HideRealNodes }} ({{ "node count" | lookup }}){{ end }} | {{ "Description" | lookup }} |
-| --- | --- |
-{{- range $i, $n := .Nodes }}
-| [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}){{ if not $.Config.HideRealNodes }} ({{ len $n.RealNodes }}){{ end }} | {{ if ne $n.Desc "" }}{{ $n.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_node" ($n | id)}}">:pencil2:</a>{{ end }} |
-{{- end }}
-
 {{ if not .Config.HideLabels }}
 ## {{ "Labels" | lookup }}
 
@@ -44,6 +36,14 @@
 {{- range $i, $t := .Labels }}
 | [{{ $t | fullname }}]({{ mdpath "label" ($t | id) }}) | {{ if ne $t.Desc "" }}{{ $t.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_label" ($t | id)}}">:pencil2:</a>{{ end }} |
 {{- end }}
+{{- end }}
+
+## {{ "Nodes" | lookup }}
+
+| {{ "Name" | lookup }}{{ if not .Config.HideRealNodes }} ({{ "node count" | lookup }}){{ end }} | {{ "Description" | lookup }} |
+| --- | --- |
+{{- range $i, $n := .Nodes }}
+| [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}){{ if not $.Config.HideRealNodes }} ({{ len $n.RealNodes }}){{ end }} | {{ if ne $n.Desc "" }}{{ $n.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_node" ($n | id)}}">:pencil2:</a>{{ end }} |
 {{- end }}
 
 ---
