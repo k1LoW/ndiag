@@ -11,7 +11,7 @@ type Component struct {
 	Desc     string
 	Cluster  *Cluster
 	Node     *Node
-	Edges   []*Edge
+	Edges    []*Edge
 	Labels   Labels
 	Metadata ComponentMetadata
 }
@@ -37,6 +37,10 @@ func (c *Component) FullName() string {
 
 func (c *Component) Id() string {
 	return strings.ToLower(c.FullName())
+}
+
+func (c *Component) DescFilename() string {
+	return MakeMdFilename("_component", c.Id())
 }
 
 func (c *Component) OverrideMetadata(c2 *Component) error {

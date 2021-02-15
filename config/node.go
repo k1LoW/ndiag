@@ -33,6 +33,10 @@ func (n *Node) Id() string {
 	return strings.ToLower(n.FullName())
 }
 
+func (n *Node) DescFilename() string {
+	return MakeMdFilename("_node", n.Id())
+}
+
 type RealNode struct {
 	Node
 	BelongTo *Node

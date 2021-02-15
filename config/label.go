@@ -20,6 +20,10 @@ func (l *Label) Id() string {
 	return strings.ToLower(l.FullName())
 }
 
+func (l *Label) DescFilename() string {
+	return MakeMdFilename("_label", l.Id())
+}
+
 func (labels Labels) Sort() {
 	sort.Slice(labels, func(i, j int) bool {
 		return labels[i].Name < labels[j].Name

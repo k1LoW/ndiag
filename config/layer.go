@@ -25,6 +25,10 @@ func (l *Layer) FullName() string {
 	return l.Name
 }
 
+func (l *Layer) DescFilename() string {
+	return MakeMdFilename("_layer", l.Id())
+}
+
 func (l *Layer) String() string {
 	return l.Name
 }

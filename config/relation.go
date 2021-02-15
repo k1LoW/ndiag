@@ -79,6 +79,10 @@ func (r *Relation) Id() string {
 	return strings.ToLower(r.relationId)
 }
 
+func (r *Relation) DescFilename() string {
+	return MakeMdFilename("_relation", r.Id())
+}
+
 type Relations []*Relation
 
 func (relations Relations) FindByLabels(labels Labels) Relations {

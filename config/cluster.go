@@ -32,6 +32,10 @@ func (c *Cluster) Id() string {
 	return strings.ToLower(c.FullName())
 }
 
+func (c *Cluster) DescFilename() string {
+	return MakeMdFilename("_cluster", c.Id())
+}
+
 func (c *Cluster) OverrideMetadata(c2 *Cluster) error {
 	if c.Id() != c2.Id() {
 		return fmt.Errorf("can not merge: %s <-> %s", c.Id(), c2.Id())
