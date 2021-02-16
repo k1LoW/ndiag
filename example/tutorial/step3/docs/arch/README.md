@@ -10,18 +10,6 @@
 
 
 
-
-## Layers
-
-| Name | Description |
-| --- | --- |
-
-
-## Labels
-
-| Name | Description |
-| --- | --- |
-
 ## Nodes
 
 | Name | Description |
@@ -29,6 +17,16 @@
 | [lb](node-lb.md) | <a href="../../ndiag.descriptions/_node-lb.md">:pencil2:</a> |
 | [app](node-app.md) | <a href="../../ndiag.descriptions/_node-app.md">:pencil2:</a> |
 | [db](node-db.md) | <a href="../../ndiag.descriptions/_node-db.md">:pencil2:</a> |
+
+## Layers
+
+| Name | Description |
+| --- | --- |
+
+## Labels
+
+| Name | Description |
+| --- | --- |
 
 ---
 

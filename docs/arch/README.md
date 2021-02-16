@@ -68,10 +68,6 @@ component id = `[node name]:[component name]`
 | [input](view-input.md) | <a href="../ndiag.descriptions/_view-input.md">:pencil2:</a> |
 | [output](view-output.md) | <a href="../ndiag.descriptions/_view-output.md">:pencil2:</a> |
 
-
-
-
-
 ## Components
 
 | Name | Description |
@@ -79,6 +75,8 @@ component id = `[node name]:[component name]`
 | [input files](node-input_files.md) | <a href="../ndiag.descriptions/_node-input_files.md">:pencil2:</a> |
 | [ndiag](node-ndiag.md) | `ndiag doc` command |
 | [documents](node-documents.md) | <a href="../ndiag.descriptions/_node-documents.md">:pencil2:</a> |
+
+
 
 ---
 
