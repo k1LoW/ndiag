@@ -714,23 +714,19 @@ func (cfg *Config) checkUnique() error {
 	}
 
 	// components
-	for _, c := range cfg.GlobalComponents() {
+	for _, c := range cfg.Components() {
 		if t, exist := ids[c.Id()]; exist {
 			return fmt.Errorf("duplicate id: %s[%s] <-> %s[%s]", t, c.Id(), "component", c.Id())
 		}
 		ids[c.Id()] = "component"
 	}
-	for _, c := range cfg.ClusterComponents() {
-		if t, exist := ids[c.Id()]; exist {
-			return fmt.Errorf("duplicate id: %s[%s] <-> %s[%s]", t, c.Id(), "component", c.Id())
+
+	// relations
+	for _, r := range cfg.Relations {
+		if t, exist := ids[r.Id()]; exist {
+			return fmt.Errorf("duplicate id: %s[%s] <-> %s[%s]", t, r.Id(), "relation", r.Id())
 		}
-		ids[c.Id()] = "component"
-	}
-	for _, c := range cfg.NodeComponents() {
-		if t, exist := ids[c.Id()]; exist {
-			return fmt.Errorf("duplicate id: %s[%s] <-> %s[%s]", t, c.Id(), "component", c.Id())
-		}
-		ids[c.Id()] = "component"
+		ids[r.Id()] = "relation"
 	}
 
 	// clusters
@@ -741,13 +737,37 @@ func (cfg *Config) checkUnique() error {
 		ids[c.Id()] = "cluster"
 	}
 
-	// read nodes
-	m := map[string]struct{}{}
-	for _, rn := range cfg.realNodes {
-		if _, exist := m[rn.Name]; exist {
-			return fmt.Errorf("duplicate real node name: %s", rn.Name)
+	// labels
+	{
+		m := map[string]struct{}{}
+		for _, l := range cfg.Labels() {
+			if _, exist := m[l.Id()]; exist {
+				return fmt.Errorf("duplicate labels: %s", l.Id())
+			}
+			m[l.Id()] = struct{}{}
 		}
-		m[rn.Name] = struct{}{}
+	}
+
+	// views
+	{
+		m := map[string]struct{}{}
+		for _, v := range cfg.Views {
+			if _, exist := m[v.Id()]; exist {
+				return fmt.Errorf("duplicate views: %s", v.Id())
+			}
+			m[v.Id()] = struct{}{}
+		}
+	}
+
+	// read nodes
+	{
+		m := map[string]struct{}{}
+		for _, rn := range cfg.realNodes {
+			if _, exist := m[rn.Name]; exist {
+				return fmt.Errorf("duplicate real nodes: %s", rn.Name)
+			}
+			m[rn.Name] = struct{}{}
+		}
 	}
 
 	return nil
