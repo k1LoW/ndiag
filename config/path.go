@@ -7,15 +7,15 @@ import (
 	"strings"
 )
 
-func ImagePath(prefix string, vals []string, format string) string {
-	return safeFilename(fmt.Sprintf("%s-%s.%s", prefix, strings.Join(vals, "-"), format))
+func MakeDiagramFilename(prefix, id, format string) string {
+	return safeFilename(fmt.Sprintf("%s-%s.%s", prefix, id, format))
 }
 
-func MdPath(prefix string, vals []string) string {
-	if len(vals) == 0 {
+func MakeMdFilename(prefix, id string) string {
+	if id == "" {
 		return safeFilename(fmt.Sprintf("%s.md", prefix))
 	}
-	return safeFilename(fmt.Sprintf("%s-%s.md", prefix, strings.Join(vals, "-")))
+	return safeFilename(fmt.Sprintf("%s-%s.md", prefix, id))
 }
 
 var unsafeCharRe = regexp.MustCompile(`[\\\/*:?"<>|\s]`)

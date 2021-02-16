@@ -293,7 +293,7 @@ func (cfg *Config) buildDescriptions() error {
 
 	// top
 	if cfg.Desc == "" {
-		desc, err := cfg.readDescFile(MdPath("_index", []string{}))
+		desc, err := cfg.readDescFile(MakeMdFilename("_index", ""))
 		if err != nil {
 			return err
 		}
@@ -302,12 +302,12 @@ func (cfg *Config) buildDescriptions() error {
 
 	// views
 	if !cfg.HideViews {
-		for _, d := range cfg.Views {
-			if d.Desc != "" {
+		for _, v := range cfg.Views {
+			if v.Desc != "" {
 				continue
 			}
-			path := filepath.Join(cfg.DescPath, MdPath("_view", []string{d.Id()}))
-			oldPath := filepath.Join(cfg.DescPath, MdPath("_diagram", []string{d.Id()}))
+			path := filepath.Join(cfg.DescPath, MakeMdFilename("_view", v.Id()))
+			oldPath := filepath.Join(cfg.DescPath, MakeMdFilename("_diagram", v.Id()))
 			if _, err := os.Stat(oldPath); err == nil {
 				if _, err := os.Stat(path); err == nil {
 					return fmt.Errorf("old description file exists: %s", oldPath)
@@ -316,11 +316,11 @@ func (cfg *Config) buildDescriptions() error {
 					return err
 				}
 			}
-			desc, err := cfg.readDescFile(MdPath("_view", []string{d.Id()}))
+			desc, err := cfg.readDescFile(MakeMdFilename("_view", v.Id()))
 			if err != nil {
 				return err
 			}
-			d.Desc = desc
+			v.Desc = desc
 		}
 	}
 
@@ -329,7 +329,7 @@ func (cfg *Config) buildDescriptions() error {
 		if c.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_cluster", []string{c.Id()}))
+		desc, err := cfg.readDescFile(MakeMdFilename("_cluster", c.Id()))
 		if err != nil {
 			return err
 		}
@@ -341,7 +341,7 @@ func (cfg *Config) buildDescriptions() error {
 		if l.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_layer", []string{l.Id()}))
+		desc, err := cfg.readDescFile(MakeMdFilename("_layer", l.Id()))
 		if err != nil {
 			return err
 		}
@@ -353,7 +353,7 @@ func (cfg *Config) buildDescriptions() error {
 		if n.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_node", []string{n.Id()}))
+		desc, err := cfg.readDescFile(MakeMdFilename("_node", n.Id()))
 		if err != nil {
 			return err
 		}
@@ -365,7 +365,7 @@ func (cfg *Config) buildDescriptions() error {
 		if c.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_component", []string{c.Id()}))
+		desc, err := cfg.readDescFile(MakeMdFilename("_component", c.Id()))
 		if err != nil {
 			return err
 		}
@@ -375,7 +375,7 @@ func (cfg *Config) buildDescriptions() error {
 		if c.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_component", []string{c.Id()}))
+		desc, err := cfg.readDescFile(MakeMdFilename("_component", c.Id()))
 		if err != nil {
 			return err
 		}
@@ -385,7 +385,7 @@ func (cfg *Config) buildDescriptions() error {
 		if c.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_component", []string{c.Id()}))
+		desc, err := cfg.readDescFile(MakeMdFilename("_component", c.Id()))
 		if err != nil {
 			return err
 		}
@@ -397,7 +397,7 @@ func (cfg *Config) buildDescriptions() error {
 		if l.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_label", []string{l.Id()}))
+		desc, err := cfg.readDescFile(MakeMdFilename("_label", l.Id()))
 		if err != nil {
 			return err
 		}
@@ -409,7 +409,7 @@ func (cfg *Config) buildDescriptions() error {
 		if r.Desc != "" {
 			continue
 		}
-		desc, err := cfg.readDescFile(MdPath("_relation", []string{r.Id()}))
+		desc, err := cfg.readDescFile(MakeMdFilename("_relation", r.Id()))
 		if err != nil {
 			return err
 		}

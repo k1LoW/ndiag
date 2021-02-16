@@ -12,12 +12,20 @@ type Label struct {
 
 type Labels []*Label
 
+func (l *Label) ElementType() ElementType {
+	return TypeLabel
+}
+
 func (l *Label) FullName() string {
 	return l.Name
 }
 
 func (l *Label) Id() string {
 	return strings.ToLower(l.FullName())
+}
+
+func (l *Label) DescFilename() string {
+	return MakeMdFilename("_label", l.Id())
 }
 
 func (labels Labels) Sort() {

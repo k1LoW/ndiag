@@ -25,12 +25,20 @@ type NodeMetadata struct {
 	Labels []string `yaml:"labels,omitempty"`
 }
 
+func (n *Node) ElementType() ElementType {
+	return TypeNode
+}
+
 func (n *Node) FullName() string {
 	return n.Name
 }
 
 func (n *Node) Id() string {
 	return strings.ToLower(n.FullName())
+}
+
+func (n *Node) DescFilename() string {
+	return MakeMdFilename("_node", n.Id())
 }
 
 type RealNode struct {

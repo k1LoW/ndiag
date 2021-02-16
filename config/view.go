@@ -12,21 +12,29 @@ type View struct {
 	Labels []string `yaml:"labels,omitempty"`
 }
 
-func (d *View) FullName() string {
+func (v *View) ElementType() ElementType {
+	return TypeView
+}
+
+func (v *View) FullName() string {
 	switch {
-	case d.Name != "":
-		return d.Name
-	case len(d.Layers) > 0 && len(d.Labels) > 0:
-		return fmt.Sprintf("%s-%s", strings.Join(d.Layers, "-"), strings.Join(d.Labels, "-"))
-	case len(d.Layers) > 0:
-		return strings.Join(d.Layers, "-")
-	case len(d.Labels) > 0:
-		return strings.Join(d.Labels, "-")
+	case v.Name != "":
+		return v.Name
+	case len(v.Layers) > 0 && len(v.Labels) > 0:
+		return fmt.Sprintf("%s-%s", strings.Join(v.Layers, "-"), strings.Join(v.Labels, "-"))
+	case len(v.Layers) > 0:
+		return strings.Join(v.Layers, "-")
+	case len(v.Labels) > 0:
+		return strings.Join(v.Labels, "-")
 	default:
 		return ""
 	}
 }
 
-func (d *View) Id() string {
-	return strings.ToLower(d.FullName())
+func (v *View) Id() string {
+	return strings.ToLower(v.FullName())
+}
+
+func (v *View) DescFilename() string {
+	return MakeMdFilename("_view", v.Id())
 }

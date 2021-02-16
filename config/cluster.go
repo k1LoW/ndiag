@@ -24,12 +24,20 @@ type ClusterMetadata struct {
 	TextColor color.Color `qs:"-"`
 }
 
+func (c *Cluster) ElementType() ElementType {
+	return TypeCluster
+}
+
 func (c *Cluster) FullName() string {
 	return fmt.Sprintf("%s:%s", c.Layer.FullName(), c.Name)
 }
 
 func (c *Cluster) Id() string {
 	return strings.ToLower(c.FullName())
+}
+
+func (c *Cluster) DescFilename() string {
+	return MakeMdFilename("_cluster", c.Id())
 }
 
 func (c *Cluster) OverrideMetadata(c2 *Cluster) error {

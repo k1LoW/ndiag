@@ -71,12 +71,20 @@ type Relation struct {
 	Attrs      []*Attr
 }
 
+func (r *Relation) ElementType() ElementType {
+	return TypeRelation
+}
+
 func (r *Relation) FullName() string {
 	return r.relationId
 }
 
 func (r *Relation) Id() string {
 	return strings.ToLower(r.relationId)
+}
+
+func (r *Relation) DescFilename() string {
+	return MakeMdFilename("_relation", r.Id())
 }
 
 type Relations []*Relation
