@@ -149,6 +149,32 @@ func (cfg *Config) Labels() Labels {
 	return cfg.labels
 }
 
+func (cfg *Config) Elements() []Element {
+	elements := []Element{}
+	for _, n := range cfg.Nodes {
+		elements = append(elements, n)
+	}
+	for _, c := range cfg.Components() {
+		elements = append(elements, c)
+	}
+	for _, r := range cfg.Relations {
+		elements = append(elements, r)
+	}
+	for _, l := range cfg.Layers() {
+		elements = append(elements, l)
+	}
+	for _, c := range cfg.Clusters() {
+		elements = append(elements, c)
+	}
+	for _, l := range cfg.Labels() {
+		elements = append(elements, l)
+	}
+	for _, v := range cfg.Views {
+		elements = append(elements, v)
+	}
+	return elements
+}
+
 func (cfg *Config) ColorSets() ColorSets {
 	return cfg.colorSets
 }
