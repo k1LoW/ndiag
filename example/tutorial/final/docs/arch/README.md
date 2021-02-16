@@ -17,6 +17,13 @@
 | [http access](view-http_access.md) | <a href="../../ndiag.descriptions/_view-http_access.md">:pencil2:</a> |
 | [app](view-app.md) | <a href="../../ndiag.descriptions/_view-app.md">:pencil2:</a> |
 
+## Nodes
+
+| Name (node count) | Description |
+| --- | --- |
+| [lb](node-lb.md) (2) | Load balancer |
+| [app](node-app.md) (3) | Application |
+| [db](node-db.md) (2) | Database |
 
 ## Layers
 
@@ -26,7 +33,6 @@
 | [vip_group](layer-vip_group.md) | A group of virtual IP and nodes/components to handle it. |
 | [Service](layer-service.md) | <a href="../../ndiag.descriptions/_layer-service.md">:pencil2:</a> |
 
-
 ## Labels
 
 | Name | Description |
@@ -34,14 +40,6 @@
 | [app](label-app.md) | App-DB |
 | [http](label-http.md) | HTTP request flow |
 | [lang:ruby](label-lang_ruby.md) | Ruby |
-
-## Nodes
-
-| Name (node count) | Description |
-| --- | --- |
-| [lb](node-lb.md) (2) | Load balancer |
-| [app](node-app.md) (3) | Application |
-| [db](node-db.md) (2) | Database |
 
 ---
 

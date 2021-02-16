@@ -16,6 +16,12 @@ See https://docs.google.com/presentation/d/1vjm5YdmOH5LrubFhHf1vlqW2O9Z2UqdWA8bi
 | --- | --- |
 | [overview](view-overview.md) | <a href="../input/ndiag.descriptions/_view-overview.md">:pencil2:</a> |
 
+## Nodes
+
+| Name | Description |
+| --- | --- |
+| [Service Instance](node-service_instance.md) | <a href="../input/ndiag.descriptions/_node-service_instance.md">:pencil2:</a> |
+| [Heartbeat and Snapshot System](node-heartbeat_and_snapshot_system.md) | <a href="../input/ndiag.descriptions/_node-heartbeat_and_snapshot_system.md">:pencil2:</a> |
 
 ## Layers
 
@@ -24,18 +30,10 @@ See https://docs.google.com/presentation/d/1vjm5YdmOH5LrubFhHf1vlqW2O9Z2UqdWA8bi
 | [zone](layer-zone.md) | <a href="../input/ndiag.descriptions/_layer-zone.md">:pencil2:</a> |
 | [instance-group](layer-instance-group.md) | <a href="../input/ndiag.descriptions/_layer-instance-group.md">:pencil2:</a> |
 
-
 ## Labels
 
 | Name | Description |
 | --- | --- |
-
-## Nodes
-
-| Name | Description |
-| --- | --- |
-| [Service Instance](node-service_instance.md) | <a href="../input/ndiag.descriptions/_node-service_instance.md">:pencil2:</a> |
-| [Heartbeat and Snapshot System](node-heartbeat_and_snapshot_system.md) | <a href="../input/ndiag.descriptions/_node-heartbeat_and_snapshot_system.md">:pencil2:</a> |
 
 ---
 
