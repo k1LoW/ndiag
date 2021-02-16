@@ -25,6 +25,10 @@ type NodeMetadata struct {
 	Labels []string `yaml:"labels,omitempty"`
 }
 
+func (n *Node) ElementType() ElementType {
+	return TypeNode
+}
+
 func (n *Node) FullName() string {
 	return n.Name
 }

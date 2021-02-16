@@ -71,6 +71,10 @@ type Relation struct {
 	Attrs      []*Attr
 }
 
+func (r *Relation) ElementType() ElementType {
+	return TypeRelation
+}
+
 func (r *Relation) FullName() string {
 	return r.relationId
 }

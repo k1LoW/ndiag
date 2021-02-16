@@ -12,6 +12,10 @@ type View struct {
 	Labels []string `yaml:"labels,omitempty"`
 }
 
+func (v *View) ElementType() ElementType {
+	return TypeView
+}
+
 func (v *View) FullName() string {
 	switch {
 	case v.Name != "":

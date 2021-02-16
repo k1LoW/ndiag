@@ -12,6 +12,10 @@ type Label struct {
 
 type Labels []*Label
 
+func (l *Label) ElementType() ElementType {
+	return TypeLabel
+}
+
 func (l *Label) FullName() string {
 	return l.Name
 }

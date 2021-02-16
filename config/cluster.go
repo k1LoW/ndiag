@@ -24,6 +24,10 @@ type ClusterMetadata struct {
 	TextColor color.Color `qs:"-"`
 }
 
+func (c *Cluster) ElementType() ElementType {
+	return TypeCluster
+}
+
 func (c *Cluster) FullName() string {
 	return fmt.Sprintf("%s:%s", c.Layer.FullName(), c.Name)
 }

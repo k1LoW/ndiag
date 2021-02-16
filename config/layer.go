@@ -17,6 +17,10 @@ type LayerMetadata struct {
 	TextColor color.Color
 }
 
+func (l *Layer) ElementType() ElementType {
+	return TypeLayer
+}
+
 func (l *Layer) Id() string {
 	return strings.ToLower(l.FullName())
 }

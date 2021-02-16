@@ -32,13 +32,6 @@ var DefaultIconPath = "ndiag.icons"
 // DefaultFormat is the default view format
 const DefaultFormat = "svg"
 
-// Element is ndiag element
-type Element interface {
-	Id() string
-	FullName() string
-	DescFilename() string
-}
-
 // Attr is attribute of ndiag element/edge
 type Attr struct {
 	Key   string

@@ -21,6 +21,10 @@ type ComponentMetadata struct {
 	Labels []string `qs:"label"`
 }
 
+func (c *Component) ElementType() ElementType {
+	return TypeComponent
+}
+
 func (c *Component) FullName() string {
 	switch {
 	case c.Node != nil:
