@@ -32,7 +32,9 @@
 {{- range $i, $c := $rel.Components }}
 | {{ $i }} | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |
 {{- end }}
-{{ end }}
+
+---
+{{- end }}
 
 {{- if not .HideLayers }}
 ## {{ "Layers" | lookup }}

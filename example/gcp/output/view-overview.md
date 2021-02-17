@@ -30,6 +30,7 @@
 | 1 | cloud dns |  <a href="../input/ndiag.descriptions/_component-cloud_dns.md">:pencil2:</a> |
 | 2 | zone:platform:cloud load balancing |  <a href="../input/ndiag.descriptions/_component-zone_platform_cloud_load_balancing.md">:pencil2:</a> |
 
+---
 
 ![relation](relation-zone_platform_cloud_load_balancing-55e948d.svg)
 
@@ -43,6 +44,7 @@
 | 0 | zone:platform:cloud load balancing |  <a href="../input/ndiag.descriptions/_component-zone_platform_cloud_load_balancing.md">:pencil2:</a> |
 | 1 | service instance:compute engine |  <a href="../input/ndiag.descriptions/_component-service_instance_compute_engine.md">:pencil2:</a> |
 
+---
 
 ![relation](relation-service_instance_compute_engine-2f9d9af.svg)
 
@@ -57,6 +59,7 @@
 | 1 | heartbeat and snapshot system:compute engine |  <a href="../input/ndiag.descriptions/_component-heartbeat_and_snapshot_system_compute_engine.md">:pencil2:</a> |
 | 2 | service instance:compute engine |  <a href="../input/ndiag.descriptions/_component-service_instance_compute_engine.md">:pencil2:</a> |
 
+---
 
 ![relation](relation-service_instance_compute_engine-ee4a537.svg)
 
@@ -70,6 +73,7 @@
 | 0 | service instance:compute engine |  <a href="../input/ndiag.descriptions/_component-service_instance_compute_engine.md">:pencil2:</a> |
 | 1 | zone:platform:persistent disk snapshot |  <a href="../input/ndiag.descriptions/_component-zone_platform_persistent_disk_snapshot.md">:pencil2:</a> |
 
+---
 ## Layers
 
 | Name | Description |

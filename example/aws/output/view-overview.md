@@ -31,6 +31,7 @@
 | 2 | lambda:function1 |  <a href="../input/ndiag.descriptions/_component-lambda_function1.md">:pencil2:</a> |
 | 3 | lambda:function2 |  <a href="../input/ndiag.descriptions/_component-lambda_function2.md">:pencil2:</a> |
 
+---
 
 ![relation](relation-lambda_function2-a1cbfde.svg)
 
@@ -44,6 +45,7 @@
 | 0 | lambda:function2 |  <a href="../input/ndiag.descriptions/_component-lambda_function2.md">:pencil2:</a> |
 | 1 | s3:ssh key bucket |  <a href="../input/ndiag.descriptions/_component-s3_ssh_key_bucket.md">:pencil2:</a> |
 
+---
 
 ![relation](relation-lambda_function2-86c8d48.svg)
 
@@ -57,6 +59,7 @@
 | 0 | lambda:function2 |  <a href="../input/ndiag.descriptions/_component-lambda_function2.md">:pencil2:</a> |
 | 1 | s3:output bucket |  <a href="../input/ndiag.descriptions/_component-s3_output_bucket.md">:pencil2:</a> |
 
+---
 
 ![relation](relation-lambda_function2-7ef7b6c.svg)
 
@@ -70,6 +73,7 @@
 | 0 | lambda:function2 |  <a href="../input/ndiag.descriptions/_component-lambda_function2.md">:pencil2:</a> |
 | 1 | platform:aws:kms |  <a href="../input/ndiag.descriptions/_component-platform_aws_kms.md">:pencil2:</a> |
 
+---
 ## Layers
 
 | Name | Description |
