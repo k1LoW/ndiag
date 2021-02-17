@@ -197,3 +197,40 @@ func (d *Dot) OutputLabel(wr io.Writer, l *config.Label) error {
 	}
 	return nil
 }
+
+func (d *Dot) OutputRelation(wr io.Writer, r *config.Relation) error {
+	ts, err := d.box.FindString("view.dot.tmpl")
+	if err != nil {
+		return err
+	}
+	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(ts))
+
+	clusters, globalNodes, _, err := d.config.BuildNestedClusters([]string{})
+	if err != nil {
+		return err
+	}
+
+	globalComponents := d.config.GlobalComponents()
+	clusters, globalNodes, globalComponents, edges, err := d.config.PruneClustersByRelations(clusters, globalNodes, globalComponents, config.Relations{r})
+	if err != nil {
+		return err
+	}
+
+	attrs := append(d.config.Graph.Attrs(), &config.Attr{
+		Key:   "rankdir",
+		Value: "LR",
+	})
+
+	if err := tmpl.Execute(wr, map[string]interface{}{
+		"GraphAttrs":       attrs,
+		"Clusters":         clusters,
+		"GlobalNodes":      globalNodes,
+		"GlobalComponents": globalComponents,
+		"Edges":            edges,
+		"HideUnlinked":     false,
+		"HideRealNodes":    true,
+	}); err != nil {
+		return err
+	}
+	return nil
+}

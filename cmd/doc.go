@@ -237,6 +237,27 @@ var docCmd = &cobra.Command{
 			}
 		}
 
+		// relations
+		for _, r := range cfg.Relations {
+			cfg, err := newConfig()
+			if err != nil {
+				return err
+			}
+
+			// draw relation
+			diag := gviz.New(cfg)
+			dPath := filepath.Join(cfg.DocPath, config.MakeDiagramFilename("relation", r.Id(), format))
+			dFile, err := os.OpenFile(dPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
+			if err != nil {
+				return err
+			}
+			if err := diag.OutputRelation(dFile, r); err != nil {
+				_ = dFile.Close()
+				return err
+			}
+			_ = dFile.Close()
+		}
+
 		// top page
 		mPath := filepath.Join(cfg.DocPath, "README.md")
 		file, err := os.OpenFile(mPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec

@@ -60,6 +60,17 @@ func (c *Component) OverrideMetadata(c2 *Component) error {
 	return nil
 }
 
+type Components []*Component
+
+func (components Components) FindById(id string) (*Component, error) {
+	for _, c := range components {
+		if c.Id() == id {
+			return c, nil
+		}
+	}
+	return nil, fmt.Errorf("component not found: %s", id)
+}
+
 func uniqueAndSort(in []string) []string {
 	m := map[string]struct{}{}
 	for _, s := range in {
