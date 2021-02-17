@@ -19,6 +19,9 @@
 ## {{ "Relations" | lookup }}
 
 {{- range $j, $rel := .Relations }}
+
+![relation]({{ diagpath "relation"  ($rel | id) $.Format }})
+
 {{ $rel.Desc }}
 <p align="right">
   [ <a href="{{ $.DescPath }}/{{ mdpath "_relation" ($rel | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]

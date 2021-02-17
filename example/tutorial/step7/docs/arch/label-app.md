@@ -19,6 +19,9 @@ App-DB
 
 ## Relations
 
+![relation](relation-lb_nginx-2750eb0.svg)
+
+
 <p align="right">
   [ <a href="../../ndiag.descriptions/_relation-lb_nginx-2750eb0.md">:pencil2: Edit description</a> ]
 <p>
@@ -30,6 +33,9 @@ App-DB
 | 2 | app:app |  <a href="../../ndiag.descriptions/_component-app_app.md">:pencil2:</a> |
 
 
+![relation](relation-app_app-fc502aa.svg)
+
+
 <p align="right">
   [ <a href="../../ndiag.descriptions/_relation-app_app-fc502aa.md">:pencil2: Edit description</a> ]
 <p>
@@ -38,6 +44,9 @@ App-DB
 | --- | --- | --- |
 | 0 | app:app |  <a href="../../ndiag.descriptions/_component-app_app.md">:pencil2:</a> |
 | 1 | db:postgresql |  <a href="../../ndiag.descriptions/_component-db_postgresql.md">:pencil2:</a> |
+
+
+![relation](relation-app_app-34fd077.svg)
 
 
 <p align="right">

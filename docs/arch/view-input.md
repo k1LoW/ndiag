@@ -17,6 +17,9 @@
 
 ## Relations
 
+![relation](relation-input_files_ndiag.yml-da3a497.svg)
+
+
 <p align="right">
   [ <a href="../ndiag.descriptions/_relation-input_files_ndiag.yml-da3a497.md">:pencil2: Edit description</a> ]
 <p>
@@ -27,6 +30,9 @@
 | 1 | ndiag:internal |  <a href="../ndiag.descriptions/_component-ndiag_internal.md">:pencil2:</a> |
 
 
+![relation](relation-input_files_nodes.yml-efaf14b.svg)
+
+
 <p align="right">
   [ <a href="../ndiag.descriptions/_relation-input_files_nodes.yml-efaf14b.md">:pencil2: Edit description</a> ]
 <p>
@@ -35,6 +41,9 @@
 | --- | --- | --- |
 | 0 | input files:nodes.yml |  <a href="../ndiag.descriptions/_component-input_files_nodes.yml.md">:pencil2:</a> |
 | 1 | ndiag:internal |  <a href="../ndiag.descriptions/_component-ndiag_internal.md">:pencil2:</a> |
+
+
+![relation](relation-input_files_ndiag.descriptions__.md-1cdb9dd.svg)
 
 
 <p align="right">

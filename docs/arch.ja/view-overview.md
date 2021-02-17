@@ -19,6 +19,9 @@
 
 ## Relations
 
+![relation](relation-input_files_ndiag.yml-da3a497.svg)
+
+
 <p align="right">
   [ <a href="../ndiag.descriptions.ja/_relation-input_files_ndiag.yml-da3a497.md">:pencil2: Edit description</a> ]
 <p>
@@ -27,6 +30,9 @@
 | --- | --- | --- |
 | 0 | input files:ndiag.yml |  <a href="../ndiag.descriptions.ja/_component-input_files_ndiag.yml.md">:pencil2:</a> |
 | 1 | ndiag:internal | ndiagの内部処理 <a href="../ndiag.descriptions.ja/_component-ndiag_internal.md">:pencil2:</a> |
+
+
+![relation](relation-input_files_nodes.yml-efaf14b.svg)
 
 
 <p align="right">
@@ -39,6 +45,9 @@
 | 1 | ndiag:internal | ndiagの内部処理 <a href="../ndiag.descriptions.ja/_component-ndiag_internal.md">:pencil2:</a> |
 
 
+![relation](relation-input_files_ndiag.descriptions__.md-1cdb9dd.svg)
+
+
 <p align="right">
   [ <a href="../ndiag.descriptions.ja/_relation-input_files_ndiag.descriptions__.md-1cdb9dd.md">:pencil2: Edit description</a> ]
 <p>
@@ -47,6 +56,9 @@
 | --- | --- | --- |
 | 0 | input files:ndiag.descriptions/*.md |  <a href="../ndiag.descriptions.ja/_component-input_files_ndiag.descriptions__.md.md">:pencil2:</a> |
 | 1 | ndiag:internal | ndiagの内部処理 <a href="../ndiag.descriptions.ja/_component-ndiag_internal.md">:pencil2:</a> |
+
+
+![relation](relation-ndiag_internal-5df3e05.svg)
 
 
 <p align="right">
@@ -59,6 +71,9 @@
 | 1 | input files:ndiag.descriptions/*.md |  <a href="../ndiag.descriptions.ja/_component-input_files_ndiag.descriptions__.md.md">:pencil2:</a> |
 
 
+![relation](relation-ndiag_internal-ee6a0d2.svg)
+
+
 <p align="right">
   [ <a href="../ndiag.descriptions.ja/_relation-ndiag_internal-ee6a0d2.md">:pencil2: Edit description</a> ]
 <p>
@@ -67,6 +82,9 @@
 | --- | --- | --- |
 | 0 | ndiag:internal | ndiagの内部処理 <a href="../ndiag.descriptions.ja/_component-ndiag_internal.md">:pencil2:</a> |
 | 1 | documents:index document |  <a href="../ndiag.descriptions.ja/_component-documents_index_document.md">:pencil2:</a> |
+
+
+![relation](relation-ndiag_internal-8143d95.svg)
 
 
 <p align="right">
@@ -79,6 +97,9 @@
 | 1 | documents:custom documents |  <a href="../ndiag.descriptions.ja/_component-documents_custom_documents.md">:pencil2:</a> |
 
 
+![relation](relation-ndiag_internal-eece4dd.svg)
+
+
 <p align="right">
   [ <a href="../ndiag.descriptions.ja/_relation-ndiag_internal-eece4dd.md">:pencil2: Edit description</a> ]
 <p>
@@ -87,6 +108,9 @@
 | --- | --- | --- |
 | 0 | ndiag:internal | ndiagの内部処理 <a href="../ndiag.descriptions.ja/_component-ndiag_internal.md">:pencil2:</a> |
 | 1 | documents:layer based documents |  <a href="../ndiag.descriptions.ja/_component-documents_layer_based_documents.md">:pencil2:</a> |
+
+
+![relation](relation-ndiag_internal-9d28271.svg)
 
 
 <p align="right">

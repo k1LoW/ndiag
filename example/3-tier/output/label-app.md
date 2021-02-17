@@ -19,6 +19,9 @@ App-DB
 
 ## Relations
 
+![relation](relation-lb_nginx-514d407.svg)
+
+
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_relation-lb_nginx-514d407.md">:pencil2: Edit description</a> ]
 <p>
@@ -28,6 +31,9 @@ App-DB
 | 0 | lb:nginx |  <a href="../input/ndiag.descriptions/_component-lb_nginx.md">:pencil2:</a> |
 | 1 | app:nginx |  <a href="../input/ndiag.descriptions/_component-app_nginx.md">:pencil2:</a> |
 | 2 | app:rails app |  <a href="../input/ndiag.descriptions/_component-app_rails_app.md">:pencil2:</a> |
+
+
+![relation](relation-app_rails_app-7e41335.svg)
 
 
 <p align="right">
