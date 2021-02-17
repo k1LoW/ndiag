@@ -62,7 +62,7 @@ func (d *Dot) OutputLayer(wr io.Writer, l *config.Layer) error {
 	}
 	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(ts))
 
-	clusters, globalNodes, edges, err := d.config.BuildNestedClusters([]string{l.Name})
+	clusters, globalNodes, edges, err := d.config.BuildNestedClusters([]string{l.Id()})
 	if err != nil {
 		return err
 	}
@@ -179,7 +179,7 @@ func (d *Dot) OutputLabel(wr io.Writer, l *config.Label) error {
 	}
 
 	globalComponents := d.config.GlobalComponents()
-	clusters, globalNodes, globalComponents, edges, err = d.config.PruneClustersByLabels(clusters, globalNodes, globalComponents, edges, []string{l.Name})
+	clusters, globalNodes, globalComponents, edges, err = d.config.PruneClustersByLabels(clusters, globalNodes, globalComponents, edges, []string{l.Id()})
 	if err != nil {
 		return err
 	}
