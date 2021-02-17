@@ -240,10 +240,13 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 		}
 	}
 
-	// collect filtered components
+	// collect filtered cluster/nodes/components using components
 	for _, c := range cfg.Components() {
 		if len(allowLabels) == 0 || len(c.Labels.Subtract(allowLabels)) > 0 {
 			comIds.Set(c.Id(), c)
+			if c.Node != nil {
+				nIds.Set(c.Node.Id(), c.Node)
+			}
 			if c.Cluster != nil {
 				cIds.Set(c.Cluster.Id(), c.Cluster)
 			}
