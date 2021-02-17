@@ -20,6 +20,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 		wantNodeComponentLen    int
 		wantEdgeLen             int
 		wantLabelLen            int
+		wantElementLen          int
 	}{
 		{
 			configFile:              "1_ndiag.yml",
@@ -32,6 +33,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantNodeComponentLen:    3,
 			wantEdgeLen:             0,
 			wantLabelLen:            0,
+			wantElementLen:          9,
 		},
 		{
 			configFile:              "2_ndiag.yml",
@@ -44,6 +46,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantNodeComponentLen:    4,
 			wantEdgeLen:             5,
 			wantLabelLen:            1,
+			wantElementLen:          20,
 		},
 		{
 			configFile:              "3_ndiag.yml",
@@ -56,6 +59,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantNodeComponentLen:    4,
 			wantEdgeLen:             5,
 			wantLabelLen:            1,
+			wantElementLen:          20,
 		},
 		{
 			desc:                    "Determine that it is the same component with or without query parameters.",
@@ -69,6 +73,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantNodeComponentLen:    4,
 			wantEdgeLen:             6,
 			wantLabelLen:            1,
+			wantElementLen:          21,
 		},
 		{
 			desc:                    "No nodes",
@@ -82,6 +87,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantNodeComponentLen:    0,
 			wantEdgeLen:             1,
 			wantLabelLen:            0,
+			wantElementLen:          6,
 		},
 		{
 			desc:                    "Labels",
@@ -95,6 +101,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			wantNodeComponentLen:    1,
 			wantEdgeLen:             2,
 			wantLabelLen:            5,
+			wantElementLen:          13,
 		},
 	}
 	for i, tt := range tests {
@@ -140,6 +147,9 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 			}
 			if got := len(d.Labels()); got != tt.wantLabelLen {
 				t.Errorf("TestLoadConfigAndRealNodes(%d) label len got %v\nwant %v", i, got, tt.wantLabelLen)
+			}
+			if got := len(d.Elements()); got != tt.wantElementLen {
+				t.Errorf("TestLoadConfigAndRealNodes(%d) ndiag element len got %v\nwant %v", i, got, tt.wantElementLen)
 			}
 		}()
 	}
