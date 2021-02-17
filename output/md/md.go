@@ -25,7 +25,7 @@ func New(cfg *config.Config) *Md {
 }
 
 func (m *Md) OutputView(wr io.Writer, v *config.View) error {
-	return m.outputView(wr, v, "view")
+	return m.outputView(wr, v, config.TypeView)
 }
 
 func (m *Md) OutputLayer(wr io.Writer, l *config.Layer) error {
@@ -111,7 +111,7 @@ func (m *Md) OutputLabel(wr io.Writer, l *config.Label) error {
 		Layers: []string{},
 		Labels: []string{l.Id()},
 	}
-	return m.outputView(wr, v, "label")
+	return m.outputView(wr, v, config.TypeLabel)
 }
 
 func (m *Md) OutputIndex(wr io.Writer) error {
@@ -144,7 +144,7 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 	return nil
 }
 
-func (m *Md) outputView(wr io.Writer, v *config.View, tType string) error {
+func (m *Md) outputView(wr io.Writer, v *config.View, eType config.ElementType) error {
 	ts, err := m.box.FindString("view.md.tmpl")
 	if err != nil {
 		return err
@@ -166,6 +166,7 @@ func (m *Md) outputView(wr io.Writer, v *config.View, tType string) error {
 
 	nodes := m.config.Nodes
 	labels := config.Labels{}
+	relations := config.Relations{}
 	if len(v.Labels) > 0 {
 		labels = config.Labels{}
 		for _, s := range v.Labels {
@@ -180,25 +181,26 @@ func (m *Md) outputView(wr io.Writer, v *config.View, tType string) error {
 		if err != nil {
 			return err
 		}
+
+		relations = m.config.Relations.FindByLabels(labels)
 	} else {
 		labels = m.config.Labels()
+		relations = m.config.Relations
 	}
 	labels.Sort()
-
-	relations := m.config.Relations.FindByLabels(labels)
 
 	hideLabels := m.config.HideLabels
 	hideLayers := m.config.HideLayers
 
-	switch tType {
-	case "label":
+	switch eType {
+	case config.TypeLabel:
 		hideLabels = true
 		hideLayers = true
 	}
 
 	tmpl := template.Must(template.New(v.Name).Funcs(output.Funcs(m.config)).Parse(ts))
 	tmplData := map[string]interface{}{
-		"TemplateType":  tType,
+		"TemplateType":  eType.String(),
 		"View":          v,
 		"Format":        m.config.Format(),
 		"DescPath":      relPath,

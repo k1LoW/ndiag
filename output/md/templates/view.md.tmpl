@@ -19,6 +19,9 @@
 ## {{ "Relations" | lookup }}
 
 {{- range $j, $rel := .Relations }}
+
+![relation]({{ diagpath "relation"  ($rel | id) $.Format }})
+
 {{ $rel.Desc }}
 <p align="right">
   [ <a href="{{ $.DescPath }}/{{ mdpath "_relation" ($rel | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
@@ -29,7 +32,9 @@
 {{- range $i, $c := $rel.Components }}
 | {{ $i }} | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |
 {{- end }}
-{{ end }}
+
+---
+{{- end }}
 
 {{- if not .HideLayers }}
 ## {{ "Layers" | lookup }}

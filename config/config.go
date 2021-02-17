@@ -240,10 +240,13 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 		}
 	}
 
-	// collect filtered components
+	// collect filtered cluster/nodes/components using components
 	for _, c := range cfg.Components() {
 		if len(allowLabels) == 0 || len(c.Labels.Subtract(allowLabels)) > 0 {
 			comIds.Set(c.Id(), c)
+			if c.Node != nil {
+				nIds.Set(c.Node.Id(), c.Node)
+			}
 			if c.Cluster != nil {
 				cIds.Set(c.Cluster.Id(), c.Cluster)
 			}
@@ -278,6 +281,70 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 		case e.Dst.Cluster != nil:
 			// cluster component
 			cIds.Set(e.Dst.Cluster.Id(), e.Dst.Cluster)
+		}
+	}
+
+	for _, k := range cIds.Keys() {
+		v, _ := cIds.Get(k)
+		c := v.(*Cluster)
+		if !clusters.Contains(c) {
+			clusters = append(clusters, c)
+		}
+	}
+
+	// prune cluster nodes
+	pruneClusters(clusters, nIds, comIds)
+
+	// global nodes
+	filteredNodes := []*Node{}
+	for _, n := range globalNodes {
+		_, ok := nIds.Get(n.Id())
+		if ok {
+			filteredComponents := []*Component{}
+			for _, c := range n.Components {
+				_, ok := comIds.Get(c.Id())
+				if ok {
+					filteredComponents = append(filteredComponents, c)
+				}
+			}
+			n.Components = filteredComponents
+			filteredNodes = append(filteredNodes, n)
+		}
+	}
+	globalNodes = filteredNodes
+
+	// global components
+	filteredComponents := []*Component{}
+	for _, c := range globalComponents {
+		_, ok := comIds.Get(c.Id())
+		if ok {
+			filteredComponents = append(filteredComponents, c)
+		}
+	}
+	globalComponents = filteredComponents
+
+	return clusters, globalNodes, globalComponents, filteredEdges, nil
+}
+
+func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes []*Node, globalComponents []*Component, relations Relations) (Clusters, []*Node, []*Component, []*Edge, error) {
+	filteredEdges := SplitRelations(relations)
+	nIds := orderedmap.NewOrderedMap()
+	cIds := orderedmap.NewOrderedMap()
+	comIds := orderedmap.NewOrderedMap()
+
+	// collect filtered cluster/nodes/components
+	for _, c := range cfg.Components() {
+		for _, r := range relations {
+			if _, err := r.Components.FindById(c.Id()); err != nil {
+				continue
+			}
+			comIds.Set(c.Id(), c)
+			if c.Node != nil {
+				nIds.Set(c.Node.Id(), c.Node)
+			}
+			if c.Cluster != nil {
+				cIds.Set(c.Cluster.Id(), c.Cluster)
+			}
 		}
 	}
 

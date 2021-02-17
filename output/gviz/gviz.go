@@ -32,9 +32,9 @@ func New(cfg *config.Config) *Gviz {
 	}
 }
 
-func (g *Gviz) OutputView(wr io.Writer, d *config.View) error {
+func (g *Gviz) OutputView(wr io.Writer, v *config.View) error {
 	buf := &bytes.Buffer{}
-	if err := g.dot.OutputView(buf, d); err != nil {
+	if err := g.dot.OutputView(buf, v); err != nil {
 		return err
 	}
 	return g.render(wr, buf.Bytes())
@@ -56,9 +56,17 @@ func (g *Gviz) OutputNode(wr io.Writer, n *config.Node) error {
 	return g.render(wr, buf.Bytes())
 }
 
-func (g *Gviz) OutputLabel(wr io.Writer, t *config.Label) error {
+func (g *Gviz) OutputLabel(wr io.Writer, l *config.Label) error {
 	buf := &bytes.Buffer{}
-	if err := g.dot.OutputLabel(buf, t); err != nil {
+	if err := g.dot.OutputLabel(buf, l); err != nil {
+		return err
+	}
+	return g.render(wr, buf.Bytes())
+}
+
+func (g *Gviz) OutputRelation(wr io.Writer, r *config.Relation) error {
+	buf := &bytes.Buffer{}
+	if err := g.dot.OutputRelation(buf, r); err != nil {
 		return err
 	}
 	return g.render(wr, buf.Bytes())

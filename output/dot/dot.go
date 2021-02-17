@@ -62,7 +62,7 @@ func (d *Dot) OutputLayer(wr io.Writer, l *config.Layer) error {
 	}
 	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(ts))
 
-	clusters, globalNodes, edges, err := d.config.BuildNestedClusters([]string{l.Name})
+	clusters, globalNodes, edges, err := d.config.BuildNestedClusters([]string{l.Id()})
 	if err != nil {
 		return err
 	}
@@ -179,7 +179,7 @@ func (d *Dot) OutputLabel(wr io.Writer, l *config.Label) error {
 	}
 
 	globalComponents := d.config.GlobalComponents()
-	clusters, globalNodes, globalComponents, edges, err = d.config.PruneClustersByLabels(clusters, globalNodes, globalComponents, edges, []string{l.Name})
+	clusters, globalNodes, globalComponents, edges, err = d.config.PruneClustersByLabels(clusters, globalNodes, globalComponents, edges, []string{l.Id()})
 	if err != nil {
 		return err
 	}
@@ -192,6 +192,43 @@ func (d *Dot) OutputLabel(wr io.Writer, l *config.Label) error {
 		"Edges":            edges,
 		"HideUnlinked":     false,
 		"HideRealNodes":    d.config.HideRealNodes,
+	}); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *Dot) OutputRelation(wr io.Writer, r *config.Relation) error {
+	ts, err := d.box.FindString("view.dot.tmpl")
+	if err != nil {
+		return err
+	}
+	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(ts))
+
+	clusters, globalNodes, _, err := d.config.BuildNestedClusters([]string{})
+	if err != nil {
+		return err
+	}
+
+	globalComponents := d.config.GlobalComponents()
+	clusters, globalNodes, globalComponents, edges, err := d.config.PruneClustersByRelations(clusters, globalNodes, globalComponents, config.Relations{r})
+	if err != nil {
+		return err
+	}
+
+	attrs := append(d.config.Graph.Attrs(), &config.Attr{
+		Key:   "rankdir",
+		Value: "LR",
+	})
+
+	if err := tmpl.Execute(wr, map[string]interface{}{
+		"GraphAttrs":       attrs,
+		"Clusters":         clusters,
+		"GlobalNodes":      globalNodes,
+		"GlobalComponents": globalComponents,
+		"Edges":            edges,
+		"HideUnlinked":     false,
+		"HideRealNodes":    true,
 	}); err != nil {
 		return err
 	}
