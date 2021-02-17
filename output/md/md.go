@@ -166,6 +166,7 @@ func (m *Md) outputView(wr io.Writer, v *config.View, eType config.ElementType) 
 
 	nodes := m.config.Nodes
 	labels := config.Labels{}
+	relations := config.Relations{}
 	if len(v.Labels) > 0 {
 		labels = config.Labels{}
 		for _, s := range v.Labels {
@@ -180,12 +181,13 @@ func (m *Md) outputView(wr io.Writer, v *config.View, eType config.ElementType) 
 		if err != nil {
 			return err
 		}
+
+		relations = m.config.Relations.FindByLabels(labels)
 	} else {
 		labels = m.config.Labels()
+		relations = m.config.Relations
 	}
 	labels.Sort()
-
-	relations := m.config.Relations.FindByLabels(labels)
 
 	hideLabels := m.config.HideLabels
 	hideLayers := m.config.HideLayers
