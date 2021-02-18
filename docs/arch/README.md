@@ -57,7 +57,7 @@ component id = `[node name]:[component name]`
 
 <p align="right">
   [ <a href="../ndiag.descriptions/_index.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ## Views

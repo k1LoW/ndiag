@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_layer-zone.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ## zone:platform
@@ -15,7 +15,7 @@
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_cluster-zone_platform.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ### Cluster components

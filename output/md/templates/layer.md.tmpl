@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="{{ .DescPath }}/{{ mdpath "_layer" ( .Layer | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
-<p>
+</p>
 
 {{ range $i, $c := .Clusters }}
 ## {{ $c | fullname }}
@@ -15,7 +15,7 @@
 
 <p align="right">
   [ <a href="{{ $.DescPath }}/{{ mdpath "_cluster" ($c | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
-<p>
+</p>
 
 {{ if ne (len $c.Components) 0 }}
 ### {{ "Cluster components" | lookup }}

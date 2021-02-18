@@ -7,7 +7,7 @@ Load balancer
 
 <p align="right">
   [ <a href="../../ndiag.descriptions/_node-lb.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 ## Components
 

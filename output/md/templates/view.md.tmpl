@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="{{ .DescPath }}/{{ mdpath (printf "_%s" .TemplateType) (.View | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
-<p>
+</p>
 
 ## {{ "Nodes" | lookup }}
 
@@ -20,20 +20,22 @@
 
 {{- range $j, $rel := .Relations }}
 
-#### {{ ($rel | id) }}
+##### `{{ ($rel | id) }}`
 
 ![relation]({{ diagpath "relation"  ($rel | id) $.Format }})
 
 {{ $rel.Desc }}
 <p align="right">
   [ <a href="{{ $.DescPath }}/{{ mdpath "_relation" ($rel | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
-<p>
+</p>
 
 | # | {{ "Component" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- | --- |
 {{- range $i, $c := $rel.Components }}
 | {{ $i }} | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |
 {{- end }}
+
+---
 
 {{- end }}
 

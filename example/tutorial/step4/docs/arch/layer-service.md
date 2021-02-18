@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="../../ndiag.descriptions/_layer-service.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ## Service:Payment
@@ -15,7 +15,7 @@
 
 <p align="right">
   [ <a href="../../ndiag.descriptions/_cluster-service_payment.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ### Cluster components

@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_index.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ## Views

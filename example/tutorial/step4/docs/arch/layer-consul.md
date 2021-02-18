@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="../../ndiag.descriptions/_layer-consul.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ## Consul:dc1
@@ -15,7 +15,7 @@
 
 <p align="right">
   [ <a href="../../ndiag.descriptions/_cluster-consul_dc1.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ### Nodes

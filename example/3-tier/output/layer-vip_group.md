@@ -7,7 +7,7 @@ A group of virtual IP and nodes/components to handle it.
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_layer-vip_group.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ## vip_group:lb
@@ -16,7 +16,7 @@ A group of virtual IP and nodes/components to handle it.
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_cluster-vip_group_lb.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ### Cluster components

@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="../ndiag.descriptions.ja/_node-input_files.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 ## Components
 

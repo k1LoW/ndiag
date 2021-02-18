@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_view-overview.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 ## Nodes
 
@@ -17,14 +17,14 @@
 
 ## Relations
 
-#### browser-3bb13e8
+##### `browser-3bb13e8`
 
 ![relation](relation-browser-3bb13e8.svg)
 
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_relation-browser-3bb13e8.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 | # | Component | Description |
 | --- | --- | --- |
@@ -32,28 +32,32 @@
 | 1 | cloud dns |  <a href="../input/ndiag.descriptions/_component-cloud_dns.md">:pencil2:</a> |
 | 2 | zone:platform:cloud load balancing |  <a href="../input/ndiag.descriptions/_component-zone_platform_cloud_load_balancing.md">:pencil2:</a> |
 
-#### zone:platform:cloud load balancing-55e948d
+---
+
+##### `zone:platform:cloud load balancing-55e948d`
 
 ![relation](relation-zone_platform_cloud_load_balancing-55e948d.svg)
 
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_relation-zone_platform_cloud_load_balancing-55e948d.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 | # | Component | Description |
 | --- | --- | --- |
 | 0 | zone:platform:cloud load balancing |  <a href="../input/ndiag.descriptions/_component-zone_platform_cloud_load_balancing.md">:pencil2:</a> |
 | 1 | service instance:compute engine |  <a href="../input/ndiag.descriptions/_component-service_instance_compute_engine.md">:pencil2:</a> |
 
-#### service instance:compute engine-2f9d9af
+---
+
+##### `service instance:compute engine-2f9d9af`
 
 ![relation](relation-service_instance_compute_engine-2f9d9af.svg)
 
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_relation-service_instance_compute_engine-2f9d9af.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 | # | Component | Description |
 | --- | --- | --- |
@@ -61,19 +65,23 @@
 | 1 | heartbeat and snapshot system:compute engine |  <a href="../input/ndiag.descriptions/_component-heartbeat_and_snapshot_system_compute_engine.md">:pencil2:</a> |
 | 2 | service instance:compute engine |  <a href="../input/ndiag.descriptions/_component-service_instance_compute_engine.md">:pencil2:</a> |
 
-#### service instance:compute engine-ee4a537
+---
+
+##### `service instance:compute engine-ee4a537`
 
 ![relation](relation-service_instance_compute_engine-ee4a537.svg)
 
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_relation-service_instance_compute_engine-ee4a537.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 | # | Component | Description |
 | --- | --- | --- |
 | 0 | service instance:compute engine |  <a href="../input/ndiag.descriptions/_component-service_instance_compute_engine.md">:pencil2:</a> |
 | 1 | zone:platform:persistent disk snapshot |  <a href="../input/ndiag.descriptions/_component-zone_platform_persistent_disk_snapshot.md">:pencil2:</a> |
+
+---
 ## Layers
 
 | Name | Description |

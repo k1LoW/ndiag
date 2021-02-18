@@ -7,7 +7,7 @@ See https://github.com/kubernetes/community/tree/master/icons#usage-example
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_index.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ## Views

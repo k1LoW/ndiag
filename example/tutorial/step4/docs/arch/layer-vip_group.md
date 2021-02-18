@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="../../ndiag.descriptions/_layer-vip_group.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ## vip_group:lb
@@ -15,7 +15,7 @@
 
 <p align="right">
   [ <a href="../../ndiag.descriptions/_cluster-vip_group_lb.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ### Cluster components

@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_label-quota_c.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 ## Nodes
 
