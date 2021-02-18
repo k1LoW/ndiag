@@ -1,3 +1,12 @@
+## [v0.12.0](https://github.com/k1LoW/ndiag/compare/v0.11.0...v0.12.0) (2021-02-19)
+
+* Add Relation id for anchor link [#79](https://github.com/k1LoW/ndiag/pull/79) ([k1LoW](https://github.com/k1LoW))
+* Add Relation diagrams [#78](https://github.com/k1LoW/ndiag/pull/78) ([k1LoW](https://github.com/k1LoW))
+* Fix README.md output [#77](https://github.com/k1LoW/ndiag/pull/77) ([k1LoW](https://github.com/k1LoW))
+* Fix Config.checkUnique() [#76](https://github.com/k1LoW/ndiag/pull/76) ([k1LoW](https://github.com/k1LoW))
+* Add command `ndiag list descs` [#75](https://github.com/k1LoW/ndiag/pull/75) ([k1LoW](https://github.com/k1LoW))
+* Fix README.md output [#74](https://github.com/k1LoW/ndiag/pull/74) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.11.0](https://github.com/k1LoW/ndiag/compare/v0.10.1...v0.11.0) (2021-02-15)
 
 * Expand client timeout [#73](https://github.com/k1LoW/ndiag/pull/73) ([k1LoW](https://github.com/k1LoW))
