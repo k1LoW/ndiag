@@ -20,6 +20,8 @@
 
 {{- range $j, $rel := .Relations }}
 
+#### {{ ($rel | id) }}
+
 ![relation]({{ diagpath "relation"  ($rel | id) $.Format }})
 
 {{ $rel.Desc }}
@@ -33,7 +35,6 @@
 | {{ $i }} | {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> |
 {{- end }}
 
----
 {{- end }}
 
 {{- if not .HideLayers }}
