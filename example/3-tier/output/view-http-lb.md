@@ -17,6 +17,8 @@
 
 ## Relations
 
+#### internet-4046636
+
 ![relation](relation-internet-4046636.svg)
 
 
@@ -29,7 +31,7 @@
 | 0 | internet |  <a href="../input/ndiag.descriptions/_component-internet.md">:pencil2:</a> |
 | 1 | vip_group:lb:vip |  <a href="../input/ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
 
----
+#### vip_group:lb:vip-f0e7297
 
 ![relation](relation-vip_group_lb_vip-f0e7297.svg)
 
@@ -43,7 +45,7 @@
 | 0 | vip_group:lb:vip |  <a href="../input/ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
 | 1 | lb:nginx |  <a href="../input/ndiag.descriptions/_component-lb_nginx.md">:pencil2:</a> |
 
----
+#### lb:nginx-514d407
 
 ![relation](relation-lb_nginx-514d407.svg)
 
@@ -58,7 +60,7 @@
 | 1 | app:nginx |  <a href="../input/ndiag.descriptions/_component-app_nginx.md">:pencil2:</a> |
 | 2 | app:rails app |  <a href="../input/ndiag.descriptions/_component-app_rails_app.md">:pencil2:</a> |
 
----
+#### lb:keepalived-afc5653
 
 ![relation](relation-lb_keepalived-afc5653.svg)
 
@@ -71,8 +73,6 @@
 | --- | --- | --- |
 | 0 | lb:keepalived |  <a href="../input/ndiag.descriptions/_component-lb_keepalived.md">:pencil2:</a> |
 | 1 | vip_group:lb:vip |  <a href="../input/ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
-
----
 ## Layers
 
 | Name | Description |
