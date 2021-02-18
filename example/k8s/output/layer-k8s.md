@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_layer-k8s.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ## k8s:my-cluster
@@ -15,7 +15,7 @@
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_cluster-k8s_my-cluster.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ### Nodes

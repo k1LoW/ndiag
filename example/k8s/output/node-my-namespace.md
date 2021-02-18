@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_node-my-namespace.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 ## Components
 

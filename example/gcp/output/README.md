@@ -7,7 +7,7 @@ See https://docs.google.com/presentation/d/1vjm5YdmOH5LrubFhHf1vlqW2O9Z2UqdWA8bi
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_index.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ## Views

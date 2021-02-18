@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_layer-instance-group.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ## instance-group:a
@@ -15,7 +15,7 @@
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_cluster-instance-group_a.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ### Nodes
@@ -29,7 +29,7 @@
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_cluster-instance-group_b.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 
 ### Nodes

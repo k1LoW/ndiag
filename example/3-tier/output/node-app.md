@@ -7,7 +7,7 @@ Application
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_node-app.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 ## Components
 

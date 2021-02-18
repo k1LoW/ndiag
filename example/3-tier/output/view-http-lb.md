@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_view-http-lb.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 ## Nodes
 
@@ -17,12 +17,14 @@
 
 ## Relations
 
+##### `internet-4046636`
+
 ![relation](relation-internet-4046636.svg)
 
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_relation-internet-4046636.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 | # | Component | Description |
 | --- | --- | --- |
@@ -31,12 +33,14 @@
 
 ---
 
+##### `vip_group:lb:vip-f0e7297`
+
 ![relation](relation-vip_group_lb_vip-f0e7297.svg)
 
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_relation-vip_group_lb_vip-f0e7297.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 | # | Component | Description |
 | --- | --- | --- |
@@ -45,12 +49,14 @@
 
 ---
 
+##### `lb:nginx-514d407`
+
 ![relation](relation-lb_nginx-514d407.svg)
 
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_relation-lb_nginx-514d407.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 | # | Component | Description |
 | --- | --- | --- |
@@ -60,12 +66,14 @@
 
 ---
 
+##### `lb:keepalived-afc5653`
+
 ![relation](relation-lb_keepalived-afc5653.svg)
 
 
 <p align="right">
   [ <a href="../input/ndiag.descriptions/_relation-lb_keepalived-afc5653.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 | # | Component | Description |
 | --- | --- | --- |

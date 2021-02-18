@@ -6,7 +6,7 @@
 
 <p align="right">
   [ <a href="../../ndiag.descriptions/_label-lang_ruby.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 ## Nodes
 

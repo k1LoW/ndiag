@@ -7,7 +7,7 @@ HTTP request flow
 
 <p align="right">
   [ <a href="../../ndiag.descriptions/_label-http.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 ## Nodes
 
@@ -18,12 +18,14 @@ HTTP request flow
 
 ## Relations
 
+##### `internet-4046636`
+
 ![relation](relation-internet-4046636.svg)
 
 
 <p align="right">
   [ <a href="../../ndiag.descriptions/_relation-internet-4046636.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 | # | Component | Description |
 | --- | --- | --- |
@@ -32,12 +34,14 @@ HTTP request flow
 
 ---
 
+##### `vip_group:lb:vip-f0e7297`
+
 ![relation](relation-vip_group_lb_vip-f0e7297.svg)
 
 
 <p align="right">
   [ <a href="../../ndiag.descriptions/_relation-vip_group_lb_vip-f0e7297.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 | # | Component | Description |
 | --- | --- | --- |
@@ -46,12 +50,14 @@ HTTP request flow
 
 ---
 
+##### `lb:nginx-2750eb0`
+
 ![relation](relation-lb_nginx-2750eb0.svg)
 
 
 <p align="right">
   [ <a href="../../ndiag.descriptions/_relation-lb_nginx-2750eb0.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 | # | Component | Description |
 | --- | --- | --- |
@@ -61,12 +67,14 @@ HTTP request flow
 
 ---
 
+##### `lb:keepalived-afc5653`
+
 ![relation](relation-lb_keepalived-afc5653.svg)
 
 
 <p align="right">
   [ <a href="../../ndiag.descriptions/_relation-lb_keepalived-afc5653.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 | # | Component | Description |
 | --- | --- | --- |

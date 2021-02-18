@@ -7,7 +7,7 @@
 
 <p align="right">
   [ <a href="../ndiag.descriptions.ja/_node-ndiag.md">:pencil2: Edit description</a> ]
-<p>
+</p>
 
 ## Components
 
