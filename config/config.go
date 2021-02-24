@@ -638,7 +638,7 @@ func (cfg *Config) FindComponent(s string) (*Component, error) {
 
 func (cfg *Config) FindLabel(name string) (*Label, error) {
 	for _, l := range cfg.Labels() {
-		if l.Name == name {
+		if l.Id() == strings.ToLower(name) {
 			return l, nil
 		}
 	}
@@ -647,7 +647,7 @@ func (cfg *Config) FindLabel(name string) (*Label, error) {
 
 func (cfg *Config) FindOrCreateLabel(name string) *Label {
 	for _, l := range cfg.Labels() {
-		if l.Name == name {
+		if l.Id() == strings.ToLower(name) {
 			return l
 		}
 	}
