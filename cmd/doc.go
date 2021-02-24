@@ -108,8 +108,10 @@ var docCmd = &cobra.Command{
 					return err
 				}
 				if err := o.OutputView(file, v); err != nil {
+					_ = file.Close()
 					return err
 				}
+				_ = file.Close()
 			}
 			// draw view
 			diag := gviz.New(cfg)
@@ -150,8 +152,10 @@ var docCmd = &cobra.Command{
 					return err
 				}
 				if err := o.OutputLayer(file, l); err != nil {
+					_ = file.Close()
 					return err
 				}
+				_ = file.Close()
 
 				// draw view
 				diag := gviz.New(cfg)
@@ -185,8 +189,10 @@ var docCmd = &cobra.Command{
 				return err
 			}
 			if err := o.OutputNode(file, n); err != nil {
+				_ = file.Close()
 				return err
 			}
+			_ = file.Close()
 
 			// draw view
 			diag := gviz.New(cfg)
@@ -219,8 +225,10 @@ var docCmd = &cobra.Command{
 					return err
 				}
 				if err := o.OutputLabel(file, rel); err != nil {
+					_ = file.Close()
 					return err
 				}
+				_ = file.Close()
 
 				// draw view
 				diag := gviz.New(cfg)
@@ -265,8 +273,10 @@ var docCmd = &cobra.Command{
 			return err
 		}
 		if err := o.OutputIndex(file); err != nil {
+			_ = file.Close()
 			return err
 		}
+		_ = file.Close()
 
 		return nil
 	},
