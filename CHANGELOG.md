@@ -1,3 +1,9 @@
+## [v0.12.1](https://github.com/k1LoW/ndiag/compare/v0.12.0...v0.12.1) (2021-02-26)
+
+* Fix md file path link [#82](https://github.com/k1LoW/ndiag/pull/82) ([k1LoW](https://github.com/k1LoW))
+* Close md file fds [#81](https://github.com/k1LoW/ndiag/pull/81) ([k1LoW](https://github.com/k1LoW))
+* Label id is in-casesensitive [#80](https://github.com/k1LoW/ndiag/pull/80) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.12.0](https://github.com/k1LoW/ndiag/compare/v0.11.0...v0.12.0) (2021-02-19)
 
 * Add Relation id for anchor link [#79](https://github.com/k1LoW/ndiag/pull/79) ([k1LoW](https://github.com/k1LoW))
