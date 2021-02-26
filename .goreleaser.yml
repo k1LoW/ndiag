@@ -57,7 +57,7 @@ changelog:
 brews:
 -
   name: ndiag
-  github:
+  tap:
     owner: k1LoW
     name: homebrew-tap
   commit_author:
@@ -65,6 +65,7 @@ brews:
     email: k1lowxb@gmail.com
   homepage: https://github.com/k1LoW/ndiag
   description: 'ndiag is a high-level architecture diagramming/documentation tool.'
+  license: MIT
   install: |
     system './ndiag', 'completion', 'bash', '--out', 'ndiag.bash'
     system './ndiag', 'completion', 'zsh', '--out', 'ndiag.zsh'
@@ -84,5 +85,6 @@ nfpms:
     formats:
       - deb
       - rpm
+      - apk
     bindir: /usr/bin
     epoch: 1
