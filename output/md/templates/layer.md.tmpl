@@ -1,11 +1,11 @@
 # {{ .Layer.Name }}
 
-![view]({{ diagpath "layer" .Layer.Name .Format }})
+![view]({{ diagpath "layer" .Layer .Format }})
 
 {{ .Layer.Desc }}
 
 <p align="right">
-  [ <a href="{{ .DescPath }}/{{ mdpath "_layer" ( .Layer | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
+  [ <a href="{{ .DescPath }}/{{ mdpath "_layer" .Layer }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
 </p>
 
 {{ range $i, $c := .Clusters }}
@@ -14,7 +14,7 @@
 {{ $c.Desc }}
 
 <p align="right">
-  [ <a href="{{ $.DescPath }}/{{ mdpath "_cluster" ($c | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
+  [ <a href="{{ $.DescPath }}/{{ mdpath "_cluster" $c }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
 </p>
 
 {{ if ne (len $c.Components) 0 }}
@@ -23,7 +23,7 @@
 | {{ "Name" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- |
 {{- range $i, $cc := $c.Components }}
-| {{ $cc | fullname }} | {{ if ne $cc.Desc "" }}{{ $cc.Desc | trim | nl2br }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_component" ($cc | id)}}">:pencil2:</a>{{ end }} |
+| {{ $cc | fullname }} | {{ if ne $cc.Desc "" }}{{ $cc.Desc | trim | nl2br }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_component" $cc }}">:pencil2:</a>{{ end }} |
 {{- end -}}
 {{- end }}
 ### {{ "Nodes" | lookup }}
@@ -31,7 +31,7 @@
 | {{ "Name" | lookup }}{{ if not $.HideRealNodes }} ({{ "node count" | lookup }}){{ end }} | {{ "Description" | lookup }} |
 | --- | --- |
 {{- range $i, $n := $c.Nodes }}
-| [{{ $n | fullname }}]({{ mdpath "node" ($n | id) }}){{ if not $.HideRealNodes }} ({{ len $n.RealNodes }}){{ end }} | {{ if ne $n.Desc "" }}{{ $n.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_node" ($n | id)}}">:pencil2:</a>{{ end }} |
+| [{{ $n | fullname }}]({{ mdpath "node" $n }}){{ if not $.HideRealNodes }} ({{ len $n.RealNodes }}){{ end }} | {{ if ne $n.Desc "" }}{{ $n.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_node" $n }}">:pencil2:</a>{{ end }} |
 {{- end }}
 
 {{- end}}

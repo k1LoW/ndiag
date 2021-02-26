@@ -107,11 +107,11 @@ func Funcs(cfg *config.Config) map[string]interface{} {
 				return fmt.Sprintf("%s ...", strings.TrimLeft(splitted[0], "# "))
 			}
 		},
-		"diagpath": func(prefix, id, format string) string {
-			return config.MakeDiagramFilename(prefix, id, format)
+		"diagpath": func(prefix string, e config.Element, format string) string {
+			return config.MakeDiagramFilename(prefix, e.Id(), format)
 		},
-		"mdpath": func(prefix, id string) string {
-			return config.MakeMdFilename(prefix, id)
+		"mdpath": func(prefix string, e config.Element) string {
+			return config.MakeMdFilename(prefix, e.Id())
 		},
 		"componentlink": componentLink,
 		"rellink":       relLink,
