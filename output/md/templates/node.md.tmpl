@@ -1,11 +1,11 @@
 # {{ .Node | fullname }}
 
-![view]({{ diagpath "node" (.Node | id) .Format }})
+![view]({{ diagpath "node" .Node .Format }})
 
 {{ .Node.Desc }}
 
 <p align="right">
-  [ <a href="{{ .DescPath }}/{{ mdpath "_node" (.Node | id) }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
+  [ <a href="{{ .DescPath }}/{{ mdpath "_node" .Node }}">:pencil2: {{ "Edit description" | lookup }}</a> ]
 </p>
 
 ## {{ "Components" | lookup }}
@@ -13,15 +13,15 @@
 | {{ "Name" | lookup }} | {{ "Description" | lookup }} | {{ "From" | lookup }} ({{ "Relation" | lookup }}) | {{ "To" | lookup }} ({{ "Relation" | lookup }}) |
 | --- | --- | --- | --- |
 {{- range $i, $c := .Components }}
-| {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" ($c | id) }}">:pencil2:</a> | {{ fromlinks $c.Edges $c }} | {{ tolinks $c.Edges $c }} |
+| {{ $c | id }} | {{ $c.Desc | trim | nl2br }} <a href="{{ $.DescPath }}/{{ mdpath "_component" $c }}">:pencil2:</a> | {{ fromlinks $c.Edges $c }} | {{ tolinks $c.Edges $c }} |
 {{- end }}
 {{ if not .HideLabels }}
 ## {{ "Labels" | lookup }}
 
 | {{ "Name" | lookup }} | {{ "Description" | lookup }} |
 | --- | --- |
-{{- range $i, $t := .Labels }}
-| [{{ $t | fullname }}]({{ mdpath "label" ($t | id) }}) | {{ if ne $t.Desc "" }}{{ $t.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_label" ($t | id)}}">:pencil2:</a>{{ end }} |
+{{- range $i, $l := .Labels }}
+| [{{ $l | fullname }}]({{ mdpath "label" $l }}) | {{ if ne $l.Desc "" }}{{ $l.Desc | summary }}{{ else }}<a href="{{ $.DescPath }}/{{ mdpath "_label" $l }}">:pencil2:</a>{{ end }} |
 {{- end }}
 {{- end }}
 {{- if not .HideRealNodes }}
