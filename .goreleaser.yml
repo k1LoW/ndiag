@@ -3,46 +3,46 @@ before:
     - go mod download
     - go mod tidy
 builds:
--
-  id: ndiag-darwin
-  hooks:
-    pre: packr2
-    post: packr2 clean
-  ldflags:
-    - -s -w -X github.com/k1LoW/ndiag.version={{.Version}} -X github.com/k1LoW/ndiag.commit={{.FullCommit}} -X github.com/k1LoW/ndiag.date={{.Date}} -X github.com/k1LoW/ndiag/version.Version={{.Version}}
-  env:
-    - CGO_ENABLED=1
-  goos:
-    - darwin
-  goarch:
-    - amd64
--
-  id: ndiag-linux
-  hooks:
-    pre: packr2
-    post: packr2 clean
-  ldflags:
-    - -s -w -X github.com/k1LoW/ndiag.version={{.Version}} -X github.com/k1LoW/ndiag.commit={{.FullCommit}} -X github.com/k1LoW/ndiag.date={{.Date}} -X github.com/k1LoW/ndiag/version.Version={{.Version}}
-    - -linkmode external
-    - -extldflags '-static'
-  env:
-    - CGO_ENABLED=1
-    - CC=/usr/local/bin/x86_64-linux-musl-cc # brew install FiloSottile/musl-cross/musl-cross
-  goos:
-    - linux
-  goarch:
-    - amd64
+  -
+    id: ndiag-darwin
+    hooks:
+      pre: packr2
+      post: packr2 clean
+    ldflags:
+      - -s -w -X github.com/k1LoW/ndiag.version={{.Version}} -X github.com/k1LoW/ndiag.commit={{.FullCommit}} -X github.com/k1LoW/ndiag.date={{.Date}} -X github.com/k1LoW/ndiag/version.Version={{.Version}}
+    env:
+      - CGO_ENABLED=1
+    goos:
+      - darwin
+    goarch:
+      - amd64
+  -
+    id: ndiag-linux
+    hooks:
+      pre: packr2
+      post: packr2 clean
+    ldflags:
+      - -s -w -X github.com/k1LoW/ndiag.version={{.Version}} -X github.com/k1LoW/ndiag.commit={{.FullCommit}} -X github.com/k1LoW/ndiag.date={{.Date}} -X github.com/k1LoW/ndiag/version.Version={{.Version}}
+      - -linkmode external
+      - -extldflags '-static'
+    env:
+      - CGO_ENABLED=1
+      - CC=/usr/local/bin/x86_64-linux-musl-cc # brew install FiloSottile/musl-cross/musl-cross
+    goos:
+      - linux
+    goarch:
+      - amd64
 archives:
--
-  id: ndiag-archive
-  name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
-  format_overrides:
-    - goos: darwin
-      format: zip
-  files:
-    - CREDITS
-    - README.md
-    - CHANGELOG.md
+  -
+    id: ndiag-archive
+    name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    format_overrides:
+      - goos: darwin
+        format: zip
+    files:
+      - CREDITS
+      - README.md
+      - CHANGELOG.md
 checksum:
   name_template: 'checksums.txt'
 snapshot:
@@ -54,30 +54,45 @@ changelog:
     exclude:
     - '^docs:'
     - '^test:'
+dockers:
+  -
+    goos: linux
+    goarch: amd64
+    image_templates:
+      - 'ghcr.io/k1low/ndiag:v{{ .Version }}'
+      - 'ghcr.io/k1low/ndiag:latest'
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+    extra_files:
+      - scripts/entrypoint.sh
 brews:
--
-  name: ndiag
-  tap:
-    owner: k1LoW
-    name: homebrew-tap
-  commit_author:
-    name: k1LoW
-    email: k1lowxb@gmail.com
-  homepage: https://github.com/k1LoW/ndiag
-  description: 'ndiag is a high-level architecture diagramming/documentation tool.'
-  license: MIT
-  install: |
-    system './ndiag', 'completion', 'bash', '--out', 'ndiag.bash'
-    system './ndiag', 'completion', 'zsh', '--out', 'ndiag.zsh'
-    bin.install 'ndiag'
-    bash_completion.install 'ndiag.bash' => 'ndiag'
-    zsh_completion.install 'ndiag.zsh' => '_ndiag'
+  -
+    name: ndiag
+    tap:
+      owner: k1LoW
+      name: homebrew-tap
+    commit_author:
+      name: k1LoW
+      email: k1lowxb@gmail.com
+    homepage: https://github.com/k1LoW/ndiag
+    description: 'ndiag is a high-level architecture diagramming/documentation tool.'
+    license: MIT
+    install: |
+      system './ndiag', 'completion', 'bash', '--out', 'ndiag.bash'
+      system './ndiag', 'completion', 'zsh', '--out', 'ndiag.zsh'
+      bin.install 'ndiag'
+      bash_completion.install 'ndiag.bash' => 'ndiag'
+      zsh_completion.install 'ndiag.zsh' => '_ndiag'
 nfpms:
   -
     id: ndiag-nfpms
     file_name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
     builds:
-    - ndiag-linux
+      - ndiag-linux
     homepage: https://github.com/k1LoW/ndiag
     maintainer: Ken'ichiro Oyama <k1lowxb@gmail.com>
     description: ndiag is a high-level architecture diagramming/documentation tool.

@@ -121,3 +121,9 @@ Download binary from [releases page](https://github.com/k1LoW/ndiag/releases)
 ```console
 $ go get github.com/k1LoW/ndiag
 ```
+
+**docker:**
+
+```console
+$ docker pull ghcr.io/k1low/ndiag:latest
+```
