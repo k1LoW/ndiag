@@ -19,7 +19,6 @@ require (
 	github.com/nfnt/resize v0.0.0-20160724205520-891127d8d1b5
 	github.com/olekukonko/tablewriter v0.0.4
 	github.com/pasztorpisti/qs v0.0.0-20171216220353-8d6c33ee906c
-	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.1.1
 	github.com/stoewer/go-strcase v1.2.0
 )
