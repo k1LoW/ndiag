@@ -1,3 +1,8 @@
+## [v0.13.0](https://github.com/k1LoW/ndiag/compare/v0.12.1...v0.13.0) (2021-03-04)
+
+* Add dockers: setting to .goreleaser.yml [#84](https://github.com/k1LoW/ndiag/pull/84) ([k1LoW](https://github.com/k1LoW))
+* Add command `ndiag coverage` [#83](https://github.com/k1LoW/ndiag/pull/83) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.12.1](https://github.com/k1LoW/ndiag/compare/v0.12.0...v0.12.1) (2021-02-26)
 
 * Fix md file path link [#82](https://github.com/k1LoW/ndiag/pull/82) ([k1LoW](https://github.com/k1LoW))
