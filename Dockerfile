@@ -1,6 +1,6 @@
-FROM golang:1.16-alpine
+FROM alpine:3.13
 
-RUN apk add --no-cache bash
+RUN apk add --no-cache bash curl git
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD [ "-h" ]
