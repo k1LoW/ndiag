@@ -1,3 +1,7 @@
+## [v0.13.1](https://github.com/k1LoW/ndiag/compare/v0.13.0...v0.13.1) (2021-03-05)
+
+* Update Dockerfile [#85](https://github.com/k1LoW/ndiag/pull/85) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.13.0](https://github.com/k1LoW/ndiag/compare/v0.12.1...v0.13.0) (2021-03-04)
 
 * Add dockers: setting to .goreleaser.yml [#84](https://github.com/k1LoW/ndiag/pull/84) ([k1LoW](https://github.com/k1LoW))
