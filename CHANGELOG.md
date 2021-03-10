@@ -1,3 +1,7 @@
+## [v0.13.2](https://github.com/k1LoW/ndiag/compare/v0.13.1...v0.13.2) (2021-03-10)
+
+* Fix coverage [#86](https://github.com/k1LoW/ndiag/pull/86) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.13.1](https://github.com/k1LoW/ndiag/compare/v0.13.0...v0.13.1) (2021-03-05)
 
 * Update Dockerfile [#85](https://github.com/k1LoW/ndiag/pull/85) ([k1LoW](https://github.com/k1LoW))
