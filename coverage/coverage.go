@@ -10,10 +10,10 @@ type Coverage struct {
 	Name       string
 	Coverage   float64
 	Views      *CoverageByElement `json:"views,omitempty"`
-	Nodes      *CoverageByElement
-	Components *CoverageByElement
+	Nodes      *CoverageByElement `json:"nodes,omitempty"`
+	Components *CoverageByElement `json:"components,omitempty"`
 	Relations  *CoverageByElement `json:"relations,omitempty"`
-	Layers     *CoverageByElement
+	Layers     *CoverageByElement `json:"layers,omitempty"`
 	Labels     *CoverageByElement `json:"labels,omitempty"`
 	Covered    int
 	Total      int
@@ -48,9 +48,13 @@ func Measure(cfg *config.Config) *Coverage {
 				cover.Views.Covered += 1
 			}
 		}
-		cover.Views.Coverage = round(float64(cover.Views.Covered) / float64(cover.Views.Total) * 100)
-		cover.Total += cover.Views.Total
-		cover.Covered += cover.Views.Covered
+		if cover.Views.Total > 0 {
+			cover.Views.Coverage = round(float64(cover.Views.Covered) / float64(cover.Views.Total) * 100)
+			cover.Total += cover.Views.Total
+			cover.Covered += cover.Views.Covered
+		} else {
+			cover.Views = nil
+		}
 	}
 
 	// nodes
@@ -60,9 +64,13 @@ func Measure(cfg *config.Config) *Coverage {
 			cover.Nodes.Covered += 1
 		}
 	}
-	cover.Nodes.Coverage = round(float64(cover.Nodes.Covered) / float64(cover.Nodes.Total) * 100)
-	cover.Total += cover.Nodes.Total
-	cover.Covered += cover.Nodes.Covered
+	if cover.Nodes.Total > 0 {
+		cover.Nodes.Coverage = round(float64(cover.Nodes.Covered) / float64(cover.Nodes.Total) * 100)
+		cover.Total += cover.Nodes.Total
+		cover.Covered += cover.Nodes.Covered
+	} else {
+		cover.Nodes = nil
+	}
 
 	// components
 	for _, c := range cfg.Components() {
@@ -71,9 +79,13 @@ func Measure(cfg *config.Config) *Coverage {
 			cover.Components.Covered += 1
 		}
 	}
-	cover.Components.Coverage = round(float64(cover.Components.Covered) / float64(cover.Components.Total) * 100)
-	cover.Total += cover.Components.Total
-	cover.Covered += cover.Views.Covered
+	if cover.Components.Total > 0 {
+		cover.Components.Coverage = round(float64(cover.Components.Covered) / float64(cover.Components.Total) * 100)
+		cover.Total += cover.Components.Total
+		cover.Covered += cover.Views.Covered
+	} else {
+		cover.Components = nil
+	}
 
 	// relations
 	if !(cfg.HideViews && cfg.HideLabels) {
@@ -84,9 +96,13 @@ func Measure(cfg *config.Config) *Coverage {
 				cover.Relations.Covered += 1
 			}
 		}
-		cover.Components.Coverage = round(float64(cover.Components.Covered) / float64(cover.Components.Total) * 100)
-		cover.Total += cover.Components.Total
-		cover.Covered += cover.Components.Covered
+		if cover.Relations.Total > 0 {
+			cover.Relations.Coverage = round(float64(cover.Relations.Covered) / float64(cover.Relations.Total) * 100)
+			cover.Total += cover.Relations.Total
+			cover.Covered += cover.Relations.Covered
+		} else {
+			cover.Relations = nil
+		}
 	}
 
 	// layers
@@ -96,9 +112,13 @@ func Measure(cfg *config.Config) *Coverage {
 			cover.Layers.Covered += 1
 		}
 	}
-	cover.Layers.Coverage = round(float64(cover.Layers.Covered) / float64(cover.Layers.Total) * 100)
-	cover.Total += cover.Layers.Total
-	cover.Covered += cover.Layers.Covered
+	if cover.Layers.Total > 0 {
+		cover.Layers.Coverage = round(float64(cover.Layers.Covered) / float64(cover.Layers.Total) * 100)
+		cover.Total += cover.Layers.Total
+		cover.Covered += cover.Layers.Covered
+	} else {
+		cover.Layers = nil
+	}
 
 	// labels
 	if !cfg.HideLabels {
@@ -109,9 +129,13 @@ func Measure(cfg *config.Config) *Coverage {
 				cover.Labels.Covered += 1
 			}
 		}
-		cover.Labels.Coverage = round(float64(cover.Labels.Covered) / float64(cover.Labels.Total) * 100)
-		cover.Total += cover.Labels.Total
-		cover.Covered += cover.Labels.Covered
+		if cover.Labels.Total > 0 {
+			cover.Labels.Coverage = round(float64(cover.Labels.Covered) / float64(cover.Labels.Total) * 100)
+			cover.Total += cover.Labels.Total
+			cover.Covered += cover.Labels.Covered
+		} else {
+			cover.Labels = nil
+		}
 	}
 
 	cover.Coverage = round(float64(cover.Covered) / float64(cover.Total) * 100)
