@@ -127,3 +127,13 @@ $ go get github.com/k1LoW/ndiag
 ```console
 $ docker pull ghcr.io/k1low/ndiag:latest
 ```
+
+**temporary:**
+
+``` console
+$ source <(curl https://git.io/ndiag)
+```
+
+``` console
+$ curl -sL https://git.io/ndiag > /tmp/ndiag.tmp && . /tmp/ndiag.tmp
+```
