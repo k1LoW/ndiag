@@ -80,13 +80,8 @@ View the document on GitHub.
 
 ## Tutorial
 
-- [English](docs/tutorial.md) :construction:
-- [日本語](docs/tutorial.ja.md) :construction:
-
-## Architecture
-
-- [English](docs/arch/README.md) :construction:
-- [日本語](docs/arch.ja/README.md) :construction:
+- [English](docs/tutorial.md)
+- [日本語](docs/tutorial.ja.md)
 
 ## Install
 
