@@ -465,3 +465,86 @@ func (cfg *Config) buildColors() error {
 	}
 	return nil
 }
+
+const maskedDesc = "\\*\\*\\*\\*\\*\\*\\*\\*\\*\\*."
+
+func (cfg *Config) HideDetails() error {
+
+	// labels
+	labelMap := map[string]string{}
+	for i, l := range cfg.labels {
+		n := fmt.Sprintf("label%d", i)
+		labelMap[l.Name] = n
+		l.Name = n
+		if l.Desc != "" {
+			l.Desc = maskedDesc
+		}
+	}
+
+	// layers
+	layerMap := map[string]string{}
+	for i, l := range cfg.Layers() {
+		n := fmt.Sprintf("layer%d", i)
+		layerMap[l.Name] = n
+		l.Name = n
+		if l.Desc != "" {
+			l.Desc = maskedDesc
+		}
+	}
+
+	// views
+	for i, v := range cfg.Views {
+		v.Name = fmt.Sprintf("view%d", i)
+		if v.Desc != "" {
+			v.Desc = maskedDesc
+		}
+		for i, l := range v.Labels {
+			ll, ok := labelMap[l]
+			if !ok {
+				return fmt.Errorf("label not found: %s", ll)
+			}
+			v.Labels[i] = ll
+		}
+		for i, l := range v.Layers {
+			ll, ok := layerMap[l]
+			if !ok {
+				return fmt.Errorf("layer not found: %s", ll)
+			}
+			v.Layers[i] = ll
+		}
+	}
+
+	// clusters
+	for i, c := range cfg.Clusters() {
+		c.Name = fmt.Sprintf("cluster%d", i)
+		if c.Desc != "" {
+			c.Desc = maskedDesc
+		}
+	}
+
+	// nodes
+	for i, n := range cfg.Nodes {
+		n.Name = fmt.Sprintf("node%d", i)
+		if n.Desc != "" {
+			n.Desc = maskedDesc
+		}
+		n.RealNodes = nil
+	}
+
+	// components
+	for i, c := range cfg.Components() {
+		c.Name = fmt.Sprintf("component%d", i)
+		if c.Desc != "" {
+			c.Desc = maskedDesc
+		}
+	}
+
+	// relations
+	for _, r := range cfg.Relations {
+		if r.Desc != "" {
+			r.Desc = maskedDesc
+		}
+	}
+
+	return nil
+}

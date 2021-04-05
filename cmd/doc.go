@@ -352,6 +352,13 @@ func newConfig() (*config.Config, error) {
 	if err := cfg.Build(); err != nil {
 		return nil, err
 	}
+
+	if hideDetails {
+		if err := cfg.HideDetails(); err != nil {
+			return nil, err
+		}
+	}
+
 	return cfg, nil
 }
 
@@ -360,5 +367,6 @@ func init() {
 	docCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
 	docCmd.Flags().StringSliceVarP(&nodeLists, "nodes", "n", []string{}, "real node list file path")
 	docCmd.Flags().BoolVarP(&rmDist, "rm-dist", "", false, "remove all files in the document directory before generating the documents")
+	docCmd.Flags().BoolVarP(&hideDetails, "hide-details", "", false, "hide details")
 	rootCmd.AddCommand(docCmd)
 }

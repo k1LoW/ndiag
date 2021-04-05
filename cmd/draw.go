@@ -86,5 +86,6 @@ func init() {
 	drawCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
 	drawCmd.Flags().StringSliceVarP(&nodeLists, "nodes", "n", []string{}, "real node list file path")
 	drawCmd.Flags().StringVarP(&out, "out", "", "", "output file path")
+	drawCmd.Flags().BoolVarP(&hideDetails, "hide-details", "", false, "hide details")
 	rootCmd.AddCommand(drawCmd)
 }
