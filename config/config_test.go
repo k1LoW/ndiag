@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -239,6 +240,36 @@ func TestBuildNestedCluster(t *testing.T) {
 			}
 		}()
 	}
+}
+
+func TestHideDetails(t *testing.T) {
+	func() {
+		tempDir, err := ioutil.TempDir("", "ndiag")
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer os.RemoveAll(tempDir)
+		cfg := New()
+		if err := cfg.LoadConfigFile(filepath.Join(testdataDir(t), "..", "example", "3-tier", "input", "ndiag.yml")); err != nil {
+			t.Fatal(err)
+		}
+		cfg.DocPath = tempDir
+		if err := cfg.Build(); err != nil {
+			t.Fatal(err)
+		}
+		want := len(cfg.Components())
+		if err := cfg.HideDetails(); err != nil {
+			t.Fatal(err)
+		}
+		if got := len(cfg.Components()); got != want {
+			t.Errorf("got %v\nwant %v", got, want)
+		}
+		for _, c := range cfg.Components() {
+			if !strings.Contains(c.Name, "component") {
+				t.Errorf("got %v\nwant %v", c.Name, "component*")
+			}
+		}
+	}()
 }
 
 func testdataDir(t *testing.T) string {

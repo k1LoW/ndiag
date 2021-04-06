@@ -474,7 +474,7 @@ func (cfg *Config) HideDetails() error {
 	labelMap := map[string]string{}
 	for i, l := range cfg.labels {
 		n := fmt.Sprintf("label%d", i)
-		labelMap[l.Name] = n
+		labelMap[l.Id()] = n
 		l.Name = n
 		if l.Desc != "" {
 			l.Desc = maskedDesc
@@ -485,7 +485,7 @@ func (cfg *Config) HideDetails() error {
 	layerMap := map[string]string{}
 	for i, l := range cfg.Layers() {
 		n := fmt.Sprintf("layer%d", i)
-		layerMap[l.Name] = n
+		layerMap[l.Id()] = n
 		l.Name = n
 		if l.Desc != "" {
 			l.Desc = maskedDesc
@@ -499,16 +499,16 @@ func (cfg *Config) HideDetails() error {
 			v.Desc = maskedDesc
 		}
 		for i, l := range v.Labels {
-			ll, ok := labelMap[l]
+			ll, ok := labelMap[strings.ToLower(l)]
 			if !ok {
-				return fmt.Errorf("label not found: %s", ll)
+				return fmt.Errorf("label not found: %s", l)
 			}
 			v.Labels[i] = ll
 		}
 		for i, l := range v.Layers {
-			ll, ok := layerMap[l]
+			ll, ok := layerMap[strings.ToLower(l)]
 			if !ok {
-				return fmt.Errorf("layer not found: %s", ll)
+				return fmt.Errorf("layer not found: %s", l)
 			}
 			v.Layers[i] = ll
 		}
