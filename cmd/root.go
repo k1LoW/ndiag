@@ -32,14 +32,15 @@ import (
 )
 
 var (
-	force      bool
-	format     string
-	layers     []string
-	nodeLists  []string
-	configPath string
-	out        string
-	rmDist     bool
-	iconPrefix string
+	force       bool
+	format      string
+	layers      []string
+	nodeLists   []string
+	configPath  string
+	out         string
+	rmDist      bool
+	iconPrefix  string
+	hideDetails bool
 )
 
 var rootCmd = &cobra.Command{
