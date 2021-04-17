@@ -12,6 +12,8 @@ type View struct {
 	Labels []string `yaml:"labels,omitempty"`
 }
 
+type Views []*View
+
 func (v *View) ElementType() ElementType {
 	return TypeView
 }

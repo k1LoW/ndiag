@@ -58,7 +58,7 @@ type Config struct {
 	HideLayers        bool               `yaml:"hideLayers,omitempty"`
 	HideRealNodes     bool               `yaml:"hideRealNodes,omitempty"`
 	HideLabels        bool               `yaml:"hideLabels,omitempty"`
-	Views             []*View            `yaml:"views"`
+	Views             Views              `yaml:"views"`
 	Nodes             []*Node            `yaml:"nodes"`
 	Relations         Relations          `yaml:"relations,omitempty"`
 	Dict              *dict.Dict         `yaml:"dict,omitempty"`
