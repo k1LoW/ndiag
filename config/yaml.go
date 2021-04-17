@@ -117,6 +117,25 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	return nil
 }
 
+func (g *Graph) UnmarshalYAML(data []byte) error {
+	raw := struct {
+		Format        string        `yaml:"format,omitempty"`
+		MapSliceAttrs yaml.MapSlice `yaml:"attrs,omitempty"`
+	}{}
+	if err := yaml.Unmarshal(data, &raw); err != nil {
+		return err
+	}
+	g.Format = raw.Format
+	g.Attrs = Attrs{}
+	for _, kv := range raw.MapSliceAttrs {
+		g.Attrs = append(g.Attrs, &Attr{
+			Key:   kv.Key.(string),
+			Value: kv.Value.(string),
+		})
+	}
+	return nil
+}
+
 func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error) {
 	components := []string{}
 	labels := []string{}

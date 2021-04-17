@@ -38,6 +38,8 @@ type Attr struct {
 	Value string
 }
 
+type Attrs []*Attr
+
 // Edge is ndiag edge
 type Edge struct {
 	Src      *Component
@@ -79,26 +81,12 @@ type Config struct {
 	iconMap           *IconMap
 }
 
-type Graph struct {
-	Format        string        `yaml:"format,omitempty"`
-	MapSliceAttrs yaml.MapSlice `yaml:"attrs,omitempty"`
-}
-
-func (g *Graph) Attrs() []*Attr {
-	attrs := []*Attr{}
-	for _, kv := range g.MapSliceAttrs {
-		attrs = append(attrs, &Attr{
-			Key:   kv.Key.(string),
-			Value: kv.Value.(string),
-		})
-	}
-	return attrs
-}
-
 func New() *Config {
 	return &Config{
-		Graph: &Graph{},
-		Dict:  &dict.Dict{},
+		Graph: &Graph{
+			Attrs: Attrs{},
+		},
+		Dict: &dict.Dict{},
 	}
 }
 
