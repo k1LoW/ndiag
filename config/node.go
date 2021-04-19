@@ -11,7 +11,7 @@ type Node struct {
 	Desc          string       `yaml:"desc,omitempty"`
 	Match         string       `yaml:"match,omitempty"`
 	MatchRegexp   string       `yaml:"matchRegexp,omitempty"`
-	Components    []*Component `yaml:"components,omitempty"`
+	Components    Components   `yaml:"components,omitempty"`
 	Clusters      Clusters     `yaml:"clusters,omitempty"`
 	Metadata      NodeMetadata `yaml:"metadata,omitempty"`
 	RealNodes     RealNodes    `yaml:"-"`

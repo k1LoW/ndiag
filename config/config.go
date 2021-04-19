@@ -72,9 +72,9 @@ type Config struct {
 	realNodes         RealNodes
 	layers            []*Layer
 	clusters          Clusters
-	globalComponents  []*Component
-	clusterComponents []*Component
-	nodeComponents    []*Component
+	globalComponents  Components
+	clusterComponents Components
+	nodeComponents    Components
 	edges             []*Edge
 	labels            Labels
 	colorSets         ColorSets
@@ -113,19 +113,19 @@ func (cfg *Config) Clusters() Clusters {
 	return cfg.clusters
 }
 
-func (cfg *Config) GlobalComponents() []*Component {
+func (cfg *Config) GlobalComponents() Components {
 	return cfg.globalComponents
 }
 
-func (cfg *Config) ClusterComponents() []*Component {
+func (cfg *Config) ClusterComponents() Components {
 	return cfg.clusterComponents
 }
 
-func (cfg *Config) NodeComponents() []*Component {
+func (cfg *Config) NodeComponents() Components {
 	return cfg.nodeComponents
 }
 
-func (cfg *Config) Components() []*Component {
+func (cfg *Config) Components() Components {
 	return append(append(cfg.globalComponents, cfg.nodeComponents...), cfg.clusterComponents...)
 }
 
@@ -196,7 +196,7 @@ func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, Nodes, []*Edg
 	return clusters, globalNodes, edges, nil
 }
 
-func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes Nodes, globalComponents []*Component, edges []*Edge, labels []string) (Clusters, Nodes, []*Component, []*Edge, error) {
+func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes Nodes, globalComponents Components, edges []*Edge, labels []string) (Clusters, Nodes, Components, []*Edge, error) {
 	filteredEdges := []*Edge{}
 	nIds := orderedmap.NewOrderedMap()
 	cIds := orderedmap.NewOrderedMap()
@@ -288,7 +288,7 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes Nodes, g
 	for _, n := range globalNodes {
 		_, ok := nIds.Get(n.Id())
 		if ok {
-			filteredComponents := []*Component{}
+			filteredComponents := Components{}
 			for _, c := range n.Components {
 				_, ok := comIds.Get(c.Id())
 				if ok {
@@ -302,7 +302,7 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes Nodes, g
 	globalNodes = filteredNodes
 
 	// global components
-	filteredComponents := []*Component{}
+	filteredComponents := Components{}
 	for _, c := range globalComponents {
 		_, ok := comIds.Get(c.Id())
 		if ok {
@@ -314,7 +314,7 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes Nodes, g
 	return clusters, globalNodes, globalComponents, filteredEdges, nil
 }
 
-func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes Nodes, globalComponents []*Component, relations Relations) (Clusters, Nodes, []*Component, []*Edge, error) {
+func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes Nodes, globalComponents Components, relations Relations) (Clusters, Nodes, Components, []*Edge, error) {
 	filteredEdges := SplitRelations(relations)
 	nIds := orderedmap.NewOrderedMap()
 	cIds := orderedmap.NewOrderedMap()
@@ -352,7 +352,7 @@ func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes Nodes
 	for _, n := range globalNodes {
 		_, ok := nIds.Get(n.Id())
 		if ok {
-			filteredComponents := []*Component{}
+			filteredComponents := Components{}
 			for _, c := range n.Components {
 				_, ok := comIds.Get(c.Id())
 				if ok {
@@ -366,7 +366,7 @@ func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes Nodes
 	globalNodes = filteredNodes
 
 	// global components
-	filteredComponents := []*Component{}
+	filteredComponents := Components{}
 	for _, c := range globalComponents {
 		_, ok := comIds.Get(c.Id())
 		if ok {
@@ -413,7 +413,7 @@ func (cfg *Config) PruneNodesByLabels(nodes Nodes, labelStrs []string) (Nodes, e
 	for _, n := range nodes {
 		_, ok := nIds.Get(n.Id())
 		if ok {
-			filteredComponents := []*Component{}
+			filteredComponents := Components{}
 			for _, c := range n.Components {
 				_, ok := comIds.Get(c.Id())
 				if ok {
@@ -606,7 +606,7 @@ func (cfg *Config) FindNode(name string) (*Node, error) {
 
 func (cfg *Config) FindComponent(s string) (*Component, error) {
 	name := queryTrim(s)
-	var components []*Component
+	var components Components
 
 	switch sepCount(name) {
 	case 2: // cluster components
@@ -850,7 +850,7 @@ func pruneClusters(clusters []*Cluster, nIds, comIds *orderedmap.OrderedMap) {
 			_, ok := nIds.Get(n.Id())
 			if ok {
 				// node component
-				filteredComponents := []*Component{}
+				filteredComponents := Components{}
 				for _, com := range n.Components {
 					_, ok := comIds.Get(com.Id())
 					if ok {
@@ -863,7 +863,7 @@ func pruneClusters(clusters []*Cluster, nIds, comIds *orderedmap.OrderedMap) {
 			}
 		}
 		c.Nodes = filteredNodes
-		filteredComponents := []*Component{}
+		filteredComponents := Components{}
 		for _, com := range c.Components {
 			_, ok := comIds.Get(com.Id())
 			if ok {

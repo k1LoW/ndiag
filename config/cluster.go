@@ -13,7 +13,7 @@ type Cluster struct {
 	Parent     *Cluster
 	Children   Clusters
 	Nodes      Nodes
-	Components []*Component
+	Components Components
 	Metadata   ClusterMetadata
 }
 
