@@ -46,7 +46,7 @@ type Edge struct {
 	Dst      *Component
 	Desc     string
 	Relation *Relation
-	Attrs    []*Attr
+	Attrs    Attrs
 }
 
 type Config struct {

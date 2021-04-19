@@ -191,7 +191,7 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 				labels = append(labels, t.(string))
 			}
 		}
-		attrs := []*Attr{}
+		attrs := Attrs{}
 		attrsi, ok := v["attrs"]
 		if ok {
 			for k, v := range attrsi.(map[string]interface{}) {

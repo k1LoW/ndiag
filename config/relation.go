@@ -13,13 +13,13 @@ import (
 type RelationType struct {
 	Name          string
 	ComponentsKey string
-	Attrs         []*Attr
+	Attrs         Attrs
 }
 
 var RelationTypeDefault = &RelationType{
 	Name:          "relation",
 	ComponentsKey: "components",
-	Attrs: []*Attr{
+	Attrs: Attrs{
 		&Attr{
 			Key:   "color",
 			Value: "#4B75B9",
@@ -42,7 +42,7 @@ var RelationTypeDefault = &RelationType{
 var RelationTypeNetwork = &RelationType{
 	Name:          "network",
 	ComponentsKey: "route",
-	Attrs: []*Attr{
+	Attrs: Attrs{
 		&Attr{
 			Key:   "color",
 			Value: "#33333399",
@@ -68,7 +68,7 @@ type Relation struct {
 	Type       *RelationType
 	Components Components
 	Labels     Labels
-	Attrs      []*Attr
+	Attrs      Attrs
 }
 
 func (r *Relation) ElementType() ElementType {
@@ -105,7 +105,7 @@ type rawRelation struct {
 	Type       *RelationType
 	Components []string
 	Labels     []string `json:"-"`
-	Attrs      []*Attr
+	Attrs      Attrs
 }
 
 func (rel *rawRelation) Id() string {
