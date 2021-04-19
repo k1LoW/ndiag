@@ -12,7 +12,7 @@ type Cluster struct {
 	Desc       string
 	Parent     *Cluster
 	Children   Clusters
-	Nodes      []*Node
+	Nodes      Nodes
 	Components []*Component
 	Metadata   ClusterMetadata
 }

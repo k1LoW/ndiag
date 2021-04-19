@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 )
@@ -13,7 +14,7 @@ type Node struct {
 	Components    []*Component `yaml:"components,omitempty"`
 	Clusters      Clusters     `yaml:"clusters,omitempty"`
 	Metadata      NodeMetadata `yaml:"metadata,omitempty"`
-	RealNodes     []*RealNode  `yaml:"-"`
+	RealNodes     RealNodes    `yaml:"-"`
 	Labels        Labels
 	nameRe        *regexp.Regexp
 	rawComponents []string
@@ -24,6 +25,15 @@ type NodeMetadata struct {
 	Icon   string   `yaml:"icon,omitempty"`
 	Labels []string `yaml:"labels,omitempty"`
 }
+
+type Nodes []*Node
+
+type RealNode struct {
+	Node
+	BelongTo *Node
+}
+
+type RealNodes []*RealNode
 
 func (n *Node) ElementType() ElementType {
 	return TypeNode
@@ -41,7 +51,20 @@ func (n *Node) DescFilename() string {
 	return MakeMdFilename("_node", n.Id())
 }
 
-type RealNode struct {
-	Node
-	BelongTo *Node
+func (nodes Nodes) FindById(id string) (*Node, error) {
+	for _, v := range nodes {
+		if v.Id() == id {
+			return v, nil
+		}
+	}
+	return nil, fmt.Errorf("node not found: %s", id)
+}
+
+func (nodes RealNodes) FindById(id string) (*RealNode, error) {
+	for _, v := range nodes {
+		if v.Id() == id {
+			return v, nil
+		}
+	}
+	return nil, fmt.Errorf("real node not found: %s", id)
 }

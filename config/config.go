@@ -61,7 +61,7 @@ type Config struct {
 	HideRealNodes     bool               `yaml:"hideRealNodes,omitempty"`
 	HideLabels        bool               `yaml:"hideLabels,omitempty"`
 	Views             Views              `yaml:"views"`
-	Nodes             []*Node            `yaml:"nodes"`
+	Nodes             Nodes              `yaml:"nodes"`
 	Relations         Relations          `yaml:"relations,omitempty"`
 	Dict              *dict.Dict         `yaml:"dict,omitempty"`
 	BaseColor         string             `yaml:"baseColor,omitempty"`
@@ -69,7 +69,7 @@ type Config struct {
 	CustomIcons       []*glyph.Blueprint `yaml:"customIcons,omitempty"`
 	basePath          string
 	rawRelations      []*rawRelation
-	realNodes         []*RealNode
+	realNodes         RealNodes
 	layers            []*Layer
 	clusters          Clusters
 	globalComponents  []*Component
@@ -167,7 +167,7 @@ func (cfg *Config) ColorSets() ColorSets {
 	return cfg.colorSets
 }
 
-func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*Edge, error) {
+func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, Nodes, []*Edge, error) {
 	edges := []*Edge{}
 	if len(layers) == 0 {
 		return Clusters{}, cfg.Nodes, cfg.edges, nil
@@ -196,7 +196,7 @@ func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*E
 	return clusters, globalNodes, edges, nil
 }
 
-func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node, globalComponents []*Component, edges []*Edge, labels []string) (Clusters, []*Node, []*Component, []*Edge, error) {
+func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes Nodes, globalComponents []*Component, edges []*Edge, labels []string) (Clusters, Nodes, []*Component, []*Edge, error) {
 	filteredEdges := []*Edge{}
 	nIds := orderedmap.NewOrderedMap()
 	cIds := orderedmap.NewOrderedMap()
@@ -284,7 +284,7 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 	pruneClusters(clusters, nIds, comIds)
 
 	// global nodes
-	filteredNodes := []*Node{}
+	filteredNodes := Nodes{}
 	for _, n := range globalNodes {
 		_, ok := nIds.Get(n.Id())
 		if ok {
@@ -314,7 +314,7 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 	return clusters, globalNodes, globalComponents, filteredEdges, nil
 }
 
-func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes []*Node, globalComponents []*Component, relations Relations) (Clusters, []*Node, []*Component, []*Edge, error) {
+func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes Nodes, globalComponents []*Component, relations Relations) (Clusters, Nodes, []*Component, []*Edge, error) {
 	filteredEdges := SplitRelations(relations)
 	nIds := orderedmap.NewOrderedMap()
 	cIds := orderedmap.NewOrderedMap()
@@ -348,7 +348,7 @@ func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes []*No
 	pruneClusters(clusters, nIds, comIds)
 
 	// global nodes
-	filteredNodes := []*Node{}
+	filteredNodes := Nodes{}
 	for _, n := range globalNodes {
 		_, ok := nIds.Get(n.Id())
 		if ok {
@@ -378,7 +378,7 @@ func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes []*No
 	return clusters, globalNodes, globalComponents, filteredEdges, nil
 }
 
-func (cfg *Config) PruneNodesByLabels(nodes []*Node, labelStrs []string) ([]*Node, error) {
+func (cfg *Config) PruneNodesByLabels(nodes Nodes, labelStrs []string) (Nodes, error) {
 	if len(labelStrs) == 0 {
 		return nodes, nil
 	}
@@ -409,7 +409,7 @@ func (cfg *Config) PruneNodesByLabels(nodes []*Node, labelStrs []string) ([]*Nod
 		comIds.Set(e.Dst.Id(), e.Dst)
 	}
 
-	filteredNodes := []*Node{}
+	filteredNodes := Nodes{}
 	for _, n := range nodes {
 		_, ok := nIds.Get(n.Id())
 		if ok {
@@ -655,15 +655,15 @@ func (cfg *Config) FindLayer(s string) (*Layer, error) {
 	return nil, fmt.Errorf("layer not found: %s", s)
 }
 
-func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clusters, []*Node, error) {
+func buildNestedClusters(clusters Clusters, layers []string, nodes Nodes) (Clusters, Nodes, error) {
 	if len(layers) == 0 {
 		return clusters, nodes, nil
 	}
 	leaf := layers[len(layers)-1]
 	layers = layers[:len(layers)-1]
 
-	globalNodes := []*Node{}
-	belongTo := []*Node{}
+	globalNodes := Nodes{}
+	belongTo := Nodes{}
 	for _, n := range nodes {
 		c := n.Clusters.FindByLayer(leaf)
 		if len(c) == 0 {
@@ -704,7 +704,7 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 		if strings.EqualFold(c.Layer.Id(), leaf) {
 			continue
 		}
-		nodes := []*Node{}
+		nodes := Nodes{}
 	N:
 		for _, n := range c.Nodes {
 			for _, b := range belongTo {
@@ -845,7 +845,7 @@ func loadFile(path string) ([]byte, error) {
 
 func pruneClusters(clusters []*Cluster, nIds, comIds *orderedmap.OrderedMap) {
 	for _, c := range clusters {
-		filteredNodes := []*Node{}
+		filteredNodes := Nodes{}
 		for _, n := range c.Nodes {
 			_, ok := nIds.Get(n.Id())
 			if ok {
