@@ -337,7 +337,7 @@ func diagExists(cfg *config.Config) error {
 
 func init() {
 	docCmd.Flags().BoolVarP(&force, "force", "", false, "generate a document without checking for the existence of an existing document")
-	docCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
+	docCmd.Flags().StringSliceVarP(&configPaths, "config", "c", []string{}, "config file or directory path")
 	docCmd.Flags().StringSliceVarP(&nodeLists, "nodes", "n", []string{}, "real node list file path")
 	docCmd.Flags().BoolVarP(&rmDist, "rm-dist", "", false, "remove all files in the document directory before generating the documents")
 	docCmd.Flags().BoolVarP(&hideDetails, "hide-details", "", false, "hide details")

@@ -71,7 +71,7 @@ var drawCmd = &cobra.Command{
 func init() {
 	drawCmd.Flags().StringVarP(&format, "format", "t", config.DefaultFormat, "format")
 	drawCmd.Flags().StringSliceVarP(&layers, "layer", "l", []string{}, "layer")
-	drawCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
+	drawCmd.Flags().StringSliceVarP(&configPaths, "config", "c", []string{}, "config file or directory path")
 	drawCmd.Flags().StringSliceVarP(&nodeLists, "nodes", "n", []string{}, "real node list file path")
 	drawCmd.Flags().StringVarP(&out, "out", "", "", "output file path")
 	drawCmd.Flags().BoolVarP(&hideDetails, "hide-details", "", false, "hide details")

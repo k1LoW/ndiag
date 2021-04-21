@@ -37,5 +37,5 @@ var listIconsCmd = &cobra.Command{
 }
 
 func init() {
-	listIconsCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
+	listIconsCmd.Flags().StringSliceVarP(&configPaths, "config", "c", []string{}, "config file or directory path")
 }
