@@ -307,15 +307,6 @@ func (cfg *Config) buildDescriptions() error {
 				continue
 			}
 			path := filepath.Join(cfg.DescPath, MakeMdFilename("_view", v.Id()))
-			oldPath := filepath.Join(cfg.DescPath, MakeMdFilename("_diagram", v.Id()))
-			if _, err := os.Stat(oldPath); err == nil {
-				if _, err := os.Stat(path); err == nil {
-					return fmt.Errorf("old description file exists: %s", oldPath)
-				}
-				if err := os.Rename(oldPath, path); err != nil {
-					return err
-				}
-			}
 			desc, err := cfg.readDescFile(MakeMdFilename("_view", v.Id()))
 			if err != nil {
 				return err

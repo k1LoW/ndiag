@@ -1,7 +1,6 @@
 package config
 
 import (
-	"errors"
 	"fmt"
 	"regexp"
 	"sort"
@@ -14,32 +13,28 @@ import (
 
 func (d *Config) UnmarshalYAML(data []byte) error {
 	raw := struct {
-		Name            string             `yaml:"name"`
-		Desc            string             `yaml:"desc,omitempty"`
-		DocPath         string             `yaml:"docPath"`
-		DescPath        string             `yaml:"descPath"`
-		IconPath        string             `yaml:"iconPath,omitempty"`
-		Graph           *Graph             `yaml:"graph,omitempty"`
-		HideViews       bool               `yaml:"hideViews"`
-		HideLayers      bool               `yaml:"hideLayers"`
-		HideRealNodes   bool               `yaml:"hideRealNodes"`
-		HideLabels bool               `yaml:"hideLabels"`
-		Views           []*View            `yaml:"views"`
-		Old             []*View            `yaml:"diagrams"` // TODO: Remove
-		Nodes           []*Node            `yaml:"nodes"`
-		Networks        []interface{}      `yaml:"networks"`
-		Relations       []interface{}      `yaml:"relations"`
-		Dict            *dict.Dict         `yaml:"dict,omitempty"`
-		BaseColor       string             `yaml:"baseColor,omitempty"`
-		TextColor       string             `yaml:"textColor,omitempty"`
-		CustomIcons     []*glyph.Blueprint `yaml:"customIcons,omitempty"`
+		Name          string             `yaml:"name"`
+		Desc          string             `yaml:"desc,omitempty"`
+		DocPath       string             `yaml:"docPath"`
+		DescPath      string             `yaml:"descPath"`
+		IconPath      string             `yaml:"iconPath,omitempty"`
+		Graph         *Graph             `yaml:"graph,omitempty"`
+		HideViews     bool               `yaml:"hideViews"`
+		HideLayers    bool               `yaml:"hideLayers"`
+		HideRealNodes bool               `yaml:"hideRealNodes"`
+		HideLabels    bool               `yaml:"hideLabels"`
+		Views         []*View            `yaml:"views"`
+		Nodes         []*Node            `yaml:"nodes"`
+		Networks      []interface{}      `yaml:"networks"`
+		Relations     []interface{}      `yaml:"relations"`
+		Dict          *dict.Dict         `yaml:"dict,omitempty"`
+		BaseColor     string             `yaml:"baseColor,omitempty"`
+		TextColor     string             `yaml:"textColor,omitempty"`
+		CustomIcons   []*glyph.Blueprint `yaml:"customIcons,omitempty"`
 	}{}
 
 	if err := yaml.Unmarshal(data, &raw); err != nil {
 		return err
-	}
-	if len(raw.Old) > 0 {
-		return errors.New("`diagrams:` is deprecated. Please use `views:` instead of `diagrams:`.")
 	}
 	d.Name = raw.Name
 	d.Desc = raw.Desc
