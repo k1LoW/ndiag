@@ -42,7 +42,7 @@ func (d *Dot) OutputView(wr io.Writer, v *config.View) error {
 	}
 
 	if err := tmpl.Execute(wr, map[string]interface{}{
-		"GraphAttrs":       d.config.Graph.Attrs(),
+		"GraphAttrs":       d.config.Graph.Attrs,
 		"Clusters":         clusters,
 		"GlobalNodes":      globalNodes,
 		"GlobalComponents": globalComponents,
@@ -86,7 +86,7 @@ L:
 	}
 
 	if err := tmpl.Execute(wr, map[string]interface{}{
-		"GraphAttrs":       d.config.Graph.Attrs(),
+		"GraphAttrs":       d.config.Graph.Attrs,
 		"Clusters":         clusters,
 		"GlobalNodes":      []*config.Node{},
 		"GlobalComponents": []*config.Component{},
@@ -153,7 +153,7 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 	}
 
 	if err := tmpl.Execute(wr, map[string]interface{}{
-		"GraphAttrs":       d.config.Graph.Attrs(),
+		"GraphAttrs":       d.config.Graph.Attrs,
 		"MainNodeId":       n.Id(),
 		"Clusters":         clusters,
 		"GlobalNodes":      nodes,
@@ -185,7 +185,7 @@ func (d *Dot) OutputLabel(wr io.Writer, l *config.Label) error {
 	}
 
 	if err := tmpl.Execute(wr, map[string]interface{}{
-		"GraphAttrs":       d.config.Graph.Attrs(),
+		"GraphAttrs":       d.config.Graph.Attrs,
 		"Clusters":         clusters,
 		"GlobalNodes":      globalNodes,
 		"GlobalComponents": globalComponents,
@@ -216,7 +216,7 @@ func (d *Dot) OutputRelation(wr io.Writer, r *config.Relation) error {
 		return err
 	}
 
-	attrs := append(d.config.Graph.Attrs(), &config.Attr{
+	attrs := append(d.config.Graph.Attrs, &config.Attr{
 		Key:   "rankdir",
 		Value: "LR",
 	})

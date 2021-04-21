@@ -26,7 +26,9 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 
+	"github.com/k1LoW/ndiag/config"
 	"github.com/k1LoW/ndiag/version"
 	"github.com/spf13/cobra"
 )
@@ -36,7 +38,7 @@ var (
 	format      string
 	layers      []string
 	nodeLists   []string
-	configPath  string
+	configPaths []string
 	out         string
 	rmDist      bool
 	iconPrefix  string
@@ -72,3 +74,82 @@ func Execute() {
 }
 
 func init() {}
+
+func detectConfigPath(configPath string) string {
+	if configPath != "" {
+		return configPath
+	}
+	for _, p := range config.DefaultConfigFilePaths {
+		if f, err := os.Stat(p); err == nil && !f.IsDir() {
+			return p
+		}
+	}
+	return config.DefaultConfigFilePaths[0]
+}
+
+func newConfig() (*config.Config, error) {
+	cfg, err := loadConfigFiles(configPaths)
+	if err != nil {
+		return nil, err
+	}
+	if len(nodeLists) == 0 {
+		cfg.HideRealNodes = true
+	} else {
+		for _, n := range nodeLists {
+			if err := cfg.LoadRealNodesFile(n); err != nil {
+				return nil, err
+			}
+		}
+	}
+	if err := cfg.Build(); err != nil {
+		return nil, err
+	}
+	if hideDetails {
+		if err := cfg.HideDetails(); err != nil {
+			return nil, err
+		}
+	}
+	return cfg, nil
+}
+
+func newConfigForIcons() (*config.Config, error) {
+	cfg, err := loadConfigFiles(configPaths)
+	if err != nil {
+		return nil, err
+	}
+	if err := cfg.BuildForIcons(); err != nil {
+		return nil, err
+	}
+	return cfg, nil
+}
+
+func loadConfigFiles(configPaths []string) (*config.Config, error) {
+	cfg := config.New()
+	for _, p := range configPaths {
+		c := config.New()
+		f, err := os.Stat(p)
+		if err != nil {
+			return nil, err
+		}
+		paths := []string{filepath.Join(p)}
+		if f.IsDir() {
+			files, err := ioutil.ReadDir(filepath.Join(p))
+			if err != nil {
+				return nil, err
+			}
+			paths = []string{}
+			for _, file := range files {
+				paths = append(paths, filepath.Join(p, file.Name()))
+			}
+		}
+		for _, p := range paths {
+			if err := c.LoadConfigFile(detectConfigPath(p)); err != nil {
+				return nil, err
+			}
+			if err := cfg.Merge(c); err != nil {
+				return nil, err
+			}
+		}
+	}
+	return cfg, nil
+}

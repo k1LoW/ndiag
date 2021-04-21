@@ -9,7 +9,6 @@ import (
 
 	"github.com/elliotchance/orderedmap"
 	"github.com/goccy/go-yaml"
-	"github.com/k1LoW/glyph"
 	"github.com/k1LoW/tbls/dict"
 	"github.com/pasztorpisti/qs"
 )
@@ -38,67 +37,78 @@ type Attr struct {
 	Value string
 }
 
+type Attrs []*Attr
+
+func (attrs Attrs) FindByKey(key string) (*Attr, error) {
+	for _, a := range attrs {
+		if a.Key == key {
+			return a, nil
+		}
+	}
+	return nil, fmt.Errorf("attr not found: %s", key)
+}
+
+func (dest Attrs) Merge(src Attrs) Attrs {
+	for _, sa := range src {
+		a, err := dest.FindByKey(sa.Key)
+		if err != nil {
+			dest = append(dest, sa)
+			continue
+		}
+		if sa.Value != "" {
+			a.Value = sa.Value
+		}
+	}
+	return dest
+}
+
 // Edge is ndiag edge
 type Edge struct {
 	Src      *Component
 	Dst      *Component
 	Desc     string
 	Relation *Relation
-	Attrs    []*Attr
+	Attrs    Attrs
 }
 
 type Config struct {
-	Name              string             `yaml:"name"`
-	Desc              string             `yaml:"desc,omitempty"`
-	DocPath           string             `yaml:"docPath"`
-	DescPath          string             `yaml:"descPath,omitempty"`
-	IconPath          string             `yaml:"iconPath,omitempty"`
-	Graph             *Graph             `yaml:"graph,omitempty"`
-	HideViews         bool               `yaml:"hideViews,omitempty"`
-	HideLayers        bool               `yaml:"hideLayers,omitempty"`
-	HideRealNodes     bool               `yaml:"hideRealNodes,omitempty"`
-	HideLabels        bool               `yaml:"hideLabels,omitempty"`
-	Views             []*View            `yaml:"views"`
-	Nodes             []*Node            `yaml:"nodes"`
-	Relations         Relations          `yaml:"relations,omitempty"`
-	Dict              *dict.Dict         `yaml:"dict,omitempty"`
-	BaseColor         string             `yaml:"baseColor,omitempty"`
-	TextColor         string             `yaml:"textColor,omitempty"`
-	CustomIcons       []*glyph.Blueprint `yaml:"customIcons,omitempty"`
+	Name              string      `yaml:"name"`
+	Desc              string      `yaml:"desc,omitempty"`
+	DocPath           string      `yaml:"docPath"`
+	DescPath          string      `yaml:"descPath,omitempty"`
+	IconPath          string      `yaml:"iconPath,omitempty"`
+	Graph             *Graph      `yaml:"graph,omitempty"`
+	HideViews         bool        `yaml:"hideViews,omitempty"`
+	HideLayers        bool        `yaml:"hideLayers,omitempty"`
+	HideRealNodes     bool        `yaml:"hideRealNodes,omitempty"`
+	HideLabels        bool        `yaml:"hideLabels,omitempty"`
+	Views             Views       `yaml:"views"`
+	Nodes             Nodes       `yaml:"nodes"`
+	Relations         Relations   `yaml:"relations,omitempty"`
+	Dict              *dict.Dict  `yaml:"dict,omitempty"`
+	BaseColor         string      `yaml:"baseColor,omitempty"`
+	TextColor         string      `yaml:"textColor,omitempty"`
+	CustomIcons       CustomIcons `yaml:"customIcons,omitempty"`
 	basePath          string
-	rawRelations      []*rawRelation
-	realNodes         []*RealNode
+	rawRelations      rawRelations
+	realNodes         RealNodes
 	layers            []*Layer
 	clusters          Clusters
-	globalComponents  []*Component
-	clusterComponents []*Component
-	nodeComponents    []*Component
+	globalComponents  Components
+	clusterComponents Components
+	nodeComponents    Components
 	edges             []*Edge
 	labels            Labels
 	colorSets         ColorSets
 	iconMap           *IconMap
 }
 
-type Graph struct {
-	Format        string        `yaml:"format,omitempty"`
-	MapSliceAttrs yaml.MapSlice `yaml:"attrs,omitempty"`
-}
-
-func (g *Graph) Attrs() []*Attr {
-	attrs := []*Attr{}
-	for _, kv := range g.MapSliceAttrs {
-		attrs = append(attrs, &Attr{
-			Key:   kv.Key.(string),
-			Value: kv.Value.(string),
-		})
-	}
-	return attrs
-}
-
 func New() *Config {
 	return &Config{
-		Graph: &Graph{},
-		Dict:  &dict.Dict{},
+		Graph: &Graph{
+			Attrs: Attrs{},
+		},
+		Dict: &dict.Dict{},
 	}
 }
 
@@ -125,19 +135,19 @@ func (cfg *Config) Clusters() Clusters {
 	return cfg.clusters
 }
 
-func (cfg *Config) GlobalComponents() []*Component {
+func (cfg *Config) GlobalComponents() Components {
 	return cfg.globalComponents
 }
 
-func (cfg *Config) ClusterComponents() []*Component {
+func (cfg *Config) ClusterComponents() Components {
 	return cfg.clusterComponents
 }
 
-func (cfg *Config) NodeComponents() []*Component {
+func (cfg *Config) NodeComponents() Components {
 	return cfg.nodeComponents
 }
 
-func (cfg *Config) Components() []*Component {
+func (cfg *Config) Components() Components {
 	return append(append(cfg.globalComponents, cfg.nodeComponents...), cfg.clusterComponents...)
 }
 
@@ -179,7 +189,7 @@ func (cfg *Config) ColorSets() ColorSets {
 	return cfg.colorSets
 }
 
-func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*Edge, error) {
+func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, Nodes, []*Edge, error) {
 	edges := []*Edge{}
 	if len(layers) == 0 {
 		return Clusters{}, cfg.Nodes, cfg.edges, nil
@@ -208,7 +218,7 @@ func (cfg *Config) BuildNestedClusters(layers []string) (Clusters, []*Node, []*E
 	return clusters, globalNodes, edges, nil
 }
 
-func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node, globalComponents []*Component, edges []*Edge, labels []string) (Clusters, []*Node, []*Component, []*Edge, error) {
+func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes Nodes, globalComponents Components, edges []*Edge, labels []string) (Clusters, Nodes, Components, []*Edge, error) {
 	filteredEdges := []*Edge{}
 	nIds := orderedmap.NewOrderedMap()
 	cIds := orderedmap.NewOrderedMap()
@@ -296,11 +306,11 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 	pruneClusters(clusters, nIds, comIds)
 
 	// global nodes
-	filteredNodes := []*Node{}
+	filteredNodes := Nodes{}
 	for _, n := range globalNodes {
 		_, ok := nIds.Get(n.Id())
 		if ok {
-			filteredComponents := []*Component{}
+			filteredComponents := Components{}
 			for _, c := range n.Components {
 				_, ok := comIds.Get(c.Id())
 				if ok {
@@ -314,7 +324,7 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 	globalNodes = filteredNodes
 
 	// global components
-	filteredComponents := []*Component{}
+	filteredComponents := Components{}
 	for _, c := range globalComponents {
 		_, ok := comIds.Get(c.Id())
 		if ok {
@@ -326,7 +336,7 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes []*Node,
 	return clusters, globalNodes, globalComponents, filteredEdges, nil
 }
 
-func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes []*Node, globalComponents []*Component, relations Relations) (Clusters, []*Node, []*Component, []*Edge, error) {
+func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes Nodes, globalComponents Components, relations Relations) (Clusters, Nodes, Components, []*Edge, error) {
 	filteredEdges := SplitRelations(relations)
 	nIds := orderedmap.NewOrderedMap()
 	cIds := orderedmap.NewOrderedMap()
@@ -360,11 +370,11 @@ func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes []*No
 	pruneClusters(clusters, nIds, comIds)
 
 	// global nodes
-	filteredNodes := []*Node{}
+	filteredNodes := Nodes{}
 	for _, n := range globalNodes {
 		_, ok := nIds.Get(n.Id())
 		if ok {
-			filteredComponents := []*Component{}
+			filteredComponents := Components{}
 			for _, c := range n.Components {
 				_, ok := comIds.Get(c.Id())
 				if ok {
@@ -378,7 +388,7 @@ func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes []*No
 	globalNodes = filteredNodes
 
 	// global components
-	filteredComponents := []*Component{}
+	filteredComponents := Components{}
 	for _, c := range globalComponents {
 		_, ok := comIds.Get(c.Id())
 		if ok {
@@ -390,7 +400,7 @@ func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes []*No
 	return clusters, globalNodes, globalComponents, filteredEdges, nil
 }
 
-func (cfg *Config) PruneNodesByLabels(nodes []*Node, labelStrs []string) ([]*Node, error) {
+func (cfg *Config) PruneNodesByLabels(nodes Nodes, labelStrs []string) (Nodes, error) {
 	if len(labelStrs) == 0 {
 		return nodes, nil
 	}
@@ -421,11 +431,11 @@ func (cfg *Config) PruneNodesByLabels(nodes []*Node, labelStrs []string) ([]*Nod
 		comIds.Set(e.Dst.Id(), e.Dst)
 	}
 
-	filteredNodes := []*Node{}
+	filteredNodes := Nodes{}
 	for _, n := range nodes {
 		_, ok := nIds.Get(n.Id())
 		if ok {
-			filteredComponents := []*Component{}
+			filteredComponents := Components{}
 			for _, c := range n.Components {
 				_, ok := comIds.Get(c.Id())
 				if ok {
@@ -618,7 +628,7 @@ func (cfg *Config) FindNode(name string) (*Node, error) {
 
 func (cfg *Config) FindComponent(s string) (*Component, error) {
 	name := queryTrim(s)
-	var components []*Component
+	var components Components
 
 	switch sepCount(name) {
 	case 2: // cluster components
@@ -667,15 +677,15 @@ func (cfg *Config) FindLayer(s string) (*Layer, error) {
 	return nil, fmt.Errorf("layer not found: %s", s)
 }
 
-func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clusters, []*Node, error) {
+func buildNestedClusters(clusters Clusters, layers []string, nodes Nodes) (Clusters, Nodes, error) {
 	if len(layers) == 0 {
 		return clusters, nodes, nil
 	}
 	leaf := layers[len(layers)-1]
 	layers = layers[:len(layers)-1]
 
-	globalNodes := []*Node{}
-	belongTo := []*Node{}
+	globalNodes := Nodes{}
+	belongTo := Nodes{}
 	for _, n := range nodes {
 		c := n.Clusters.FindByLayer(leaf)
 		if len(c) == 0 {
@@ -716,7 +726,7 @@ func buildNestedClusters(clusters Clusters, layers []string, nodes []*Node) (Clu
 		if strings.EqualFold(c.Layer.Id(), leaf) {
 			continue
 		}
-		nodes := []*Node{}
+		nodes := Nodes{}
 	N:
 		for _, n := range c.Nodes {
 			for _, b := range belongTo {
@@ -857,12 +867,12 @@ func loadFile(path string) ([]byte, error) {
 
 func pruneClusters(clusters []*Cluster, nIds, comIds *orderedmap.OrderedMap) {
 	for _, c := range clusters {
-		filteredNodes := []*Node{}
+		filteredNodes := Nodes{}
 		for _, n := range c.Nodes {
 			_, ok := nIds.Get(n.Id())
 			if ok {
 				// node component
-				filteredComponents := []*Component{}
+				filteredComponents := Components{}
 				for _, com := range n.Components {
 					_, ok := comIds.Get(com.Id())
 					if ok {
@@ -875,7 +885,7 @@ func pruneClusters(clusters []*Cluster, nIds, comIds *orderedmap.OrderedMap) {
 			}
 		}
 		c.Nodes = filteredNodes
-		filteredComponents := []*Component{}
+		filteredComponents := Components{}
 		for _, com := range c.Components {
 			_, ok := comIds.Get(com.Id())
 			if ok {

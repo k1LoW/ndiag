@@ -77,6 +77,6 @@ var coverageCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(coverageCmd)
-	coverageCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
+	coverageCmd.Flags().StringSliceVarP(&configPaths, "config", "c", []string{}, "config file or directory path")
 	coverageCmd.Flags().StringVarP(&cformat, "format", "t", "", "output format")
 }
