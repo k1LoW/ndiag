@@ -66,6 +66,15 @@ func (cs Clusters) Find(layer, name string) *Cluster {
 	return nil
 }
 
+func (cs Clusters) FindById(id string) (*Cluster, error) {
+	for _, c := range cs {
+		if c.Layer.Id() == id {
+			return c, nil
+		}
+	}
+	return nil, fmt.Errorf("cluster not found: %s", id)
+}
+
 func (cs Clusters) FindByLayer(layer string) Clusters {
 	result := Clusters{}
 	for _, c := range cs {

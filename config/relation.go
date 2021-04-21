@@ -125,6 +125,37 @@ func (rel *rawRelation) Id() string {
 	return strings.ToLower(fmt.Sprintf("%s-%s", queryTrim(rel.Components[0]), s[:7]))
 }
 
+type rawRelations []*rawRelation
+
+func (relations rawRelations) FindById(id string) (*rawRelation, error) {
+	for _, r := range relations {
+		if r.Id() == id {
+			return r, nil
+		}
+	}
+	return nil, fmt.Errorf("raw relation not found: %s", id)
+}
+
+func (dest rawRelations) Merge(src rawRelations) rawRelations {
+	for _, sr := range src {
+		r, err := dest.FindById(sr.Id())
+		if err != nil {
+			dest = append(dest, sr)
+			continue
+		}
+		if sr.Desc != "" {
+			r.Desc = sr.Desc
+		}
+		if sr.Type != nil {
+			r.Type = sr.Type
+		}
+		r.Components = merge(r.Components, sr.Components)
+		r.Labels = uniqueAndSort(append(r.Labels, sr.Labels...))
+		r.Attrs = r.Attrs.Merge(sr.Attrs)
+	}
+	return dest
+}
+
 func SplitRelations(relations Relations) []*Edge {
 	var prev *Component
 	edges := []*Edge{}
@@ -184,9 +215,9 @@ func MergeEdges(edges []*Edge) []*Edge {
 	return merged1
 }
 
-func uniqueRawRelations(rels []*rawRelation) []*rawRelation {
+func uniqueRawRelations(rels rawRelations) rawRelations {
 	rKeys := orderedmap.NewOrderedMap()
-	result := []*rawRelation{}
+	result := rawRelations{}
 	for _, rel := range rels {
 		key, _ := json.Marshal(rel)
 		rKeys.Set(string(key), rel)

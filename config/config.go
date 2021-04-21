@@ -9,7 +9,6 @@ import (
 
 	"github.com/elliotchance/orderedmap"
 	"github.com/goccy/go-yaml"
-	"github.com/k1LoW/glyph"
 	"github.com/k1LoW/tbls/dict"
 	"github.com/pasztorpisti/qs"
 )
@@ -40,6 +39,29 @@ type Attr struct {
 
 type Attrs []*Attr
 
+func (attrs Attrs) FindByKey(key string) (*Attr, error) {
+	for _, a := range attrs {
+		if a.Key == key {
+			return a, nil
+		}
+	}
+	return nil, fmt.Errorf("attr not found: %s", key)
+}
+
+func (dest Attrs) Merge(src Attrs) Attrs {
+	for _, sa := range src {
+		a, err := dest.FindByKey(sa.Key)
+		if err != nil {
+			dest = append(dest, sa)
+			continue
+		}
+		if sa.Value != "" {
+			a.Value = sa.Value
+		}
+	}
+	return dest
+}
+
 // Edge is ndiag edge
 type Edge struct {
 	Src      *Component
@@ -50,25 +72,25 @@ type Edge struct {
 }
 
 type Config struct {
-	Name              string             `yaml:"name"`
-	Desc              string             `yaml:"desc,omitempty"`
-	DocPath           string             `yaml:"docPath"`
-	DescPath          string             `yaml:"descPath,omitempty"`
-	IconPath          string             `yaml:"iconPath,omitempty"`
-	Graph             *Graph             `yaml:"graph,omitempty"`
-	HideViews         bool               `yaml:"hideViews,omitempty"`
-	HideLayers        bool               `yaml:"hideLayers,omitempty"`
-	HideRealNodes     bool               `yaml:"hideRealNodes,omitempty"`
-	HideLabels        bool               `yaml:"hideLabels,omitempty"`
-	Views             Views              `yaml:"views"`
-	Nodes             Nodes              `yaml:"nodes"`
-	Relations         Relations          `yaml:"relations,omitempty"`
-	Dict              *dict.Dict         `yaml:"dict,omitempty"`
-	BaseColor         string             `yaml:"baseColor,omitempty"`
-	TextColor         string             `yaml:"textColor,omitempty"`
-	CustomIcons       []*glyph.Blueprint `yaml:"customIcons,omitempty"`
+	Name              string      `yaml:"name"`
+	Desc              string      `yaml:"desc,omitempty"`
+	DocPath           string      `yaml:"docPath"`
+	DescPath          string      `yaml:"descPath,omitempty"`
+	IconPath          string      `yaml:"iconPath,omitempty"`
+	Graph             *Graph      `yaml:"graph,omitempty"`
+	HideViews         bool        `yaml:"hideViews,omitempty"`
+	HideLayers        bool        `yaml:"hideLayers,omitempty"`
+	HideRealNodes     bool        `yaml:"hideRealNodes,omitempty"`
+	HideLabels        bool        `yaml:"hideLabels,omitempty"`
+	Views             Views       `yaml:"views"`
+	Nodes             Nodes       `yaml:"nodes"`
+	Relations         Relations   `yaml:"relations,omitempty"`
+	Dict              *dict.Dict  `yaml:"dict,omitempty"`
+	BaseColor         string      `yaml:"baseColor,omitempty"`
+	TextColor         string      `yaml:"textColor,omitempty"`
+	CustomIcons       CustomIcons `yaml:"customIcons,omitempty"`
 	basePath          string
-	rawRelations      []*rawRelation
+	rawRelations      rawRelations
 	realNodes         RealNodes
 	layers            []*Layer
 	clusters          Clusters

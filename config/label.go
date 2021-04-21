@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 )
@@ -32,6 +33,15 @@ func (labels Labels) Sort() {
 	sort.Slice(labels, func(i, j int) bool {
 		return labels[i].Name < labels[j].Name
 	})
+}
+
+func (labels Labels) FindById(id string) (*Label, error) {
+	for _, l := range labels {
+		if l.Id() == id {
+			return l, nil
+		}
+	}
+	return nil, fmt.Errorf("label not found: %s", id)
 }
 
 func (labels Labels) Subtract(labels2 Labels) Labels {

@@ -26,7 +26,7 @@ func (d *Config) UnmarshalYAML(data []byte) error {
 		HideLabels    bool               `yaml:"hideLabels"`
 		Views         Views              `yaml:"views"`
 		Old           Views              `yaml:"diagrams"` // TODO: Remove
-		Nodes         []*Node            `yaml:"nodes"`
+		Nodes         Nodes              `yaml:"nodes"`
 		Networks      []interface{}      `yaml:"networks"`
 		Relations     []interface{}      `yaml:"relations"`
 		Dict          *dict.Dict         `yaml:"dict,omitempty"`
