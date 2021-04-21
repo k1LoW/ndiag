@@ -13,13 +13,13 @@ import (
 type RelationType struct {
 	Name          string
 	ComponentsKey string
-	Attrs         []*Attr
+	Attrs         Attrs
 }
 
 var RelationTypeDefault = &RelationType{
 	Name:          "relation",
 	ComponentsKey: "components",
-	Attrs: []*Attr{
+	Attrs: Attrs{
 		&Attr{
 			Key:   "color",
 			Value: "#4B75B9",
@@ -42,7 +42,7 @@ var RelationTypeDefault = &RelationType{
 var RelationTypeNetwork = &RelationType{
 	Name:          "network",
 	ComponentsKey: "route",
-	Attrs: []*Attr{
+	Attrs: Attrs{
 		&Attr{
 			Key:   "color",
 			Value: "#33333399",
@@ -68,7 +68,7 @@ type Relation struct {
 	Type       *RelationType
 	Components Components
 	Labels     Labels
-	Attrs      []*Attr
+	Attrs      Attrs
 }
 
 func (r *Relation) ElementType() ElementType {
@@ -105,7 +105,7 @@ type rawRelation struct {
 	Type       *RelationType
 	Components []string
 	Labels     []string `json:"-"`
-	Attrs      []*Attr
+	Attrs      Attrs
 }
 
 func (rel *rawRelation) Id() string {
@@ -123,6 +123,37 @@ func (rel *rawRelation) Id() string {
 	}
 	s := fmt.Sprintf("%x", h.Sum(nil))
 	return strings.ToLower(fmt.Sprintf("%s-%s", queryTrim(rel.Components[0]), s[:7]))
+}
+
+type rawRelations []*rawRelation
+
+func (relations rawRelations) FindById(id string) (*rawRelation, error) {
+	for _, r := range relations {
+		if r.Id() == id {
+			return r, nil
+		}
+	}
+	return nil, fmt.Errorf("raw relation not found: %s", id)
+}
+
+func (dest rawRelations) Merge(src rawRelations) rawRelations {
+	for _, sr := range src {
+		r, err := dest.FindById(sr.Id())
+		if err != nil {
+			dest = append(dest, sr)
+			continue
+		}
+		if sr.Desc != "" {
+			r.Desc = sr.Desc
+		}
+		if sr.Type != nil {
+			r.Type = sr.Type
+		}
+		r.Components = merge(r.Components, sr.Components)
+		r.Labels = merge(r.Labels, sr.Labels)
+		r.Attrs = r.Attrs.Merge(sr.Attrs)
+	}
+	return dest
 }
 
 func SplitRelations(relations Relations) []*Edge {
@@ -184,9 +215,9 @@ func MergeEdges(edges []*Edge) []*Edge {
 	return merged1
 }
 
-func uniqueRawRelations(rels []*rawRelation) []*rawRelation {
+func uniqueRawRelations(rels rawRelations) rawRelations {
 	rKeys := orderedmap.NewOrderedMap()
-	result := []*rawRelation{}
+	result := rawRelations{}
 	for _, rel := range rels {
 		key, _ := json.Marshal(rel)
 		rKeys.Set(string(key), rel)

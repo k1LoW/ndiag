@@ -268,6 +268,9 @@ func (cfg *Config) buildRelations() error {
 			Labels:     labels,
 			Attrs:      rel.Attrs,
 		}
+		if len(rel.Components) < 2 {
+			return fmt.Errorf("invalid format: %s, %v", rel.Id(), rel)
+		}
 		for _, r := range rel.Components {
 			c, err := cfg.FindComponent(r)
 			if err != nil {

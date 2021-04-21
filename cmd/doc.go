@@ -317,36 +317,9 @@ func diagExists(cfg *config.Config) error {
 	return nil
 }
 
-func newConfig() (*config.Config, error) {
-	cfg := config.New()
-	if err := cfg.LoadConfigFile(detectConfigPath(configPath)); err != nil {
-		return nil, err
-	}
-	if len(nodeLists) == 0 {
-		cfg.HideRealNodes = true
-	} else {
-		for _, n := range nodeLists {
-			if err := cfg.LoadRealNodesFile(n); err != nil {
-				return nil, err
-			}
-		}
-	}
-	if err := cfg.Build(); err != nil {
-		return nil, err
-	}
-
-	if hideDetails {
-		if err := cfg.HideDetails(); err != nil {
-			return nil, err
-		}
-	}
-
-	return cfg, nil
-}
-
 func init() {
 	docCmd.Flags().BoolVarP(&force, "force", "", false, "generate a document without checking for the existence of an existing document")
-	docCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
+	docCmd.Flags().StringSliceVarP(&configPaths, "config", "c", []string{}, "config file or directory path")
 	docCmd.Flags().StringSliceVarP(&nodeLists, "nodes", "n", []string{}, "real node list file path")
 	docCmd.Flags().BoolVarP(&rmDist, "rm-dist", "", false, "remove all files in the document directory before generating the documents")
 	docCmd.Flags().BoolVarP(&hideDetails, "hide-details", "", false, "hide details")

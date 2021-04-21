@@ -12,8 +12,8 @@ type Cluster struct {
 	Desc       string
 	Parent     *Cluster
 	Children   Clusters
-	Nodes      []*Node
-	Components []*Component
+	Nodes      Nodes
+	Components Components
 	Metadata   ClusterMetadata
 }
 
@@ -64,6 +64,15 @@ func (cs Clusters) Find(layer, name string) *Cluster {
 		}
 	}
 	return nil
+}
+
+func (cs Clusters) FindById(id string) (*Cluster, error) {
+	for _, c := range cs {
+		if c.Layer.Id() == id {
+			return c, nil
+		}
+	}
+	return nil, fmt.Errorf("cluster not found: %s", id)
 }
 
 func (cs Clusters) FindByLayer(layer string) Clusters {

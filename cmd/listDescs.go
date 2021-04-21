@@ -31,5 +31,5 @@ var listDescsCmd = &cobra.Command{
 }
 
 func init() {
-	listDescsCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
+	listDescsCmd.Flags().StringSliceVarP(&configPaths, "config", "c", []string{}, "config file or directory path")
 }

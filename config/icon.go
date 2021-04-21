@@ -118,6 +118,30 @@ func (m *IconMap) RemoveTempIconDir() error {
 	return os.RemoveAll(m.tempIconDir)
 }
 
+type CustomIcons []*glyph.Blueprint
+
+func (icons CustomIcons) FindByKey(key string) (*glyph.Blueprint, error) {
+	for _, i := range icons {
+		if i.Key == key {
+			return i, nil
+		}
+	}
+	return nil, fmt.Errorf("icon not found: %s", key)
+}
+
+func (dest CustomIcons) Merge(src CustomIcons) CustomIcons {
+	for _, si := range src {
+		i, err := dest.FindByKey(si.Key)
+		if err != nil {
+			dest = append(dest, si)
+			continue
+		}
+		i.RawLines = si.RawLines
+		i.RawTexts = si.RawTexts
+	}
+	return dest
+}
+
 func (cfg *Config) buildIconMap() error {
 	tempIconDir := filepath.Join(os.TempDir(), fmt.Sprintf("ndiag.%06d", os.Getpid()))
 	im := NewIconMap(tempIconDir)

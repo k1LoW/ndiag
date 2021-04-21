@@ -12,6 +12,8 @@ type View struct {
 	Labels []string `yaml:"labels,omitempty"`
 }
 
+type Views []*View
+
 func (v *View) ElementType() ElementType {
 	return TypeView
 }
@@ -37,4 +39,32 @@ func (v *View) Id() string {
 
 func (v *View) DescFilename() string {
 	return MakeMdFilename("_view", v.Id())
+}
+
+func (views Views) FindById(id string) (*View, error) {
+	for _, v := range views {
+		if v.Id() == id {
+			return v, nil
+		}
+	}
+	return nil, fmt.Errorf("view not found: %s", id)
+}
+
+func (dest Views) Merge(src Views) Views {
+	for _, sv := range src {
+		v, err := dest.FindById(sv.Id())
+		if err != nil {
+			dest = append(dest, sv)
+			continue
+		}
+		if sv.Name != "" {
+			v.Name = sv.Name
+		}
+		if sv.Desc != "" {
+			v.Desc = sv.Desc
+		}
+		v.Layers = sv.Layers
+		v.Labels = sv.Labels
+	}
+	return dest
 }

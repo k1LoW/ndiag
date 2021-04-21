@@ -22,7 +22,6 @@ THE SOFTWARE.
 package cmd
 
 import (
-	"github.com/k1LoW/ndiag/config"
 	"github.com/k1LoW/ndiag/icon"
 	"github.com/k1LoW/ndiag/icon/aws"
 	"github.com/k1LoW/ndiag/icon/gcp"
@@ -64,19 +63,8 @@ var fetchIconsCmd = &cobra.Command{
 	},
 }
 
-func newConfigForIcons() (*config.Config, error) {
-	cfg := config.New()
-	if err := cfg.LoadConfigFile(detectConfigPath(configPath)); err != nil {
-		return nil, err
-	}
-	if err := cfg.BuildForIcons(); err != nil {
-		return nil, err
-	}
-	return cfg, nil
-}
-
 func init() {
 	rootCmd.AddCommand(fetchIconsCmd)
-	fetchIconsCmd.Flags().StringVarP(&configPath, "config", "c", "", "config file path")
+	fetchIconsCmd.Flags().StringSliceVarP(&configPaths, "config", "c", []string{}, "config file or directory path")
 	fetchIconsCmd.Flags().StringVarP(&iconPrefix, "prefix", "", "", "icon key prefix")
 }

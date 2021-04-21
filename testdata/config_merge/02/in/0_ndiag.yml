@@ -1,0 +1,41 @@
+nodes:
+  -
+    name: lb-*
+    clusters:
+      - 'consul:dc1'
+      - 'group:lb'
+  -
+    name: app-*
+    clusters:
+      - 'consul:dc1'
+  -
+    name: db-*
+    clusters:
+      - 'consul:dc1'
+relations:
+  -
+    id: http-internet
+    type: network
+    components:
+      - "internet"
+      - "group:lb:vip"
+      - "lb-*:nginx"
+  -
+    id: http-proxy
+    type: network
+    components:
+      - "lb-*:nginx"
+      - "app-*:rails"
+  -
+    id: rails-db
+    type: network
+    labels:
+      - app
+    components:
+      - "app-*:rails"
+      - "db-*:postgresql"
+  -
+    id: vip
+    components:
+      - 'lb-*:keepalived'
+      - "group:lb:vip"

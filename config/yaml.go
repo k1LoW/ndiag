@@ -112,6 +112,25 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 	return nil
 }
 
+func (g *Graph) UnmarshalYAML(data []byte) error {
+	raw := struct {
+		Format        string        `yaml:"format,omitempty"`
+		MapSliceAttrs yaml.MapSlice `yaml:"attrs,omitempty"`
+	}{}
+	if err := yaml.Unmarshal(data, &raw); err != nil {
+		return err
+	}
+	g.Format = raw.Format
+	g.Attrs = Attrs{}
+	for _, kv := range raw.MapSliceAttrs {
+		g.Attrs = append(g.Attrs, &Attr{
+			Key:   kv.Key.(string),
+			Value: kv.Value.(string),
+		})
+	}
+	return nil
+}
+
 func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error) {
 	components := []string{}
 	labels := []string{}
@@ -121,9 +140,6 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 		//   - ["internet", "lb:nginx", "app:nginx", "app:rails"]
 		for _, r := range v {
 			components = append(components, r.(string))
-		}
-		if len(components) < 2 {
-			return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
 		}
 		rel := &rawRelation{
 			Type:       relType,
@@ -143,14 +159,10 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 			id = ""
 		}
 		ri, ok := v[relType.ComponentsKey]
-		if !ok {
-			return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
-		}
-		for _, r := range ri.([]interface{}) {
-			components = append(components, r.(string))
-		}
-		if len(components) < 2 {
-			return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
+		if ok {
+			for _, r := range ri.([]interface{}) {
+				components = append(components, r.(string))
+			}
 		}
 		typei, ok := v["type"]
 		if ok {
@@ -167,7 +179,7 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 				labels = append(labels, t.(string))
 			}
 		}
-		attrs := []*Attr{}
+		attrs := Attrs{}
 		attrsi, ok := v["attrs"]
 		if ok {
 			for k, v := range attrsi.(map[string]interface{}) {
