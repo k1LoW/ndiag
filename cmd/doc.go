@@ -93,16 +93,7 @@ var docCmd = &cobra.Command{
 			if !cfg.HideViews {
 				// generate md
 				o := md.New(cfg)
-				oldPath := filepath.Join(cfg.DocPath, config.MakeMdFilename("diagram", v.Id()))
 				path := filepath.Join(cfg.DocPath, config.MakeMdFilename("view", v.Id()))
-				if _, err := os.Stat(oldPath); err == nil {
-					if _, err := os.Stat(path); err == nil {
-						return fmt.Errorf("old file exists: %s", oldPath)
-					}
-					if err := os.Rename(oldPath, path); err != nil {
-						return err
-					}
-				}
 				file, err := os.Create(path)
 				if err != nil {
 					return err
@@ -115,16 +106,7 @@ var docCmd = &cobra.Command{
 			}
 			// draw view
 			diag := gviz.New(cfg)
-			oldPath := filepath.Join(cfg.DocPath, config.MakeDiagramFilename("diagram", v.Id(), format))
 			path := filepath.Join(cfg.DocPath, config.MakeDiagramFilename("view", v.Id(), format))
-			if _, err := os.Stat(oldPath); err == nil {
-				if _, err := os.Stat(path); err == nil {
-					return fmt.Errorf("old diagram file exists: %s", oldPath)
-				}
-				if err := os.Rename(oldPath, path); err != nil {
-					return err
-				}
-			}
 			dFile, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) // #nosec
 			if err != nil {
 				return err
