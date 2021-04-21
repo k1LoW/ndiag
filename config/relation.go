@@ -150,7 +150,7 @@ func (dest rawRelations) Merge(src rawRelations) rawRelations {
 			r.Type = sr.Type
 		}
 		r.Components = merge(r.Components, sr.Components)
-		r.Labels = uniqueAndSort(append(r.Labels, sr.Labels...))
+		r.Labels = merge(r.Labels, sr.Labels)
 		r.Attrs = r.Attrs.Merge(sr.Attrs)
 	}
 	return dest

@@ -146,9 +146,6 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 		for _, r := range v {
 			components = append(components, r.(string))
 		}
-		if len(components) < 2 {
-			return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
-		}
 		rel := &rawRelation{
 			Type:       relType,
 			Components: components,
@@ -167,14 +164,10 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 			id = ""
 		}
 		ri, ok := v[relType.ComponentsKey]
-		if !ok {
-			return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
-		}
-		for _, r := range ri.([]interface{}) {
-			components = append(components, r.(string))
-		}
-		if len(components) < 2 {
-			return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
+		if ok {
+			for _, r := range ri.([]interface{}) {
+				components = append(components, r.(string))
+			}
 		}
 		typei, ok := v["type"]
 		if ok {
