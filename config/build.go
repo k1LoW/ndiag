@@ -309,7 +309,6 @@ func (cfg *Config) buildDescriptions() error {
 			if v.Desc != "" {
 				continue
 			}
-			path := filepath.Join(cfg.DescPath, MakeMdFilename("_view", v.Id()))
 			desc, err := cfg.readDescFile(MakeMdFilename("_view", v.Id()))
 			if err != nil {
 				return err
