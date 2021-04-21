@@ -68,18 +68,6 @@ var drawCmd = &cobra.Command{
 	},
 }
 
-func detectConfigPath(configPath string) string {
-	if configPath != "" {
-		return configPath
-	}
-	for _, p := range config.DefaultConfigFilePaths {
-		if f, err := os.Stat(p); err == nil && !f.IsDir() {
-			return p
-		}
-	}
-	return config.DefaultConfigFilePaths[0]
-}
-
 func init() {
 	drawCmd.Flags().StringVarP(&format, "format", "t", config.DefaultFormat, "format")
 	drawCmd.Flags().StringSliceVarP(&layers, "layer", "l", []string{}, "layer")

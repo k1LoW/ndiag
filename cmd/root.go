@@ -27,6 +27,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/k1LoW/ndiag/config"
 	"github.com/k1LoW/ndiag/version"
 	"github.com/spf13/cobra"
 )
@@ -72,3 +73,42 @@ func Execute() {
 }
 
 func init() {}
+
+func detectConfigPath(configPath string) string {
+	if configPath != "" {
+		return configPath
+	}
+	for _, p := range config.DefaultConfigFilePaths {
+		if f, err := os.Stat(p); err == nil && !f.IsDir() {
+			return p
+		}
+	}
+	return config.DefaultConfigFilePaths[0]
+}
+
+func newConfig() (*config.Config, error) {
+	cfg := config.New()
+	if err := cfg.LoadConfigFile(detectConfigPath(configPath)); err != nil {
+		return nil, err
+	}
+	if len(nodeLists) == 0 {
+		cfg.HideRealNodes = true
+	} else {
+		for _, n := range nodeLists {
+			if err := cfg.LoadRealNodesFile(n); err != nil {
+				return nil, err
+			}
+		}
+	}
+	if err := cfg.Build(); err != nil {
+		return nil, err
+	}
+
+	if hideDetails {
+		if err := cfg.HideDetails(); err != nil {
+			return nil, err
+		}
+	}
+
+	return cfg, nil
+}
