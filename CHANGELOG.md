@@ -1,3 +1,9 @@
+## [v0.14.0](https://github.com/k1LoW/ndiag/compare/v0.13.2...v0.14.0) (2021-04-21)
+
+* Remove deprecated section `diagrams:` [#89](https://github.com/k1LoW/ndiag/pull/89) ([k1LoW](https://github.com/k1LoW))
+* Support multiple config files and directories [#88](https://github.com/k1LoW/ndiag/pull/88) ([k1LoW](https://github.com/k1LoW))
+* Add `--hide-details` option [#87](https://github.com/k1LoW/ndiag/pull/87) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.13.2](https://github.com/k1LoW/ndiag/compare/v0.13.1...v0.13.2) (2021-03-10)
 
 * Fix coverage [#86](https://github.com/k1LoW/ndiag/pull/86) ([k1LoW](https://github.com/k1LoW))
