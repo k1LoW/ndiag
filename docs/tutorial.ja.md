@@ -580,7 +580,7 @@ $ ndiag list icons -c ndiag.yml
 
 1. `customIcons:` セクションで[glyphの記述方式](https://github.com/k1LoW/glyph#concept)でアイコンを表現する
 2. アイコンディレクトリ(デフォルト: `ndiag.icons` )を作成し、SVGもしくはPNGファイルを配置する
-3. `ndiag fetch-isons` コマンドを実行して、追加のアイコンをアイコンディレクトリにダウンロードする。
+3. `ndiag fetch-icons` コマンドを実行して、追加のアイコンをアイコンディレクトリにダウンロードする。
 
 また、アイコンを付与できるのはアーキテクチャ要素(Node、Component)とClusterです。
 
