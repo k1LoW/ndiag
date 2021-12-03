@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go_version: [1.15, 1.16]
+        go_version: [1.17]
     steps:
       - name: Set up Go ${{ matrix.go_version }}
         uses: actions/setup-go@v2
@@ -32,7 +32,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          env PATH=`go env GOPATH`/bin:$PATH make ci_doc
+          make ci_doc
         env:
           GITHUB_BRANCH: ${{ steps.get_branch.outputs.GITHUB_BRANCH }}
 

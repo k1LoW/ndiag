@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"image"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
@@ -209,7 +208,7 @@ func (cfg *Config) buildIconMap() error {
 }
 
 func isImg(path string) bool {
-	imgf, err := ioutil.ReadFile(filepath.Clean(path))
+	imgf, err := os.ReadFile(filepath.Clean(path))
 	if err != nil {
 		return false
 	}
