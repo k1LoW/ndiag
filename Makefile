@@ -61,8 +61,6 @@ ndiag_doc_fetch_icons: build
 	./ndiag doc -c example/aws/input/ndiag.yml --rm-dist
 
 ci_doc: depsdev ndiag_doc
-	$(eval DIFF_EXIST := $(shell git checkout go.* && git diff --exit-code --quiet || echo "exist"))
-	test -z "$(DIFF_EXIST)" || (git add -A ./docs && git add -A ./example && git commit -m "Update ndiag archtecture document by GitHub Action (${GITHUB_SHA})" && git push -v origin ${GITHUB_BRANCH} && exit 1)
 
 depsdev:
 	go get github.com/Songmu/ghch/cmd/ghch
