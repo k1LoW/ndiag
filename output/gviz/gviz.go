@@ -9,7 +9,6 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 
@@ -156,7 +155,7 @@ func (g *Gviz) renderSVG(wr io.Writer, b []byte) (e error) {
 	for _, img := range xmlquery.Find(doc, "//svg/g/g/image") {
 		for i, attr := range img.Attr {
 			if attr.Name.Space == "xlink" && attr.Name.Local == "href" {
-				imgf, err := ioutil.ReadFile(attr.Value)
+				imgf, err := os.ReadFile(attr.Value)
 				if err != nil {
 					return err
 				}

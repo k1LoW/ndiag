@@ -3,7 +3,7 @@ package config
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -858,7 +858,7 @@ func loadFile(path string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	buf, err := ioutil.ReadFile(filepath.Clean(fullPath))
+	buf, err := os.ReadFile(filepath.Clean(fullPath))
 	if err != nil {
 		return nil, err
 	}

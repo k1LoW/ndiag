@@ -68,7 +68,6 @@ func Execute() {
 	}
 
 	if err := rootCmd.Execute(); err != nil {
-		rootCmd.PrintErrln(err)
 		os.Exit(1)
 	}
 }
@@ -133,7 +132,7 @@ func loadConfigFiles(configPaths []string) (*config.Config, error) {
 		}
 		paths := []string{filepath.Join(p)}
 		if f.IsDir() {
-			files, err := ioutil.ReadDir(filepath.Join(p))
+			files, err := os.ReadDir(filepath.Join(p))
 			if err != nil {
 				return nil, err
 			}

@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go_version: [1.15, 1.16]
+        go_version: [1.17]
     steps:
       - name: Set up Go ${{ matrix.go_version }}
         uses: actions/setup-go@v2
@@ -28,16 +28,15 @@ jobs:
         id: get_branch
         run: echo ::set-output name=GITHUB_BRANCH::${GITHUB_REF/refs\/heads\//}
 
-      - name: Update ndiag documents
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          env PATH=`go env GOPATH`/bin:$PATH make ci_doc
-        env:
-          GITHUB_BRANCH: ${{ steps.get_branch.outputs.GITHUB_BRANCH }}
-
       - name: Test
         run: make ci
+
+      - name: Update ndiag documents
+        run: make ci_doc
+
+      - uses: EndBug/add-and-commit@v7
+        with:
+          add: 'docs/ example/'
 
       - name: Run codecov
         run: codecov

@@ -1,7 +1,7 @@
 package config
 
 import (
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"regexp"
 	"testing"
@@ -12,7 +12,7 @@ import (
 
 func TestMerge(t *testing.T) {
 	rootDir := filepath.Join(testdataDir(t), "config_merge")
-	dirs, err := ioutil.ReadDir(rootDir)
+	dirs, err := os.ReadDir(rootDir)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -20,7 +20,7 @@ func TestMerge(t *testing.T) {
 		if !d.IsDir() {
 			continue
 		}
-		in, err := ioutil.ReadDir(filepath.Join(rootDir, d.Name(), "in"))
+		in, err := os.ReadDir(filepath.Join(rootDir, d.Name(), "in"))
 		if err != nil {
 			t.Fatal(err)
 		}
