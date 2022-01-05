@@ -1,3 +1,9 @@
+## [v0.14.1](https://github.com/k1LoW/ndiag/compare/v0.14.0...v0.14.1) (2022-01-05)
+
+* Fix k8s iconPath [#92](https://github.com/k1LoW/ndiag/pull/92) ([rnakamine](https://github.com/rnakamine))
+* Replace ioutil and update Go [#91](https://github.com/k1LoW/ndiag/pull/91) ([k1LoW](https://github.com/k1LoW))
+* Fix typo in tutorial [#90](https://github.com/k1LoW/ndiag/pull/90) ([yano3](https://github.com/yano3))
+
 ## [v0.14.0](https://github.com/k1LoW/ndiag/compare/v0.13.2...v0.14.0) (2021-04-21)
 
 * Remove deprecated section `diagrams:` [#89](https://github.com/k1LoW/ndiag/pull/89) ([k1LoW](https://github.com/k1LoW))
