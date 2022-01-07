@@ -58,7 +58,7 @@ func (f *HashicorpIcon) Fetch(iconPath, prefix string) error {
 			if !strings.Contains(f.Name, ".svg") {
 				continue
 			}
-			if !strings.Contains(f.Name, "FullColor") || strings.Contains(f.Name, "Enterprise") {
+			if !strings.Contains(f.Name, "Color") || strings.Contains(f.Name, "Enterprise") {
 				continue
 			}
 
