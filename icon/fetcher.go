@@ -43,7 +43,7 @@ func Download(src, dest string) (string, error) {
 	defer resp.Body.Close()
 
 	p := filepath.Join(dest, filepath.Base(src))
-	f, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+	f, err := os.OpenFile(filepath.Clean(p), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
 		return "", err
 	}
