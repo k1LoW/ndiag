@@ -1,3 +1,7 @@
+## [v0.14.3](https://github.com/k1LoW/ndiag/compare/v0.14.2...v0.14.3) (2022-02-09)
+
+* Support darwin arm64 [#94](https://github.com/k1LoW/ndiag/pull/94) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.14.2](https://github.com/k1LoW/ndiag/compare/v0.14.1...v0.14.2) (2022-01-19)
 
 * Fix the conditions for getting the HashiCorp icon. [#93](https://github.com/k1LoW/ndiag/pull/93) ([rnakamine](https://github.com/rnakamine))
