@@ -17,6 +17,19 @@ builds:
     goarch:
       - amd64
   -
+    id: ndiag-darwin-arm64
+    hooks:
+      pre: packr2
+      post: packr2 clean
+    ldflags:
+      - -s -w -X github.com/k1LoW/ndiag.version={{.Version}} -X github.com/k1LoW/ndiag.commit={{.FullCommit}} -X github.com/k1LoW/ndiag.date={{.Date}} -X github.com/k1LoW/ndiag/version.Version={{.Version}}
+    env:
+      - CGO_ENABLED=1
+    goos:
+      - darwin
+    goarch:
+      - arm64
+  -
     id: ndiag-linux
     hooks:
       pre: packr2
