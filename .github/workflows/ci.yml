@@ -23,7 +23,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install graphviz
-          sudo pip install codecov
 
       - name: Check out source code
         uses: actions/checkout@v2
@@ -42,7 +41,5 @@ jobs:
         with:
           add: 'docs/ example/'
 
-      - name: Run codecov
-        run: codecov
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: Run octocov
+        uses: k1LoW/octocov-action@v0
