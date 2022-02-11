@@ -5,7 +5,7 @@ ndiag
 /archdoc/
 /ndiag.descriptions/
 /ndiag.icons/
-coverage.txt
+coverage.out
 *-packr.go
 .envrc
 .go-version
