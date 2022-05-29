@@ -87,11 +87,10 @@ View the document on GitHub.
 
 **deb:**
 
-Use [dpkg-i-from-url](https://github.com/k1LoW/dpkg-i-from-url)
-
 ``` console
 $ export NDIAG_VERSION=X.X.X
-$ curl -L https://git.io/dpkg-i-from-url | bash -s -- https://github.com/k1LoW/ndiag/releases/download/v$NDIAG_VERSION/ndiag_$NDIAG_VERSION-1_amd64.deb
+$ curl -o ndiag.deb -L https://github.com/k1LoW/ndiag/releases/download/v$NDIAG_VERSION/ndiag_$NDIAG_VERSION-1_amd64.deb
+$ dpkg -i ndiag.deb
 ```
 
 **RPM:**
@@ -103,11 +102,10 @@ $ yum install https://github.com/k1LoW/ndiag/releases/download/v$NDIAG_VERSION/n
 
 **apk:**
 
-Use [apk-add-from-url](https://github.com/k1LoW/apk-add-from-url)
-
 ``` console
 $ export NDIAG_VERSION=X.X.X
-$ curl -L https://git.io/apk-add-from-url | sh -s -- https://github.com/k1LoW/ndiag/releases/download/v$NDIAG_VERSION/ndiag_$NDIAG_VERSION-1_amd64.apk
+$ curl -o ndiag.apk -L https://github.com/k1LoW/ndiag/releases/download/v$NDIAG_VERSION/ndiag_$NDIAG_VERSION-1_amd64.apk
+$ apk add ndiag.apk
 ```
 
 **homebrew tap:**
