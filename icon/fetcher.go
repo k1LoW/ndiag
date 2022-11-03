@@ -3,6 +3,7 @@ package icon
 import (
 	"bytes"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"image/png"
 	"io"
@@ -65,7 +66,19 @@ func OptimizeSVG(b []byte, width, height float64) ([]byte, error) {
 		return nil, err
 	}
 	s := xmlquery.FindOne(imgdoc, "//svg")
-	attrs := []xml.Attr{}
+	if s == nil {
+		// workaround for "xmlns=" before " xmlns:xxx=" to cause xmlquery parsing error.
+		b = bytes.Replace(b, []byte("xmlns="), []byte("xmlns:ndiag-workaround="), 1)
+		imgdoc, err = xmlquery.Parse(bytes.NewReader(b))
+		if err != nil {
+			return nil, err
+		}
+		s = xmlquery.FindOne(imgdoc, "//svg")
+		if s == nil {
+			return nil, errors.New("failed to optimize SVG")
+		}
+	}
+	attrs := []xmlquery.Attr{}
 	hasViewBox := false
 	cw := 0.0
 	ch := 0.0
@@ -106,19 +119,19 @@ func OptimizeSVG(b []byte, width, height float64) ([]byte, error) {
 		}
 	}
 
-	s.Attr = append([]xml.Attr{
-		xml.Attr{
+	s.Attr = append([]xmlquery.Attr{
+		xmlquery.Attr{
 			Name:  xml.Name{Local: "width"},
 			Value: fmt.Sprintf("%spx", strconv.FormatFloat(nw, 'f', 2, 64)),
 		},
-		xml.Attr{
+		xmlquery.Attr{
 			Name:  xml.Name{Local: "height"},
 			Value: fmt.Sprintf("%spx", strconv.FormatFloat(nh, 'f', 2, 64)),
 		},
 	}, attrs...)
 
 	if !hasViewBox {
-		s.Attr = append(s.Attr, xml.Attr{
+		s.Attr = append(s.Attr, xmlquery.Attr{
 			Name:  xml.Name{Local: "viewBox"},
 			Value: fmt.Sprintf("0 0 %g %g", cw, ch),
 		})
