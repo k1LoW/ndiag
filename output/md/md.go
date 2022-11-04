@@ -1,26 +1,27 @@
 package md
 
 import (
+	"embed"
 	"fmt"
 	"io"
 	"path/filepath"
 	"text/template"
 
 	"github.com/elliotchance/orderedmap"
-	"github.com/gobuffalo/packr/v2"
 	"github.com/k1LoW/ndiag/config"
 	"github.com/k1LoW/ndiag/output"
 )
 
+//go:embed templates/*.tmpl
+var tmpls embed.FS
+
 type Md struct {
 	config *config.Config
-	box    *packr.Box
 }
 
 func New(cfg *config.Config) *Md {
 	return &Md{
 		config: cfg,
-		box:    packr.New("md", "./templates"),
 	}
 }
 
@@ -29,7 +30,7 @@ func (m *Md) OutputView(wr io.Writer, v *config.View) error {
 }
 
 func (m *Md) OutputLayer(wr io.Writer, l *config.Layer) error {
-	ts, err := m.box.FindString("layer.md.tmpl")
+	ts, err := tmpls.ReadFile("templates/layer.md.tmpl")
 	if err != nil {
 		return err
 	}
@@ -44,7 +45,7 @@ func (m *Md) OutputLayer(wr io.Writer, l *config.Layer) error {
 		return err
 	}
 
-	tmpl := template.Must(template.New(l.Name).Funcs(output.Funcs(m.config)).Parse(ts))
+	tmpl := template.Must(template.New(l.Name).Funcs(output.Funcs(m.config)).Parse(string(ts)))
 	tmplData := map[string]interface{}{
 		"Layer":         l,
 		"Format":        m.config.Format(),
@@ -59,7 +60,7 @@ func (m *Md) OutputLayer(wr io.Writer, l *config.Layer) error {
 }
 
 func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
-	ts, err := m.box.FindString("node.md.tmpl")
+	ts, err := tmpls.ReadFile("templates/node.md.tmpl")
 	if err != nil {
 		return err
 	}
@@ -87,7 +88,7 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 	}
 	labels.Sort()
 
-	tmpl := template.Must(template.New(n.Id()).Funcs(output.Funcs(m.config)).Parse(ts))
+	tmpl := template.Must(template.New(n.Id()).Funcs(output.Funcs(m.config)).Parse(string(ts)))
 	tmplData := map[string]interface{}{
 		"Node":          n,
 		"Format":        m.config.Format(),
@@ -115,7 +116,7 @@ func (m *Md) OutputLabel(wr io.Writer, l *config.Label) error {
 }
 
 func (m *Md) OutputIndex(wr io.Writer) error {
-	ts, err := m.box.FindString("index.md.tmpl")
+	ts, err := tmpls.ReadFile("templates/index.md.tmpl")
 	if err != nil {
 		return err
 	}
@@ -127,7 +128,7 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 
 	m.config.Labels().Sort()
 
-	tmpl := template.Must(template.New("index").Funcs(output.Funcs(m.config)).Parse(ts))
+	tmpl := template.Must(template.New("index").Funcs(output.Funcs(m.config)).Parse(string(ts)))
 	tmplData := map[string]interface{}{
 		"Config":   m.config,
 		"View":     m.config.PrimaryView(),
@@ -145,7 +146,7 @@ func (m *Md) OutputIndex(wr io.Writer) error {
 }
 
 func (m *Md) outputView(wr io.Writer, v *config.View, eType config.ElementType) error {
-	ts, err := m.box.FindString("view.md.tmpl")
+	ts, err := tmpls.ReadFile("templates/view.md.tmpl")
 	if err != nil {
 		return err
 	}
@@ -198,7 +199,7 @@ func (m *Md) outputView(wr io.Writer, v *config.View, eType config.ElementType) 
 		hideLayers = true
 	}
 
-	tmpl := template.Must(template.New(v.Name).Funcs(output.Funcs(m.config)).Parse(ts))
+	tmpl := template.Must(template.New(v.Name).Funcs(output.Funcs(m.config)).Parse(string(ts)))
 	tmplData := map[string]interface{}{
 		"TemplateType":  eType.String(),
 		"View":          v,
