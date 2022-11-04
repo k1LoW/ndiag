@@ -22,9 +22,7 @@ lint:
 	golangci-lint run ./...
 
 build:
-	packr2
 	go build -ldflags="$(BUILD_LDFLAGS)"
-	packr2 clean
 
 ndiag_draw: build
 	./ndiag draw -c example/3-tier/input/ndiag.yml -n example/3-tier/input/nodes.yml -t png -l consul -l vip_group > example.png
@@ -62,7 +60,6 @@ ci_doc: depsdev ndiag_doc
 depsdev:
 	go install github.com/Songmu/ghch/cmd/ghch@latest
 	go install github.com/Songmu/gocredits/cmd/gocredits@latest
-	go install github.com/gobuffalo/packr/v2/packr2@v2.8.3
 
 prerelease:
 	git pull origin main --tag

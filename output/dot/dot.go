@@ -1,35 +1,36 @@
 package dot
 
 import (
+	"embed"
 	"fmt"
 	"io"
 	"strings"
 	"text/template"
 
 	"github.com/elliotchance/orderedmap"
-	"github.com/gobuffalo/packr/v2"
 	"github.com/k1LoW/ndiag/config"
 	"github.com/k1LoW/ndiag/output"
 )
 
+//go:embed templates/*.tmpl
+var tmpls embed.FS
+
 type Dot struct {
 	config *config.Config
-	box    *packr.Box
 }
 
 func New(cfg *config.Config) *Dot {
 	return &Dot{
 		config: cfg,
-		box:    packr.New("dot", "./templates"),
 	}
 }
 
 func (d *Dot) OutputView(wr io.Writer, v *config.View) error {
-	ts, err := d.box.FindString("view.dot.tmpl")
+	ts, err := tmpls.ReadFile("templates/view.dot.tmpl")
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(ts))
+	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(string(ts)))
 
 	clusters, globalNodes, edges, err := d.config.BuildNestedClusters(v.Layers)
 	if err != nil {
@@ -56,11 +57,11 @@ func (d *Dot) OutputView(wr io.Writer, v *config.View) error {
 }
 
 func (d *Dot) OutputLayer(wr io.Writer, l *config.Layer) error {
-	ts, err := d.box.FindString("view.dot.tmpl")
+	ts, err := tmpls.ReadFile("templates/view.dot.tmpl")
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(ts))
+	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(string(ts)))
 
 	clusters, globalNodes, edges, err := d.config.BuildNestedClusters([]string{l.Id()})
 	if err != nil {
@@ -100,11 +101,11 @@ L:
 }
 
 func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
-	ts, err := d.box.FindString("node.dot.tmpl")
+	ts, err := tmpls.ReadFile("templates/node.dot.tmpl")
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(ts))
+	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(string(ts)))
 
 	clusters := config.Clusters{}
 	cIds := orderedmap.NewOrderedMap() // map[string]*config.Cluster{}
@@ -167,11 +168,11 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 }
 
 func (d *Dot) OutputLabel(wr io.Writer, l *config.Label) error {
-	ts, err := d.box.FindString("view.dot.tmpl")
+	ts, err := tmpls.ReadFile("templates/view.dot.tmpl")
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(ts))
+	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(string(ts)))
 
 	clusters, globalNodes, edges, err := d.config.BuildNestedClusters([]string{})
 	if err != nil {
@@ -199,11 +200,11 @@ func (d *Dot) OutputLabel(wr io.Writer, l *config.Label) error {
 }
 
 func (d *Dot) OutputRelation(wr io.Writer, r *config.Relation) error {
-	ts, err := d.box.FindString("view.dot.tmpl")
+	ts, err := tmpls.ReadFile("templates/view.dot.tmpl")
 	if err != nil {
 		return err
 	}
-	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(ts))
+	tmpl := template.Must(template.New("view").Funcs(output.Funcs(d.config)).Parse(string(ts)))
 
 	clusters, globalNodes, _, err := d.config.BuildNestedClusters([]string{})
 	if err != nil {
