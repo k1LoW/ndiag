@@ -1,3 +1,10 @@
+## [v0.14.4](https://github.com/k1LoW/ndiag/compare/v0.14.3...v0.14.4) - 2022-11-04
+- Use octocov by @k1LoW in https://github.com/k1LoW/ndiag/pull/95
+- Bump up go and pkgs by @k1LoW in https://github.com/k1LoW/ndiag/pull/96
+- Fix build flags of linux build by @k1LoW in https://github.com/k1LoW/ndiag/pull/97
+- packr2 to embed by @k1LoW in https://github.com/k1LoW/ndiag/pull/98
+- Fix build pipeline by @k1LoW in https://github.com/k1LoW/ndiag/pull/99
+
 ## [v0.14.3](https://github.com/k1LoW/ndiag/compare/v0.14.2...v0.14.3) (2022-02-09)
 
 * Support darwin arm64 [#94](https://github.com/k1LoW/ndiag/pull/94) ([k1LoW](https://github.com/k1LoW))
