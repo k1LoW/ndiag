@@ -25,6 +25,12 @@ builds:
       - arm64
   -
     id: ndiag-linux
+    flags:
+      - -a
+      - -tags
+      - netgo
+      - -installsuffix
+      - netgo
     ldflags:
       - -s -w -X github.com/k1LoW/ndiag.version={{.Version}} -X github.com/k1LoW/ndiag.commit={{.FullCommit}} -X github.com/k1LoW/ndiag.date={{.Date}} -X github.com/k1LoW/ndiag/version.Version={{.Version}}
       - -linkmode external
