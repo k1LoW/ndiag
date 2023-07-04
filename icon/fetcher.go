@@ -21,6 +21,7 @@ import (
 )
 
 var sizeRe = regexp.MustCompile(`\A([0-9.]+)`)
+var xmlnsAttrRe = regexp.MustCompile(`xmlns="([^"]+)"`)
 
 type Fetcher interface {
 	Fetch(iconPath, prefix string) error
@@ -66,9 +67,15 @@ func OptimizeSVG(b []byte, width, height float64) ([]byte, error) {
 		return nil, err
 	}
 	s := xmlquery.FindOne(imgdoc, "//svg")
+	xmlnsAttrs := []string{}
 	if s == nil {
 		// workaround for "xmlns=" before " xmlns:xxx=" to cause xmlquery parsing error.
-		b = bytes.Replace(b, []byte("xmlns="), []byte("xmlns:ndiag-workaround="), 1)
+		// So, put them on the tail end after parsing
+		matches := xmlnsAttrRe.FindAllSubmatch(b, -1)
+		for _, m := range matches {
+			xmlnsAttrs = append(xmlnsAttrs, string(m[1]))
+		}
+		b = xmlnsAttrRe.ReplaceAll(b, []byte(""))
 		imgdoc, err = xmlquery.Parse(bytes.NewReader(b))
 		if err != nil {
 			return nil, err
@@ -134,6 +141,13 @@ func OptimizeSVG(b []byte, width, height float64) ([]byte, error) {
 		s.Attr = append(s.Attr, xmlquery.Attr{
 			Name:  xml.Name{Local: "viewBox"},
 			Value: fmt.Sprintf("0 0 %g %g", cw, ch),
+		})
+	}
+
+	for _, a := range xmlnsAttrs {
+		s.Attr = append(s.Attr, xmlquery.Attr{
+			Name:  xml.Name{Local: "xmlns"},
+			Value: a,
 		})
 	}
 
