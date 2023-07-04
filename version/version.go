@@ -4,4 +4,4 @@ package version
 const Name string = "ndiag"
 
 // Version for this
-var Version = "0.14.4"
+var Version = "0.14.5"
