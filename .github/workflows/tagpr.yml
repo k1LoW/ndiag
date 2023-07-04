@@ -15,6 +15,11 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@v3
 
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: go.mod
+
       - id: run-tagpr
         name: Run tagpr
         uses: Songmu/tagpr@v1
@@ -31,10 +36,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: go.mod
+
       - name: Setup
         run: |
-          brew uninstall go@1.17
-          brew install go
           brew install goreleaser
           brew install messense/macos-cross-toolchains/x86_64-unknown-linux-gnu
 
