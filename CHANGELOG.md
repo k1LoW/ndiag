@@ -1,3 +1,9 @@
+## [v0.14.5](https://github.com/k1LoW/ndiag/compare/v0.14.4...v0.14.5) - 2023-07-04
+- Bump golang.org/x/image from 0.1.0 to 0.5.0 by @dependabot in https://github.com/k1LoW/ndiag/pull/101
+- Bump golang.org/x/net from 0.1.0 to 0.7.0 by @dependabot in https://github.com/k1LoW/ndiag/pull/103
+- Fix workaround for svg parsing by @k1LoW in https://github.com/k1LoW/ndiag/pull/106
+- Fix CI by @k1LoW in https://github.com/k1LoW/ndiag/pull/107
+
 ## [v0.14.4](https://github.com/k1LoW/ndiag/compare/v0.14.3...v0.14.4) - 2022-11-04
 - Use octocov by @k1LoW in https://github.com/k1LoW/ndiag/pull/95
 - Bump up go and pkgs by @k1LoW in https://github.com/k1LoW/ndiag/pull/96
