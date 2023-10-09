@@ -114,6 +114,12 @@ $ apk add ndiag.apk
 $ brew install k1LoW/tap/ndiag
 ```
 
+**[aqua](https://aquaproj.github.io/):**
+
+```console
+$ aqua g -i k1LoW/ndiag
+```
+
 **manually:**
 
 Download binary from [releases page](https://github.com/k1LoW/ndiag/releases)
