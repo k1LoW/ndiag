@@ -1,3 +1,7 @@
+## [v0.14.6](https://github.com/k1LoW/ndiag/compare/v0.14.5...v0.14.6) - 2023-10-12
+- docs: add the installation guide with aqua by @suzuki-shunsuke in https://github.com/k1LoW/ndiag/pull/109
+- Bump golang.org/x/net from 0.7.0 to 0.17.0 by @dependabot in https://github.com/k1LoW/ndiag/pull/111
+
 ## [v0.14.5](https://github.com/k1LoW/ndiag/compare/v0.14.4...v0.14.5) - 2023-07-04
 - Bump golang.org/x/image from 0.1.0 to 0.5.0 by @dependabot in https://github.com/k1LoW/ndiag/pull/101
 - Bump golang.org/x/net from 0.1.0 to 0.7.0 by @dependabot in https://github.com/k1LoW/ndiag/pull/103
