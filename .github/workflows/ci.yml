@@ -27,11 +27,6 @@ jobs:
           fail_level: warning
           go_version_file: go.mod
 
-      - name: Setup
-        run: |
-          sudo apt-get update
-          sudo apt-get install graphviz
-
       - name: Get branch
         id: get_branch
         run: echo ::set-output name=GITHUB_BRANCH::${GITHUB_REF/refs\/heads\//}
