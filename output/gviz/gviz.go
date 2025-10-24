@@ -2,6 +2,7 @@ package gviz
 
 import (
 	"bytes"
+	"context"
 	"encoding/base64"
 	"fmt"
 	"image"
@@ -135,7 +136,10 @@ func (g *Gviz) renderSVG(wr io.Writer, b []byte) (e error) {
 	}()
 
 	// use go-graphviz
-	gviz := graphviz.New()
+	gviz, err := graphviz.New(context.Background())
+	if err != nil {
+		return err
+	}
 	graph, err := graphviz.ParseBytes(b)
 	if err != nil {
 		return err
@@ -151,7 +155,7 @@ func (g *Gviz) renderSVG(wr io.Writer, b []byte) (e error) {
 
 	buf := new(bytes.Buffer)
 
-	if err := gviz.Render(graph, graphviz.Format("svg"), buf); err != nil {
+	if err := gviz.Render(context.Background(), graph, graphviz.Format("svg"), buf); err != nil {
 		return err
 	}
 
