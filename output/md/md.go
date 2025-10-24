@@ -84,7 +84,11 @@ func (m *Md) OutputNode(wr io.Writer, n *config.Node) error {
 	}
 	for _, k := range relLabels.Keys() {
 		l, _ := relLabels.Get(k)
-		labels = append(labels, l.(*config.Label))
+		label, ok := l.(*config.Label)
+		if !ok {
+			continue
+		}
+		labels = append(labels, label)
 	}
 	labels.Sort()
 
@@ -167,9 +171,8 @@ func (m *Md) outputView(wr io.Writer, v *config.View, eType config.ElementType) 
 
 	nodes := m.config.Nodes
 	labels := config.Labels{}
-	relations := config.Relations{}
+	var relations config.Relations
 	if len(v.Labels) > 0 {
-		labels = config.Labels{}
 		for _, s := range v.Labels {
 			label, ok := m.config.FindLabel(s)
 			if ok != nil {

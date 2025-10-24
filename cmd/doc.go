@@ -32,7 +32,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// docCmd represents the doc command
+// docCmd represents the doc command.
 var docCmd = &cobra.Command{
 	Use:   "doc",
 	Short: "Generate architecture document",

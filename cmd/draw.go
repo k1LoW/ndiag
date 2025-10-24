@@ -33,7 +33,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// drawCmd represents the draw command
+// drawCmd represents the draw command.
 var drawCmd = &cobra.Command{
 	Use:   "draw",
 	Short: "Draw view",

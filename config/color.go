@@ -27,7 +27,7 @@ func (s ColorSets) Get(i int) ColorSet {
 	return s[idx]
 }
 
-// defaultColorSets return color sets for layer line
+// defaultColorSets return color sets for layer line.
 func defaultColorSets(bc string, tc string) ColorSets {
 	csets := ColorSets{}
 	for _, c := range defaultColors {

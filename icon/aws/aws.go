@@ -4,7 +4,6 @@ import (
 	"archive/zip"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,13 +16,13 @@ import (
 const archiveURL = "https://d1.awsstatic.com/webteam/architecture-icons/Q32020/AWS-Architecture-Assets-For-Light-and-Dark-BG_20200911.478ff05b80f909792f7853b1a28de8e28eac67f4.zip"
 const logoURL = "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg"
 
-type AWSIcon struct{}
+type Icon struct{}
 
 var rep = strings.NewReplacer("_Light", "", "_48", "", "loT", "iot", "IoT", "iot", "FSx", "fsx", "AMIs", "amis", "_", "-", "&", "and", "VMware", "vmware")
 var rep2 = strings.NewReplacer("res-amazon", "res", "res-aws", "res", "arch-aws-", "", "arch-amazon-", "")
 
-func (f *AWSIcon) Fetch(iconPath, prefix string) error {
-	dir, err := ioutil.TempDir("", "ndiag-icon-aws")
+func (f *Icon) Fetch(iconPath, prefix string) error {
+	dir, err := os.MkdirTemp("", "ndiag-icon-aws")
 	if err != nil {
 		return err
 	}
@@ -75,7 +74,7 @@ func (f *AWSIcon) Fetch(iconPath, prefix string) error {
 			return err
 		}
 
-		if err := ioutil.WriteFile(path, b, f.Mode()); err != nil {
+		if err := os.WriteFile(path, b, f.Mode()); err != nil {
 			_ = rc.Close()
 			return err
 		}
@@ -100,7 +99,7 @@ func (f *AWSIcon) Fetch(iconPath, prefix string) error {
 		return err
 	}
 	path := filepath.Join(iconPath, prefix, "logo.svg")
-	if err := ioutil.WriteFile(path, b, 0600); err != nil {
+	if err := os.WriteFile(path, b, 0600); err != nil {
 		return err
 	}
 	counter[path] = struct{}{}

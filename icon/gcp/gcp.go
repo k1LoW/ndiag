@@ -4,7 +4,6 @@ import (
 	"archive/zip"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -28,10 +27,10 @@ var rep = strings.NewReplacer(
 	"logo_lockup_cloud_rgb", "logo-lockup-h",
 )
 
-type GCPIcon struct{}
+type Icon struct{}
 
-func (f *GCPIcon) Fetch(iconPath, prefix string) error {
-	dir, err := ioutil.TempDir("", "ndiag-icon-gcp")
+func (f *Icon) Fetch(iconPath, prefix string) error {
+	dir, err := os.MkdirTemp("", "ndiag-icon-gcp")
 	if err != nil {
 		return err
 	}
@@ -94,7 +93,7 @@ func (f *GCPIcon) Fetch(iconPath, prefix string) error {
 				}
 			}
 
-			if err := ioutil.WriteFile(path, b, f.Mode()); err != nil {
+			if err := os.WriteFile(path, b, f.Mode()); err != nil {
 				_ = rc.Close()
 				return err
 			}

@@ -28,10 +28,10 @@ var DefaultConfigFilePaths = []string{"ndiag.yml"}
 var DefaultDescPath = "ndiag.descriptions"
 var DefaultIconPath = "ndiag.icons"
 
-// DefaultFormat is the default view format
+// DefaultFormat is the default view format.
 const DefaultFormat = "svg"
 
-// Attr is attribute of ndiag element/edge
+// Attr is attribute of ndiag element/edge.
 type Attr struct {
 	Key   string
 	Value string
@@ -62,7 +62,7 @@ func (dest Attrs) Merge(src Attrs) Attrs {
 	return dest
 }
 
-// Edge is ndiag edge
+// Edge is ndiag edge.
 type Edge struct {
 	Src      *Component
 	Dst      *Component
@@ -296,7 +296,10 @@ func (cfg *Config) PruneClustersByLabels(clusters Clusters, globalNodes Nodes, g
 
 	for _, k := range cIds.Keys() {
 		v, _ := cIds.Get(k)
-		c := v.(*Cluster)
+		c, ok := v.(*Cluster)
+		if !ok {
+			continue
+		}
 		if !clusters.Contains(c) {
 			clusters = append(clusters, c)
 		}
@@ -360,7 +363,10 @@ func (cfg *Config) PruneClustersByRelations(clusters Clusters, globalNodes Nodes
 
 	for _, k := range cIds.Keys() {
 		v, _ := cIds.Get(k)
-		c := v.(*Cluster)
+		c, ok := v.(*Cluster)
+		if !ok {
+			continue
+		}
 		if !clusters.Contains(c) {
 			clusters = append(clusters, c)
 		}
@@ -451,13 +457,6 @@ func (cfg *Config) PruneNodesByLabels(nodes Nodes, labelStrs []string) (Nodes, e
 	return nodes, nil
 }
 
-func (cfg *Config) loadConfig(in []byte) error {
-	if err := yaml.Unmarshal(in, cfg); err != nil {
-		return err
-	}
-	return nil
-}
-
 func (cfg *Config) LoadConfigFile(path string) error {
 	buf, err := loadFile(path)
 	if err != nil {
@@ -467,76 +466,17 @@ func (cfg *Config) LoadConfigFile(path string) error {
 	if err != nil {
 		return err
 	}
-	return cfg.loadConfig(buf)
+	if err := yaml.Unmarshal(buf, cfg); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (cfg *Config) LoadRealNodes(in []byte) error {
 	if len(cfg.Nodes) == 0 {
 		return errors.New("nodes not found")
 	}
-	if err := cfg.loadRealNodes(in); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (cfg *Config) Build() error {
-	if err := cfg.checkFormat(); err != nil {
-		return err
-	}
-	if err := cfg.buildDefault(); err != nil {
-		return err
-	}
-	if err := cfg.buildIconMap(); err != nil {
-		return err
-	}
-	if err := cfg.buildClusters(); err != nil {
-		return err
-	}
-	if err := cfg.buildNodes(); err != nil {
-		return err
-	}
-	if err := cfg.buildComponents(); err != nil {
-		return err
-	}
-	if err := cfg.buildRelations(); err != nil {
-		return err
-	}
-	if err := cfg.buildColors(); err != nil {
-		return err
-	}
-	if err := cfg.checkUnique(); err != nil {
-		return err
-	}
-	if len(cfg.Views) == 0 {
-		cfg.Views = append(cfg.Views, &View{
-			Name:   "Nodes",
-			Layers: []string{},
-		})
-		cfg.HideViews = true
-	}
-	if err := cfg.buildDescriptions(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (cfg *Config) BuildForIcons() error {
-	if err := cfg.checkFormat(); err != nil {
-		return err
-	}
-	if err := cfg.buildDefault(); err != nil {
-		return err
-	}
-	if err := cfg.buildIconMap(); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (cfg *Config) loadRealNodes(in []byte) error {
-	rNodes := []string{}
+	var rNodes []string
 	if err := yaml.Unmarshal(in, &rNodes); err == nil {
 		for _, rn := range rNodes {
 			belongTo := false
@@ -605,6 +545,61 @@ func (cfg *Config) loadRealNodes(in []byte) error {
 			rel.Components = replaced
 		}
 		cfg.rawRelations = append(cfg.rawRelations, uniqueRawRelations(rConfig.rawRelations)...)
+	}
+	return nil
+}
+
+func (cfg *Config) Build() error {
+	if err := cfg.checkFormat(); err != nil {
+		return err
+	}
+	if err := cfg.buildDefault(); err != nil {
+		return err
+	}
+	if err := cfg.buildIconMap(); err != nil {
+		return err
+	}
+	if err := cfg.buildClusters(); err != nil {
+		return err
+	}
+	if err := cfg.buildNodes(); err != nil {
+		return err
+	}
+	if err := cfg.buildComponents(); err != nil {
+		return err
+	}
+	if err := cfg.buildRelations(); err != nil {
+		return err
+	}
+	if err := cfg.buildColors(); err != nil {
+		return err
+	}
+	if err := cfg.checkUnique(); err != nil {
+		return err
+	}
+	if len(cfg.Views) == 0 {
+		cfg.Views = append(cfg.Views, &View{
+			Name:   "Nodes",
+			Layers: []string{},
+		})
+		cfg.HideViews = true
+	}
+	if err := cfg.buildDescriptions(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (cfg *Config) BuildForIcons() error {
+	if err := cfg.checkFormat(); err != nil {
+		return err
+	}
+	if err := cfg.buildDefault(); err != nil {
+		return err
+	}
+	if err := cfg.buildIconMap(); err != nil {
+		return err
 	}
 	return nil
 }
@@ -975,7 +970,11 @@ func merge(a, b []string) []string {
 	o := []string{}
 	for _, k := range m.Keys() {
 		s, _ := m.Get(k)
-		o = append(o, s.(string))
+		str, ok := s.(string)
+		if !ok {
+			continue
+		}
+		o = append(o, str)
 	}
 	return o
 }

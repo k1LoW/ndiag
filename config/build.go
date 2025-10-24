@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -85,7 +84,11 @@ func (cfg *Config) buildComponents() error {
 
 	// global components
 	for _, c := range gc.Keys() {
-		com, err := cfg.parseComponent(c.(string))
+		cStr, ok := c.(string)
+		if !ok {
+			continue
+		}
+		com, err := cfg.parseComponent(cStr)
 		if err != nil {
 			return err
 		}
@@ -114,7 +117,11 @@ func (cfg *Config) buildComponents() error {
 	}
 
 	for _, c := range nc.Keys() {
-		splitted := sepSplit(c.(string))
+		cStr, ok := c.(string)
+		if !ok {
+			continue
+		}
+		splitted := sepSplit(cStr)
 		nodeName := splitted[0]
 		comName := splitted[1]
 		n, err := cfg.FindNode(nodeName)
@@ -140,7 +147,11 @@ func (cfg *Config) buildComponents() error {
 
 	// cluster components
 	for _, c := range cc.Keys() {
-		splitted := sepSplit(c.(string))
+		cStr, ok := c.(string)
+		if !ok {
+			continue
+		}
+		splitted := sepSplit(cStr)
 		clName := fmt.Sprintf("%s:%s", splitted[0], splitted[1])
 		comName := splitted[2]
 		belongTo := false
@@ -418,7 +429,7 @@ func (cfg *Config) readDescFile(f string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	b, err := ioutil.ReadAll(file)
+	b, err := os.ReadFile(descPath)
 	if err != nil {
 		return "", err
 	}

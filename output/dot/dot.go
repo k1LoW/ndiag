@@ -142,15 +142,27 @@ func (d *Dot) OutputNode(wr io.Writer, n *config.Node) error {
 	}
 	for _, k := range nIds.Keys() {
 		n, _ := nIds.Get(k)
-		nodes = append(nodes, n.(*config.Node))
+		node, ok := n.(*config.Node)
+		if !ok {
+			continue
+		}
+		nodes = append(nodes, node)
 	}
 	for _, k := range cIds.Keys() {
 		c, _ := cIds.Get(k)
-		clusters = append(clusters, c.(*config.Cluster))
+		cluster, ok := c.(*config.Cluster)
+		if !ok {
+			continue
+		}
+		clusters = append(clusters, cluster)
 	}
 	for _, k := range gIds.Keys() {
 		c, _ := gIds.Get(k)
-		globalComponents = append(globalComponents, c.(*config.Component))
+		component, ok := c.(*config.Component)
+		if !ok {
+			continue
+		}
+		globalComponents = append(globalComponents, component)
 	}
 
 	if err := tmpl.Execute(wr, map[string]interface{}{

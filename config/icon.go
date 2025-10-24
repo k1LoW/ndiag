@@ -76,7 +76,7 @@ func (m *IconMap) GeneratePNGGlyphIcons() (e error) {
 			return err
 		}
 		if err := i.Glyph.WriteImage(f); err != nil {
-			e = f.Close()
+			_ = f.Close()
 			return err
 		}
 		if err := f.Close(); err != nil {
@@ -103,7 +103,7 @@ func (m *IconMap) GenerateSVGGlyphIcons() (e error) {
 			return err
 		}
 		if err := i.Glyph.Write(f); err != nil {
-			e = f.Close()
+			_ = f.Close()
 			return err
 		}
 		if err := f.Close(); err != nil {
