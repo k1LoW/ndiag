@@ -1,6 +1,6 @@
 module github.com/k1LoW/ndiag
 
-go 1.19
+go 1.23.0
 
 require (
 	github.com/antchfx/xmlquery v1.3.12
@@ -45,8 +45,8 @@ require (
 	github.com/stretchr/testify v1.8.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	golang.org/x/image v0.10.0 // indirect
-	golang.org/x/net v0.17.0 // indirect
-	golang.org/x/sys v0.13.0 // indirect
-	golang.org/x/text v0.13.0 // indirect
+	golang.org/x/net v0.38.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 )
