@@ -23,7 +23,7 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -57,7 +57,7 @@ func Execute() {
 	rootCmd.SetOut(os.Stdout)
 	rootCmd.SetErr(os.Stderr)
 
-	log.SetOutput(ioutil.Discard)
+	log.SetOutput(io.Discard)
 	if env := os.Getenv("DEBUG"); env != "" {
 		debug, err := os.Create(fmt.Sprintf("%s.debug", version.Name))
 		if err != nil {

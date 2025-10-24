@@ -18,7 +18,7 @@ func (v ElementType) String() string {
 	return elementTypes[v]
 }
 
-// Element is ndiag element
+// Element is ndiag element.
 type Element interface {
 	ElementType() ElementType
 	Id() string

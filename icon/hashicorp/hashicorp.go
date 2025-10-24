@@ -4,7 +4,6 @@ import (
 	"archive/zip"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,7 +13,7 @@ import (
 	"github.com/stoewer/go-strcase"
 )
 
-type HashicorpIcon struct{}
+type Icon struct{}
 
 var archiveURLs = []string{
 	"https://drive.google.com/uc?export=download&id=1EtZa2tnvRJoSk5kqJtuToS8mLnQudoiM", // Vagant
@@ -28,8 +27,8 @@ var archiveURLs = []string{
 
 var rep = strings.NewReplacer("_FullColor_RGB", "", "_VerticalLogo", "", "_PrimaryLogo", "-h")
 
-func (f *HashicorpIcon) Fetch(iconPath, prefix string) error {
-	dir, err := ioutil.TempDir("", "ndiag-icon-hashicorp")
+func (f *Icon) Fetch(iconPath, prefix string) error {
+	dir, err := os.MkdirTemp("", "ndiag-icon-hashicorp")
 	if err != nil {
 		return err
 	}
@@ -80,7 +79,7 @@ func (f *HashicorpIcon) Fetch(iconPath, prefix string) error {
 				return err
 			}
 
-			if err := ioutil.WriteFile(path, b, f.Mode()); err != nil {
+			if err := os.WriteFile(path, b, f.Mode()); err != nil {
 				_ = rc.Close()
 				return err
 			}

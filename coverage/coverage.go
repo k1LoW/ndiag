@@ -9,29 +9,29 @@ import (
 type Coverage struct {
 	Name       string
 	Coverage   float64
-	Views      *CoverageByElement `json:"views,omitempty"`
-	Nodes      *CoverageByElement `json:"nodes,omitempty"`
-	Components *CoverageByElement `json:"components,omitempty"`
-	Relations  *CoverageByElement `json:"relations,omitempty"`
-	Layers     *CoverageByElement `json:"layers,omitempty"`
-	Labels     *CoverageByElement `json:"labels,omitempty"`
+	Views      *ByElement `json:"views,omitempty"`
+	Nodes      *ByElement `json:"nodes,omitempty"`
+	Components *ByElement `json:"components,omitempty"`
+	Relations  *ByElement `json:"relations,omitempty"`
+	Layers     *ByElement `json:"layers,omitempty"`
+	Labels     *ByElement `json:"labels,omitempty"`
 	Covered    int
 	Total      int
 }
 
-type CoverageByElement struct {
+type ByElement struct {
 	Coverage float64
 	Covered  int
 	Total    int
 }
 
-// Measure coverage
+// Measure coverage.
 func Measure(cfg *config.Config) *Coverage {
 	cover := &Coverage{
 		Name:       cfg.Name,
-		Nodes:      &CoverageByElement{},
-		Components: &CoverageByElement{},
-		Layers:     &CoverageByElement{},
+		Nodes:      &ByElement{},
+		Components: &ByElement{},
+		Layers:     &ByElement{},
 	}
 	// index
 	cover.Total += 1
@@ -41,7 +41,7 @@ func Measure(cfg *config.Config) *Coverage {
 
 	// views
 	if !cfg.HideViews {
-		cover.Views = &CoverageByElement{}
+		cover.Views = &ByElement{}
 		for _, v := range cfg.Views {
 			cover.Views.Total += 1
 			if v.Desc != "" {
@@ -88,8 +88,8 @@ func Measure(cfg *config.Config) *Coverage {
 	}
 
 	// relations
-	if !(cfg.HideViews && cfg.HideLabels) {
-		cover.Relations = &CoverageByElement{}
+	if !cfg.HideViews || !cfg.HideLabels {
+		cover.Relations = &ByElement{}
 		for _, r := range cfg.Relations {
 			cover.Relations.Total += 1
 			if r.Desc != "" {
@@ -122,7 +122,7 @@ func Measure(cfg *config.Config) *Coverage {
 
 	// labels
 	if !cfg.HideLabels {
-		cover.Labels = &CoverageByElement{}
+		cover.Labels = &ByElement{}
 		for _, l := range cfg.Labels() {
 			cover.Labels.Total += 1
 			if l.Desc != "" {
