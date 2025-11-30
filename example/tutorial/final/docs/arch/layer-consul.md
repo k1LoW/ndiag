@@ -23,7 +23,6 @@ Consul DC
 
 | Name (node count) | Description |
 | --- | --- |
-| [lb](node-lb.md) (2) | Load balancer |
 | [app](node-app.md) (3) | Application |
 | [db](node-db.md) (2) | Database |
 

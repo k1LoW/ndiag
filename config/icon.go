@@ -61,7 +61,23 @@ func (m *IconMap) Set(k string, i *Icon) {
 
 func (m *IconMap) GeneratePNGGlyphIcons() (e error) {
 	if err := os.Mkdir(m.tempIconDir, 0750); err != nil {
-		return err
+		if !os.IsExist(err) {
+			return err
+		}
+		// Directory already exists, check if files are already generated
+		for _, k := range m.Keys() {
+			i, err := m.Get(k)
+			if err != nil {
+				return err
+			}
+			if !i.IsGlyph() {
+				continue
+			}
+			if _, err := os.Stat(i.Path); err == nil {
+				// File already exists, skip regeneration
+				continue
+			}
+		}
 	}
 	for _, k := range m.Keys() {
 		i, err := m.Get(k)
@@ -69,6 +85,10 @@ func (m *IconMap) GeneratePNGGlyphIcons() (e error) {
 			return err
 		}
 		if !i.IsGlyph() {
+			continue
+		}
+		// Check if file already exists
+		if _, err := os.Stat(i.Path); err == nil {
 			continue
 		}
 		f, err := os.OpenFile(i.Path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666) // #nosec
@@ -88,7 +108,23 @@ func (m *IconMap) GeneratePNGGlyphIcons() (e error) {
 
 func (m *IconMap) GenerateSVGGlyphIcons() (e error) {
 	if err := os.Mkdir(m.tempIconDir, 0750); err != nil {
-		return err
+		if !os.IsExist(err) {
+			return fmt.Errorf("failed to create temp icon dir %q: %w", m.tempIconDir, err)
+		}
+		// Directory already exists, check if files are already generated
+		for _, k := range m.Keys() {
+			i, err := m.Get(k)
+			if err != nil {
+				return err
+			}
+			if !i.IsGlyph() {
+				continue
+			}
+			if _, err := os.Stat(i.Path); err == nil {
+				// File already exists, skip regeneration
+				continue
+			}
+		}
 	}
 	for _, k := range m.Keys() {
 		i, err := m.Get(k)
@@ -96,6 +132,10 @@ func (m *IconMap) GenerateSVGGlyphIcons() (e error) {
 			return err
 		}
 		if !i.IsGlyph() {
+			continue
+		}
+		// Check if file already exists
+		if _, err := os.Stat(i.Path); err == nil {
 			continue
 		}
 		f, err := os.OpenFile(i.Path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666) // #nosec
@@ -152,7 +192,7 @@ func (cfg *Config) buildIconMap() error {
 		}
 		gm.Set(k, g)
 	}
-	// set glyph.Glyph
+	// set glyph.Glyph (but don't generate files yet)
 	for _, k := range gm.Keys() {
 		g, err := gm.Get(k)
 		if err != nil {

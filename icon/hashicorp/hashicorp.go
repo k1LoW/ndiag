@@ -79,7 +79,7 @@ func (f *Icon) Fetch(iconPath, prefix string) error {
 				return err
 			}
 
-			if err := os.WriteFile(path, b, f.Mode()); err != nil {
+			if err := os.WriteFile(path, b, 0644); err != nil {
 				_ = rc.Close()
 				return err
 			}

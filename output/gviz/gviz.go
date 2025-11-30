@@ -91,14 +91,10 @@ func (g *Gviz) renderPNG(wr io.Writer, b []byte) (e error) {
 		return fmt.Errorf("%w: if the format is png, you need dot command", err)
 	}
 
+	// Generate icon files just before rendering
 	if err := g.config.IconMap().GeneratePNGGlyphIcons(); err != nil {
 		return err
 	}
-	defer func() {
-		if err := g.config.IconMap().RemoveTempIconDir(); err != nil {
-			e = err
-		}
-	}()
 
 	// use dot commad
 	dotFormatOption := fmt.Sprintf("-T%s", format)
@@ -126,14 +122,10 @@ func (g *Gviz) renderPNG(wr io.Writer, b []byte) (e error) {
 }
 
 func (g *Gviz) renderSVG(wr io.Writer, b []byte) (e error) {
+	// Generate icon files just before rendering to avoid go-graphviz WASM memory issues
 	if err := g.config.IconMap().GenerateSVGGlyphIcons(); err != nil {
 		return err
 	}
-	defer func() {
-		if err := g.config.IconMap().RemoveTempIconDir(); err != nil {
-			e = err
-		}
-	}()
 
 	// use go-graphviz
 	gviz, err := graphviz.New(context.Background())

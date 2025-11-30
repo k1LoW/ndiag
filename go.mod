@@ -1,11 +1,11 @@
 module github.com/k1LoW/ndiag
 
-go 1.24.0
+go 1.24.10
 
 require (
 	github.com/antchfx/xmlquery v1.3.12
 	github.com/elliotchance/orderedmap v1.5.0
-	github.com/goccy/go-graphviz v0.2.9
+	github.com/goccy/go-graphviz v0.2.10
 	github.com/goccy/go-json v0.9.11
 	github.com/goccy/go-yaml v1.9.6
 	github.com/google/go-cmp v0.5.8
@@ -44,7 +44,7 @@ require (
 	github.com/srwiley/oksvg v0.0.0-20221011165216-be6e8873101c // indirect
 	github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef // indirect
 	github.com/stretchr/testify v1.8.0 // indirect
-	github.com/tetratelabs/wazero v1.9.0 // indirect
+	github.com/tetratelabs/wazero v1.10.1 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	golang.org/x/image v0.32.0 // indirect
 	golang.org/x/net v0.17.0 // indirect
