@@ -1,0 +1,123 @@
+digraph ndiag {
+  graph [rankdir=TB, layout=dot, splines=ortho, fontname="Arial"];
+
+
+
+
+  
+  subgraph "cluster_consul:dc1" {
+    label = "Consul:dc1";
+    style = "rounded,filled,setlinewidth(2)";
+    color = "#1f91beff"
+    fillcolor = "#ffffffff"
+    fontcolor = "#333333ff"
+    shape = box;
+    fontname="Arial";
+
+    
+    subgraph "cluster_app" {
+      label = "app (3)";
+      style = "solid,bold,filled";
+      color = "#333333"
+      fillcolor = "#FFFFFF"
+      
+      
+      "app:nginx"[label="NGINX", style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];
+      
+      
+      
+      "app:rails app"[label="Rails App", style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];
+      
+      
+
+      
+      
+    }
+    
+    subgraph "cluster_db" {
+      label = "db (2)";
+      style = "solid,bold,filled";
+      color = "#333333"
+      fillcolor = "#FFFFFF"
+      
+      
+      "db:postgresql"[label="PostgreSQL", style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];
+      
+      
+
+      
+      
+    }
+    
+
+    
+
+    
+       
+  subgraph "cluster_vip_group:lb" {
+    label = "vip_group:lb";
+    style = "rounded,filled,setlinewidth(2)";
+    color = "#b2cf3eff"
+    fillcolor = "#ffffffff"
+    fontcolor = "#333333ff"
+    shape = box;
+    fontname="Arial";
+
+    
+    subgraph "cluster_lb" {
+      label = "lb (2)";
+      style = "solid,bold,filled";
+      color = "#333333"
+      fillcolor = "#FFFFFF"
+      
+      
+      "lb:nginx"[label="NGINX", style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];
+      
+      
+      
+      "lb:keepalived"[label="Keepalived", style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];
+      
+      
+
+      
+      
+    }
+    
+
+    
+      
+      "vip_group:lb:vip"[label="vip", style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];
+      
+    
+
+    
+  }
+
+    
+  }
+
+
+
+
+
+
+
+"internet"[label="internet", style="rounded,bold", shape=box, fontname="Arial"];
+
+
+
+
+"internet" -> "vip_group:lb:vip"[id="edge-0", labelfontcolor="#333333", fontname="Arial", color="#33333399", arrowhead="normal", arrowhead="normal", style="bold"];
+
+"vip_group:lb:vip" -> "lb:nginx"[id="edge-1", labelfontcolor="#333333", fontname="Arial", color="#33333399", arrowhead="normal", arrowhead="normal", style="bold"];
+
+"lb:nginx" -> "app:nginx"[id="edge-2", labelfontcolor="#333333", fontname="Arial", color="#33333399", arrowhead="normal", arrowhead="normal", style="bold"];
+
+"app:nginx" -> "app:rails app"[id="edge-3", labelfontcolor="#333333", fontname="Arial", color="#33333399", arrowhead="normal", arrowhead="normal", style="bold"];
+
+"app:rails app" -> "db:postgresql"[id="edge-4", labelfontcolor="#333333", fontname="Arial", color="#33333399", arrowhead="normal", arrowhead="normal", style="bold"];
+
+"lb:keepalived" -> "vip_group:lb:vip"[id="edge-5", labelfontcolor="#333333", fontname="Arial", color="#4B75B9", arrowhead="dot", arrowhead="dot", style="bold,dashed"];
+
+
+}
