@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/antchfx/xmlquery"
+	"github.com/k1LoW/ndiag/version"
 	"github.com/nfnt/resize"
 )
 
@@ -38,7 +39,12 @@ func Download(src, dest string) (string, error) {
 		},
 	}
 
-	resp, err := client.Get(src)
+	req, err := http.NewRequest("GET", src, nil)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("User-Agent", fmt.Sprintf("%s/%s", version.Name, version.Version))
+	resp, err := client.Do(req)
 	if err != nil {
 		return "", err
 	}
