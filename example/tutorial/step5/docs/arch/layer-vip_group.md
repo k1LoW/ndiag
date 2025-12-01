@@ -27,7 +27,6 @@
 
 | Name | Description |
 | --- | --- |
-| [lb](node-lb.md) | <a href="../../ndiag.descriptions/_node-lb.md">:pencil2:</a> |
 
 ---
 

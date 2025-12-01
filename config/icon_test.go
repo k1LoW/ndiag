@@ -2,14 +2,13 @@ package config
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
 )
 
 func TestComponentIcon(t *testing.T) {
-	tempDir, err := ioutil.TempDir("", "ndiag")
+	tempDir, err := os.MkdirTemp("", "ndiag")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,7 +39,7 @@ func TestComponentIcon(t *testing.T) {
 }
 
 func TestClusterIcon(t *testing.T) {
-	tempDir, err := ioutil.TempDir("", "ndiag")
+	tempDir, err := os.MkdirTemp("", "ndiag")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -61,7 +60,7 @@ func TestClusterIcon(t *testing.T) {
 }
 
 func TestIconImage(t *testing.T) {
-	tempDir, err := ioutil.TempDir("", "ndiag")
+	tempDir, err := os.MkdirTemp("", "ndiag")
 	if err != nil {
 		t.Fatal(err)
 	}

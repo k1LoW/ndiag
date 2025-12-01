@@ -32,7 +32,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// docCmd represents the doc command
+// docCmd represents the doc command.
 var docCmd = &cobra.Command{
 	Use:   "doc",
 	Short: "Generate architecture document",
@@ -44,6 +44,11 @@ var docCmd = &cobra.Command{
 			return err
 		}
 		format := cfg.Format()
+
+		// Cleanup icon files at the end
+		defer func() {
+			_ = cfg.IconMap().RemoveTempIconDir()
+		}()
 
 		err = os.MkdirAll(cfg.DocPath, 0755) // #nosec
 		if err != nil {
@@ -89,10 +94,6 @@ var docCmd = &cobra.Command{
 
 		// views
 		for _, v := range cfg.Views {
-			cfg, err := newConfig()
-			if err != nil {
-				return err
-			}
 			if !cfg.HideViews {
 				// generate md
 				o := md.New(cfg)
@@ -124,11 +125,6 @@ var docCmd = &cobra.Command{
 		// layers
 		if !cfg.HideLayers {
 			for _, l := range cfg.Layers() {
-				cfg, err := newConfig()
-				if err != nil {
-					return err
-				}
-
 				// generate md
 				o := md.New(cfg)
 				mPath := filepath.Join(cfg.DocPath, config.MakeMdFilename("layer", l.Id()))
@@ -161,10 +157,6 @@ var docCmd = &cobra.Command{
 
 		// nodes
 		for _, n := range cfg.Nodes {
-			cfg, err := newConfig()
-			if err != nil {
-				return err
-			}
 			o := md.New(cfg)
 
 			// generate md
@@ -196,10 +188,6 @@ var docCmd = &cobra.Command{
 		// labels
 		if !cfg.HideLabels {
 			for k := range cfg.Labels() {
-				cfg, err := newConfig()
-				if err != nil {
-					return err
-				}
 				rel := cfg.Labels()[k]
 
 				// generate md
@@ -232,11 +220,6 @@ var docCmd = &cobra.Command{
 
 		// relations
 		for _, r := range cfg.Relations {
-			cfg, err := newConfig()
-			if err != nil {
-				return err
-			}
-
 			// draw relation
 			diag := gviz.New(cfg)
 			dPath := filepath.Join(cfg.DocPath, config.MakeDiagramFilename("relation", r.Id(), format))

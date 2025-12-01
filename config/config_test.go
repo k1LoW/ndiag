@@ -1,7 +1,6 @@
 package config
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -107,7 +106,7 @@ func TestLoadConfigAndRealNodes(t *testing.T) {
 	}
 	for i, tt := range tests {
 		func() {
-			tempDir, err := ioutil.TempDir("", "ndiag")
+			tempDir, err := os.MkdirTemp("", "ndiag")
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -173,7 +172,7 @@ func TestBuildNestedCluster(t *testing.T) {
 	}
 	for i, tt := range tests {
 		func() {
-			tempDir, err := ioutil.TempDir("", "ndiag")
+			tempDir, err := os.MkdirTemp("", "ndiag")
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -244,7 +243,7 @@ func TestBuildNestedCluster(t *testing.T) {
 
 func TestHideDetails(t *testing.T) {
 	func() {
-		tempDir, err := ioutil.TempDir("", "ndiag")
+		tempDir, err := os.MkdirTemp("", "ndiag")
 		if err != nil {
 			t.Fatal(err)
 		}

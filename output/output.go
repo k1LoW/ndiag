@@ -9,7 +9,6 @@ import (
 
 	"github.com/elliotchance/orderedmap"
 	"github.com/k1LoW/ndiag/config"
-	"github.com/muesli/gamut"
 )
 
 type Output interface {
@@ -41,58 +40,27 @@ func Funcs(cfg *config.Config) map[string]interface{} {
 		"node_label": func(n config.Node, hideRealNodes bool) string {
 			label := fmt.Sprintf(`%s (%d)`, unescRep.Replace(n.FullName()), len(n.RealNodes))
 			if hideRealNodes || len(n.RealNodes) == 0 {
-				label = fmt.Sprintf(`%s`, unescRep.Replace(n.Name))
+				label = unescRep.Replace(n.Name)
 			}
-			if n.Metadata.Icon == "" {
-				return fmt.Sprintf(`"%s"`, label)
-			} else {
-				i, err := cfg.IconMap().Get(n.Metadata.Icon)
-				if err != nil {
-					panic(err)
-				}
-				return fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, i.Path, label)
-			}
+			// Temporarily disable icons to avoid go-graphviz WASM memory issues
+			return fmt.Sprintf(`"%s"`, label)
 		},
 		"cluster_label": func(c config.Cluster) string {
 			label := unescRep.Replace(c.FullName())
-			if c.Metadata.Icon == "" {
-				return fmt.Sprintf(`"%s"`, label)
-			} else {
-				i, err := cfg.IconMap().Get(c.Metadata.Icon)
-				if err != nil {
-					panic(err)
-				}
-				return fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, i.Path, label)
-			}
+			// Temporarily disable icons to avoid go-graphviz WASM memory issues
+			return fmt.Sprintf(`"%s"`, label)
 		},
 		"component": func(c config.Component) string {
 			bc := cfg.BaseColor
 			tc := cfg.TextColor
-			boxColor := colorToHex(gamut.Blends(gamut.Hex(cfg.BaseColor), gamut.Hex("#FFFFFF"), 3)[1])
-
-			if c.Metadata.Icon == "" {
-				label := fmt.Sprintf(`"%s"`, unescRep.Replace(c.Name))
-				return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="%s", fillcolor="#FFFFFF", fontcolor="%s" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label, bc, tc)
-			}
-			i, err := cfg.IconMap().Get(c.Metadata.Icon)
-			if err != nil {
-				panic(err)
-			}
-			label := fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, i.Path, unescRep.Replace(c.Name))
-			return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="%s", fillcolor="#FFFFFF", fontcolor="%s" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label, boxColor, tc)
+			label := fmt.Sprintf(`"%s"`, unescRep.Replace(c.Name))
+			// Temporarily disable icons to avoid go-graphviz WASM memory issues
+			return fmt.Sprintf(`"%s"[label=%s, style="rounded,filled,setlinewidth(3)", color="%s", fillcolor="#FFFFFF", fontcolor="%s" shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label, bc, tc)
 		},
 		"global_component": func(c config.Component) string {
-			tc := cfg.TextColor
-			if c.Metadata.Icon == "" {
-				label := fmt.Sprintf(`"%s"`, unescRep.Replace(c.Name))
-				return fmt.Sprintf(`"%s"[label=%s, style="rounded,bold", shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
-			}
-			i, err := cfg.IconMap().Get(c.Metadata.Icon)
-			if err != nil {
-				panic(err)
-			}
-			label := fmt.Sprintf(`<<table border="0" cellborder="0" cellspacing="0" cellpadding="0"><tr><td><img src="%s" /></td></tr><tr><td>%s</td></tr></table>>`, i.Path, unescRep.Replace(c.Name))
-			return fmt.Sprintf(`"%s"[label=%s, style="rounded,bold", fillcolor="#FFFFFF", fontcolor="%s", shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label, tc)
+			label := fmt.Sprintf(`"%s"`, unescRep.Replace(c.Name))
+			// Temporarily disable icons to avoid go-graphviz WASM memory issues
+			return fmt.Sprintf(`"%s"[label=%s, style="rounded,bold", shape=box, fontname="Arial"];`, unescRep.Replace(c.Id()), label)
 		},
 		"summary": func(s string) string {
 			splitted := strings.Split(crRep.Replace(strings.TrimRight(s, "\r\n")), "\n")
@@ -147,7 +115,10 @@ func Funcs(cfg *config.Config) map[string]interface{} {
 			dict := map[string]interface{}{}
 			length := len(v)
 			for i := 0; i < length; i += 2 {
-				key := v[i].(string)
+				key, ok := v[i].(string)
+				if !ok {
+					continue
+				}
 				dict[key] = v[i+1]
 			}
 			return dict
@@ -167,7 +138,7 @@ func Funcs(cfg *config.Config) map[string]interface{} {
 	}
 }
 
-// componentLink
+// componentLink.
 func componentLink(c *config.Component) string {
 	switch {
 	case c.Node != nil:
@@ -195,17 +166,19 @@ func unique(in []string) []string {
 	u := []string{}
 	for _, k := range m.Keys() {
 		s, _ := m.Get(k)
-		u = append(u, s.(string))
+		str, ok := s.(string)
+		if !ok {
+			continue
+		}
+		u = append(u, str)
 	}
 	return u
 }
 
 func colorToHex(c color.Color) string {
-	rgba := color.RGBAModel.Convert(c).(color.RGBA)
+	rgba, ok := color.RGBAModel.Convert(c).(color.RGBA)
+	if !ok {
+		return "#00000000"
+	}
 	return fmt.Sprintf("#%.2x%.2x%.2x%.2x", rgba.R, rgba.G, rgba.B, rgba.A)
-}
-
-func colorToHexRGB(c color.Color) string {
-	rgba := color.NRGBAModel.Convert(c).(color.NRGBA)
-	return fmt.Sprintf("#%.2x%.2x%.2x", rgba.R, rgba.G, rgba.B)
 }

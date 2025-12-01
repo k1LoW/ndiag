@@ -187,7 +187,11 @@ func MergeEdges(edges []*Edge) []*Edge {
 	}
 	for _, k := range eKeys0.Keys() {
 		e, _ := eKeys0.Get(k)
-		merged0 = append(merged0, e.(*Edge))
+		edge, ok := e.(*Edge)
+		if !ok {
+			continue
+		}
+		merged0 = append(merged0, edge)
 	}
 
 	eKeys1 := orderedmap.NewOrderedMap()
@@ -210,7 +214,11 @@ func MergeEdges(edges []*Edge) []*Edge {
 	}
 	for _, k := range eKeys1.Keys() {
 		e, _ := eKeys1.Get(k)
-		merged1 = append(merged1, e.(*Edge))
+		edge, ok := e.(*Edge)
+		if !ok {
+			continue
+		}
+		merged1 = append(merged1, edge)
 	}
 	return merged1
 }
@@ -224,7 +232,11 @@ func uniqueRawRelations(rels rawRelations) rawRelations {
 	}
 	for _, k := range rKeys.Keys() {
 		rel, _ := rKeys.Get(k)
-		result = append(result, rel.(*rawRelation))
+		r, ok := rel.(*rawRelation)
+		if !ok {
+			continue
+		}
+		result = append(result, r)
 	}
 	return result
 }

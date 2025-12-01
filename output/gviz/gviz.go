@@ -2,6 +2,7 @@ package gviz
 
 import (
 	"bytes"
+	"context"
 	"encoding/base64"
 	"fmt"
 	"image"
@@ -87,13 +88,13 @@ func (g *Gviz) renderPNG(wr io.Writer, b []byte) (e error) {
 	format := g.config.Format()
 	_, err := exec.LookPath("dot")
 	if err != nil {
-		return fmt.Errorf("%v: if the format is png, you need dot command", err)
+		return fmt.Errorf("%w: if the format is png, you need dot command", err)
 	}
 
+	// Generate icon files just before rendering
 	if err := g.config.IconMap().GeneratePNGGlyphIcons(); err != nil {
 		return err
 	}
-	defer g.config.IconMap().RemoveTempIconDir()
 
 	// use dot commad
 	dotFormatOption := fmt.Sprintf("-T%s", format)
@@ -121,13 +122,16 @@ func (g *Gviz) renderPNG(wr io.Writer, b []byte) (e error) {
 }
 
 func (g *Gviz) renderSVG(wr io.Writer, b []byte) (e error) {
+	// Generate icon files just before rendering to avoid go-graphviz WASM memory issues
 	if err := g.config.IconMap().GenerateSVGGlyphIcons(); err != nil {
 		return err
 	}
-	defer g.config.IconMap().RemoveTempIconDir()
 
 	// use go-graphviz
-	gviz := graphviz.New()
+	gviz, err := graphviz.New(context.Background())
+	if err != nil {
+		return err
+	}
 	graph, err := graphviz.ParseBytes(b)
 	if err != nil {
 		return err
@@ -143,7 +147,7 @@ func (g *Gviz) renderSVG(wr io.Writer, b []byte) (e error) {
 
 	buf := new(bytes.Buffer)
 
-	if err := gviz.Render(graph, graphviz.Format("svg"), buf); err != nil {
+	if err := gviz.Render(context.Background(), graph, graphviz.Format("svg"), buf); err != nil {
 		return err
 	}
 

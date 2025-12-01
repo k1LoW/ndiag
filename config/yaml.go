@@ -100,7 +100,7 @@ func (n *Node) UnmarshalYAML(data []byte) error {
 		n.Match = n.Name
 	}
 	if n.MatchRegexp == "" {
-		n.nameRe = regexp.MustCompile(fmt.Sprintf("^%s$", strings.Replace(n.Match, "*", ".+", -1)))
+		n.nameRe = regexp.MustCompile(fmt.Sprintf("^%s$", strings.ReplaceAll(n.Match, "*", ".+")))
 	} else {
 		n.nameRe = regexp.MustCompile(n.MatchRegexp)
 	}
@@ -123,9 +123,17 @@ func (g *Graph) UnmarshalYAML(data []byte) error {
 	g.Format = raw.Format
 	g.Attrs = Attrs{}
 	for _, kv := range raw.MapSliceAttrs {
+		key, ok := kv.Key.(string)
+		if !ok {
+			continue
+		}
+		value, ok := kv.Value.(string)
+		if !ok {
+			continue
+		}
 		g.Attrs = append(g.Attrs, &Attr{
-			Key:   kv.Key.(string),
-			Value: kv.Value.(string),
+			Key:   key,
+			Value: value,
 		})
 	}
 	return nil
@@ -139,7 +147,11 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 		// networks:
 		//   - ["internet", "lb:nginx", "app:nginx", "app:rails"]
 		for _, r := range v {
-			components = append(components, r.(string))
+			str, ok := r.(string)
+			if !ok {
+				continue
+			}
+			components = append(components, str)
 		}
 		rel := &rawRelation{
 			Type:       relType,
@@ -154,39 +166,66 @@ func parseRelation(relType *RelationType, rel interface{}) (*rawRelation, error)
 		)
 		idi, ok := v["id"]
 		if ok {
-			id = idi.(string)
+			id, ok = idi.(string)
+			if !ok {
+				id = ""
+			}
 		} else {
 			id = ""
 		}
 		ri, ok := v[relType.ComponentsKey]
 		if ok {
-			for _, r := range ri.([]interface{}) {
-				components = append(components, r.(string))
+			riSlice, ok := ri.([]interface{})
+			if ok {
+				for _, r := range riSlice {
+					str, ok := r.(string)
+					if !ok {
+						continue
+					}
+					components = append(components, str)
+				}
 			}
 		}
 		typei, ok := v["type"]
 		if ok {
-			switch typei.(string) {
-			case "network":
-				relType = RelationTypeNetwork
-			default:
-				return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
+			typeStr, ok := typei.(string)
+			if ok {
+				switch typeStr {
+				case "network":
+					relType = RelationTypeNetwork
+				default:
+					return nil, fmt.Errorf("invalid %s format: %s", relType.Name, v)
+				}
 			}
 		}
 		ti, ok := v["labels"]
 		if ok {
-			for _, t := range ti.([]interface{}) {
-				labels = append(labels, t.(string))
+			tiSlice, ok := ti.([]interface{})
+			if ok {
+				for _, t := range tiSlice {
+					str, ok := t.(string)
+					if !ok {
+						continue
+					}
+					labels = append(labels, str)
+				}
 			}
 		}
 		attrs := Attrs{}
 		attrsi, ok := v["attrs"]
 		if ok {
-			for k, v := range attrsi.(map[string]interface{}) {
-				attrs = append(attrs, &Attr{
-					Key:   k,
-					Value: v.(string),
-				})
+			attrsMap, ok := attrsi.(map[string]interface{})
+			if ok {
+				for k, v := range attrsMap {
+					vStr, ok := v.(string)
+					if !ok {
+						continue
+					}
+					attrs = append(attrs, &Attr{
+						Key:   k,
+						Value: vStr,
+					})
+				}
 			}
 		}
 		sort.Slice(attrs, func(i, j int) bool {

@@ -4,7 +4,6 @@ import (
 	"archive/zip"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -20,10 +19,10 @@ const logoURL = "https://raw.githubusercontent.com/kubernetes/kubernetes/master/
 var pathRe = regexp.MustCompile(`\A.+/([^/]+)/([^/]+)/([^/]+)\.svg\z`)
 var rep = strings.NewReplacer("control_plane_components", "control-plane", "infrastructure_components", "infra", "_", "-")
 
-type K8sIcon struct{}
+type Icon struct{}
 
-func (f *K8sIcon) Fetch(iconPath, prefix string) error {
-	dir, err := ioutil.TempDir("", "ndiag-icon-k8s")
+func (f *Icon) Fetch(iconPath, prefix string) error {
+	dir, err := os.MkdirTemp("", "ndiag-icon-k8s")
 	if err != nil {
 		return err
 	}
@@ -76,7 +75,7 @@ func (f *K8sIcon) Fetch(iconPath, prefix string) error {
 			return err
 		}
 
-		if err := ioutil.WriteFile(path, buf, f.Mode()); err != nil {
+		if err := os.WriteFile(path, buf, 0600); err != nil {
 			_ = rc.Close()
 			return err
 		}
@@ -101,7 +100,7 @@ func (f *K8sIcon) Fetch(iconPath, prefix string) error {
 		return err
 	}
 	path := filepath.Join(iconPath, prefix, "logo.svg")
-	if err := ioutil.WriteFile(path, b, 0600); err != nil {
+	if err := os.WriteFile(path, b, 0600); err != nil {
 		return err
 	}
 	counter[path] = struct{}{}

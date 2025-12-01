@@ -1,0 +1,126 @@
+digraph ndiag {
+  graph [rankdir=TB, layout=dot, splines=ortho, fontname="Arial", rankdir="LR"];
+
+
+
+
+  
+  subgraph "cluster_type:input" {
+    label = "type:input";
+    style = "rounded,filled,setlinewidth(2)";
+    color = "#1f91beff"
+    fillcolor = "#ffffffff"
+    fontcolor = "#333333ff"
+    shape = box;
+    fontname="Arial";
+
+    
+    subgraph "cluster_input files" {
+      label = "input files";
+      style = "solid,bold,filled";
+      color = "#333333"
+      fillcolor = "#FFFFFF"
+      
+      
+      "input files:ndiag.yml"[label="ndiag.yml", style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];
+      
+      
+      
+      "input files:nodes.yml"[label="nodes.yml", style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];
+      
+      
+      
+      "input files:ndiag.descriptions/*.md"[label="ndiag.descriptions/*.md", style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];
+      
+      
+
+      
+      
+    }
+    
+
+    
+
+    
+  }
+
+
+  
+  subgraph "cluster_type:output" {
+    label = "type:output";
+    style = "rounded,filled,setlinewidth(2)";
+    color = "#1f91beff"
+    fillcolor = "#ffffffff"
+    fontcolor = "#333333ff"
+    shape = box;
+    fontname="Arial";
+
+    
+    subgraph "cluster_documents" {
+      label = "documents";
+      style = "solid,bold,filled";
+      color = "#333333"
+      fillcolor = "#FFFFFF"
+      
+      
+      "documents:index document"[label="index document", style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];
+      
+      
+      
+      "documents:custom documents"[label="custom documents", style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];
+      
+      
+      
+      "documents:layer based documents"[label="layer based documents", style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];
+      
+      
+      
+      "documents:label based documents"[label="label based documents", style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];
+      
+      
+
+      
+      
+    }
+    
+
+    
+
+    
+  }
+
+
+
+
+  subgraph "cluster_ndiag" {
+    label = "ndiag";
+    style = "solid,bold";
+    
+    
+    "ndiag:internal"[label="internal", style="rounded,filled,setlinewidth(3)", color="#4B75B9", fillcolor="#FFFFFF", fontcolor="#333333" shape=box, fontname="Arial"];
+    
+    
+    
+    
+  }
+
+
+
+
+
+"input files:ndiag.yml" -> "ndiag:internal"[id="edge-0", labelfontcolor="#333333", fontname="Arial", color="#33333399", arrowhead="normal", arrowhead="normal", style="bold"];
+
+"input files:nodes.yml" -> "ndiag:internal"[id="edge-1", labelfontcolor="#333333", fontname="Arial", color="#33333399", arrowhead="normal", arrowhead="normal", style="bold"];
+
+"ndiag:internal" -> "input files:ndiag.descriptions/*.md"[id="edge-2", labelfontcolor="#333333", fontname="Arial", color="#33333399", arrowhead="normal", arrowhead="normal", style="bold", dir="both"];
+
+"ndiag:internal" -> "documents:index document"[id="edge-3", labelfontcolor="#333333", fontname="Arial", color="#33333399", arrowhead="normal", arrowhead="normal", style="bold"];
+
+"ndiag:internal" -> "documents:custom documents"[id="edge-4", labelfontcolor="#333333", fontname="Arial", color="#33333399", arrowhead="normal", arrowhead="normal", style="bold"];
+
+"ndiag:internal" -> "documents:layer based documents"[id="edge-5", labelfontcolor="#333333", fontname="Arial", color="#33333399", arrowhead="normal", arrowhead="normal", style="bold"];
+
+"ndiag:internal" -> "documents:label based documents"[id="edge-6", labelfontcolor="#333333", fontname="Arial", color="#33333399", arrowhead="normal", arrowhead="normal", style="bold"];
+
+
+}

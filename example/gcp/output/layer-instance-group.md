@@ -9,34 +9,6 @@
 </p>
 
 
-## instance-group:a
-
-
-
-<p align="right">
-  [ <a href="../input/ndiag.descriptions/_cluster-instance-group_a.md">:pencil2: Edit description</a> ]
-</p>
-
-
-### Nodes
-
-| Name | Description |
-| --- | --- |
-| [Service Instance](node-service_instance.md) | <a href="../input/ndiag.descriptions/_node-service_instance.md">:pencil2:</a> |
-## instance-group:b
-
-
-
-<p align="right">
-  [ <a href="../input/ndiag.descriptions/_cluster-instance-group_b.md">:pencil2: Edit description</a> ]
-</p>
-
-
-### Nodes
-
-| Name | Description |
-| --- | --- |
-| [Heartbeat and Snapshot System](node-heartbeat_and_snapshot_system.md) | <a href="../input/ndiag.descriptions/_node-heartbeat_and_snapshot_system.md">:pencil2:</a> |
 
 ---
 

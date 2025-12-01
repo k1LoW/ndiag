@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/antchfx/xmlquery"
+	"github.com/k1LoW/ndiag/version"
 	"github.com/nfnt/resize"
 )
 
@@ -38,7 +39,12 @@ func Download(src, dest string) (string, error) {
 		},
 	}
 
-	resp, err := client.Get(src)
+	req, err := http.NewRequest("GET", src, nil)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("User-Agent", fmt.Sprintf("%s/%s", version.Name, version.Version))
+	resp, err := client.Do(req)
 	if err != nil {
 		return "", err
 	}
@@ -92,22 +98,22 @@ func OptimizeSVG(b []byte, width, height float64) ([]byte, error) {
 	nw := size
 	nh := size
 	for _, a := range s.Attr {
-		switch {
-		case a.Name.Local == "width":
+		switch a.Name.Local {
+		case "width":
 			if !hasViewBox {
 				matched := sizeRe.FindStringSubmatch(a.Value)
 				if len(matched) > 0 {
 					cw, _ = strconv.ParseFloat(matched[1], 64)
 				}
 			}
-		case a.Name.Local == "height":
+		case "height":
 			if !hasViewBox {
 				matched := sizeRe.FindStringSubmatch(a.Value)
 				if len(matched) > 0 {
 					ch, _ = strconv.ParseFloat(matched[1], 64)
 				}
 			}
-		case a.Name.Local == "viewBox":
+		case "viewBox":
 			splitted := strings.Split(a.Value, " ")
 			if len(splitted) == 4 {
 				hasViewBox = true
@@ -153,9 +159,7 @@ func OptimizeSVG(b []byte, width, height float64) ([]byte, error) {
 
 	// If there are no line breaks, Graphviz will not recognize it as SVG.
 	docstr := strings.Replace(strings.Replace(imgdoc.OutputXML(false), "?>", "?>\n", 1), "-->", "-->\n", 1)
-	if strings.Contains(docstr, "<?xml?>") {
-		docstr = strings.Replace(docstr, "<?xml?>", `<?xml version="1.0"?>`, 1)
-	}
+	docstr = strings.Replace(docstr, "<?xml?>", `<?xml version="1.0"?>`, 1)
 
 	return []byte(docstr), nil
 }

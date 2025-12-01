@@ -47,13 +47,13 @@ var fetchIconsCmd = &cobra.Command{
 
 		switch target {
 		case "aws":
-			fetcher = &aws.AWSIcon{}
+			fetcher = &aws.Icon{}
 		case "gcp":
-			fetcher = &gcp.GCPIcon{}
+			fetcher = &gcp.Icon{}
 		case "hashicorp":
-			fetcher = &hashicorp.HashicorpIcon{}
+			fetcher = &hashicorp.Icon{}
 		case "k8s":
-			fetcher = &k8s.K8sIcon{}
+			fetcher = &k8s.Icon{}
 		}
 
 		if iconPrefix == "" {

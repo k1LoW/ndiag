@@ -10,25 +10,6 @@ A group of virtual IP and nodes/components to handle it.
 </p>
 
 
-## vip_group:lb
-
-
-
-<p align="right">
-  [ <a href="../../ndiag.descriptions/_cluster-vip_group_lb.md">:pencil2: Edit description</a> ]
-</p>
-
-
-### Cluster components
-
-| Name | Description |
-| --- | --- |
-| vip_group:lb:vip | <a href="../../ndiag.descriptions/_component-vip_group_lb_vip.md">:pencil2:</a> |
-### Nodes
-
-| Name (node count) | Description |
-| --- | --- |
-| [lb](node-lb.md) (2) | Load balancer |
 
 ---
 
