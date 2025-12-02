@@ -1,3 +1,10 @@
+## [v0.14.7](https://github.com/k1LoW/ndiag/compare/v0.14.6...v0.14.7) - 2025-12-02
+- Bump golang.org/x/image from 0.5.0 to 0.10.0 by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/112
+- feat: update go-graphviz by @k1LoW in https://github.com/k1LoW/ndiag/pull/117
+- chore(deps): bump the dependencies group with 7 updates by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/119
+- chore: setup tagpr labels by @k1LoW in https://github.com/k1LoW/ndiag/pull/113
+- Bump golang.org/x/net from 0.17.0 to 0.38.0 by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/116
+
 ## [v0.14.6](https://github.com/k1LoW/ndiag/compare/v0.14.5...v0.14.6) - 2023-10-12
 - docs: add the installation guide with aqua by @suzuki-shunsuke in https://github.com/k1LoW/ndiag/pull/109
 - Bump golang.org/x/net from 0.7.0 to 0.17.0 by @dependabot in https://github.com/k1LoW/ndiag/pull/111
