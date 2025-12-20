@@ -1,3 +1,5 @@
+version: 2
+
 before:
   hooks:
     - go mod download
@@ -8,47 +10,30 @@ builds:
     ldflags:
       - -s -w -X github.com/k1LoW/ndiag.version={{.Version}} -X github.com/k1LoW/ndiag.commit={{.FullCommit}} -X github.com/k1LoW/ndiag.date={{.Date}} -X github.com/k1LoW/ndiag/version.Version={{.Version}}
     env:
-      - CGO_ENABLED=1
+      - CGO_ENABLED=0
     goos:
       - darwin
     goarch:
       - amd64
-  -
-    id: ndiag-darwin-arm64
-    ldflags:
-      - -s -w -X github.com/k1LoW/ndiag.version={{.Version}} -X github.com/k1LoW/ndiag.commit={{.FullCommit}} -X github.com/k1LoW/ndiag.date={{.Date}} -X github.com/k1LoW/ndiag/version.Version={{.Version}}
-    env:
-      - CGO_ENABLED=1
-    goos:
-      - darwin
-    goarch:
       - arm64
   -
     id: ndiag-linux
-    flags:
-      - -a
-      - -tags
-      - netgo
-      - -installsuffix
-      - netgo
     ldflags:
       - -s -w -X github.com/k1LoW/ndiag.version={{.Version}} -X github.com/k1LoW/ndiag.commit={{.FullCommit}} -X github.com/k1LoW/ndiag.date={{.Date}} -X github.com/k1LoW/ndiag/version.Version={{.Version}}
-      - -linkmode external
-      - -extldflags '-static'
     env:
-      - CGO_ENABLED=1
-      - CC=x86_64-unknown-linux-gnu-gcc # brew install messense/macos-cross-toolchains/x86_64-unknown-linux-gnu
+      - CGO_ENABLED=0
     goos:
       - linux
     goarch:
       - amd64
+      - arm64
 archives:
   -
     id: ndiag-archive
     name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     format_overrides:
       - goos: darwin
-        format: zip
+        formats: [zip]
     files:
       - CREDITS
       - README.md
@@ -56,9 +41,9 @@ archives:
 checksum:
   name_template: 'checksums.txt'
 snapshot:
-  name_template: "{{ .Version }}-next"
+  version_template: "{{ .Version }}-next"
 changelog:
-  skip: true
+  disable: true
   sort: asc
   filters:
     exclude:
@@ -68,7 +53,7 @@ nfpms:
   -
     id: ndiag-nfpms
     file_name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
-    builds:
+    ids:
       - ndiag-linux
     homepage: https://github.com/k1LoW/ndiag
     maintainer: Ken'ichiro Oyama <k1lowxb@gmail.com>
