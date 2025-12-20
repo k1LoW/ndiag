@@ -1,3 +1,5 @@
+## [v0.15.1](https://github.com/k1LoW/ndiag/compare/v0.15.0...v0.15.1) - 2025-12-20
+
 ## [v0.15.0](https://github.com/k1LoW/ndiag/compare/v0.14.6...v0.15.0) - 2025-12-20
 - Bump golang.org/x/image from 0.5.0 to 0.10.0 by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/112
 - feat: update go-graphviz by @k1LoW in https://github.com/k1LoW/ndiag/pull/117
