@@ -43,12 +43,16 @@ jobs:
 
       - name: Setup
         run: |
-          brew install goreleaser
           brew install messense/macos-cross-toolchains/x86_64-unknown-linux-gnu
 
-      - name: Release
-        run: |
-          make release
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: latest
+          args: --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   dockerimage:
     needs: tagpr

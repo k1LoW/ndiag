@@ -75,6 +75,6 @@ prerelease_for_tagpr:
 	git add CHANGELOG.md CREDITS go.mod go.sum
 
 release:
-	goreleaser --rm-dist
+	goreleaser --clean
 
 .PHONY: default test
