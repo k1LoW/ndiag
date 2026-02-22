@@ -46,7 +46,7 @@ jobs:
           brew install messense/macos-cross-toolchains/x86_64-unknown-linux-gnu
 
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v6
+        uses: goreleaser/goreleaser-action@v7
         with:
           distribution: goreleaser
           version: latest
