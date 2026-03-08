@@ -14,7 +14,7 @@ require (
 	github.com/k1LoW/tbls v1.92.3
 	github.com/karrick/godirwalk v1.17.0
 	github.com/labstack/gommon v0.4.2
-	github.com/mattn/go-runewidth v0.0.20
+	github.com/mattn/go-runewidth v0.0.21
 	github.com/muesli/gamut v0.3.1
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/olekukonko/tablewriter v0.0.5
