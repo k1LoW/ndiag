@@ -1,9 +1,9 @@
 module github.com/k1LoW/ndiag
 
-go 1.24.10
+go 1.25.0
 
 require (
-	github.com/antchfx/xmlquery v1.5.0
+	github.com/antchfx/xmlquery v1.5.1
 	github.com/elliotchance/orderedmap v1.8.0
 	github.com/goccy/go-graphviz v0.2.10
 	github.com/goccy/go-json v0.10.6
@@ -11,7 +11,7 @@ require (
 	github.com/google/go-cmp v0.7.0
 	github.com/h2non/go-is-svg v0.0.0-20160927212452-35e8c4b0612c
 	github.com/k1LoW/glyph v0.5.1-0.20210105154244-06dafc0214e7
-	github.com/k1LoW/tbls v1.92.3
+	github.com/k1LoW/tbls v1.93.0
 	github.com/karrick/godirwalk v1.17.0
 	github.com/labstack/gommon v0.4.2
 	github.com/mattn/go-runewidth v0.0.21
@@ -25,7 +25,7 @@ require (
 
 require (
 	github.com/ajstarks/svgo v0.0.0-20211024235047-1546f124cd8b // indirect
-	github.com/antchfx/xpath v1.3.5 // indirect
+	github.com/antchfx/xpath v1.3.6 // indirect
 	github.com/beta/freetype v0.0.1 // indirect
 	github.com/clipperhouse/uax29/v2 v2.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
@@ -46,8 +46,8 @@ require (
 	github.com/stretchr/testify v1.11.1 // indirect
 	github.com/tetratelabs/wazero v1.10.1 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
-	golang.org/x/image v0.34.0 // indirect
-	golang.org/x/net v0.48.0 // indirect
-	golang.org/x/sys v0.39.0 // indirect
-	golang.org/x/text v0.32.0 // indirect
+	golang.org/x/image v0.36.0 // indirect
+	golang.org/x/net v0.49.0 // indirect
+	golang.org/x/sys v0.40.0 // indirect
+	golang.org/x/text v0.34.0 // indirect
 )
