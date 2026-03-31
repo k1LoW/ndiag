@@ -1,3 +1,13 @@
+## [v0.15.2](https://github.com/k1LoW/ndiag/compare/v0.15.1...v0.15.2) - 2026-03-31
+- chore(deps): bump github.com/k1LoW/tbls from 1.92.1 to 1.92.2 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/123
+- chore(deps): bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/125
+- chore(deps): bump github.com/mattn/go-runewidth from 0.0.19 to 0.0.20 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/126
+- chore(deps): bump goreleaser/goreleaser-action from 6 to 7 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/127
+- chore(deps): bump the dependencies group across 1 directory with 2 updates by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/130
+- chore(deps): bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/131
+- chore(deps): bump the dependencies group across 1 directory with 5 updates by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/132
+- chore(deps): bump golang.org/x/image from 0.36.0 to 0.38.0 by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/133
+
 ## [v0.15.1](https://github.com/k1LoW/ndiag/compare/v0.15.0...v0.15.1) - 2025-12-20
 
 ## [v0.15.0](https://github.com/k1LoW/ndiag/compare/v0.14.6...v0.15.0) - 2025-12-20
