@@ -1,6 +1,6 @@
 module github.com/k1LoW/ndiag
 
-go 1.25.0
+go 1.25.7
 
 require (
 	github.com/antchfx/xmlquery v1.5.1
@@ -10,11 +10,11 @@ require (
 	github.com/goccy/go-yaml v1.19.2
 	github.com/google/go-cmp v0.7.0
 	github.com/h2non/go-is-svg v0.0.0-20160927212452-35e8c4b0612c
-	github.com/k1LoW/glyph v0.5.1-0.20210105154244-06dafc0214e7
-	github.com/k1LoW/tbls v1.93.0
+	github.com/k1LoW/glyph v0.6.0
+	github.com/k1LoW/tbls v1.94.2
 	github.com/karrick/godirwalk v1.17.0
 	github.com/labstack/gommon v0.4.2
-	github.com/mattn/go-runewidth v0.0.21
+	github.com/mattn/go-runewidth v0.0.22
 	github.com/muesli/gamut v0.3.1
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/olekukonko/tablewriter v0.0.5
@@ -36,7 +36,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/muesli/clusters v0.0.0-20200529215643-2700303c1762 // indirect
 	github.com/muesli/kmeans v0.3.1 // indirect
@@ -47,7 +47,7 @@ require (
 	github.com/tetratelabs/wazero v1.10.1 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	golang.org/x/image v0.38.0 // indirect
-	golang.org/x/net v0.49.0 // indirect
-	golang.org/x/sys v0.40.0 // indirect
+	golang.org/x/net v0.52.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/text v0.35.0 // indirect
 )
