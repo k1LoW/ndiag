@@ -11,10 +11,10 @@ require (
 	github.com/google/go-cmp v0.7.0
 	github.com/h2non/go-is-svg v0.0.0-20160927212452-35e8c4b0612c
 	github.com/k1LoW/glyph v0.6.0
-	github.com/k1LoW/tbls v1.94.2
+	github.com/k1LoW/tbls v1.94.4
 	github.com/karrick/godirwalk v1.17.0
 	github.com/labstack/gommon v0.4.2
-	github.com/mattn/go-runewidth v0.0.22
+	github.com/mattn/go-runewidth v0.0.23
 	github.com/muesli/gamut v0.3.1
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/olekukonko/tablewriter v0.0.5
