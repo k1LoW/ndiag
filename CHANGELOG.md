@@ -1,3 +1,8 @@
+## [v0.15.3](https://github.com/k1LoW/ndiag/compare/v0.15.2...v0.15.3) - 2026-04-20
+- chore(deps): bump the dependencies group with 3 updates by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/134
+- chore(deps): bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/136
+- chore(deps): bump github.com/labstack/gommon from 0.4.2 to 0.5.0 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/137
+
 ## [v0.15.2](https://github.com/k1LoW/ndiag/compare/v0.15.1...v0.15.2) - 2026-03-31
 - chore(deps): bump github.com/k1LoW/tbls from 1.92.1 to 1.92.2 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/123
 - chore(deps): bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/125
