@@ -46,8 +46,8 @@ github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/k1LoW/glyph v0.6.0 h1:v36hoBxI2P/AUmwczWYfMYpNBNYJNSa8C4PlZmwERfY=
 github.com/k1LoW/glyph v0.6.0/go.mod h1:DXhnhEe0+7B1B2PDJ3GWUG3gJNnIn8o1c9UwJtWsjwM=
-github.com/k1LoW/tbls v1.94.4 h1:GLGyvV382U9D1ZsywOsYvrPQaordoX5gZo/VTf3d37g=
-github.com/k1LoW/tbls v1.94.4/go.mod h1:3/6NM4C1gSzTafwnXdRmzsOKZMOC9x+lCAV/9VdIAt4=
+github.com/k1LoW/tbls v1.94.5 h1:TF2eC33MTUgCHsKPvRkO/v/ucTE/9UdHQhorB5Puaew=
+github.com/k1LoW/tbls v1.94.5/go.mod h1:3/6NM4C1gSzTafwnXdRmzsOKZMOC9x+lCAV/9VdIAt4=
 github.com/karrick/godirwalk v1.17.0 h1:b4kY7nqDdioR/6qnbHQyDvmA17u5G1cZ6J+CZXwSWoI=
 github.com/karrick/godirwalk v1.17.0/go.mod h1:j4mkqPuvaLI8mp1DroR3P6ad7cyYd4c1qeJ3RV7ULlk=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=

@@ -11,7 +11,7 @@ require (
 	github.com/google/go-cmp v0.7.0
 	github.com/h2non/go-is-svg v0.0.0-20160927212452-35e8c4b0612c
 	github.com/k1LoW/glyph v0.6.0
-	github.com/k1LoW/tbls v1.94.4
+	github.com/k1LoW/tbls v1.94.5
 	github.com/karrick/godirwalk v1.17.0
 	github.com/labstack/gommon v0.5.0
 	github.com/mattn/go-runewidth v0.0.23
