@@ -1,3 +1,8 @@
+## [v0.15.4](https://github.com/k1LoW/ndiag/compare/v0.15.3...v0.15.4) - 2026-07-06
+
+- chore(deps): bump golang.org/x/image from 0.38.0 to 0.41.0 by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/143
+- chore(deps): bump the dependencies group across 1 directory with 6 updates by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/144
+
 ## [v0.15.3](https://github.com/k1LoW/ndiag/compare/v0.15.2...v0.15.3) - 2026-07-04
 
 - chore(deps): bump the dependencies group with 3 updates by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/134
