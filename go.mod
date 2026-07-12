@@ -1,6 +1,6 @@
 module github.com/k1LoW/ndiag
 
-go 1.25.7
+go 1.25.8
 
 require (
 	github.com/antchfx/xmlquery v1.5.1
@@ -11,7 +11,7 @@ require (
 	github.com/google/go-cmp v0.7.0
 	github.com/h2non/go-is-svg v0.0.0-20160927212452-35e8c4b0612c
 	github.com/k1LoW/glyph v0.6.0
-	github.com/k1LoW/tbls v1.94.5
+	github.com/k1LoW/tbls v1.95.0
 	github.com/karrick/godirwalk v1.17.0
 	github.com/labstack/gommon v0.5.0
 	github.com/mattn/go-runewidth v0.0.24
@@ -45,8 +45,8 @@ require (
 	github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef // indirect
 	github.com/tetratelabs/wazero v1.10.1 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
-	golang.org/x/image v0.41.0 // indirect
-	golang.org/x/net v0.55.0 // indirect
-	golang.org/x/sys v0.45.0 // indirect
-	golang.org/x/text v0.37.0 // indirect
+	golang.org/x/image v0.44.0 // indirect
+	golang.org/x/net v0.56.0 // indirect
+	golang.org/x/sys v0.46.0 // indirect
+	golang.org/x/text v0.40.0 // indirect
 )
