@@ -14,7 +14,7 @@ import (
 	"github.com/stoewer/go-strcase"
 )
 
-const archiveURL = "https://cloud.google.com/icons/files/google-cloud-icons.zip"
+const archiveURL = "https://cloud.google.com/static/icons/files/google-cloud-icons.zip"
 const iconArchiveURL = "https://cloud.google.com/files/logos/logos-cloud.zip"
 
 var pathRe = regexp.MustCompile(`\A.+/([^/]+)\.(svg)\z`)
