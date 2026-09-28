@@ -1,6 +1,6 @@
 module github.com/k1LoW/ndiag
 
-go 1.25.7
+go 1.26.8
 
 require (
 	github.com/antchfx/xmlquery v1.5.1
