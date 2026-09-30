@@ -99,7 +99,7 @@ func (f *Icon) Fetch(iconPath, prefix string) error {
 		return err
 	}
 	path := filepath.Join(iconPath, prefix, "logo.svg")
-	if err := os.WriteFile(path, b, 0600); err != nil {
+	if err := os.WriteFile(path, b, 0600); err != nil { //nolint:gosec // G703 false positive: path is built from the user-specified icon directory and a fixed file name
 		return err
 	}
 	counter[path] = struct{}{}

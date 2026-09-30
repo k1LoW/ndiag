@@ -32,9 +32,9 @@ func Download(src, dest string) (string, error) {
 	client := &http.Client{
 		Timeout: 60 * time.Second,
 		Transport: &http.Transport{
-			Dial: (&net.Dialer{
+			DialContext: (&net.Dialer{
 				Timeout: 5 * time.Second,
-			}).Dial,
+			}).DialContext,
 			TLSHandshakeTimeout: 5 * time.Second,
 		},
 	}
