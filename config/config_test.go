@@ -253,6 +253,7 @@ func TestHideDetails(t *testing.T) {
 			t.Fatal(err)
 		}
 		cfg.DocPath = tempDir
+		cfg.DescPath = tempDir
 		if err := cfg.Build(); err != nil {
 			t.Fatal(err)
 		}
