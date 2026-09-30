@@ -1,3 +1,9 @@
+## [v0.15.5](https://github.com/k1LoW/ndiag/compare/v0.15.4...v0.15.5) - 2026-09-30
+
+- ci: generate CREDITS with gocredits v1.0.0 from a make target by @k1LoW in https://github.com/k1LoW/ndiag/pull/155
+- chore(deps): bump the dependencies group across 1 directory with 2 updates by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/148
+- chore(deps): bump the dependencies group across 1 directory with 9 updates by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/154
+
 ## [v0.15.4](https://github.com/k1LoW/ndiag/compare/v0.15.3...v0.15.4) - 2026-07-06
 
 - chore(deps): bump golang.org/x/image from 0.38.0 to 0.41.0 by @dependabot[bot] in https://github.com/k1LoW/ndiag/pull/143
