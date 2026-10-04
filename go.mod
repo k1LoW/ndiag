@@ -6,15 +6,15 @@ require (
 	github.com/antchfx/xmlquery v1.5.1
 	github.com/elliotchance/orderedmap v1.8.0
 	github.com/goccy/go-graphviz v0.2.10
-	github.com/goccy/go-json v0.10.6
+	github.com/goccy/go-json v0.11.2
 	github.com/goccy/go-yaml v1.19.2
 	github.com/google/go-cmp v0.7.0
 	github.com/h2non/go-is-svg v0.0.0-20160927212452-35e8c4b0612c
 	github.com/k1LoW/glyph v0.6.0
-	github.com/k1LoW/tbls v1.96.0
+	github.com/k1LoW/tbls v1.96.1
 	github.com/karrick/godirwalk v1.17.0
 	github.com/labstack/gommon v0.5.0
-	github.com/mattn/go-runewidth v0.0.28
+	github.com/mattn/go-runewidth v0.0.30
 	github.com/muesli/gamut v0.3.1
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/olekukonko/tablewriter v0.0.5
